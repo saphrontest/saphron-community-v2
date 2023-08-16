@@ -1,0 +1,1 @@
+export {default as SCIcon} from './SCIcon'

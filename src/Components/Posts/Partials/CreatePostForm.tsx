@@ -16,19 +16,27 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
     const [selectedFile, setSelectedFile] = useState<string>();
     const selectFileRef = useRef<HTMLInputElement>(null);
 
-
-
     const onTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        console.log(e)
+      const {name, value} = e.target;
+      setTextInputs((prev) => ({ ...prev, [name]: value }));
     }
 
     const handleCreatePost = () => {
 
     }
 
-    const onSelectImage = () => {
-        
-    }
+    const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const reader = new FileReader();
+      if (event.target.files?.[0]) {
+        reader.readAsDataURL(event.target.files[0]);
+      }
+  
+      reader.onload = (readerEvent) => {
+        if (readerEvent.target?.result) {
+          setSelectedFile(readerEvent.target?.result as string);
+        }
+      };
+    };
 
   return selectedTab === "Post" ? (
           <TextInputs

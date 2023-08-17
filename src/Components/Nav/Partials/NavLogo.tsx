@@ -1,7 +1,5 @@
 import { Flex, Image } from '@chakra-ui/react'
-import React from 'react'
 import LogoHorizontal from '../../../assets/Logo/logo-horizontal.png'
-import { Link, NavLink, useNavigate, Navigate } from 'react-router-dom'
 const NavLogo = () => {
 
     return (
@@ -10,6 +8,7 @@ const NavLogo = () => {
             width={{ base: "150px", md: "auto" }}
             mr={{ base: 0, md: 2 }}
             cursor="pointer"
+            onClick={() => window.location.href = "/"}
         >
             <Image src={LogoHorizontal} width={150} />
         </Flex>

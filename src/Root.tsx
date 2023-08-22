@@ -1,8 +1,8 @@
 import React from 'react'
-import { createBrowserRouter} from 'react-router-dom'
+import {createBrowserRouter} from 'react-router-dom'
 import {CommunityDetail, Home, PostDetail, Submit} from './Pages'
 
-export const router = createBrowserRouter([
+const rootsArray = [
   {
     path: "/",
     element: <Home />, 
@@ -19,6 +19,11 @@ export const router = createBrowserRouter([
     path: "post/:id",
     element: <PostDetail />, 
   },
-])
+]
 
-export default router
+const routerOptions = {
+  
+}
+
+
+export default createBrowserRouter(rootsArray, routerOptions)

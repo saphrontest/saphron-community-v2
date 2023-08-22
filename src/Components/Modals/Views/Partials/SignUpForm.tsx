@@ -22,9 +22,9 @@ const SignUp: React.FC<SignUpProps> = () => {
   const [createUserWithEmailAndPassword, _, loading, authError] =
     useCreateUserWithEmailAndPassword(auth);
 
-    const toggleView = (view: ModalViewTypes) => dispatch(setModal({isOpen: true, view: view}));
+  const toggleView = (view: ModalViewTypes) => dispatch(setModal({isOpen: true, view: view}));
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (formError) setFormError("");
     if (!form.email.includes("@")) {
@@ -36,7 +36,7 @@ const SignUp: React.FC<SignUpProps> = () => {
     }
 
     // Valid form inputs
-    createUserWithEmailAndPassword(form.email, form.password);
+    await createUserWithEmailAndPassword(form.email, form.password);
   };
 
   const onChange = ({

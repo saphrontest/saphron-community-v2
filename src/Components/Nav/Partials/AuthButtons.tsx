@@ -1,5 +1,4 @@
 import { Button } from '@chakra-ui/react'
-import React from 'react'
 import { useDispatch } from 'react-redux'
 import { setModal } from '../../../redux/slices/modalSlice'
 

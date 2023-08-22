@@ -3,10 +3,13 @@ import React from "react";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import {auth} from "../../../../firebaseClient"
 import GoogleLogo from "../../../../assets/images/google-logo.png"
+import { setModal } from "../../../../redux/slices/modalSlice";
+import { useDispatch } from "react-redux";
 
 type AuthButtonsProps = {};
 
 const AuthButtons: React.FC<AuthButtonsProps> = () => {
+  const dispatch = useDispatch()
   const [signInWithGoogle, _, loading, error] = useSignInWithGoogle(auth);
 
   return (
@@ -14,7 +17,7 @@ const AuthButtons: React.FC<AuthButtonsProps> = () => {
       <Button
         variant="oauth"
         mb={2}
-        onClick={() => signInWithGoogle()}
+        onClick={async () => signInWithGoogle().then(() => dispatch(setModal({isOpen: false, view: null})))}
         isLoading={loading}
       >
         <Image src={GoogleLogo} height="20px" mr={4} alt="GOOGLE_LOGO"/>

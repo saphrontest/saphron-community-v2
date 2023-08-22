@@ -1,7 +1,7 @@
 //Chakra & React
 import { useState } from "react";
 import { Flex } from "@chakra-ui/react";
-import { AuthModal } from "../Modals";
+import { AddCommunityModal, AuthModal } from "../Modals";
 import { SearchInput, GoSubmit, AuthButtons, NavLogo, UserMenu } from "./Partials";
 import { CommunitySelect } from "../Community";
 import { auth } from "../../firebaseClient";
@@ -30,6 +30,7 @@ const Nav = () => {
         </Flex>
       </header>
       <AuthModal />
+      <AddCommunityModal />
     </>
   );
 };

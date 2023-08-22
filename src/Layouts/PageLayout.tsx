@@ -1,18 +1,23 @@
 import React from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import { Nav } from "../Components";
+import { auth } from "../firebaseClient";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useDispatch } from "react-redux";
+import { setModal } from "../redux/slices/modalSlice";
 
 interface PageLayoutProps {
   children: React.ReactElement[] | React.ReactElement
   maxWidth?: string;
   isNav?: boolean;
+  askAuth?: boolean;
 }
 
 // Assumes array of two children are passed
 const PageLayout: React.FC<PageLayoutProps> = ({
   children,
   maxWidth,
-  isNav=true
+  isNav = true,
 }) => {
   return (
     <>

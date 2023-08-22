@@ -1,4 +1,4 @@
-export type ModalViewTypes = "login" | "signup" | "resetPassword" | null;
+export type ModalViewTypes = "login" | "signup" | "resetPassword" | "addCommunity" | null;
 
 export interface ModalInterface {
     isOpen: boolean;

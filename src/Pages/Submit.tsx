@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { PageContent } from '../Layouts'
+import { PageLayout } from '../Layouts'
 import { Box, Text } from '@chakra-ui/react'
 import { NewPostForm } from '../Components'
 import { CommunitySelect } from '../Components/Community'
@@ -7,7 +7,7 @@ import { CommunitySelect } from '../Components/Community'
 const Submit = () => {
   const [communitySelectOpen, setCommunitySelectOpen] = useState(false)
   return (
-    <PageContent maxWidth="1060px">
+    <PageLayout maxWidth="1060px">
       <>
           <Box p="14px 0px" borderBottom="1px solid" borderColor="white" mb={2}>
               <Text fontWeight={600} textAlign="left">Create a post</Text>
@@ -16,7 +16,7 @@ const Submit = () => {
           <NewPostForm />
       </>
       <></>
-    </PageContent>
+    </PageLayout>
   )
 }
 

@@ -6,9 +6,17 @@ import { MdOutlineLogin } from 'react-icons/md'
 import { VscAccount } from 'react-icons/vsc'
 import { setModal } from '../../../redux/slices/modalSlice'
 import { useDispatch } from 'react-redux'
+import { User, signOut } from "firebase/auth";
+import { FC } from 'react'
+import { auth } from '../../../firebaseClient'
 
-const UserMenu = () => {
+interface UserMenuProps {
+    user: User
+}
+
+const UserMenu: FC <UserMenuProps> = ({user}) => {
     const dispatch = useDispatch()
+    const logout = async () => await signOut(auth);
     return (
         <Menu>
             <MenuButton
@@ -19,7 +27,7 @@ const UserMenu = () => {
             >
                 <Flex alignItems="center">
                     <Flex alignItems="center">
-                        {false ? (
+                        {user ? (
                             <>
                                 {/* Avatar should be user profile image */}
                                 <Box
@@ -29,7 +37,7 @@ const UserMenu = () => {
                                     alignItems="flex-start"
                                     mr={8}
                                 >
-                                    <Text fontWeight={700}>kadri çabuk</Text>
+                                    <Text fontWeight={700}>{user.displayName}</Text>
                                     <Flex alignItems="center">
                                         <Icon as={IoSparkles} color="brand.100" mr={1} />
                                         <Text color="gray.400">1 karma</Text>
@@ -49,7 +57,7 @@ const UserMenu = () => {
                 </Flex>
             </MenuButton>
             <MenuList>
-                {false ? (
+                {user ? (
                     <>
                         <MenuItem
                             fontSize="10pt"
@@ -66,7 +74,7 @@ const UserMenu = () => {
                             fontSize="10pt"
                             fontWeight={700}
                             _hover={{ bg: "blue.500", color: "white" }}
-                            onClick={() => console.log("logout")}
+                            onClick={() => logout()}
                         >
                             <Flex alignItems="center">
                                 <Icon fontSize={20} mr={2} as={MdOutlineLogin} />

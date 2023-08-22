@@ -4,10 +4,13 @@ import { Flex } from "@chakra-ui/react";
 import { AuthModal } from "../Modals";
 import { SearchInput, GoSubmit, AuthButtons, NavLogo, UserMenu } from "./Partials";
 import { CommunitySelect } from "../Community";
+import { auth } from "../../firebaseClient";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { User } from "firebase/auth";
 
 const Nav = () => {
   const [dropdown, toggleDropdown] = useState(false)
-
+  const [user] = useAuthState(auth);
   return (
     <>
       <header>
@@ -21,9 +24,8 @@ const Nav = () => {
           <CommunitySelect isOpen={dropdown} setOpen={toggleDropdown} />
           <SearchInput />
           <Flex justifyContent="space-between" alignItems="center">
-            {/* if user or not */}
-            {false ? <GoSubmit /> : <AuthButtons />}
-            <UserMenu />
+            {user ? <GoSubmit /> : <AuthButtons />}
+            <UserMenu user={user as User}/>
           </Flex>
         </Flex>
       </header>

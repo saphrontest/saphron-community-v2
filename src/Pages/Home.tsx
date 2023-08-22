@@ -1,11 +1,11 @@
 import React from 'react'
-import { PageContent } from '../Layouts'
+import { PageLayout } from '../Layouts'
 import { CreatePostLink, PostItem } from '../Components'
 import { Stack } from '@chakra-ui/react'
 
 const Home = () => {
   return (
-    <PageContent>
+    <PageLayout>
       <>
         <CreatePostLink />
         <Stack>
@@ -13,7 +13,7 @@ const Home = () => {
         </Stack>
       </>
       <></>
-    </PageContent>
+    </PageLayout>
   )
 }
 

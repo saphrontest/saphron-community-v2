@@ -29,8 +29,6 @@ const Nav = () => {
           </Flex>
         </Flex>
       </header>
-      <AuthModal />
-      <AddCommunityModal />
     </>
   );
 };

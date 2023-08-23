@@ -1,10 +1,6 @@
 import React from "react";
 import { Box, Flex } from "@chakra-ui/react";
-import { Nav } from "../Components";
-import { auth } from "../firebaseClient";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useDispatch } from "react-redux";
-import { setModal } from "../redux/slices/modalSlice";
+import { Modal, Nav } from "../Components";
 
 interface PageLayoutProps {
   children: React.ReactElement[] | React.ReactElement
@@ -41,6 +37,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
           </Box>
         </Flex>
       </Flex>
+      <Modal />
     </>
   );
 };

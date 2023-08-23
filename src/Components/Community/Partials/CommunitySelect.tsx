@@ -1,9 +1,10 @@
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Flex, Icon, Menu, MenuButton, MenuItem, MenuList, Text, useOutsideClick } from '@chakra-ui/react';
-import { FC, useRef } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { GrAdd } from 'react-icons/gr';
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../../redux/slices/modalSlice';
+import { getCommunities } from '../../../Helpers/apiFunctions';
 
 interface CommunityProps {
     isOpen: boolean;
@@ -17,6 +18,15 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen}) => {
         ref: communityMenuRef,
         handler: () => isOpen && setOpen(isOpen)
       });
+
+      const get = async () => {
+          const res = await getCommunities()
+          console.log(res)
+      }
+
+      useEffect(() => {
+        get()
+      }, [])
 
     return (
         <Menu isOpen={isOpen}>

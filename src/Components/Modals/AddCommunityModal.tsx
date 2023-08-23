@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import { ModalLayout } from '../../Layouts'
-import { Alert, Box, Button, Checkbox, Divider, Flex, Icon, Input, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Stack, Text, useToast } from '@chakra-ui/react'
-import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs";
-import { HiLockClosed } from "react-icons/hi";
+import { Box, Button, Divider, Input, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text} from '@chakra-ui/react'
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
 import { useNavigate } from 'react-router-dom';
 import { auth, firestore } from '../../firebaseClient';
 import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import md5 from 'md5';
 
 const AddCommunityModal = () => {
 
@@ -44,15 +43,16 @@ const AddCommunityModal = () => {
 
         try {
             // Create community document and community as a subcollection document on user
-            const communityDocRef = doc(firestore, "communities", name);
+            const communityDocRef = doc(firestore, "communities", md5(`${name}.${new Date().getTime().toString()}`));
 
             await runTransaction(firestore, async (transaction) => {
                 const communityDoc = await transaction.get(communityDocRef);
                 if (communityDoc.exists()) {
-                    throw new Error(`Sorry, /r${name} is taken. Try another.`);
+                    throw new Error(`Sorry, comm/${name} is taken. Try another.`);
                 }
                 
                 transaction.set(communityDocRef, {
+                    name: name,
                     creatorId: user?.uid,
                     createdAt: serverTimestamp(),
                     numberOfMembers: 1,
@@ -61,8 +61,8 @@ const AddCommunityModal = () => {
 
                 transaction.set(
                     doc(firestore, `users/${user?.uid}/communities`, name), {
-                    communityId: name,
-                    isModerator: true,
+                        communityId: name,
+                        isModerator: true,
                     }
                 );
             });

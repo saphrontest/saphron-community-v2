@@ -3,6 +3,7 @@ import { Timestamp } from "firebase/firestore";
 export interface Community {
     id: string;
     creatorId: string;
+    name: string;
     numberOfMembers: number;
     privacyType: "public" | "restrictied" | "private";
     createdAt?: Timestamp;
@@ -11,6 +12,7 @@ export interface Community {
 
 export const defaultCommunity: Community = {
     id: "",
+    name: "",
     creatorId: "",
     numberOfMembers: 0,
     privacyType: "public",

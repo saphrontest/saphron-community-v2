@@ -1,3 +1,5 @@
 export {default as Tabs} from './Tabs'
 export {default as TabItemComponent} from './TabItemComponent'
 export {default as CreatePostForm} from './CreatePostForm'
+export {default as PostItem} from './PostItem'
+export {default as PostList} from './PostList'

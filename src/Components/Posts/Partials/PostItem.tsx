@@ -1,5 +1,5 @@
-import { Flex, Icon, Spinner, Stack, Text } from '@chakra-ui/react'
-import React from 'react'
+import { Avatar, Flex, Icon, Spinner, Stack, Text } from '@chakra-ui/react'
+import React, { FC } from 'react'
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsChat, BsDot } from "react-icons/bs";
 import {
@@ -11,10 +11,37 @@ import {
   IoBookmarkOutline,
 } from "react-icons/io5";
 import { Link } from 'react-router-dom';
+import { Post } from '../../../Interface/PostInterface';
+import moment from 'moment';
 
 
-const PostItem = () => {
-  const userVoteValue = 1
+export type PostItemContentProps = {
+  post: Post;
+  onVote: (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    post: Post,
+    vote: number,
+    communityId: string,
+    postIdx?: number
+  ) => void;
+  onDeletePost: (post: Post) => Promise<boolean>;
+  userIsCreator: boolean;
+  onSelectPost?: (value: Post, postIdx: number) => void;
+  postIdx?: number;
+  userVoteValue?: number;
+  homePage?: boolean;
+};
+
+const PostItem: FC<PostItemContentProps> = ({
+  post,
+  postIdx,
+  onVote,
+  onSelectPost,
+  onDeletePost,
+  userVoteValue,
+  userIsCreator,
+  homePage,
+}) => {
   return (
     <Flex
       border="1px solid"
@@ -43,7 +70,7 @@ const PostItem = () => {
           onClick={(event) => console.log('object')}
         />
         <Text fontSize="9pt" fontWeight={600}>
-          vote status
+        {post.voteStatus}
         </Text>
         <Icon
           as={
@@ -54,23 +81,33 @@ const PostItem = () => {
           color={userVoteValue === 1 ? "gray.400" : "#4379FF"}
           fontSize={22}
           cursor="pointer"
-          onClick={(event) => console.log('object')}
+          onClick={(event) => onVote(event, post, -1, post.communityId)}
         />
       </Flex>
       <Flex direction="column" width="100%">
         <Stack spacing={1} p="10px 10px">
           <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
-            <>
-              {/* <Avatar src={post.communityImageURL} boxSize={18}/> */}
-              <a href="/submit">
-                <Text
-                  fontWeight={700}
-                  _hover={{ textDecoration: "underline" }}
-                  onClick={(event) => console.log('object')}
-                >{`community id`}</Text>
-              </a>
-              <Icon as={BsDot} color="gray.500" fontSize={8} />
-            </>
+          {post.createdAt && (
+            <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
+              {homePage && (
+                <>
+                  <Avatar src={post.communityImageURL} boxSize={18}/>
+                  <Link to={`comm/${post.communityId}`}>
+                    <Text
+                      fontWeight={700}
+                      _hover={{ textDecoration: "underline" }}
+                      onClick={(event) => event.stopPropagation()}
+                    >{`r/${post.communityId}`}</Text>
+                  </Link>
+                  <Icon as={BsDot} color="gray.500" fontSize={8} />
+                </>
+              )}
+              <Text color="gray.500">
+                Posted by u/{post.userDisplayText}{" "}
+                {moment(new Date(post.createdAt.seconds * 1000)).fromNow()}
+              </Text>
+            </Stack>
+          )}
             <Text color="gray.500">
               Posted by u/
             </Text>

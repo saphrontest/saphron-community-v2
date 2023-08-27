@@ -5,8 +5,11 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../../firebaseClient";
 
 const SearchInput = () => {
+  const [user] = useAuthState(auth);
   return (
     <Flex flexGrow={1} maxWidth={"600px"} mr={2}>
       <InputGroup>
@@ -34,6 +37,9 @@ const SearchInput = () => {
           height="34px"
           bg="gray.50"
           width="100%"
+          onClick={() => {
+            // TODO: if user is not exist, show toast
+          }}
         />
       </InputGroup>
     </Flex>

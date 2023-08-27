@@ -1,10 +1,14 @@
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Flex, Icon, Menu, MenuButton, MenuItem, MenuList, Text, useOutsideClick } from '@chakra-ui/react';
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { GrAdd } from 'react-icons/gr';
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../../redux/slices/modalSlice';
 import { getCommunities } from '../../../Helpers/apiFunctions';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../../firebaseClient';
+import { Community } from '../../../Interface/CommunityInterface';
+import { useNavigate } from 'react-router-dom';
 
 interface CommunityProps {
     isOpen: boolean;
@@ -12,21 +16,23 @@ interface CommunityProps {
 }
 
 const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen}) => {
+    const [communities, setCommunities] = useState<Community[]>([])
+    const navigate = useNavigate()
     const communityMenuRef = useRef(null)
     const dispatch = useDispatch()
+    const [user] = useAuthState(auth);
     useOutsideClick({
         ref: communityMenuRef,
         handler: () => isOpen && setOpen(isOpen)
       });
 
-      const get = async () => {
-          const res = await getCommunities()
-          console.log(res)
-      }
-
-      useEffect(() => {
+    useEffect(() => {
+        const get = async () => {
+            const res = await getCommunities()
+            setCommunities(res)
+        }
         get()
-      }, [])
+    }, [])
 
     return (
         <Menu isOpen={isOpen}>
@@ -71,19 +77,40 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen}) => {
                     >
                         MODERATING
                     </Text>
-                    <MenuItem
-                        width="100%"
-                        fontSize="10pt"
-                        _hover={{ bg: "gray.100" }}
-                        onClick={() => console.log("select community")}
-                    >
-                        <Flex alignItems="center">community</Flex>
-                    </MenuItem>
+                    {communities.filter(comm => comm.creatorId === user?.uid).map(comm => {
+                        return (
+                            <MenuItem
+                                key={comm.id}
+                                width="100%"
+                                fontSize="10pt"
+                                fontWeight={600}
+                                _hover={{ bg: "gray.100" }}
+                                onClick={() => navigate(`/community/${comm.id}`)}
+                            >
+                                <Flex alignItems="center">{comm.name}</Flex>
+                            </MenuItem>
+                        )
+                    })}
+                    
                 </Box>
                 <Box mt={3} mb={4}>
                 <Text pl={3} mb={1} fontSize="7pt" fontWeight={500} color="gray.500">
                 MY COMMUNITIES
                 </Text>
+                {communities.filter(comm => comm.creatorId !== user?.uid).map(comm => {
+                    return (
+                        <MenuItem
+                            key={comm.id}
+                            width="100%"
+                            fontSize="10pt"
+                            fontWeight={600}
+                            _hover={{ bg: "gray.100" }}
+                            onClick={() => navigate(`/community/${comm.id}`)}
+                        >
+                            <Flex alignItems="center">{comm.name}</Flex>
+                        </MenuItem>
+                    )
+                })}
                 <MenuItem
                 width="100%"
                 fontSize="10pt"

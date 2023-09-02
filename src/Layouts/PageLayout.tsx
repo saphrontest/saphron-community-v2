@@ -6,7 +6,6 @@ interface PageLayoutProps {
   children: React.ReactElement[] | React.ReactElement
   maxWidth?: string;
   isNav?: boolean;
-  askAuth?: boolean;
 }
 
 // Assumes array of two children are passed

@@ -1,14 +1,16 @@
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Flex, Icon, Menu, MenuButton, MenuItem, MenuList, Text, useOutsideClick } from '@chakra-ui/react';
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { GrAdd } from 'react-icons/gr';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../../redux/slices/modalSlice';
 import { getCommunities } from '../../../Helpers/apiFunctions';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../../firebaseClient';
-import { Community } from '../../../Interface/CommunityInterface';
 import { useNavigate } from 'react-router-dom';
+import { setCommunities } from '../../../redux/slices/communitySlice';
+import { RootState } from '../../../redux/store';
+import { Community } from '../../../Interface/CommunityInterface';
 
 interface CommunityProps {
     isOpen: boolean;
@@ -16,7 +18,7 @@ interface CommunityProps {
 }
 
 const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen}) => {
-    const [communities, setCommunities] = useState<Community[]>([])
+    const {communities} = useSelector((state: RootState) => state.community)
     const navigate = useNavigate()
     const communityMenuRef = useRef(null)
     const dispatch = useDispatch()
@@ -29,7 +31,8 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen}) => {
     useEffect(() => {
         const get = async () => {
             const res = await getCommunities()
-            setCommunities(res)
+            const communityList = [...res.map(({ id, name, creatorId, privacyType, createdAt }) => ({ id, name, creatorId, privacyType, createdAt: { seconds: createdAt?.seconds, nanoseconds: createdAt?.nanoseconds } }))]
+            dispatch(setCommunities(communityList as Community[]))
         }
         get()
     }, [])

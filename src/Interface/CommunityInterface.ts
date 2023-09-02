@@ -18,3 +18,11 @@ export const defaultCommunity: Community = {
     privacyType: "public",
     imageURL: ""
 };
+
+interface CommunitySlice {
+    communities: Community[]
+}
+
+export const communitySliceInitial: CommunitySlice = {
+    communities: []
+} 

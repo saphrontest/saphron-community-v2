@@ -1,15 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit"
-// import { ModalInterface, defaultModalState } from "../../Interface/ModalInterface";
-// import type { PayloadAction } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { Community, communitySliceInitial } from "../../Interface/CommunityInterface"
 
 export const communitiySlice = createSlice({
   name: "communitySlice",
-  initialState: {},
+  initialState: communitySliceInitial,
   reducers: {
-    
+    setCommunities: (state, action: PayloadAction<Community[]>) => {
+      state.communities = action.payload
+    }
   },
 })
 export const {
-  
+  setCommunities
 } = communitiySlice.actions
 export default communitiySlice.reducer

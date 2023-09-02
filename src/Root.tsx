@@ -12,6 +12,10 @@ const rootsArray = [
     element: <Submit />, 
   },
   {
+    path: "submit/:communityId",
+    element: <Submit />, 
+  },
+  {
     path: "community/:id",
     element: <CommunityDetail />, 
   },

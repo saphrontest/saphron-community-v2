@@ -30,13 +30,14 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav}) => {
         handler: () => isOpen && setOpen(isOpen)
       });
 
+      const getCommunityList = async () => {
+          const res = await getCommunities()
+          const communityList = [...res.map(({ id, name, creatorId, privacyType, createdAt }) => ({ id, name, creatorId, privacyType, createdAt: { seconds: createdAt?.seconds, nanoseconds: createdAt?.nanoseconds } }))]
+          dispatch(setCommunities(communityList as Community[]))
+      }
     useEffect(() => {
-        const get = async () => {
-            const res = await getCommunities()
-            const communityList = [...res.map(({ id, name, creatorId, privacyType, createdAt }) => ({ id, name, creatorId, privacyType, createdAt: { seconds: createdAt?.seconds, nanoseconds: createdAt?.nanoseconds } }))]
-            dispatch(setCommunities(communityList as Community[]))
-        }
-        get()
+        getCommunityList()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

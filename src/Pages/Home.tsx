@@ -7,9 +7,13 @@ import { getPosts } from '../Helpers/apiFunctions'
 import { deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 import { firestore, storage } from '../firebaseClient'
+import { useSelector } from 'react-redux'
+import { RootState } from '../redux/store'
+import { Community } from '../Interface/CommunityInterface'
 const Home = () => {
   const [posts, setPosts] = useState<Post[]>([])
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
+  const {communities} = useSelector((state: RootState) => state.community)
   const getPostsData = async () => {
     const result = await getPosts()
     setPosts(result)
@@ -52,11 +56,12 @@ const Home = () => {
       <>
         <CreatePostLink />
         <Stack>
-          {posts.map((post, index) => <PostItem
+          {posts.map(post => <PostItem
             key={post.id}
             post={post}
             handleDelete={handleDelete}
             isDeleteLoading={isDeleteLoading}
+            communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
           />)}
         </Stack>
       </>

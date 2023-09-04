@@ -21,8 +21,10 @@ export const defaultCommunity: Community = {
 
 interface CommunitySlice {
     communities: Community[]
+    selectedCommunity: Community | null
 }
 
 export const communitySliceInitial: CommunitySlice = {
-    communities: []
+    communities: [],
+    selectedCommunity: null
 } 

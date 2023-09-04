@@ -7,10 +7,14 @@ export const communitiySlice = createSlice({
   reducers: {
     setCommunities: (state, action: PayloadAction<Community[]>) => {
       state.communities = action.payload
+    },
+    setSelectedCommunity: (state, action: PayloadAction<Community>) => {
+      state.selectedCommunity = action.payload
     }
   },
 })
 export const {
-  setCommunities
+  setCommunities,
+  setSelectedCommunity
 } = communitiySlice.actions
 export default communitiySlice.reducer

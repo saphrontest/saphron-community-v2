@@ -40,10 +40,6 @@ const PostDetail = () => {
     getDetail()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  
-  useEffect(() => {
-    console.log(isPageLoading)
-  }, [isPageLoading])
 
   const handleDelete = async (post: Post): Promise<boolean> => {
     setDeleteLoading(true)
@@ -76,7 +72,7 @@ const PostDetail = () => {
   return (
     <PageLayout>
       <>
-        {!isPageLoading && <PostItem post={post} isDeleteLoading={isDeleteLoading} handleDelete={handleDelete} />}
+        {!isPageLoading && <PostItem post={post} isDeleteLoading={isDeleteLoading} handleDelete={handleDelete} communityName={communities.filter((c: Community) => post.communityId === c.id)[0].name}/>}
         {!isPageLoading && <Comments comments={comments} post={post} getComments={getComments}/>}
       </>
       <>

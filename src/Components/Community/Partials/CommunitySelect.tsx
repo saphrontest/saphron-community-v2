@@ -8,21 +8,23 @@ import { getCommunities } from '../../../Helpers/apiFunctions';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../../firebaseClient';
 import { useNavigate } from 'react-router-dom';
-import { setCommunities } from '../../../redux/slices/communitySlice';
+import { setCommunities, setSelectedCommunity } from '../../../redux/slices/communitySlice';
 import { RootState } from '../../../redux/store';
 import { Community } from '../../../Interface/CommunityInterface';
 
 interface CommunityProps {
     isOpen: boolean;
     setOpen: (value: boolean) => void;
+    isNav?: boolean;
 }
 
-const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen}) => {
+const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav}) => {
     const {communities} = useSelector((state: RootState) => state.community)
     const navigate = useNavigate()
     const communityMenuRef = useRef(null)
     const dispatch = useDispatch()
     const [user] = useAuthState(auth);
+    const {selectedCommunity} = useSelector((state: RootState) => state.community)
     useOutsideClick({
         ref: communityMenuRef,
         handler: () => isOpen && setOpen(isOpen)
@@ -62,7 +64,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen}) => {
                                 flexDirection="column"
                                 fontSize="10pt"
                             >
-                                <Text fontWeight={600}>text</Text>
+                                <Text fontWeight={600}>{selectedCommunity?.name}</Text>
                             </Box>
                         </>
                     </Flex>
@@ -88,7 +90,11 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen}) => {
                                 fontSize="10pt"
                                 fontWeight={600}
                                 _hover={{ bg: "gray.100" }}
-                                onClick={() => navigate(`/community/${comm.id}`)}
+                                onClick={() => {
+                                    dispatch(setSelectedCommunity(comm))
+                                    !!isNav && navigate(`/community/${comm.id}`)
+                                    setOpen(false)
+                                }}
                             >
                                 <Flex alignItems="center">{comm.name}</Flex>
                             </MenuItem>
@@ -108,7 +114,11 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen}) => {
                             fontSize="10pt"
                             fontWeight={600}
                             _hover={{ bg: "gray.100" }}
-                            onClick={() => navigate(`/community/${comm.id}`)}
+                            onClick={() => {
+                                dispatch(setSelectedCommunity(comm))
+                                !!isNav && navigate(`/community/${comm.id}`)
+                                setOpen(false)
+                            }}
                         >
                             <Flex alignItems="center">{comm.name}</Flex>
                         </MenuItem>

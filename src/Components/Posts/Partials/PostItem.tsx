@@ -11,8 +11,13 @@ import {
   IoBookmarkOutline,
 } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
-import { Post } from '../../../Interface/PostInterface';
+import { Post, PostVote } from '../../../Interface/PostInterface';
 import moment from 'moment';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, firestore } from '../../../firebaseClient';
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../../redux/slices/modalSlice';
+import { collection, doc, writeBatch } from 'firebase/firestore';
 
 
 
@@ -21,16 +26,42 @@ export type PostItemContentProps = {
   homePage?: boolean;
   isDeleteLoading: boolean;
   handleDelete: (post: Post) => Promise<boolean>;
+  communityName: string;
 };
 
 const PostItem: FC<PostItemContentProps> = ({
   post,
   homePage,
   isDeleteLoading,
-  handleDelete
+  handleDelete,
+  communityName
 }) => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [loadingImage, setLoadingImage] = useState(true);
+  const [user] = useAuthState(auth);
+  
+  const onVote = async (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    vote: number
+  ) => {
+    event.stopPropagation();
+    if (!user?.uid) {
+      dispatch(setModal({isOpen: true, view: 'login'}))
+      return;
+    }
+
+    try {
+
+      // TODO: GET USER VOTES
+      // TODO: IF USER HAS VOTE FOR THIS POST => REMOVE VOTE FROM USER.VOTES && ADD NEW VOTE TO USER.VOTES && UPDATE POST VOTE STATUS
+      // TODO: IF NOT => ADD NEW VOTE TO USER.VOTES && UPDATE POST VOTE STATUS
+
+    } catch (error) {
+      console.log("onVote error", error);
+    }
+  };
+
   return (
     <Flex
       border="1px solid"
@@ -49,29 +80,29 @@ const PostItem: FC<PostItemContentProps> = ({
         width="40px"
         borderRadius={"3px 0px 0px 3px"}
       >
-        {/* <Icon
+        <Icon
           as={
-            userVoteValue === 1 ? IoArrowUpCircleSharp : IoArrowUpCircleOutline
+            true ? IoArrowUpCircleSharp : IoArrowUpCircleOutline
           }
-          color={userVoteValue === 1 ? "brand.100" : "gray.400"}
+          color={true ? "brand.100" : "gray.400"}
           fontSize={22}
           cursor="pointer"
-          onClick={(event) => console.log('object')}
+          onClick={(event) => onVote(event, 1)}
         />
         <Text fontSize="9pt" fontWeight={600}>
-        {post.voteStatus}
+          {post.voteStatus}
         </Text>
         <Icon
           as={
-            userVoteValue === 1
+            true
               ? IoArrowDownCircleOutline
               : IoArrowDownCircleSharp
           }
-          color={userVoteValue === 1 ? "gray.400" : "#4379FF"}
+          color={true ? "gray.400" : "#4379FF"}
           fontSize={22}
           cursor="pointer"
-          onClick={(event) => onVote(event, post, -1, post.communityId)}
-        /> */}
+          onClick={(event) => onVote(event, -1)}
+        />
       </Flex>
       <Flex direction="column" width="100%">
         <Stack spacing={1} p="10px 10px">
@@ -80,16 +111,16 @@ const PostItem: FC<PostItemContentProps> = ({
             <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
                 <>
                   <Avatar src={post.communityImageURL} boxSize={18}/>
-                  <Link to={`comm/${post.communityId}`}>
+                  <Link to={`community/${post.communityId}`}>
                     <Text
                       fontWeight={700}
                       _hover={{ textDecoration: "underline" }}
                       onClick={(event) => event.stopPropagation()}
-                    >{`comm/${post.communityId}`}</Text>
+                    >{`community/${communityName}`}</Text>
                   </Link>
                   <Icon as={BsDot} color="gray.500" fontSize={8} />
                 </>
-              <Text color="gray.500">
+              <Text color="gray.500" textAlign={"right"}>
                 Posted by u/{post.userDisplayText}{" "}
                 {moment(new Date(post.createdAt.seconds * 1000)).fromNow()}
               </Text>

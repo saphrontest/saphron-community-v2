@@ -38,7 +38,7 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
           setCommentCreateLoading(true);
           try {
             const batch = writeBatch(firestore);
-      
+
             // Create comment document
             const commentDocRef = doc(collection(firestore, "comments"));
             batch.set(commentDocRef, {
@@ -65,9 +65,6 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
           }
     }
 
-    useEffect(() => {
-        console.log(typeof comments)
-    }, [comments])
     return (
         <Box bg="white" p={2} borderRadius="0px 0px 4px 4px">
             <Flex

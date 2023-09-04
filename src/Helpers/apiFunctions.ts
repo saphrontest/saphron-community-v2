@@ -1,9 +1,10 @@
+// FIREBASE
 import { query, collection, getDocs, doc, getDoc, where } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
+// INTERFACES
 import { Community } from "../Interface/CommunityInterface";
 import { Post } from "../Interface/PostInterface";
 import { Comment } from "../Interface/CommentsInterface";
-
 
 const fetch = {
   getDetail: async (query: string, id:string) => {

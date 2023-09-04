@@ -48,7 +48,6 @@ export const getPostDetails = async (id: string) => {
 
 export const getPostComments = async (id: string) => {
   const comments: (Comment | null)[] = []
-  console.log(typeof comments)
   const commentsDocs = await fetch.getListWhere("comments", where("postId", "==", id))
   commentsDocs.docs.forEach((doc) => {
     comments.push({ id: doc.id, ...doc.data() } as Comment)

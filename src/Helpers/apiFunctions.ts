@@ -3,8 +3,9 @@ import { query, collection, getDocs, doc, getDoc, where } from "firebase/firesto
 import { firestore } from "../firebaseClient";
 // INTERFACES
 import { Community } from "../Interface/CommunityInterface";
-import { Post } from "../Interface/PostInterface";
+import { Post, PostVote } from "../Interface/PostInterface";
 import { Comment } from "../Interface/CommentsInterface";
+import { getAuth } from "firebase/auth";
 
 const fetch = {
   getDetail: async (query: string, id:string) => {
@@ -53,4 +54,16 @@ export const getPostComments = async (id: string) => {
     comments.push({ id: doc.id, ...doc.data() } as Comment)
   })
   return comments
+}
+
+export const getUserVotes = async (id: string) => {
+  const postVotes = await fetch.getList(`users/${id}/postVotes`)
+  if(postVotes.size){
+    const votes: PostVote[] = []
+    postVotes.forEach(doc => {
+      votes.push({ id: doc.id, ...doc.data() } as PostVote)
+    })
+    return votes
+  }
+  return false
 }

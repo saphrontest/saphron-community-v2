@@ -13,6 +13,7 @@ import { Community } from '../Interface/CommunityInterface'
 const Home = () => {
   const [posts, setPosts] = useState<Post[]>([])
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
+  const [isVoteChange, setVoteChange] = useState<boolean>(false)
   const {communities} = useSelector((state: RootState) => state.community)
   const getPostsData = async () => {
     const result = await getPosts()
@@ -21,6 +22,13 @@ const Home = () => {
   useEffect(() => {
     getPostsData()
   }, [])
+  
+  useEffect(() => {
+    if(isVoteChange){
+      getPostsData()
+      return () => setVoteChange(false)
+    }
+  }, [isVoteChange])
 
   const handleDelete = async (post: Post): Promise<boolean> => {
       setDeleteLoading(true)
@@ -62,6 +70,7 @@ const Home = () => {
             handleDelete={handleDelete}
             isDeleteLoading={isDeleteLoading}
             communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
+            setVoteChange={setVoteChange}
           />)}
         </Stack>
       </>

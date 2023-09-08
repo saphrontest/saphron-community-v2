@@ -1,5 +1,5 @@
 import { Avatar, Flex, Icon, Image, Skeleton, Spinner, Stack, Text } from '@chakra-ui/react'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsChat, BsDot } from "react-icons/bs";
 import {
@@ -15,11 +15,11 @@ import { Post, PostVote } from '../../../Interface/PostInterface';
 import moment from 'moment';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, firestore } from '../../../firebaseClient';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../../redux/slices/modalSlice';
 import { collection, doc, writeBatch } from 'firebase/firestore';
-
-
+import { getUserVotes } from '../../../Helpers/apiFunctions';
+import { RootState } from '../../../redux/store';
 
 export type PostItemContentProps = {
   post: Post;
@@ -27,6 +27,7 @@ export type PostItemContentProps = {
   isDeleteLoading: boolean;
   handleDelete: (post: Post) => Promise<boolean>;
   communityName: string;
+  setVoteChange: (isChanged: boolean) => void;
 };
 
 const PostItem: FC<PostItemContentProps> = ({
@@ -34,31 +35,71 @@ const PostItem: FC<PostItemContentProps> = ({
   homePage,
   isDeleteLoading,
   handleDelete,
-  communityName
+  communityName,
+  setVoteChange
 }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [loadingImage, setLoadingImage] = useState(true);
   const [user] = useAuthState(auth);
+  const [userVote, setUserVote] = useState<PostVote | null>(null)
+  const [isVoteLoading, setVoteLoading] = useState<boolean>(false)
+  const {communities} = useSelector((state:RootState) => state.community)
   
+  useEffect(() => {
+    getUserVotesData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const getUserVotesData = async () => {
+    const data = user && await getUserVotes(user.uid)
+    data ? setUserVote(data.filter(vote => vote.postId === post.id)[0] as PostVote) : setUserVote(null)
+  }
+
   const onVote = async (
     event: React.MouseEvent<SVGElement, MouseEvent>,
     vote: number
   ) => {
+    setVoteLoading(true)
+    const batch = writeBatch(firestore);
     event.stopPropagation();
     if (!user?.uid) {
       dispatch(setModal({isOpen: true, view: 'login'}))
       return;
     }
-
+    const community = communities.filter(c => c.name === communityName)[0]
     try {
+      const newVote: PostVote = {
+        postId: post.id,
+        communityId: community.id,
+        voteValue: vote,
+      };
 
-      // TODO: GET USER VOTES
-      // TODO: IF USER HAS VOTE FOR THIS POST => REMOVE VOTE FROM USER.VOTES && ADD NEW VOTE TO USER.VOTES && UPDATE POST VOTE STATUS
-      // TODO: IF NOT => ADD NEW VOTE TO USER.VOTES && UPDATE POST VOTE STATUS
+      if(userVote){
 
+        const postVoteRef = doc( firestore, "users", `${user.uid}/postVotes/${userVote.id}` );
+
+        if(userVote.voteValue === vote) {
+          batch.delete(postVoteRef);
+        }else{
+          batch.update(postVoteRef, {
+            voteValue: vote,
+          });
+        }
+      }else{
+        const postVoteRef = doc(collection(firestore, "users", `${user.uid}/postVotes`));
+        newVote.id= postVoteRef.id;
+        batch.set(postVoteRef, newVote);
+      }
+      const postRef = doc(firestore, "posts", post.id);
+      batch.update(postRef, { voteStatus: post.voteStatus + vote });
+      await batch.commit();
+      setVoteChange(true)
     } catch (error) {
       console.log("onVote error", error);
+    } finally {
+      getUserVotesData()
+      setVoteLoading(false);
     }
   };
 
@@ -79,30 +120,34 @@ const PostItem: FC<PostItemContentProps> = ({
         p={2}
         width="40px"
         borderRadius={"3px 0px 0px 3px"}
-      >
-        <Icon
-          as={
-            true ? IoArrowUpCircleSharp : IoArrowUpCircleOutline
-          }
-          color={true ? "brand.100" : "gray.400"}
-          fontSize={22}
-          cursor="pointer"
-          onClick={(event) => onVote(event, 1)}
-        />
-        <Text fontSize="9pt" fontWeight={600}>
-          {post.voteStatus}
-        </Text>
-        <Icon
-          as={
-            true
-              ? IoArrowDownCircleOutline
-              : IoArrowDownCircleSharp
-          }
-          color={true ? "gray.400" : "#4379FF"}
-          fontSize={22}
-          cursor="pointer"
-          onClick={(event) => onVote(event, -1)}
-        />
+        >
+        {isVoteLoading ? <Spinner size="sm" /> : (
+          <>
+            <Icon
+              as={
+                userVote?.voteValue === 1 ? IoArrowUpCircleSharp : IoArrowUpCircleOutline
+              }
+              color={userVote?.voteValue === 1 ? "brand.100" : "gray.400"}
+              fontSize={22}
+              cursor="pointer"
+              onClick={(event) => onVote(event, 1)}
+            />
+            <Text fontSize="9pt" fontWeight={600}>
+              {post.voteStatus}
+            </Text>
+            <Icon
+              as={
+                userVote?.voteValue === -1
+                  ? IoArrowDownCircleSharp
+                  : IoArrowDownCircleOutline
+              }
+              color={userVote?.voteValue === -1 ?  "#4379FF" :  "gray.400"}
+              fontSize={22}
+              cursor="pointer"
+              onClick={(event) => onVote(event, -1)}
+            />
+          </>
+        )}
       </Flex>
       <Flex direction="column" width="100%">
         <Stack spacing={1} p="10px 10px">

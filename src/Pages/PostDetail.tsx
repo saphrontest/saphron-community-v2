@@ -18,6 +18,7 @@ const PostDetail = () => {
   const [post, setPost] = useState<Post | null>(null)
   const [comments, setComments] = useState<(Comment | null)[]>()
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
+  const [isVoteChange, setVoteChange] = useState<boolean>(false)
   const {communities} = useSelector((state: RootState) => state.community)
   const isPageLoading = !(!!post && !!comments)
 
@@ -40,6 +41,13 @@ const PostDetail = () => {
     getDetail()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if(isVoteChange){
+      getDetail()
+      return () => setVoteChange(false)
+    }
+  }, [isVoteChange])
 
   const handleDelete = async (post: Post): Promise<boolean> => {
     setDeleteLoading(true)
@@ -72,7 +80,7 @@ const PostDetail = () => {
   return (
     <PageLayout>
       <>
-        {!isPageLoading && <PostItem post={post} isDeleteLoading={isDeleteLoading} handleDelete={handleDelete} communityName={communities.filter((c: Community) => post.communityId === c.id)[0].name}/>}
+        {!isPageLoading && <PostItem setVoteChange={setVoteChange} post={post} isDeleteLoading={isDeleteLoading} handleDelete={handleDelete} communityName={communities.filter((c: Community) => post.communityId === c.id)[0].name}/>}
         {!isPageLoading && <Comments comments={comments} post={post} getComments={getComments}/>}
       </>
       <>

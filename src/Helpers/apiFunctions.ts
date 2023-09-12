@@ -41,10 +41,25 @@ export const getPosts = async () => {
   return posts as Post[]
 }
 
+export const getPostsByCommunities = async (id: string) => {
+  const posts: Post[] = []
+  const postsDoc = await fetch.getListWhere("posts", where("communityId", "==", id))
+  postsDoc.docs.forEach((doc) => {
+    posts.push({ id: doc.id, ...doc.data() } as Post)
+  })
+  return posts
+}
+
 export const getPostDetails = async (id: string) => {
   const post = await fetch.getDetail("posts", id)
   const postObject = { id: post.id, ...post.data() }
   return postObject as Post
+}
+
+export const getCommunityDetail = async (id: string) => {
+  const community = await fetch.getDetail("communities", id)
+  const communityObject = { id: community.id, ...community.data() }
+  return communityObject as Community
 }
 
 export const getPostComments = async (id: string) => {

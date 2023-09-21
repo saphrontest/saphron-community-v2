@@ -5,7 +5,6 @@ import { firestore } from "../firebaseClient";
 import { Community } from "../Interface/CommunityInterface";
 import { Post, PostVote } from "../Interface/PostInterface";
 import { Comment } from "../Interface/CommentsInterface";
-import { getAuth } from "firebase/auth";
 
 const fetch = {
   getDetail: async (query: string, id:string) => {

@@ -19,12 +19,11 @@ interface CommunityProps {
 }
 
 const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav}) => {
-    const {communities} = useSelector((state: RootState) => state.community)
+    const {communities, selectedCommunity} = useSelector((state: RootState) => state.community)
     const navigate = useNavigate()
     const communityMenuRef = useRef(null)
     const dispatch = useDispatch()
     const [user] = useAuthState(auth);
-    const {selectedCommunity} = useSelector((state: RootState) => state.community)
     useOutsideClick({
         ref: communityMenuRef,
         handler: () => isOpen && setOpen(isOpen)
@@ -65,7 +64,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav}) => {
                                 flexDirection="column"
                                 fontSize="10pt"
                             >
-                                <Text fontWeight={600}>{selectedCommunity?.name}</Text>
+                                <Text fontWeight={600}>{selectedCommunity?.name ?? "Select Community"}</Text>
                             </Box>
                         </>
                     </Flex>

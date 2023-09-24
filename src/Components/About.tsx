@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -21,29 +21,38 @@ import { doc, updateDoc } from "firebase/firestore";
 import { Community } from "../Interface/CommunityInterface";
 import { auth, firestore, storage } from "../firebaseClient";
 import { Link, useNavigate } from "react-router-dom";
+import { getCommunityDetail } from "../Helpers/apiFunctions";
 
 type AboutProps = {
-  community: Community;
+  communityId: string;
   pt?: number;
   onCreatePage?: boolean;
   loading?: boolean;
 };
 
 const About: React.FC<AboutProps> = ({
-    community,
-    pt,
-    onCreatePage,
-    loading,
+  communityId,
+  pt,
+  onCreatePage,
+  loading,
 }) => {
   const [user] = useAuthState(auth); // will revisit how 'auth' state is passed
   const navigate = useNavigate()
   const selectFileRef = useRef<HTMLInputElement>(null);
 
-  // April 24 - moved this logic to custom hook in tutorial build (useSelectFile)
   const [selectedFile, setSelectedFile] = useState<string>();
-
-  // Added last!
   const [imageLoading, setImageLoading] = useState(false);
+
+  const [community, setCommunity] = useState<Community>()
+
+  useEffect(() => {
+    getCommunityDetail(communityId).then((result) => {
+      setCommunity(result)
+    }).catch((err) => {
+      console.error("GET COMMUNITY DETAIL ERROR: ", err)
+    });
+
+  }, [communityId])
 
   const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const reader = new FileReader();
@@ -62,10 +71,10 @@ const About: React.FC<AboutProps> = ({
     if (!selectedFile) return;
     setImageLoading(true);
     try {
-      const imageRef = ref(storage, `communities/${community.id}/image`);
+      const imageRef = ref(storage, `communities/${community?.id}/image`);
       await uploadString(imageRef, selectedFile, "data_url");
       const downloadURL = await getDownloadURL(imageRef);
-      await updateDoc(doc(firestore, "communities", community.id), {
+      community && await updateDoc(doc(firestore, "communities", community?.id), {
         imageURL: downloadURL,
       });
       console.log("HERE IS DOWNLOAD URL", downloadURL);
@@ -119,16 +128,18 @@ const About: React.FC<AboutProps> = ({
               </Box>
             )}
             <Stack spacing={2}>
-              <Flex width="100%" p={2} fontWeight={600} fontSize="10pt">
+              <Flex direction="column" flexGrow={1}>
+                <Text align="left">
+                  {community?.name}
+                </Text>
+              </Flex>
+              <Divider />
+              <Flex width="100%" p={2} fontWeight={600} fontSize="10pt" direction="column">
                 <Flex direction="column" flexGrow={1}>
                   <Text>
                     {community?.numberOfMembers?.toLocaleString()}
                   </Text>
                   <Text>Members</Text>
-                </Flex>
-                <Flex direction="column" flexGrow={1}>
-                  <Text>1</Text>
-                  <Text>Online</Text>
                 </Flex>
               </Flex>
               <Divider />
@@ -171,7 +182,7 @@ const About: React.FC<AboutProps> = ({
                       >
                         Change Image
                       </Text>
-                      <Image src={community?.imageURL || selectedFile} boxSize={community?.imageURL || selectedFile ? 40 : 30} alt="ICON"/>
+                      <Image src={community?.imageURL || selectedFile} boxSize={community?.imageURL || selectedFile ? 40 : 30} alt="ICON" />
                     </Flex>
                     {selectedFile &&
                       (imageLoading ? (

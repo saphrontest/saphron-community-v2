@@ -1,5 +1,7 @@
 export {default as Nav} from './Nav'
 export {default as Modal} from './Modal'
 export {default as About} from './About'
+export {default as PersonalHome} from './PersonalHome'
+export {default as Recommendations} from './Recommendations'
 export {SCIcon} from './SCElements'
 export {PostLoader, PostItem, CreatePostLink, NewPostForm} from './Posts'

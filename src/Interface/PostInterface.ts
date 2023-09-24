@@ -29,19 +29,13 @@ voteValue: number;
 
 
 interface PostState {
-    selectedPost: Post | null;
     posts: Post[];
     postVotes: PostVote[];
-    postsCache: {
-      [key: string]: Post[];
-    };
-    postUpdateRequired: boolean;
+    savedPosts: String[]
   }
 
 export const defaultPostState: PostState = {
-    selectedPost: null,
     posts: [],
     postVotes: [],
-    postsCache: {},
-    postUpdateRequired: true,
+    savedPosts: []
   };

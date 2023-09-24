@@ -9,6 +9,7 @@ import {
   IoArrowUpCircleOutline,
   IoArrowUpCircleSharp,
   IoBookmarkOutline,
+  IoBookmarkSharp
 } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
 import { Post, PostVote } from '../../../Interface/PostInterface';
@@ -18,7 +19,7 @@ import { auth, firestore } from '../../../firebaseClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../../redux/slices/modalSlice';
 import { collection, doc, writeBatch } from 'firebase/firestore';
-import { getUserVotes } from '../../../Helpers/apiFunctions';
+import { getUserSavedPosts, getUserVotes, savePost } from '../../../Helpers/apiFunctions';
 import { RootState } from '../../../redux/store';
 
 export type PostItemContentProps = {
@@ -44,12 +45,26 @@ const PostItem: FC<PostItemContentProps> = ({
   const [user] = useAuthState(auth);
   const [userVote, setUserVote] = useState<PostVote | null>(null)
   const [isVoteLoading, setVoteLoading] = useState<boolean>(false)
+  const [isSaveLoading, setSaveLoading] = useState(false)
+  const [isSaved, setSaved] = useState(false)
   const {communities} = useSelector((state:RootState) => state.community)
+  const {savedPosts} = useSelector((state:RootState) => state.post)
+
   
   useEffect(() => {
     getUserVotesData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if(!!post === true && savedPosts.length){
+      savedPosts.forEach((saved: any) => {
+        if(saved.postId === post.id){
+          setSaved(true)
+        }
+      })
+    }
+  }, [post, savedPosts])
 
   const getUserVotesData = async () => {
     const data = user && await getUserVotes(user.uid)
@@ -75,8 +90,9 @@ const PostItem: FC<PostItemContentProps> = ({
         voteValue: vote,
       };
 
+      
       if(userVote){
-
+        // UPDATE, IF USER HAS PREVIOUS VOTE
         const postVoteRef = doc( firestore, "users", `${user.uid}/postVotes/${userVote.id}` );
 
         if(userVote.voteValue === vote) {
@@ -87,6 +103,7 @@ const PostItem: FC<PostItemContentProps> = ({
           });
         }
       }else{
+        // CREATE, IF USER HAS NOT PREVIOUS VOTE
         const postVoteRef = doc(collection(firestore, "users", `${user.uid}/postVotes`));
         newVote.id= postVoteRef.id;
         batch.set(postVoteRef, newVote);
@@ -102,6 +119,15 @@ const PostItem: FC<PostItemContentProps> = ({
       setVoteLoading(false);
     }
   };
+
+  const handleSave = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
+    setSaveLoading(true)
+    savePost(post.id, user?.uid as string).finally(() => {
+      getUserSavedPosts(user?.uid as string)
+      setSaveLoading(false)
+    })
+  }
 
   return (
     <Flex
@@ -205,7 +231,7 @@ const PostItem: FC<PostItemContentProps> = ({
             <Icon as={BsChat} mr={2} />
             <Text fontSize="9pt" textAlign={"left"}>{post.numberOfComments}</Text>
           </Flex>
-          <Flex
+          {/* <Flex
             align="center"
             p="8px 10px"
             borderRadius={4}
@@ -214,16 +240,22 @@ const PostItem: FC<PostItemContentProps> = ({
           >
             <Icon as={IoArrowRedoOutline} mr={2} />
             <Text fontSize="9pt">Share</Text>
-          </Flex>
+          </Flex> */}
+          
           <Flex
             align="center"
             p="8px 10px"
             borderRadius={4}
             _hover={{ bg: "gray.200" }}
             cursor="pointer"
+            onClick={handleSave}
           >
-            <Icon as={IoBookmarkOutline} mr={2} />
-            <Text fontSize="9pt">Save</Text>
+            {isSaveLoading ? <Spinner size="sm" /> : (
+              <>
+                <Icon as={isSaved ? IoBookmarkSharp : IoBookmarkOutline} mr={2} />
+                <Text fontSize="9pt">Save</Text>
+              </>
+            )}
           </Flex>
           <Flex
             align="center"

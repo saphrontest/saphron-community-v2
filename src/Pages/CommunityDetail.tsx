@@ -91,7 +91,7 @@ const CommunityDetail = () => {
         />)}
       </>
       <>
-          {community && <About community={community}/>}
+          {community && <About communityId={community.id}/>}
       </>
     </PageLayout>
   )

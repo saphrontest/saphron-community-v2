@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { modalSlice, communitySlice } from './slices'
+import { modalSlice, communitySlice, postSlice } from './slices'
 
 export const store = configureStore({
   reducer: {
     modal: modalSlice,
     community: communitySlice,
+    post: postSlice,
   },
 })
 

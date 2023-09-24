@@ -80,11 +80,11 @@ const PostDetail = () => {
   return (
     <PageLayout>
       <>
-        {!isPageLoading && <PostItem setVoteChange={setVoteChange} post={post} isDeleteLoading={isDeleteLoading} handleDelete={handleDelete} communityName={communities.filter((c: Community) => post.communityId === c.id)[0].name}/>}
+        {!isPageLoading && <PostItem setVoteChange={setVoteChange} post={post} isDeleteLoading={isDeleteLoading} handleDelete={handleDelete} communityName={communities.filter((c: Community) => post.communityId === c.id)[0]?.name}/>}
         {!isPageLoading && <Comments comments={comments} post={post} getComments={getComments}/>}
       </>
       <>
-        <About community={communities.filter(({id}) => id === post?.communityId)[0] as Community ?? null}/>
+        <About communityId={communities.filter(({id}) => id === post?.communityId)[0]?.id as string ?? ""}/>
       </>
     </PageLayout>
   )

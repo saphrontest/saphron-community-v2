@@ -16,9 +16,10 @@ interface CommunityProps {
     isOpen: boolean;
     setOpen: (value: boolean) => void;
     isNav?: boolean;
+    selectedCommunityId?: string;
 }
 
-const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav}) => {
+const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCommunityId}) => {
     const {communities, selectedCommunity} = useSelector((state: RootState) => state.community)
     const navigate = useNavigate()
     const communityMenuRef = useRef(null)
@@ -36,6 +37,10 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav}) => {
       }
     useEffect(() => {
         getCommunityList()
+        if(selectedCommunityId){
+            const comm = communities.find(community => community.id === selectedCommunityId)
+            comm && dispatch(setSelectedCommunity(comm))
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

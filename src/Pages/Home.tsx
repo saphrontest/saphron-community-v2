@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
-import { CreatePostLink, PostItem } from '../Components'
-import { Stack } from '@chakra-ui/react'
+import { CreatePostLink, PersonalHome, PostItem, Recommendations } from '../Components'
+import {Stack} from '@chakra-ui/react'
 import { Post } from '../Interface/PostInterface'
-import { getPosts } from '../Helpers/apiFunctions'
+import { getPosts, getUserSavedPosts } from '../Helpers/apiFunctions'
 import { deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
-import { firestore, storage } from '../firebaseClient'
+import { auth, firestore, storage } from '../firebaseClient'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { Community } from '../Interface/CommunityInterface'
+import { useAuthState } from 'react-firebase-hooks/auth'
+
 const Home = () => {
-  const [posts, setPosts] = useState<Post[]>([])
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
   const [isVoteChange, setVoteChange] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
   const {communities} = useSelector((state: RootState) => state.community)
-  const getPostsData = async () => {
-    const result = await getPosts()
-    setPosts(result)
-  }
+  const {posts} = useSelector((state: RootState) => state.post)
+  const [user] = useAuthState(auth);
+  
   useEffect(() => {
-    getPostsData()
-  }, [])
+    user?.uid && getPostsData()
+    return () => setLoading(false)
+  }, [user])
   
   useEffect(() => {
     if(isVoteChange){
@@ -29,6 +31,11 @@ const Home = () => {
       return () => setVoteChange(false)
     }
   }, [isVoteChange])
+
+  const getPostsData = () => {
+    getPosts()
+    getUserSavedPosts(user?.uid as string)
+  }
 
   const handleDelete = async (post: Post): Promise<boolean> => {
       setDeleteLoading(true)
@@ -64,7 +71,7 @@ const Home = () => {
       <>
         <CreatePostLink />
         <Stack>
-          {posts.map(post => <PostItem
+          {!loading && posts.map(post => <PostItem
             key={post.id}
             post={post}
             handleDelete={handleDelete}
@@ -74,7 +81,10 @@ const Home = () => {
           />)}
         </Stack>
       </>
-      <></>
+      <>
+        <PersonalHome />
+        <Recommendations />
+      </>
     </PageLayout>
   )
 }

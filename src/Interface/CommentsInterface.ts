@@ -11,3 +11,11 @@ export type Comment = {
     text: string;
     createdAt?: Timestamp;
   } | null;
+
+export type CommentVote = {
+    id?: string;
+    creatorId: string;
+    postId?: string;
+    commentId?: string;
+    value: number;
+  } | null;

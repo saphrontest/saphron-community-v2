@@ -4,7 +4,7 @@ import { Community } from '../Interface/CommunityInterface'
 import { PageLayout } from '../Layouts'
 import { getCommunityDetail, getPostsByCommunities } from '../Helpers/apiFunctions'
 import { Post } from '../Interface/PostInterface'
-import { About, PostItem } from '../Components'
+import { About, CreatePostLink, PostItem } from '../Components'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { deleteDoc, doc } from 'firebase/firestore';
@@ -45,11 +45,6 @@ const CommunityDetail = () => {
     }
   }, [isVoteChange])
   
-  useEffect(() => {
-      console.log(community)
-      console.log(posts)
-  }, [community, posts])
-
   const handleDelete = async (post: Post): Promise<boolean> => {
     setDeleteLoading(true)
     console.log("DELETING POST: ", post.id);
@@ -81,6 +76,7 @@ const CommunityDetail = () => {
   return (
     <PageLayout>
       <>
+        <CreatePostLink communityId={communityId}/>
         {posts.map(post => <PostItem
           key={post?.id}
           post={post}

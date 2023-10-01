@@ -129,6 +129,7 @@ const PostItem: FC<PostItemContentProps> = ({
     })
   }
 
+
   return (
     <Flex
       border="1px solid"
@@ -180,7 +181,7 @@ const PostItem: FC<PostItemContentProps> = ({
           <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
           {post.createdAt && (
             <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
-                <>
+                <Flex gap={1}>
                   <Avatar src={post.communityImageURL} boxSize={18}/>
                   <Link to={`community/${post.communityId}`}>
                     <Text
@@ -190,7 +191,7 @@ const PostItem: FC<PostItemContentProps> = ({
                     >{`community/${communityName}`}</Text>
                   </Link>
                   <Icon as={BsDot} color="gray.500" fontSize={8} />
-                </>
+                </Flex>
               <Text color="gray.500" textAlign={"right"}>
                 Posted by u/{post.userDisplayText}{" "}
                 {moment(new Date(post.createdAt.seconds * 1000)).fromNow()}
@@ -208,12 +209,12 @@ const PostItem: FC<PostItemContentProps> = ({
                 <Skeleton height="200px" width="100%" borderRadius={4} />
               )}
               <Image
-                // width="80%"
-                // maxWidth="500px"
                 maxHeight="460px"
                 src={post.imageURL}
                 display={loadingImage ? "none" : "unset"}
-                onLoad={() => setLoadingImage(false)}
+                onLoad={(e) => {
+                  setLoadingImage(false)
+                }}
                 alt="Post Image"
               />
             </Flex>

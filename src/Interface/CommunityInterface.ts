@@ -4,6 +4,7 @@ export interface Community {
     id: string;
     creatorId: string;
     name: string;
+    description?: string;
     numberOfMembers: number;
     privacyType: "public" | "restrictied" | "private";
     createdAt?: Timestamp;
@@ -16,7 +17,8 @@ export const defaultCommunity: Community = {
     creatorId: "",
     numberOfMembers: 0,
     privacyType: "public",
-    imageURL: ""
+    imageURL: "",
+    description: ""
 };
 
 interface CommunitySlice {

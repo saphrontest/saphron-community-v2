@@ -20,7 +20,7 @@ const Login: React.FC<LoginProps> = () => {
 
   const toggleView = (view: ModalViewTypes) => dispatch(setModal({isOpen: true, view: view}));
 
-  const [signInWithEmailAndPassword, _, loading, authError] =
+  const [signInWithEmailAndPassword, _, loading, error] =
     useSignInWithEmailAndPassword(auth);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -32,6 +32,11 @@ const Login: React.FC<LoginProps> = () => {
 
     // Valid form inputs
     signInWithEmailAndPassword(form.email, form.password);
+    if(error){
+      setFormError("Invalid email or password!");
+    } else {
+      dispatch(setModal({isOpen: false, view: null}))
+    }
   };
 
   const onChange = ({
@@ -44,6 +49,16 @@ const Login: React.FC<LoginProps> = () => {
   };
 
   return (
+    <>
+    {
+      formError && <Text
+        color="red.600"
+        fontWeight={500}
+        paddingBottom={3}
+      >
+        {formError}
+      </Text>
+    }
     <form onSubmit={onSubmit}>
       <InputItem
         name="email"
@@ -93,6 +108,8 @@ const Login: React.FC<LoginProps> = () => {
         </Text>
       </Flex>
     </form>
+
+    </>
   );
 };
 export default Login;

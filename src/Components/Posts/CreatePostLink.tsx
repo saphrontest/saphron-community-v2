@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { Flex, Icon, Image, Input } from '@chakra-ui/react'
 import { BsLink45Deg } from "react-icons/bs";
 import { IoImageOutline } from "react-icons/io5";
 import LogoIcon from '../../assets/Logo/logo-icon.png'
 import { useNavigate } from 'react-router-dom';
-const CreatePostLink = () => {
+
+interface CreatePostLinkProps {
+  communityId?: string;
+}
+
+const CreatePostLink : FC <CreatePostLinkProps> = ({communityId}) => {
   const navigate = useNavigate()
   return (
     <Flex
@@ -17,7 +22,7 @@ const CreatePostLink = () => {
         borderColor="gray.300"
         p={2}
         mb={4}
-        onClick={() => navigate("/submit")}
+        onClick={() => navigate(`/submit/${communityId}`)}
       >
         <Image src={LogoIcon} width={8} mr={2}/>
         <Input

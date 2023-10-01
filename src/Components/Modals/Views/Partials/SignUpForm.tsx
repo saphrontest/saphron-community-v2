@@ -37,6 +37,13 @@ const SignUp: React.FC<SignUpProps> = () => {
 
     // Valid form inputs
     await createUserWithEmailAndPassword(form.email, form.password);
+
+    if(authError?.message){
+      setFormError("Please try again!")
+    } else {
+      dispatch(setModal({isOpen: true, view: "login"}))
+    }
+
   };
 
   const onChange = ({
@@ -49,6 +56,16 @@ const SignUp: React.FC<SignUpProps> = () => {
   };
 
   return (
+    <>
+    {
+      formError && <Text
+        color="red.600"
+        fontWeight={500}
+        paddingBottom={3}
+      >
+        {formError}
+      </Text>
+    }
     <form onSubmit={onSubmit}>
       <InputItem
         name="email"
@@ -92,6 +109,7 @@ const SignUp: React.FC<SignUpProps> = () => {
         </Text>
       </Flex>
     </form>
+    </>
   );
 };
 export default SignUp;

@@ -6,6 +6,7 @@ import { auth, firestore, storage } from '../../../firebaseClient';
 import { Community } from '../../../Interface/CommunityInterface';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
+import { useNavigate } from 'react-router-dom';
 
 interface CreatePostFormInterface {
     selectedTab: string;
@@ -15,6 +16,7 @@ interface CreatePostFormInterface {
 
 const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTab, community}) => {
   const [user] = useAuthState(auth)
+  const navigate = useNavigate()
     const [textInputs, setTextInputs] = useState({
         title: "",
         body: "",
@@ -54,8 +56,8 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
           await updateDoc(postDocRef, {
             imageURL: downloadURL
           })
-          console.log("downloded image:", downloadURL)
         }
+        navigate("/")
       } catch (error) {
         console.log("on create post", error)
       } finally {

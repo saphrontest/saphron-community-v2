@@ -25,7 +25,7 @@ const AddCommunityModal = () => {
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.length > 21) return;
-        setName(event.target.value);
+        setName(event.target.value.replace(/ /g, "_"));
         setCharsRemaining(21 - event.target.value.length);
     };
 

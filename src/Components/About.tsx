@@ -11,6 +11,7 @@ import {
   Text,
   Image,
   Spinner,
+  useToast,
 } from "@chakra-ui/react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiCakeLine } from "react-icons/ri";
@@ -22,6 +23,8 @@ import { Community } from "../Interface/CommunityInterface";
 import { auth, firestore, storage } from "../firebaseClient";
 import { Link, useNavigate } from "react-router-dom";
 import { getCommunityDetail } from "../Helpers/apiFunctions";
+import { Input } from "../chakra/input";
+import { InputItem } from "../Layouts";
 
 type AboutProps = {
   communityId: string;
@@ -37,12 +40,13 @@ const About: React.FC<AboutProps> = ({
   loading,
 }) => {
   const [user] = useAuthState(auth); // will revisit how 'auth' state is passed
-  const navigate = useNavigate()
+  const toast = useToast()
   const selectFileRef = useRef<HTMLInputElement>(null);
 
   const [selectedFile, setSelectedFile] = useState<string>();
   const [imageLoading, setImageLoading] = useState(false);
-
+  const [addDescriptionView, setAddDescriptionView] = useState(false)
+  const [descriptionText, setDescriptionText] = useState("")
   const [community, setCommunity] = useState<Community>()
 
   useEffect(() => {
@@ -51,6 +55,8 @@ const About: React.FC<AboutProps> = ({
     }).catch((err) => {
       console.error("GET COMMUNITY DETAIL ERROR: ", err)
     });
+
+    console.log(community)
 
   }, [communityId])
 
@@ -87,6 +93,23 @@ const About: React.FC<AboutProps> = ({
     setImageLoading(false);
   };
 
+  const addDescription = async () => {
+    try {
+      const commDoc = doc(firestore, "communities", communityId);
+      await updateDoc(commDoc, {
+        description: descriptionText
+      })
+      setAddDescriptionView(false)
+    } catch (error: any) {
+      toast({
+        title: "Try Again later..",
+        status: "error",
+        isClosable: true,
+      })
+      console.log("updateDescription error", error.message);
+    }
+  }
+
   return (
     <Box pt={pt} position="sticky" top="14px">
       <Flex
@@ -112,24 +135,57 @@ const About: React.FC<AboutProps> = ({
           </Stack>
         ) : (
           <>
-            {user?.uid === community?.creatorId && (
-              <Box
-                bg="gray.100"
-                width="100%"
-                p={2}
-                borderRadius={4}
-                border="1px solid"
-                borderColor="gray.300"
-                cursor="pointer"
-              >
-                <Text fontSize="9pt" fontWeight={700} color="blue.500">
-                  Add description
-                </Text>
-              </Box>
-            )}
-            <Stack spacing={2}>
-              <Flex direction="column" flexGrow={1}>
-                <Text align="left">
+              {community?.description ? (
+                <>
+                  <Text textAlign={"left"} fontWeight={700} fontSize={14} pb={3}>Description</Text>
+                  <Box
+                    bg="gray.100"
+                    width="100%"
+                    p={2}
+                    borderRadius={4}
+                    border="1px solid"
+                    borderColor="gray.300"
+                  >
+                    <Text fontSize="9pt" fontWeight={700} color="blue.500" textAlign={"left"}>
+                      {community?.description}
+                    </Text>
+                  </Box>
+                </>
+              ) : (
+                user?.uid === community?.creatorId  && !addDescriptionView ? (
+                  <Box
+                    bg="gray.100"
+                    width="100%"
+                    p={2}
+                    borderRadius={4}
+                    border="1px solid"
+                    borderColor="gray.300"
+                    cursor="pointer"
+                    onClick={() => setAddDescriptionView(prev => !prev)}
+                  >
+                    <Text fontSize="9pt" fontWeight={700} color="blue.500">
+                      Add description
+                    </Text>
+                  </Box>
+                )
+               : (
+                <>
+                      <InputItem
+                        name="description"
+                        placeholder="Description"
+                        type="text"
+                        onChange={({target: { value }}: React.ChangeEvent<HTMLInputElement>) => setDescriptionText(value)}
+                      />
+                      <Button onClick={addDescription}>
+                        <Text>Add</Text>
+                      </Button>
+                </>
+              )
+              )}
+            <Stack spacing={2} >
+              <Flex direction="column" flexGrow={1}  paddingTop={2} paddingBottom={2}>
+                <Text textAlign={"left"} fontWeight={700} fontSize={14} pb={2}>Name</Text>
+                <Text align="left" pl={2}>
                   {community?.name}
                 </Text>
               </Flex>

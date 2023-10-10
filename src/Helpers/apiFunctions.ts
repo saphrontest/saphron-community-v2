@@ -13,7 +13,7 @@ import { firestore } from "../firebaseClient";
 // INTERFACES
 import { Community } from "../Interface/CommunityInterface";
 import { Post, PostVote } from "../Interface/PostInterface";
-import { Comment } from "../Interface/CommentsInterface";
+import { Comment, CommentVote } from "../Interface/CommentsInterface";
 import { store } from "../redux/store";
 import { setPosts, addSavedPosts } from "../redux/slices/postSlice";
 
@@ -86,6 +86,7 @@ export const getPostsByCommunities = async (id: string) => {
     where("communityId", "==", id)
   );
   postsDoc.docs.forEach((doc) => {
+    console.log(doc.data())
     posts.push({ id: doc.id, ...doc.data() } as Post);
   });
   return posts;
@@ -126,6 +127,19 @@ export const getUserVotes = async (id: string) => {
   }
   return false;
 };
+
+export const getCommentVotesByUserId = async (id: string) => {
+  const commentVotes = await fetch.getList(`users/${id}/commentVotes`);
+  if (commentVotes.size) {
+    const votes: CommentVote[] = [];
+    commentVotes.forEach((doc) => {
+      votes.push({ id: doc.id, ...doc.data() } as CommentVote);
+    });
+    return votes;
+  }
+  return [];
+};
+
 
 export const savePost = async (postId: string, userId: string) => {
   const savePostRef = doc(firestore, "users", userId, "savedPosts", postId);

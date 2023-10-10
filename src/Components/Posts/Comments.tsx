@@ -49,6 +49,7 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
               text: comment,
               postTitle: post.title,
               createdAt: serverTimestamp(),
+              voteValue: 0
             } as Comment);
       
             // Update post numberOfComments

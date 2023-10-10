@@ -10,4 +10,13 @@ export type Comment = {
     postTitle: string;
     text: string;
     createdAt?: Timestamp;
+    voteValue?: number;
+  } | null;
+
+export type CommentVote = {
+    id?: string;
+    creatorId: string;
+    postId?: string;
+    commentId?: string;
+    value: number;
   } | null;

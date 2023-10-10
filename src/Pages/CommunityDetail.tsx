@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Community } from '../Interface/CommunityInterface'
 import { PageLayout } from '../Layouts'
 import { getCommunityDetail, getPostsByCommunities } from '../Helpers/apiFunctions'
@@ -13,6 +13,7 @@ import { firestore, storage } from '../firebaseClient'
 
 const CommunityDetail = () => {
   const location = useLocation()
+  const navigate = useNavigate()
   const communityId = useRef(location.pathname.split('/').at(-1)).current
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
   const [isVoteChange, setVoteChange] = useState<boolean>(false)
@@ -71,6 +72,7 @@ const CommunityDetail = () => {
     } finally {
       setDeleteLoading(false)
       communityId && getPosts(communityId)
+      navigate("/")
     }
 }
   return (

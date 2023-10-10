@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { Community } from '../Interface/CommunityInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
@@ -19,7 +20,8 @@ const Home = () => {
   const {communities} = useSelector((state: RootState) => state.community)
   const {posts} = useSelector((state: RootState) => state.post)
   const [user] = useAuthState(auth);
-  
+  const navigate = useNavigate()
+
   useEffect(() => {
     user?.uid && getPostsData()
     return () => setLoading(false)

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
 import { getPostComments, getPostDetails } from '../Helpers/apiFunctions'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Post } from '../Interface/PostInterface'
 import { About, PostItem } from '../Components'
 import { firestore, storage } from '../firebaseClient'
@@ -15,6 +15,7 @@ import { Community } from '../Interface/CommunityInterface'
 
 const PostDetail = () => {
   const {id} = useParams()
+  const navigate = useNavigate()
   const [post, setPost] = useState<Post | null>(null)
   const [comments, setComments] = useState<(Comment | null)[]>()
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
@@ -74,6 +75,7 @@ const PostDetail = () => {
       return false;
     } finally {
       setDeleteLoading(false)
+      navigate("/")
     }
 }
 

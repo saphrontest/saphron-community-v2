@@ -1,11 +1,11 @@
 import { Box, Flex, SkeletonCircle, SkeletonText, Stack, Text } from '@chakra-ui/react'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import CommentItem from './CommentItem';
 import { Comment } from '../../Interface/CommentsInterface';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, firestore } from '../../firebaseClient';
 import { CommentInput } from './Partials';
-import { collection, doc, increment, serverTimestamp, writeBatch } from 'firebase/firestore';
+import { collection, collectionGroup, deleteDoc, doc, getDocs, increment, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
 import { Post } from '../../Interface/PostInterface';
@@ -25,7 +25,39 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
     const [commentCreateLoading, setCommentCreateLoading] = useState<boolean>(false);
     const commentArray = comments as (Comment | null)[];
     
-    const onCommentDelete = (comment: Comment) => {
+    const onCommentDelete = async (commentId: string, postId: string) => {
+        setDeleteLoading(commentId)
+        try {
+            // delete the comment
+            const commentRef = doc(firestore, "comments", commentId)
+            await deleteDoc(commentRef);
+
+            // delete the comment votes for all users which is voted for the comment
+            const commentVotesRef = collectionGroup(firestore, "commentVotes")
+            const commentDocs = await getDocs(commentVotesRef)
+            commentDocs.forEach(async doc => {
+                if(doc.data().commentId === commentId){
+                    await deleteDoc(doc.ref);
+                }
+            })
+
+            // update the numberOfComments for the post
+            const batch = writeBatch(firestore)
+            const postRef = doc(firestore, "posts", postId)
+            batch.update(postRef, {
+                numberOfComments: increment(-1)
+            })
+            batch.commit()
+            
+
+        } catch (error: any) {
+            console.log("ERROR deleting comment: " + error.message)
+        } finally {
+            getComments(post.id)
+            setDeleteLoading(commentId)
+        }
+
+        
         
     }
 
@@ -104,6 +136,7 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
                                         comment={item}
                                         onDelete={onCommentDelete}
                                         isLoading={deleteLoading === (item?.id as string)}
+                                        getComments={getComments}
                                     />
                                 ))}
                             </>

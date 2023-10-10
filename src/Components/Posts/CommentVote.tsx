@@ -10,11 +10,11 @@ interface CommentVoteProps {
 }
 const CommentVote:FC<CommentVoteProps> = ({userVote, onVote, userId, voteValue}) => {
     return (
-        <Flex gap={1}>
+        <Flex gap={1} alignItems={"center"}>
             <Icon
                 as={userVote?.value === 1 ? IoArrowUpCircleSharp : IoArrowUpCircleOutline}
                 color={userVote?.value === 1 ? "brand.100" : "gray.400"}
-                fontSize={22}
+                fontSize={17}
                 cursor="pointer"
                 onClick={(e) => userId && onVote(1, userId)}
             />
@@ -22,7 +22,7 @@ const CommentVote:FC<CommentVoteProps> = ({userVote, onVote, userId, voteValue})
             <Icon
                 as={userVote?.value === -1 ? IoArrowDownCircleSharp : IoArrowDownCircleOutline}
                 color={userVote?.value === -1 ? "#4379FF" : "gray.400"}
-                fontSize={22}
+                fontSize={17}
                 cursor="pointer"
                 onClick={(e) => userId && onVote(-1, userId)}
             />

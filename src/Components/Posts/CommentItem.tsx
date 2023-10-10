@@ -12,29 +12,33 @@ import { setModal } from '../../redux/slices/modalSlice';
 
 interface CommentItemProps {
     comment: Comment;
-    onDelete: (comment: Comment) => void;
+    onDelete: (commentId: string, postId: string) => void;
     isLoading: boolean;
+    getComments: (id: string) => void
 }
 
-const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading }) => {
+const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading, getComments }) => {
     const dispatch = useDispatch()
     const [user] = useAuthState(auth);
-    const [commentVotes, setCommentVotes] = useState<CommentVoteInterface[]>([])
+    const [voteLoading, setVoteLoading] = useState<boolean>(false)
     const [userVote, setUserVote] = useState<CommentVoteInterface>(null)
 
+
     useEffect(() => {
-        const get = async (userId: string) => {
-            const votes = await getCommentVotesByUserId(userId)
-            setCommentVotes(votes)
-            setUserVote(commentVotes.find(vote => vote?.creatorId === userId) || null)
-        }
-        user?.uid && get(user.uid)
+        user?.uid && getUserVote(user.uid)
     }, [user?.uid])
 
-
+    const getUserVote = async (userId: string) => {
+        setVoteLoading(true)
+        try {
+            const votes = await getCommentVotesByUserId(userId)
+            setUserVote(votes.find(vote => vote?.creatorId === userId) || null)
+        } finally {
+            setVoteLoading(false)
+        }
+    }
 
     const onVote = async (value: number, userId: string) => {
-
         if (!!userId === false) {
             dispatch(setModal({ isOpen: true, view: 'login' }))
             return;
@@ -59,7 +63,7 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading }) => 
             // ADD COMMENT VOTE VALUE TO COMMENT ITEM
             const batch = writeBatch(firestore);
             const commentRef = doc(firestore, "comments", comment?.id as string);
-            batch.update(commentRef, { voteValue: increment(value) });
+            batch.update(commentRef, { voteValue: increment(value === userVote?.value ? -1 * value : value) });
             await batch.commit();
         }
 
@@ -67,16 +71,29 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading }) => 
             // UPDATE COMMENT ITEM VOTE VALUE
             const batch = writeBatch(firestore);
             const commentVoteRef = doc(firestore, "users", `${userId}/commentVotes/${userVote?.id}`);
-            batch.update(commentVoteRef, { value: value });
+            if(value === userVote?.value) {
+                batch.delete(commentVoteRef);
+            } else {
+                batch.update(commentVoteRef, { value: value });
+            }
             await batch.commit();
         }
 
-        if (!!userVote) {
-            updateCommentVoteValue(userId)
-        } else {
-            createCommentVote(userId)
+
+        try {
+            if (!!userVote) {
+                updateCommentVoteValue(userId)
+            } else {
+                createCommentVote(userId)
+            }
+            addCommentVoteValue()
+
+        } finally {
+            getComments(comment?.postId as string)
+            getUserVote(userId)
         }
-        addCommentVoteValue()
+        
+
 
     }
 
@@ -108,17 +125,19 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading }) => 
                     fontWeight={600}
                     color="gray.500"
                 >
-                    <CommentVote
-                        userId={user?.uid as string}
-                        userVote={userVote}
-                        onVote={onVote}
-                        voteValue={comment?.voteValue as number}
-                    />
+                    {
+                        voteLoading ? <Spinner size="sm" /> : 
+                            <CommentVote
+                            userId={user?.uid as string}
+                            userVote={userVote}
+                            onVote={onVote}
+                            voteValue={comment?.voteValue as number} />
+                    }
                     {user?.uid === comment?.creatorId && (
                         <Text
                             fontSize="9pt"
                             _hover={{ color: "blue.500" }}
-                            onClick={() => onDelete(comment)}
+                            onClick={() => onDelete(comment?.id as string, comment?.postId as string)}
                         >
                             Delete
                         </Text>

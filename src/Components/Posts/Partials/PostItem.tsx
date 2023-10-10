@@ -264,7 +264,10 @@ const PostItem: FC<PostItemContentProps> = ({
             borderRadius={4}
             _hover={{ bg: "gray.200" }}
             cursor="pointer"
-            onClick={() => handleDelete(post)}
+            onClick={(ev) => {
+              ev.stopPropagation()
+              handleDelete(post)
+            }}
           >
             {isDeleteLoading ? <Spinner size="sm" /> : (
               <>

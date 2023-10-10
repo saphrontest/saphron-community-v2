@@ -34,11 +34,22 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
 
     const handleCreatePost = async () => {
 
+        if(!!user === false){
+          toast({
+            title: "Please login, first!",
+            status: "error",
+            isClosable: true,
+            position: "top-right"
+          })
+          return;
+        }
+
         if(!community){
           toast({
             title: "Please select a community, first!",
             status: "error",
             isClosable: true,
+            position: "top-right"
           })
           return;
         }

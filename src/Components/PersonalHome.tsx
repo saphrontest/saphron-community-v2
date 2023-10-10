@@ -1,11 +1,33 @@
-import { Button, Flex, Stack, Text } from '@chakra-ui/react'
+import { Button, Flex, Stack, Text, useToast } from '@chakra-ui/react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import WelcomePicture from "../assets/images/welcome.png"
 import { setModal } from '../redux/slices/modalSlice'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from '../firebaseClient'
 const PersonalHome = () => {
+    const [user] = useAuthState(auth)
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const toast = useToast()
+
+    const handleButton = (type: string = "add-community") => {
+        if(!!user === false) {
+            toast({
+                title: "Please login, first!",
+                status: "error",
+                isClosable: true,
+                position: "top-right"
+            })
+            return;
+        }
+        if(type === "create-post") {
+            navigate("submit")
+        } else {
+            dispatch(setModal({ isOpen: true, view: "addCommunity" }))
+        }
+    }
+
     return (
         <Flex
             direction="column"
@@ -35,8 +57,8 @@ const PersonalHome = () => {
                     <Text fontSize="9pt">
                         Your personal <strong>Saphron Health</strong> frontpage, built for you.
                     </Text>
-                    <Button height="30px" onClick={() => navigate("submit")}>Create Post</Button>
-                    <Button variant="outline" height="30px" onClick={() => dispatch(setModal({ isOpen: true, view: "addCommunity" }))}>
+                    <Button height="30px" onClick={() => handleButton("create-post")}>Create Post</Button>
+                    <Button variant="outline" height="30px" onClick={() => handleButton("add-community")}>
                         Create Community
                     </Button>
                 </Stack>

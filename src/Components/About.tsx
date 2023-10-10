@@ -13,7 +13,6 @@ import {
   Spinner,
   useToast,
 } from "@chakra-ui/react";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiCakeLine } from "react-icons/ri";
 import { useAuthState } from "react-firebase-hooks/auth";
 import moment from "moment";
@@ -21,9 +20,8 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
 import { Community } from "../Interface/CommunityInterface";
 import { auth, firestore, storage } from "../firebaseClient";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getCommunityDetail } from "../Helpers/apiFunctions";
-import { Input } from "../chakra/input";
 import { InputItem } from "../Layouts";
 
 type AboutProps = {

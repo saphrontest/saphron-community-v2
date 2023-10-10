@@ -38,7 +38,7 @@ const Home = () => {
     getPosts()
     getUserSavedPosts(user?.uid as string)
   }
-
+  
   const handleDelete = async (post: Post): Promise<boolean> => {
       setDeleteLoading(true)
       console.log("DELETING POST: ", post.id);

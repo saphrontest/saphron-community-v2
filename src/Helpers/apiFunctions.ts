@@ -128,6 +128,18 @@ export const getUserVotes = async (id: string) => {
   return false;
 };
 
+export const getCommentVotesByUserId = async (id: string) => {
+  const commentVotes = await fetch.getList(`users/${id}/commentVotes`);
+  if (commentVotes.size) {
+    const votes: CommentVote[] = [];
+    commentVotes.forEach((doc) => {
+      votes.push({ id: doc.id, ...doc.data() } as CommentVote);
+    });
+    return votes;
+  }
+  return [];
+};
+
 
 export const savePost = async (postId: string, userId: string) => {
   const savePostRef = doc(firestore, "users", userId, "savedPosts", postId);

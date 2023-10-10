@@ -1,11 +1,14 @@
 import { FC, useEffect, useState } from 'react'
-import { Comment, CommentVote } from '../../Interface/CommentsInterface'
+import { Comment, CommentVote as CommentVoteInterface } from '../../Interface/CommentsInterface'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, firestore } from '../../firebaseClient';
-import { Avatar, Box, Flex, Icon, Spinner, Stack, Text } from '@chakra-ui/react';
+import { Avatar, Box, Flex, Spinner, Stack, Text } from '@chakra-ui/react';
 import moment from 'moment';
-import { IoArrowDownCircleOutline, IoArrowUpCircleOutline } from 'react-icons/io5';
-import { collection, doc, getDoc, writeBatch } from 'firebase/firestore';
+import { collection, doc, increment, writeBatch } from 'firebase/firestore';
+import { getCommentVotesByUserId } from '../../Helpers/apiFunctions';
+import CommentVote from './CommentVote';
+import { useDispatch } from 'react-redux';
+import { setModal } from '../../redux/slices/modalSlice';
 
 interface CommentItemProps {
     comment: Comment;
@@ -14,61 +17,73 @@ interface CommentItemProps {
 }
 
 const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading }) => {
+    const dispatch = useDispatch()
     const [user] = useAuthState(auth);
-    const [commentVotes, setCommentVotes] = useState<CommentVote[]>([])
+    const [commentVotes, setCommentVotes] = useState<CommentVoteInterface[]>([])
+    const [userVote, setUserVote] = useState<CommentVoteInterface>(null)
 
     useEffect(() => {
-        user?.uid && getCommentVotes(user.uid)
+        const get = async (userId: string) => {
+            const votes = await getCommentVotesByUserId(userId)
+            setCommentVotes(votes)
+            setUserVote(commentVotes.find(vote => vote?.creatorId === userId) || null)
+        }
+        user?.uid && get(user.uid)
     }, [user?.uid])
 
-    const getCommentVotes = (userId: string) => {
-        const commentVotesRef = doc(collection(firestore, "users", userId, "commentVotes"));
-        getDoc(commentVotesRef)
-            .then((doc) => {
-                console.log(doc)
-                if (doc.exists()) {
-                    const data = doc.data();
-                    const votes: CommentVote[] = []
-                    data.forEach((element: any) => {
-                        const item = {id: element?.id , ...element?.data()} as CommentVote
-                        votes.push(item);
-                    }).finally(() => setCommentVotes(votes));
-                    console.log("comment votes:", data);
-                }else{
-                    console.log("comment votes not exist");
-                }
-            })
-    }
-    
-    
-    const onVote = async (value: number, userId: string) => {
-        
-        
 
-        const addCommentVote = async (userId: string) => {
+
+    const onVote = async (value: number, userId: string) => {
+
+        if (!!userId === false) {
+            dispatch(setModal({ isOpen: true, view: 'login' }))
+            return;
+        }
+
+        const createCommentVote = async (userId: string) => {
+            // ADD COMMENT VOTE VALUE TO COMMENT ITEM
             const batch = writeBatch(firestore);
-            const commentVote: CommentVote = {
+            const commentVote: CommentVoteInterface = {
                 creatorId: userId,
                 postId: comment?.postId,
                 commentId: comment?.id,
                 value: value
             }
-
             const commentVoteRef = doc(collection(firestore, "users", userId, "commentVotes"));
-            commentVote.id= commentVoteRef.id;
-            batch.set(commentVoteRef, commentVote)
+            commentVote.id = commentVoteRef.id;
+            batch.set(commentVoteRef, commentVote);
             await batch.commit();
         }
-            
-        
+
+        const addCommentVoteValue = async () => {
+            // ADD COMMENT VOTE VALUE TO COMMENT ITEM
+            const batch = writeBatch(firestore);
+            const commentRef = doc(firestore, "comments", comment?.id as string);
+            batch.update(commentRef, { voteValue: increment(value) });
+            await batch.commit();
+        }
+
+        const updateCommentVoteValue = async (userId: string) => {
+            // UPDATE COMMENT ITEM VOTE VALUE
+            const batch = writeBatch(firestore);
+            const commentVoteRef = doc(firestore, "users", `${userId}/commentVotes/${userVote?.id}`);
+            batch.update(commentVoteRef, { value: value });
+            await batch.commit();
+        }
+
+        if (!!userVote) {
+            updateCommentVoteValue(userId)
+        } else {
+            createCommentVote(userId)
+        }
+        addCommentVoteValue()
 
     }
 
     return (
         <Flex>
             <Box mr={2}>
-                {/* <Avatar boxSize={8} /> */}
-                <Avatar src={comment?.creatorPhotoURL}/>
+                <Avatar src={comment?.creatorPhotoURL} />
             </Box>
             <Stack spacing={1}>
                 <Stack direction="row" align="center" spacing={2} fontSize="8pt">
@@ -93,16 +108,20 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading }) => 
                     fontWeight={600}
                     color="gray.500"
                 >
-                    <Icon as={IoArrowUpCircleOutline} onClick={(e) => user?.uid && onVote(1, user?.uid)}/>
-                    <Icon as={IoArrowDownCircleOutline} onClick={(e) => user?.uid && onVote(-1, user?.uid)}/>
+                    <CommentVote
+                        userId={user?.uid as string}
+                        userVote={userVote}
+                        onVote={onVote}
+                        voteValue={comment?.voteValue as number}
+                    />
                     {user?.uid === comment?.creatorId && (
-                            <Text
-                                fontSize="9pt"
-                                _hover={{ color: "blue.500" }}
-                                onClick={() => onDelete(comment)}
-                            >
-                                Delete
-                            </Text>
+                        <Text
+                            fontSize="9pt"
+                            _hover={{ color: "blue.500" }}
+                            onClick={() => onDelete(comment)}
+                        >
+                            Delete
+                        </Text>
                     )}
                 </Stack>
             </Stack>

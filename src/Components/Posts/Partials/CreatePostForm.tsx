@@ -7,6 +7,7 @@ import { Community } from '../../../Interface/CommunityInterface';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@chakra-ui/react';
 
 interface CreatePostFormInterface {
     selectedTab: string;
@@ -16,6 +17,7 @@ interface CreatePostFormInterface {
 
 const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTab, community}) => {
   const [user] = useAuthState(auth)
+  const toast = useToast()
   const navigate = useNavigate()
     const [textInputs, setTextInputs] = useState({
         title: "",
@@ -31,6 +33,16 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
     }
 
     const handleCreatePost = async () => {
+
+        if(!community){
+          toast({
+            title: "Please select a community, first!",
+            status: "error",
+            isClosable: true,
+          })
+          return;
+        }
+        
 
       setLoading(true);
       const {title, body} = textInputs

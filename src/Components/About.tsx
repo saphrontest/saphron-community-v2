@@ -55,9 +55,6 @@ const About: React.FC<AboutProps> = ({
     }).catch((err) => {
       console.error("GET COMMUNITY DETAIL ERROR: ", err)
     });
-
-    console.log(community)
-
   }, [communityId])
 
   const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {

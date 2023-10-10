@@ -1,5 +1,7 @@
 import React, { Ref } from "react";
-import { Flex, Stack, Button, Image } from "@chakra-ui/react";
+import { Flex, Stack, Button, Image, useToast } from "@chakra-ui/react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../../firebaseClient";
 
 type ImageUploadProps = {
   selectedFile?: string;
@@ -16,6 +18,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   selectFileRef,
   onSelectImage,
 }) => {
+  const [user] = useAuthState(auth)
+  const toast = useToast()
   return (
     <Flex direction="column" justify="center" align="center" width="100%">
       {selectedFile ? (
@@ -51,7 +55,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           <Button
             variant="outline"
             height="28px"
-            onClick={() => selectFileRef.current?.click()}
+            onClick={() => {
+                !!user ? selectFileRef.current?.click() : toast({
+                title: "Please login, first!",
+                status: "error",
+                isClosable: true,
+                position: "top-right"
+              })}
+            }
           >
             Upload
           </Button>

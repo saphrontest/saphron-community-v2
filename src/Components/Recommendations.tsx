@@ -1,22 +1,45 @@
 import { Avatar, Box, Button, Flex, Skeleton, SkeletonCircle, Stack, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from '../redux/store';
-import { getUserCommunities } from '../Helpers/apiFunctions';
+import { getCommunities, getUserCommunities } from '../Helpers/apiFunctions';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebaseClient';
 import CommArt from "../assets/images/CommsArt.png"
+import { setCommunities } from '../redux/slices/communitySlice';
+import { Community } from '../Interface/CommunityInterface';
 
 const Recommendations = () => {
+  const dispatch = useDispatch()
     const [loading, setLoading] = useState(false)
     const [viewAll, setViewAll] = useState(false)
     const [myCommmunities, setMyCommmunities] = useState<any[]>([])
     const {communities} = useSelector((state: RootState) => state.community)
     const [user] = useAuthState(auth)
+    
     useEffect(() => {
         user?.uid && getUserCommunity(user?.uid)
     }, [user])
+    
+    useEffect(() => {
+      getCommunities().then(communitiesData => {
+        const communityList = [
+          ...communitiesData.map(({ id, name, creatorId, privacyType, createdAt }) => ({
+            id,
+            name,
+            creatorId,
+            privacyType,
+            createdAt: {
+              seconds: createdAt?.seconds,
+              nanoseconds: createdAt?.nanoseconds 
+            } 
+          }))
+        ]
+        dispatch(setCommunities(communityList as Community[]))
+      })
+    }, [])
+
     const getUserCommunity = async (userId: string) => {
         const comms = await getUserCommunities(userId)
         setMyCommmunities(comms)
@@ -67,8 +90,7 @@ const Recommendations = () => {
           </Stack>
         ) : (
           <>
-            {communities.map((item, index) => {
-              
+            {(viewAll ? communities : communities.slice(0, 3)).map((item, index) => {
               return (
                 <Link key={item.id} to={`/comm/${item.id}`}>
                   <Flex
@@ -112,11 +134,13 @@ const Recommendations = () => {
                 </Link>
               );
             })}
-            <Box p="10px 20px">
-              <Button height="30px" width="100%" onClick={() => setViewAll(prev => !prev)}>
-                {viewAll ? "Hide" : "View All"}
-              </Button>
-            </Box>
+              {communities.length > 4 && 
+                <Box p="10px 20px">
+                    <Button height="30px" width="100%" onClick={() => setViewAll(prev => !prev)}>
+                      {viewAll ? "Hide" : "View All"}
+                    </Button>
+                </Box>
+              }
           </>
         )}
       </Flex>

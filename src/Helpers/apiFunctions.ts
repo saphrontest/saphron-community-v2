@@ -50,6 +50,7 @@ export const getCommunities = async () => {
       name,
     });
   });
+  console.log(communities)
   return communities;
 };
 

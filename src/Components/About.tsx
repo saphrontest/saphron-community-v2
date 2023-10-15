@@ -23,6 +23,8 @@ import { auth, firestore, storage } from "../firebaseClient";
 import { Link } from "react-router-dom";
 import { getCommunityDetail } from "../Helpers/apiFunctions";
 import { InputItem } from "../Layouts";
+import { useDispatch } from "react-redux";
+import { setSelectedCommunity } from "../redux/slices/communitySlice";
 
 type AboutProps = {
   communityId: string;
@@ -37,8 +39,9 @@ const About: React.FC<AboutProps> = ({
   onCreatePage,
   loading,
 }) => {
-  const [user] = useAuthState(auth); // will revisit how 'auth' state is passed
   const toast = useToast()
+  const dispatch = useDispatch()
+  const [user] = useAuthState(auth); // will revisit how 'auth' state is passed
   const selectFileRef = useRef<HTMLInputElement>(null);
 
   const [selectedFile, setSelectedFile] = useState<string>();
@@ -211,11 +214,33 @@ const About: React.FC<AboutProps> = ({
                   </Text>
                 )}
               </Flex>
+              {/* id: string;
+                  creatorId: string;
+                  name: string;
+                  description?: string;
+                  numberOfMembers: number;
+                  privacyType: "public" | "restrictied" | "private";
+                  createdAt?: Timestamp;
+                  imageURL?: string; 
+
+                  id,
+                  name,
+                  creatorId,
+                  privacyType,
+                  createdAt: {
+                    seconds: createdAt?.seconds,
+                    nanoseconds: createdAt?.nanoseconds 
+                  } 
+              */}
               {!onCreatePage && (
                 <Link to={`/submit/${community?.id}`}>
-                  <Button mt={3} height="30px">
-                    Create Post
-                  </Button>
+                    <Button
+                    mt={3} 
+                    height="30px"
+                      onClick={() => community && dispatch(setSelectedCommunity(community as Community))}
+                    >
+                      Create Post
+                    </Button>
                 </Link>
               )}
               {/* !!!ADDED AT THE VERY END!!! INITIALLY DOES NOT EXIST */}

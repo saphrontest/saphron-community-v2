@@ -5,15 +5,21 @@ import { PageLayout } from '../Layouts'
 import { getCommunityDetail, getPostsByCommunities } from '../Helpers/apiFunctions'
 import { Post } from '../Interface/PostInterface'
 import { About, CreatePostLink, PostItem } from '../Components'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
-import { firestore, storage } from '../firebaseClient'
+import { auth, firestore, storage } from '../firebaseClient'
+import { useToast } from '@chakra-ui/react'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { setModal } from '../redux/slices/modalSlice'
 
 const CommunityDetail = () => {
+  const toast = useToast()
   const location = useLocation()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [user] = useAuthState(auth)
   const communityId = useRef(location.pathname.split('/').at(-1)).current
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
   const [isVoteChange, setVoteChange] = useState<boolean>(false)
@@ -47,6 +53,16 @@ const CommunityDetail = () => {
   }, [isVoteChange])
   
   const handleDelete = async (post: Post): Promise<boolean> => {
+    if (!user?.uid) {
+      toast({
+        title: "Please login, first!",
+        status: "error",
+        isClosable: true,
+        position: "top-right"
+      })
+      dispatch(setModal({isOpen: true, view: 'login'}))
+      return false;
+    }
     setDeleteLoading(true)
     console.log("DELETING POST: ", post.id);
 

@@ -90,9 +90,9 @@ const Recommendations = () => {
           </Stack>
         ) : (
           <>
-            {(viewAll ? communities : communities.slice(0, 3)).map((item, index) => {
+            {(viewAll ? communities : communities.slice(0, 3)).map((item: Community, index: number) => {
               return (
-                <Link key={item.id} to={`/comm/${item.id}`}>
+                <Link key={item.id} to={`/community/${item.id}`}>
                   <Flex
                     position="relative"
                     align="center"

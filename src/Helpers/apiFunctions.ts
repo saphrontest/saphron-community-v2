@@ -50,7 +50,6 @@ export const getCommunities = async () => {
       name,
     });
   });
-  console.log(communities)
   return communities;
 };
 
@@ -87,7 +86,6 @@ export const getPostsByCommunities = async (id: string) => {
     where("communityId", "==", id)
   );
   postsDoc.docs.forEach((doc) => {
-    console.log(doc.data())
     posts.push({ id: doc.id, ...doc.data() } as Post);
   });
   return posts;

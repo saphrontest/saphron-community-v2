@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
 import { CreatePostLink, PersonalHome, PostItem, Recommendations } from '../Components'
-import {Stack} from '@chakra-ui/react'
+import {Stack, useToast} from '@chakra-ui/react'
 import { Post } from '../Interface/PostInterface'
 import { getPosts, getUserSavedPosts } from '../Helpers/apiFunctions'
 import { deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 import { auth, firestore, storage } from '../firebaseClient'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { Community } from '../Interface/CommunityInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { useNavigate } from 'react-router-dom'
+import { setModal } from '../redux/slices/modalSlice'
 
 const Home = () => {
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
@@ -20,7 +20,8 @@ const Home = () => {
   const {communities} = useSelector((state: RootState) => state.community)
   const {posts} = useSelector((state: RootState) => state.post)
   const [user] = useAuthState(auth);
-  const navigate = useNavigate()
+  const toast = useToast()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     user?.uid && getPostsData()
@@ -40,6 +41,16 @@ const Home = () => {
   }
   
   const handleDelete = async (post: Post): Promise<boolean> => {
+    if (!user?.uid) {
+      toast({
+        title: "Please login, first!",
+        status: "error",
+        isClosable: true,
+        position: "top-right"
+      })
+      dispatch(setModal({isOpen: true, view: 'login'}))
+      return false;
+    }
       setDeleteLoading(true)
       console.log("DELETING POST: ", post.id);
   

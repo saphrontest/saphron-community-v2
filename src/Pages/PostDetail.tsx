@@ -4,18 +4,24 @@ import { getPostComments, getPostDetails } from '../Helpers/apiFunctions'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Post } from '../Interface/PostInterface'
 import { About, PostItem } from '../Components'
-import { firestore, storage } from '../firebaseClient'
+import { auth, firestore, storage } from '../firebaseClient'
 import { deleteObject, ref } from 'firebase/storage'
 import { deleteDoc, doc } from 'firebase/firestore'
 import { Comments } from '../Components/Posts'
 import { Comment } from '../Interface/CommentsInterface'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { Community } from '../Interface/CommunityInterface'
+import { useToast } from '@chakra-ui/react'
+import { setModal } from '../redux/slices/modalSlice'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 const PostDetail = () => {
   const {id} = useParams()
+  const toast = useToast()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [user] = useAuthState(auth)
   const [post, setPost] = useState<Post | null>(null)
   const [comments, setComments] = useState<(Comment | null)[]>()
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
@@ -51,6 +57,18 @@ const PostDetail = () => {
   }, [isVoteChange])
 
   const handleDelete = async (post: Post): Promise<boolean> => {
+
+    if (!user?.uid) {
+      toast({
+        title: "Please login, first!",
+        status: "error",
+        isClosable: true,
+        position: "top-right"
+      })
+      dispatch(setModal({isOpen: true, view: 'login'}))
+      return false;
+    }
+
     setDeleteLoading(true)
     console.log("DELETING POST: ", post.id);
 

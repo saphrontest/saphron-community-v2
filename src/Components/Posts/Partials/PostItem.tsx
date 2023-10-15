@@ -1,4 +1,4 @@
-import { Avatar, Flex, Icon, Image, Skeleton, Spinner, Stack, Text } from '@chakra-ui/react'
+import { Avatar, Flex, Icon, Image, Skeleton, Spinner, Stack, Text, useToast } from '@chakra-ui/react'
 import React, { FC, useEffect, useState } from 'react'
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsChat, BsDot } from "react-icons/bs";
@@ -39,6 +39,7 @@ const PostItem: FC<PostItemContentProps> = ({
   communityName,
   setVoteChange
 }) => {
+  const toast = useToast()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [loadingImage, setLoadingImage] = useState(true);
@@ -79,6 +80,12 @@ const PostItem: FC<PostItemContentProps> = ({
     const batch = writeBatch(firestore);
     event.stopPropagation();
     if (!user?.uid) {
+      toast({
+        title: "Please login, first!",
+        status: "error",
+        isClosable: true,
+        position: "top-right"
+      })
       dispatch(setModal({isOpen: true, view: 'login'}))
       return;
     }
@@ -122,6 +129,17 @@ const PostItem: FC<PostItemContentProps> = ({
 
   const handleSave = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
+    if(!user?.uid){
+      toast({
+        title: "Please login, first!",
+        status: "error",
+        isClosable: true,
+        position: "top-right"
+      })
+      dispatch(setModal({isOpen: true, view: 'login'}))
+      return;
+    }
+
     setSaveLoading(true)
     savePost(post.id, user?.uid as string).finally(() => {
       getUserSavedPosts(user?.uid as string)

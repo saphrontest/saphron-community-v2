@@ -8,13 +8,13 @@ export const postSlice = createSlice({
     setPosts: (state, action) => {
         state.posts = action.payload
     },
-    addSavedPosts: (state, action) => {
-        state.savedPosts.push(action.payload)
+    setSavedPosts: (state, action) => {
+        state.savedPosts = action.payload
     }
   },
 })
 export const {
     setPosts,
-    addSavedPosts
+    setSavedPosts
 } = postSlice.actions
 export default postSlice.reducer

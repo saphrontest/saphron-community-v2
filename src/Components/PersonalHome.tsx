@@ -37,6 +37,7 @@ const PersonalHome = () => {
             border="1px solid"
             borderColor="gray.300"
             position="sticky"
+            mb={3}
         >
             <Flex
                 align="flex-end"

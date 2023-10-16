@@ -5,7 +5,6 @@ import { BsChat, BsDot } from "react-icons/bs";
 import {
   IoArrowDownCircleOutline,
   IoArrowDownCircleSharp,
-  IoArrowRedoOutline,
   IoArrowUpCircleOutline,
   IoArrowUpCircleSharp,
   IoBookmarkOutline,
@@ -50,7 +49,6 @@ const PostItem: FC<PostItemContentProps> = ({
   const [isSaved, setSaved] = useState(false)
   const {communities} = useSelector((state:RootState) => state.community)
   const {savedPosts} = useSelector((state:RootState) => state.post)
-
   
   useEffect(() => {
     getUserVotesData()
@@ -60,7 +58,7 @@ const PostItem: FC<PostItemContentProps> = ({
   useEffect(() => {
     if(!!post === true && savedPosts.length){
       savedPosts.forEach((saved: any) => {
-        if(saved.postId === post.id){
+        if(saved.id === post.id){
           setSaved(true)
         }
       })
@@ -127,7 +125,7 @@ const PostItem: FC<PostItemContentProps> = ({
     }
   };
 
-  const handleSave = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleSave = async(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     if(!user?.uid){
       toast({
@@ -141,7 +139,8 @@ const PostItem: FC<PostItemContentProps> = ({
     }
 
     setSaveLoading(true)
-    savePost(post.id, user?.uid as string).finally(() => {
+    savePost(post, user?.uid as string)
+    .finally(() => {
       getUserSavedPosts(user?.uid as string)
       setSaveLoading(false)
     })

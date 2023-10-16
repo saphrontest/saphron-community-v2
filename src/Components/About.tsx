@@ -50,6 +50,7 @@ const About: React.FC<AboutProps> = ({
   const [descriptionText, setDescriptionText] = useState("")
   const [community, setCommunity] = useState<Community>()
 
+
   useEffect(() => {
     getCommunityDetail(communityId).then((result) => {
       setCommunity(result)
@@ -108,20 +109,8 @@ const About: React.FC<AboutProps> = ({
     }
   }
 
-  return (
-    <Box pt={pt} position="sticky" top="14px">
-      <Flex
-        justify="space-between"
-        align="center"
-        p={3}
-        color="white"
-        bg="blue.400"
-        borderRadius="4px 4px 0px 0px"
-      >
-        <Text fontSize="10pt" fontWeight={700}>
-          About Community
-        </Text>
-      </Flex>
+  const AboutContent = () => {
+    return (
       <Flex direction="column" p={3} bg="white" borderRadius="0px 0px 4px 4px">
         {loading ? (
           <Stack mt={2}>
@@ -281,6 +270,25 @@ const About: React.FC<AboutProps> = ({
           </>
         )}
       </Flex>
+    )
+  }
+
+  return (
+    <Box pt={pt} position="sticky" top="14px">
+      <Flex
+        justify="space-between"
+        align="center"
+        p={3}
+        color="white"
+        bg="blue.400"
+        borderRadius="4px 4px 0px 0px"
+      >
+        <Text fontSize="10pt" fontWeight={700}>
+          About Community
+        </Text>
+        {!!community === false && <Spinner size="md" />}
+      </Flex>
+      {!!community && <AboutContent />}
     </Box>
   );
 };

@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Box, Flex, Icon, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text } from '@chakra-ui/react'
 import { CgProfile } from 'react-icons/cg'
-import { IoSparkles } from 'react-icons/io5'
+import { IoBookmarksSharp, IoSparkles } from 'react-icons/io5'
 import { MdOutlineLogin } from 'react-icons/md'
 import { VscAccount } from 'react-icons/vsc'
 import { setModal } from '../../../redux/slices/modalSlice'
@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux'
 import { User, signOut } from "firebase/auth";
 import { FC } from 'react'
 import { auth } from '../../../firebaseClient'
+import { useNavigate } from 'react-router-dom'
 
 interface UserMenuProps {
     user: User
@@ -16,6 +17,7 @@ interface UserMenuProps {
 
 const UserMenu: FC <UserMenuProps> = ({user}) => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const logout = async () => await signOut(auth);
     return (
         <Menu>
@@ -67,6 +69,17 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                             <Flex alignItems="center">
                                 <Icon fontSize={20} mr={2} as={CgProfile} />
                                 Profile
+                            </Flex>
+                        </MenuItem>
+                        <MenuItem
+                            fontSize="10pt"
+                            fontWeight={700}
+                            _hover={{ bg: "blue.500", color: "white" }}
+                            onClick={() => navigate("/saved-posts")}
+                        >
+                            <Flex alignItems="center">
+                                <Icon as={IoBookmarksSharp} fontSize={20} mr={2}/>
+                                Saved Posts
                             </Flex>
                         </MenuItem>
                         <MenuDivider />

@@ -15,6 +15,7 @@ import { Community } from '../Interface/CommunityInterface'
 import { useToast } from '@chakra-ui/react'
 import { setModal } from '../redux/slices/modalSlice'
 import { useAuthState } from 'react-firebase-hooks/auth'
+import { setSelectedCommunity } from '../redux/slices/communitySlice'
 
 const PostDetail = () => {
   const {id} = useParams()
@@ -55,6 +56,15 @@ const PostDetail = () => {
       return () => setVoteChange(false)
     }
   }, [isVoteChange])
+
+  useEffect(() => {
+
+    if(post?.communityId){
+      const postCommunity = communities.find(community => community.id === post.communityId)
+      dispatch(setSelectedCommunity(postCommunity as Community))
+    } 
+
+  }, [post])
 
   const handleDelete = async (post: Post): Promise<boolean> => {
 
@@ -104,7 +114,7 @@ const PostDetail = () => {
         {!isPageLoading && <Comments comments={comments} post={post} getComments={getComments}/>}
       </>
       <>
-        <About communityId={communities.filter(({id}) => id === post?.communityId)[0]?.id as string ?? ""}/>
+      <About communityId={communities.filter(({id}) => id === post?.communityId)[0]?.id as string ?? ""}/>
       </>
     </PageLayout>
   )

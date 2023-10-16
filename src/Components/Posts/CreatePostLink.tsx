@@ -20,9 +20,9 @@ const CreatePostLink : FC <CreatePostLinkProps> = ({communityId}) => {
         borderRadius={4}
         border="1px solid"
         borderColor="gray.300"
+        onClick={() => navigate(`/submit${communityId ? `/${communityId}` : ''}`)}
         p={2}
         mb={4}
-        onClick={() => navigate("/submit")}
       >
         <Image src={LogoIcon} width={8} mr={2}/>
         <Input

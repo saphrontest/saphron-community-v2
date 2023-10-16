@@ -15,7 +15,7 @@ import { Community } from "../Interface/CommunityInterface";
 import { Post, PostVote } from "../Interface/PostInterface";
 import { Comment, CommentVote } from "../Interface/CommentsInterface";
 import { store } from "../redux/store";
-import { setPosts, addSavedPosts } from "../redux/slices/postSlice";
+import { setPosts, setSavedPosts } from "../redux/slices/postSlice";
 
 const fetch = {
   getDetail: async (query: string, id: string) => {
@@ -140,16 +140,15 @@ export const getCommentVotesByUserId = async (id: string) => {
 };
 
 
-export const savePost = async (postId: string, userId: string) => {
-  const savePostRef = doc(firestore, "users", userId, "savedPosts", postId);
-
-  getDoc(savePostRef)
-    .then((docSnapshot) => {
+export const savePost = async (post: Post, userId: string) => {
+  const savePostRef = doc(firestore, "users", userId, "savedPosts", post.id);
+  await getDoc(savePostRef)
+    .then(async (docSnapshot) => {
       if (docSnapshot.exists()) {
         // Document exists, you can access its data using docSnapshot.data()
         const data = docSnapshot.data();
         console.log("Document data:", data);
-        deleteDoc(savePostRef)
+        await deleteDoc(savePostRef)
           .then(() => {
             console.log("Document deleted. Post removed.");
             return true;
@@ -157,10 +156,20 @@ export const savePost = async (postId: string, userId: string) => {
           .catch((error) => {
             console.error("Error deleting document:", error);
             return false;
-          });
+          })
       } else {
         // Document does not exist
-        setDoc(savePostRef, { postId })
+        await setDoc(savePostRef, {
+          id: post.id,
+          communityId: post.communityId,
+          creatorId: post.creatorId,
+          title: post.title,
+          body: post.body,
+          numberOfComments: post.numberOfComments,
+          voteStatus: post.voteStatus,
+          createdAt: post.createdAt,
+          userDisplayText: post.userDisplayText,
+        })
           .then(() => {
             console.log("Post saved.");
             return true;
@@ -175,6 +184,7 @@ export const savePost = async (postId: string, userId: string) => {
       console.error("Error getting document:", error);
       return false;
     });
+
 };
 
 export const getUserSavedPosts = async (userId: string) => {
@@ -187,11 +197,13 @@ export const getUserSavedPosts = async (userId: string) => {
   // Try to get the documents in the subcollection
   getDocs(q)
     .then((querySnapshot: any) => {
+      const savedPosts: any[] = []
       querySnapshot.forEach((docSnapshot: any) => {
         // Access each document's data using docSnapshot.data()
         const data = docSnapshot.data();
-        store.dispatch(addSavedPosts(data))
+        savedPosts.push(data);
       });
+      store.dispatch(setSavedPosts(savedPosts))
     })
     .catch((error) => {
       console.error("Error getting documents:", error);

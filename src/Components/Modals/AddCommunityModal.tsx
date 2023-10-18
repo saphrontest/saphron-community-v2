@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { ModalLayout } from '../../Layouts'
-import { Box, Button, Divider, Input, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text} from '@chakra-ui/react'
+import { Box, Button, Divider, Input, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text, useToast} from '@chakra-ui/react'
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +13,7 @@ const AddCommunityModal = () => {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const toast = useToast()
 
     const [user] = useAuthState(auth);
     const [name, setName] = useState("");
@@ -42,12 +43,19 @@ const AddCommunityModal = () => {
         setLoading(true);
 
         try {
+            const newCommunityId = md5(`${name}.${new Date().getTime().toString()}`)
             // Create community document and community as a subcollection document on user
-            const communityDocRef = doc(firestore, "communities", md5(`${name}.${new Date().getTime().toString()}`));
+            const communityDocRef = doc(firestore, "communities", newCommunityId);
 
             await runTransaction(firestore, async (transaction) => {
                 const communityDoc = await transaction.get(communityDocRef);
                 if (communityDoc.exists()) {
+                    toast({
+                        title: `Sorry, comm/${name} is taken. Try another.`,
+                        status: "error",
+                        isClosable: true,
+                        position: "top-right"
+                    })
                     throw new Error(`Sorry, comm/${name} is taken. Try another.`);
                 }
                 
@@ -60,8 +68,8 @@ const AddCommunityModal = () => {
                 });
 
                 transaction.set(
-                    doc(firestore, `users/${user?.uid}/communities`, name), {
-                        communityId: name,
+                    doc(firestore, `users/${user?.uid}/communities`, newCommunityId), {
+                        communityId: newCommunityId,
                         isModerator: true,
                     }
                 );

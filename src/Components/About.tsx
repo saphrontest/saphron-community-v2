@@ -27,6 +27,7 @@ import { useDispatch } from "react-redux";
 import { setSelectedCommunity } from "../redux/slices/communitySlice";
 
 type AboutProps = {
+  community?: Community
   communityId: string;
   pt?: number;
   onCreatePage?: boolean;
@@ -38,6 +39,7 @@ const About: React.FC<AboutProps> = ({
   pt,
   onCreatePage,
   loading,
+  community: propCommunity
 }) => {
   const toast = useToast()
   const dispatch = useDispatch()
@@ -52,12 +54,19 @@ const About: React.FC<AboutProps> = ({
 
 
   useEffect(() => {
+
+    if(propCommunity) {
+      setCommunity(propCommunity)
+      return;
+    }
+
     getCommunityDetail(communityId).then((result) => {
       setCommunity(result)
     }).catch((err) => {
       console.error("GET COMMUNITY DETAIL ERROR: ", err)
     });
-  }, [communityId])
+
+  }, [communityId, propCommunity])
 
   const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const reader = new FileReader();

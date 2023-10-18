@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from '@chakra-ui/icons';
-import { Box, Flex, Icon, Menu, MenuButton, MenuItem, MenuList, Text, useOutsideClick } from '@chakra-ui/react';
+import { Box, Flex, Icon, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, useOutsideClick } from '@chakra-ui/react';
 import { FC, useEffect, useRef } from 'react'
 import { GrAdd } from 'react-icons/gr';
 import { useDispatch, useSelector } from 'react-redux';
@@ -78,7 +78,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
             </MenuButton>
             <MenuList ref={communityMenuRef}>
                 <Box mt={3} mb={4}>
-                    <Text
+                    {communities.filter(comm => comm.creatorId === user?.uid).length ? <Text
                         pl={3}
                         mb={1}
                         fontSize="7pt"
@@ -86,7 +86,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                         color="gray.500"
                     >
                         MODERATING
-                    </Text>
+                    </Text> : null}
                     {communities.filter(comm => comm.creatorId === user?.uid).map(comm => {
                         return (
                             <MenuItem
@@ -129,6 +129,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                         </MenuItem>
                     )
                 })}
+                <MenuDivider />
                 <MenuItem
                 width="100%"
                 fontSize="10pt"

@@ -34,6 +34,7 @@ const SavedPosts = () => {
         dispatch(setModal({isOpen: true, view: 'login'}))
       }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user])
 
 

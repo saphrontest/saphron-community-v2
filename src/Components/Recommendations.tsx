@@ -9,6 +9,7 @@ import { auth } from '../firebaseClient';
 import CommArt from "../assets/images/CommsArt.png"
 import { setCommunities } from '../redux/slices/communitySlice';
 import { Community } from '../Interface/CommunityInterface';
+import RecCommArt from '../assets/images/CommsArt.png'
 
 const Recommendations = () => {
   const dispatch = useDispatch()
@@ -60,17 +61,23 @@ const Recommendations = () => {
       <Flex
         align="flex-end"
         color="white"
-        p="6px 10px"
         bg="blue.500"
         height="70px"
         borderRadius="4px 4px 0px 0px"
         fontWeight={600}
-        bgImage={CommArt}
         backgroundSize="cover"
-        bgGradient="linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75)),
-        url('images/recCommsArt.png')"
+        bgImage={RecCommArt}
       >
-        Top Communities
+        <Flex
+        width="100%"
+        height="100%"
+        align="flex-end"
+        color="white"
+        p="6px 10px"
+        bgGradient="linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75))"
+        >
+          Top Communities
+        </Flex>
       </Flex>
       <Flex direction="column">
         {loading ? (

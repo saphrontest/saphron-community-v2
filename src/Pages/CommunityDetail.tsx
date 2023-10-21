@@ -4,7 +4,7 @@ import { Community } from '../Interface/CommunityInterface'
 import { PageLayout } from '../Layouts'
 import { getCommunityDetail, getPostsByCommunities } from '../Helpers/apiFunctions'
 import { Post } from '../Interface/PostInterface'
-import { About, CreatePostLink, PostItem } from '../Components'
+import { About, CreatePostLink, NoEntry, PostItem } from '../Components'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { deleteDoc, doc } from 'firebase/firestore';
@@ -95,14 +95,14 @@ const CommunityDetail = () => {
     <PageLayout>
       <>
         <CreatePostLink communityId={communityId}/>
-        {posts.map(post => <PostItem
+        {posts.length ? posts.map(post => <PostItem
           key={post?.id}
           post={post}
           handleDelete={handleDelete}
           isDeleteLoading={isDeleteLoading}
           communityName={communities?.filter((c: Community) => post?.communityId === c.id)[0]?.name}
           setVoteChange={setVoteChange}
-        />)}
+        />) : <NoEntry type="community post"/>}
       </>
       <>
           {community && <About communityId={community.id} community={community}/>}

@@ -127,6 +127,23 @@ export const getUserVotes = async (id: string) => {
   return false;
 };
 
+export const getJoinedCommunitiesList = async (id: string) => {
+  const joinedCommunitiesDocs = await fetch.getList(`users/${id}/communities`);
+  if (joinedCommunitiesDocs.size) {
+    const joinedCommunities: Community[] = [];
+    joinedCommunitiesDocs.forEach((doc) => {
+      joinedCommunities.push(doc.data() as Community);
+    });
+    return joinedCommunities;
+  }
+  return false;
+};
+
+export const joinCommunity = async (userId: string, communityId: string, isModerator: boolean) => {
+  const savePostRef = doc(collection(firestore, "users", userId, "communities"));
+  console.log(savePostRef)
+}
+
 export const getCommentVotesByUserId = async (id: string) => {
   const commentVotes = await fetch.getList(`users/${id}/commentVotes`);
   if (commentVotes.size) {

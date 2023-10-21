@@ -118,6 +118,37 @@ const About: React.FC<AboutProps> = ({
     }
   }
 
+  const AddDescription = () => {
+    return !addDescriptionView ? (
+      <Box
+        bg="gray.100"
+        width="100%"
+        p={2}
+        borderRadius={4}
+        border="1px solid"
+        borderColor="gray.300"
+        cursor="pointer"
+        onClick={() => setAddDescriptionView(prev => !prev)}
+      >
+        <Text fontSize="9pt" fontWeight={700} color="blue.500">
+          Add description
+        </Text>
+      </Box>
+    ) : (
+    <>
+          <InputItem
+            name="description"
+            placeholder="Description"
+            type="text"
+            onChange={({target: { value }}: React.ChangeEvent<HTMLInputElement>) => setDescriptionText(value)}
+          />
+          <Button onClick={addDescription}>
+            <Text>Add</Text>
+          </Button>
+    </>
+  )
+  }
+
   const AboutContent = () => {
     return (
       <Flex direction="column" p={3} bg="white" borderRadius="0px 0px 4px 4px">
@@ -131,7 +162,7 @@ const About: React.FC<AboutProps> = ({
           </Stack>
         ) : (
           <>
-              {community?.description ? (
+              {community?.description && (
                 <>
                   <Text textAlign={"left"} fontWeight={700} fontSize={14} pb={3}>Description</Text>
                   <Box
@@ -147,37 +178,8 @@ const About: React.FC<AboutProps> = ({
                     </Text>
                   </Box>
                 </>
-              ) : (
-                user?.uid === community?.creatorId  && !addDescriptionView ? (
-                  <Box
-                    bg="gray.100"
-                    width="100%"
-                    p={2}
-                    borderRadius={4}
-                    border="1px solid"
-                    borderColor="gray.300"
-                    cursor="pointer"
-                    onClick={() => setAddDescriptionView(prev => !prev)}
-                  >
-                    <Text fontSize="9pt" fontWeight={700} color="blue.500">
-                      Add description
-                    </Text>
-                  </Box>
-                )
-               : (
-                <>
-                      <InputItem
-                        name="description"
-                        placeholder="Description"
-                        type="text"
-                        onChange={({target: { value }}: React.ChangeEvent<HTMLInputElement>) => setDescriptionText(value)}
-                      />
-                      <Button onClick={addDescription}>
-                        <Text>Add</Text>
-                      </Button>
-                </>
-              )
               )}
+              {user?.uid === community?.creatorId && <AddDescription />}
             <Stack spacing={2} >
               <Flex direction="column" flexGrow={1}  paddingTop={2} paddingBottom={2}>
                 <Text textAlign={"left"} fontWeight={700} fontSize={14} pb={2}>Name</Text>

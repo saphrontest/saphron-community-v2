@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
-import { CreatePostLink, PersonalHome, PostItem, Recommendations } from '../Components'
+import { CreatePostLink, NoEntry, PersonalHome, PostItem, Recommendations } from '../Components'
 import {Stack, useToast} from '@chakra-ui/react'
 import { Post } from '../Interface/PostInterface'
 import { getPosts, getUserSavedPosts } from '../Helpers/apiFunctions'
@@ -92,6 +92,7 @@ const Home = () => {
             communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
             setVoteChange={setVoteChange}
           />)}
+          {!posts.length ? <NoEntry type="post"/> : null}
         </Stack>
       </>
       <>

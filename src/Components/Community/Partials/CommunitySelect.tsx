@@ -1,10 +1,10 @@
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Flex, Icon, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, useOutsideClick } from '@chakra-ui/react';
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { GrAdd } from 'react-icons/gr';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../../redux/slices/modalSlice';
-import { getCommunities } from '../../../Helpers/apiFunctions';
+import { getCommunities, getJoinedCommunitiesList } from '../../../Helpers/apiFunctions';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../../firebaseClient';
 import { useNavigate } from 'react-router-dom';
@@ -20,22 +20,32 @@ interface CommunityProps {
 }
 
 const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCommunityId}) => {
-    const {communities, selectedCommunity} = useSelector((state: RootState) => state.community)
     const navigate = useNavigate()
-    const communityMenuRef = useRef(null)
     const dispatch = useDispatch()
     const [user] = useAuthState(auth);
+    const communityMenuRef = useRef(null)
+    const [myCommunities, setMyCommunities] = useState<Community[]>([])
+    const {communities, selectedCommunity} = useSelector((state: RootState) => state.community)
     useOutsideClick({
         ref: communityMenuRef,
         handler: () => isOpen && setOpen(isOpen)
       });
 
-      const getCommunityList = async () => {
-          const res = await getCommunities()
-          const communityList = [...res.map(({ id, name, creatorId, privacyType, createdAt }) => ({ id, name, creatorId, privacyType, createdAt: { seconds: createdAt?.seconds, nanoseconds: createdAt?.nanoseconds } }))]
-          dispatch(setCommunities(communityList as Community[]))
-      }
+    const getCommunityList = async () => {
+        const res = await getCommunities()
+        const communityList = [...res.map(({ id, name, creatorId, privacyType, createdAt }) => ({ id, name, creatorId, privacyType, createdAt: { seconds: createdAt?.seconds, nanoseconds: createdAt?.nanoseconds } }))]
+        dispatch(setCommunities(communityList as Community[]))
+    }
+    const getJoinedCommunities = async (userId: string) => {
+        const joined = await getJoinedCommunitiesList(userId)
+        console.log(joined)
+    }
+
     useEffect(() => {
+        user?.uid && getJoinedCommunities(user?.uid)
+    }, [user])
+
+    useEffect(() => {    
         getCommunityList()
         if(selectedCommunityId){
             const comm = communities.find(community => community.id === selectedCommunityId)
@@ -43,6 +53,11 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    useEffect(() => {
+        setMyCommunities(communities.filter(comm => comm.creatorId === user?.uid))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [communities])
 
     return (
         <Menu isOpen={isOpen}>
@@ -78,7 +93,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
             </MenuButton>
             <MenuList ref={communityMenuRef}>
                 <Box mt={3} mb={4}>
-                    {communities.filter(comm => comm.creatorId === user?.uid).length ? <Text
+                    {myCommunities.length ? <Text
                         pl={3}
                         mb={1}
                         fontSize="7pt"
@@ -87,7 +102,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                     >
                         MODERATING
                     </Text> : null}
-                    {communities.filter(comm => comm.creatorId === user?.uid).map(comm => {
+                    {myCommunities.map(comm => {
                         return (
                             <MenuItem
                                 key={comm.id}

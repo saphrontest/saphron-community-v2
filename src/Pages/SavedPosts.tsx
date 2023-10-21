@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import { PersonalHome, PostItem } from '../Components'
+import { NoEntry, PersonalHome, PostItem, SCIcon } from '../Components'
 import { Post } from '../Interface/PostInterface'
 import { Community } from '../Interface/CommunityInterface'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, firestore, storage } from '../firebaseClient'
-import { Box, Text, useToast } from '@chakra-ui/react'
+import { Box, Flex, Text, useToast } from '@chakra-ui/react'
 import { setModal } from '../redux/slices/modalSlice'
 import { deleteObject, ref } from 'firebase/storage'
 import { deleteDoc, doc } from 'firebase/firestore'
@@ -84,22 +84,32 @@ const SavedPosts = () => {
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isVoteChange])
+
+    console.log(savedPosts)
+
   return (
     <PageLayout>
       <>
-        <Box p="14px 0px" >
-            <Text fontWeight={600} textAlign="left">Saved Posts</Text>
-        </Box>
-        {savedPosts.map((post: any, index) => (
-        <PostItem
-          key={index}
-          post={post}
-          handleDelete={handleDelete}
-          isDeleteLoading={isDeleteLoading}
-          communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
-          setVoteChange={setVoteChange}
-        />
-        ))}
+        {
+          savedPosts.length ? (
+            <>
+              <Box p="14px 0px" >
+                <Text fontWeight={600} textAlign="left">Saved Posts</Text>
+              </Box>
+              {savedPosts.map((post: any, index) => (
+                <PostItem
+                  key={index}
+                  post={post}
+                  handleDelete={handleDelete}
+                  isDeleteLoading={isDeleteLoading}
+                  communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
+                  setVoteChange={setVoteChange}
+                />
+              ))}
+            </>
+          )
+            : <NoEntry type="saved post" />
+        }
       </>
       <>
         <PersonalHome />

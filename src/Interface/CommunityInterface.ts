@@ -18,7 +18,7 @@ export const defaultCommunity: Community = {
     numberOfMembers: 0,
     privacyType: "public",
     imageURL: "",
-    description: ""
+    description: "",
 };
 
 interface CommunitySlice {

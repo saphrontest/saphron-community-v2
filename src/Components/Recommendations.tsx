@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from '../redux/store';
-import { getCommunities, getUserCommunities } from '../Helpers/apiFunctions';
+import { getCommunities, getUserCommunities, joinCommunity } from '../Helpers/apiFunctions';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebaseClient';
 import CommArt from "../assets/images/CommsArt.png"
@@ -45,7 +45,8 @@ const Recommendations = () => {
         const comms = await getUserCommunities(userId)
         setMyCommmunities(comms)
     }
-    const onJoin = () => {
+    const onJoin = async (userId: string, communityId: string) => {
+      const res = await joinCommunity(userId, communityId, false)
 
     }
 
@@ -99,7 +100,8 @@ const Recommendations = () => {
           <>
             {(viewAll ? communities : communities.slice(0, 3)).map((item: Community, index: number) => {
               return (
-                <Link key={item.id} to={`/community/${item.id}`}>
+                // <Link key={item.id} to={`/community/${item.id}`}>
+                <Box key={item.id} >
                   <Flex
                     position="relative"
                     align="center"
@@ -125,20 +127,20 @@ const Recommendations = () => {
                       </Flex>
                     </Flex>
                     <Box position="absolute" right="10px">
-                      {/* <Button
+                      <Button
                         height="22px"
                         fontSize="8pt"
                         onClick={(event) => {
                           event.stopPropagation();
-                          onJoin()
+                          user?.uid && onJoin(user?.uid, item.id)
                         }}
-                        variant={isJoined ? "outline" : "solid"}
+                        variant={false ? "outline" : "solid"}
                       >
-                        {isJoined ? "Joined" : "Join"}
-                      </Button> */}
+                        {false ? "Joined" : "Join"}
+                      </Button>
                     </Box>
                   </Flex>
-                </Link>
+                </Box>
               );
             })}
               {communities.length > 4 && 

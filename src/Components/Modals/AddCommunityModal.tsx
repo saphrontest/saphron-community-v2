@@ -76,7 +76,6 @@ const AddCommunityModal = () => {
             });
 
             handleClose();
-            navigate(`community/${name}`);
 
         } catch (error: any) {
             console.log("Transaction error", error);
@@ -86,14 +85,6 @@ const AddCommunityModal = () => {
         }
         
     };
-
-    // const onCommunityTypeChange = (
-    //     event: React.ChangeEvent<HTMLInputElement>
-    // ) => {
-    //     const { name } = event.target;
-    //     if (name === communityType) return;
-    //     setCommunityType(name);
-    // };
 
     return (
         <ModalLayout>

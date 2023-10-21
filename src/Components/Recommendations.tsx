@@ -1,22 +1,23 @@
 import { Avatar, Box, Button, Flex, Skeleton, SkeletonCircle, Stack, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
-import { getCommunities, getUserCommunities, joinCommunity } from '../Helpers/apiFunctions';
+import { getCommunities, getJoinedCommunitiesList, getUserCommunities, joinCommunity, leaveCommunity } from '../Helpers/apiFunctions';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebaseClient';
 import CommArt from "../assets/images/CommsArt.png"
-import { setCommunities } from '../redux/slices/communitySlice';
-import { Community } from '../Interface/CommunityInterface';
+import { setCommunities, setJoinedCommunities } from '../redux/slices/communitySlice';
+import { Community, JoinedCommunity } from '../Interface/CommunityInterface';
 import RecCommArt from '../assets/images/CommsArt.png'
 
 const Recommendations = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [viewAll, setViewAll] = useState(false)
     const [myCommmunities, setMyCommmunities] = useState<any[]>([])
-    const {communities} = useSelector((state: RootState) => state.community)
+    const {communities, joinedCommunities} = useSelector((state: RootState) => state.community)
     const [user] = useAuthState(auth)
     
     useEffect(() => {
@@ -41,14 +42,35 @@ const Recommendations = () => {
       })
     }, [])
 
+    console.log(joinedCommunities)
+
+    useEffect(() => {
+      user?.uid && getJoinedCommunities(user?.uid)
+    }, [user?.uid])
+
+    const getJoinedCommunities = async (userId: string) => {
+      const joined : JoinedCommunity[] | false = await getJoinedCommunitiesList(userId)
+      joined && dispatch(setJoinedCommunities(joined as JoinedCommunity[]))
+    }
+
     const getUserCommunity = async (userId: string) => {
         const comms = await getUserCommunities(userId)
         setMyCommmunities(comms)
     }
     const onJoin = async (userId: string, communityId: string) => {
-      const res = await joinCommunity(userId, communityId, false)
-
+      const mine = myCommmunities.find(mine => mine.communityId === communityId)
+      if(!!mine){
+        if(mine.isModerator) {
+          return
+        }
+        const res = await leaveCommunity(userId, communityId)
+        res && getJoinedCommunitiesList(userId)
+        return;
+      }
+      const res = await joinCommunity(userId, communityId)
+      res && getJoinedCommunitiesList(userId)
     }
+
 
   return (
     <Flex
@@ -110,13 +132,14 @@ const Recommendations = () => {
                     borderColor="gray.200"
                     p="10px 12px"
                     fontWeight={600}
+                    cursor={"default"}
                   >
                     <Flex width="80%" align="center">
                       <Flex width="15%">
                         <Text mr={2}>{index + 1}</Text>
                       </Flex>
-                      <Flex align="center" width="80%" gap={2}>
-                      <Avatar src={item.imageURL} boxSize={item.imageURL ? 28 : 30} style={{width: 30, height: 30}} />
+                      <Flex align="center" width="80%" gap={2} cursor="pointer" onClick={() => navigate(`/community/${item.id}`)}>
+                        <Avatar src={item.imageURL} boxSize={item.imageURL ? 28 : 30} style={{width: 30, height: 30}} />
                         <span
                           style={{
                             whiteSpace: "nowrap",
@@ -134,9 +157,9 @@ const Recommendations = () => {
                           event.stopPropagation();
                           user?.uid && onJoin(user?.uid, item.id)
                         }}
-                        variant={false ? "outline" : "solid"}
+                        variant={!!joinedCommunities.find(joined => joined.communityId === item.id) ? "outline" : "solid"}
                       >
-                        {false ? "Joined" : "Join"}
+                        {joinedCommunities.find(joined => joined.communityId === item.id) ? "Joined" : "Join"}
                       </Button>
                     </Box>
                   </Flex>

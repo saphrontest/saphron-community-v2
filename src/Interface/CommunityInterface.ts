@@ -11,6 +11,11 @@ export interface Community {
     imageURL?: string;
 }
 
+export interface JoinedCommunity {
+    communityId: string;
+    isModerator: boolean;
+}
+
 export const defaultCommunity: Community = {
     id: "",
     name: "",
@@ -23,10 +28,12 @@ export const defaultCommunity: Community = {
 
 interface CommunitySlice {
     communities: Community[]
-    selectedCommunity: Community | null
+    selectedCommunity: Community | null,
+    joinedCommunities: JoinedCommunity[]
 }
 
 export const communitySliceInitial: CommunitySlice = {
     communities: [],
-    selectedCommunity: null
+    selectedCommunity: null,
+    joinedCommunities: [],
 } 

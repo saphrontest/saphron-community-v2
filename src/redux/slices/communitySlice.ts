@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { Community, communitySliceInitial } from "../../Interface/CommunityInterface"
+import { Community, JoinedCommunity, communitySliceInitial } from "../../Interface/CommunityInterface"
 
 export const communitiySlice = createSlice({
   name: "communitySlice",
@@ -10,11 +10,15 @@ export const communitiySlice = createSlice({
     },
     setSelectedCommunity: (state, action: PayloadAction<Community>) => {
       state.selectedCommunity = action.payload
+    },
+    setJoinedCommunities: (state, action: PayloadAction<JoinedCommunity[]>) => {
+     state.joinedCommunities = action.payload
     }
   },
 })
 export const {
   setCommunities,
-  setSelectedCommunity
+  setSelectedCommunity,
+  setJoinedCommunities
 } = communitiySlice.actions
 export default communitiySlice.reducer

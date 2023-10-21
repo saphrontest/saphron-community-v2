@@ -57,16 +57,19 @@ const About: React.FC<AboutProps> = ({
 
     if(propCommunity) {
       setCommunity(propCommunity)
+      console.log(propCommunity)
       return;
     }
 
     getCommunityDetail(communityId).then((result) => {
+      console.log(result)
       setCommunity(result)
     }).catch((err) => {
       console.error("GET COMMUNITY DETAIL ERROR: ", err)
     });
 
   }, [communityId, propCommunity])
+
 
   const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const reader = new FileReader();

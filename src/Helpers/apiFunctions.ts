@@ -11,7 +11,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 // INTERFACES
-import { Community } from "../Interface/CommunityInterface";
+import { Community, JoinedCommunity } from "../Interface/CommunityInterface";
 import { Post, PostVote } from "../Interface/PostInterface";
 import { Comment, CommentVote } from "../Interface/CommentsInterface";
 import { store } from "../redux/store";
@@ -130,18 +130,42 @@ export const getUserVotes = async (id: string) => {
 export const getJoinedCommunitiesList = async (id: string) => {
   const joinedCommunitiesDocs = await fetch.getList(`users/${id}/communities`);
   if (joinedCommunitiesDocs.size) {
-    const joinedCommunities: Community[] = [];
+    const joinedCommunities: JoinedCommunity[] = [];
     joinedCommunitiesDocs.forEach((doc) => {
-      joinedCommunities.push(doc.data() as Community);
+      joinedCommunities.push(doc.data() as JoinedCommunity);
     });
+
     return joinedCommunities;
   }
   return false;
 };
 
-export const joinCommunity = async (userId: string, communityId: string, isModerator: boolean) => {
-  const savePostRef = doc(collection(firestore, "users", userId, "communities"));
-  console.log(savePostRef)
+export const joinCommunity = async (userId: string, communityId: string) => {
+
+  const joinCommunityRef = doc(firestore, "users", userId, "communities", communityId);
+
+  try {
+    await setDoc(joinCommunityRef, { communityId, isModerator: false })
+    return true
+  } catch (err) {
+    return false
+  }
+
+
+}
+
+export const leaveCommunity = async (userId: string, communityId: string) => {
+
+  const communityRef = doc(firestore, "users", userId, "communities", communityId);
+
+  try {
+    await deleteDoc(communityRef)
+    return true
+  } catch (err) {
+    return false
+  }
+
+
 }
 
 export const getCommentVotesByUserId = async (id: string) => {

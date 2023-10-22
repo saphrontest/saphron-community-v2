@@ -10,7 +10,7 @@ import { auth } from '../../../firebaseClient';
 import { useNavigate } from 'react-router-dom';
 import { setCommunities, setJoinedCommunities, setSelectedCommunity } from '../../../redux/slices/communitySlice';
 import { RootState } from '../../../redux/store';
-import { Community, JoinedCommunity } from '../../../Interface/CommunityInterface';
+import { Community } from '../../../Interface/CommunityInterface';
 
 interface CommunityProps {
     isOpen: boolean;
@@ -70,7 +70,6 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
 
         }
     }, [communities, joinedCommunities])
-
 
 
     return (

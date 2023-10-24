@@ -57,12 +57,10 @@ const About: React.FC<AboutProps> = ({
 
     if(propCommunity) {
       setCommunity(propCommunity)
-      console.log(propCommunity)
       return;
     }
 
     getCommunityDetail(communityId).then((result) => {
-      console.log(result)
       setCommunity(result)
     }).catch((err) => {
       console.error("GET COMMUNITY DETAIL ERROR: ", err)
@@ -235,7 +233,7 @@ const About: React.FC<AboutProps> = ({
                     nanoseconds: createdAt?.nanoseconds 
                   } 
               */}
-              {!onCreatePage && (
+              {(!onCreatePage && user?.uid) && (
                 <Link to={`/submit/${community?.id}`}>
                     <Button
                     mt={3} 

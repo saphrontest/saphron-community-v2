@@ -24,7 +24,7 @@ const Home = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    user?.uid && getPostsData()
+    getPostsData()
     return () => setLoading(false)
   }, [user])
   
@@ -37,7 +37,7 @@ const Home = () => {
 
   const getPostsData = () => {
     getPosts()
-    getUserSavedPosts(user?.uid as string)
+    user?.uid && getUserSavedPosts(user?.uid as string)
   }
   
   const handleDelete = async (post: Post): Promise<boolean> => {

@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Flex, Skeleton, SkeletonCircle, Stack, Text } from '@chakra-ui/react';
+import { Avatar, Box, Button, Flex, Skeleton, SkeletonCircle, Stack, Text, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,6 +14,7 @@ import RecCommArt from '../assets/images/CommsArt.png'
 const Recommendations = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const toast = useToast()
     const [loading, setLoading] = useState(false)
     const [viewAll, setViewAll] = useState(false)
     const [myCommmunities, setMyCommmunities] = useState<any[]>([])
@@ -42,7 +43,6 @@ const Recommendations = () => {
       })
     }, [])
 
-    console.log(joinedCommunities)
 
     useEffect(() => {
       user?.uid && getJoinedCommunities(user?.uid)
@@ -57,6 +57,7 @@ const Recommendations = () => {
         const comms = await getUserCommunities(userId)
         setMyCommmunities(comms)
     }
+    
     const onJoin = async (userId: string, communityId: string) => {
       const mine = myCommmunities.find(mine => mine.communityId === communityId)
       if(!!mine){
@@ -155,7 +156,16 @@ const Recommendations = () => {
                         fontSize="8pt"
                         onClick={(event) => {
                           event.stopPropagation();
-                          user?.uid && onJoin(user?.uid, item.id)
+                          if(!user?.uid) {
+                            toast({
+                              title: "Please login, first!",
+                              status: "error",
+                              isClosable: true,
+                              position: "top-right"
+                            })
+                            return;
+                          }
+                          onJoin(user?.uid, item.id)
                         }}
                         variant={!!joinedCommunities.find(joined => joined.communityId === item.id) ? "outline" : "solid"}
                       >

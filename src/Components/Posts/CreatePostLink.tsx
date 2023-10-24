@@ -1,16 +1,32 @@
 import React, { FC } from 'react'
-import { Flex, Icon, Image, Input } from '@chakra-ui/react'
+import { Flex, Icon, Image, Input, useToast } from '@chakra-ui/react'
 import { BsLink45Deg } from "react-icons/bs";
 import { IoImageOutline } from "react-icons/io5";
 import LogoIcon from '../../assets/Logo/logo-icon.png'
 import { useNavigate } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../firebaseClient';
 
 interface CreatePostLinkProps {
   communityId?: string;
 }
 
 const CreatePostLink : FC <CreatePostLinkProps> = ({communityId}) => {
+  const [user] = useAuthState(auth)
   const navigate = useNavigate()
+  const toast = useToast()
+  const handleClick = () => {
+    if(user?.uid) {
+      navigate(`/submit${communityId ? `/${communityId}` : ''}`)
+    } else {
+      toast({
+        title: "Please login, first!",
+        status: "error",
+        isClosable: true,
+        position: "top-right"
+      })
+    }
+  }
   return (
     <Flex
         justify="space-evenly"
@@ -20,7 +36,7 @@ const CreatePostLink : FC <CreatePostLinkProps> = ({communityId}) => {
         borderRadius={4}
         border="1px solid"
         borderColor="gray.300"
-        onClick={() => navigate(`/submit${communityId ? `/${communityId}` : ''}`)}
+        onClick={handleClick}
         p={2}
         mb={4}
       >

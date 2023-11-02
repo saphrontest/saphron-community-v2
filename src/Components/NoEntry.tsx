@@ -11,7 +11,7 @@ const NoEntry = (props: any) => {
           cssClass="NoEntry"
         />
         <Text fontSize={24} fontWeight={"bold"} color={"blue.800"}>
-          No {props.type},yet!
+          No {props.type}, yet!
         </Text>
       </Flex>
     )

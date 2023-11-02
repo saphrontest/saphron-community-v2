@@ -24,7 +24,7 @@ const Nav = () => {
           <SearchInput />
           <Flex justifyContent="space-between" alignItems="center">
             {user ? <GoSubmit /> : <AuthButtons />}
-            <UserMenu user={user as User}/>
+            {!!user && <UserMenu user={user as User}/>}
           </Flex>
         </Flex>
       </header>

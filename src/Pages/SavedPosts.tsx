@@ -85,8 +85,6 @@ const SavedPosts = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isVoteChange])
 
-    console.log(savedPosts)
-
   return (
     <PageLayout>
       <>

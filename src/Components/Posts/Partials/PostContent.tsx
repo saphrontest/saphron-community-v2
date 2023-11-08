@@ -20,7 +20,7 @@ const PostContent: FC<PostContentProps> = ({ post, communityName }) => {
           <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
             <Flex gap={1}>
               <Avatar src={post.communityImageURL} boxSize={18} />
-              <Link to={`community/${post.communityId}`}>
+              <Link to={`community-detail/${post.communityId}`}>
                 <Text
                   fontWeight={700}
                   _hover={{ textDecoration: "underline" }}

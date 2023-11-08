@@ -2,7 +2,7 @@
   "name": "saphron-community",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/",
+  "homepage": "https://saphronhealth.com/community",
   "dependencies": {
     "@chakra-ui/icons": "^2.1.0",
     "@chakra-ui/react": "^2.8.0",

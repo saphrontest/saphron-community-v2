@@ -114,7 +114,7 @@ const PostDetail = () => {
         {!isPageLoading && <Comments comments={comments} post={post} getComments={getComments}/>}
       </>
       <>
-      <About communityId={communities.filter(({id}) => id === post?.communityId)[0]?.id as string ?? ""}/>
+        {!isPageLoading && <About communityId={communities.filter(({id}) => id === post?.communityId)[0]?.id as string ?? ""}/>}
       </>
     </PageLayout>
   )

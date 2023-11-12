@@ -29,12 +29,6 @@ const TextEditor: FC<TextEditorProps> = ({onChange, value}) => {
           const data = editor.getData();
           onChange("body", data)
       } }
-      onBlur={ ( event, editor ) => {
-          console.log( 'Blur.', editor );
-      } }
-      onFocus={ ( event, editor ) => {
-          console.log( 'Focus.', editor );
-      } }
       
     />
   )

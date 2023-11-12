@@ -1,3 +1,7 @@
+:root {
+    --ck-color-base-border: #E2E8F0;
+}
+
 .PostBody a {
     text-decoration: underline;
     color: blue;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Stack, Input, Textarea, Flex, Button } from "@chakra-ui/react";
+import { Stack, Input, Flex, Button } from "@chakra-ui/react";
 import TextEditor from "../../TextEditor";
 
 type TextInputsProps = {
@@ -35,21 +35,6 @@ const TextInputs: React.FC<TextInputsProps> = ({
         borderRadius={4}
         placeholder="Title"
       />
-      {/* <Textarea
-        name="body"
-        value={textInputs.body}
-        onChange={onChange}
-        fontSize="10pt"
-        placeholder="Text (optional)"
-        _placeholder={{ color: "gray.500" }}
-        _focus={{
-          outline: "none",
-          bg: "white",
-          border: "1px solid",
-          borderColor: "black",
-        }}
-        height="100px"
-      /> */}
       <TextEditor onChange={onChange} value={textInputs.body}/>
       <Flex justify="flex-end">
         <Button

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import TextInputs from './TextInputs';
 import ImageUpload from './ImageUpload';
 import { addDoc, collection, serverTimestamp, updateDoc } from 'firebase/firestore';

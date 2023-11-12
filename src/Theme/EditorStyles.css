@@ -1,0 +1,35 @@
+.PostBody a {
+    text-decoration: underline;
+    color: blue;
+    font-weight: 600;
+}
+
+.PostBody h2 {
+    font-weight: 800;
+}
+
+.PostBody h3 {
+    font-weight: 700;
+}
+
+.PostBody h4 {
+    font-weight: 600;
+}
+
+.PostBody ul,
+.PostBody ol {
+    padding: 0 16px;
+}
+
+.PostBody blockquote {
+    padding-left: 15px;
+    border-left: 3px solid #ccc;
+}
+
+.ck.ck-editor__editable_inline {
+    padding: 0 32px;
+}
+
+.ck.ck-balloon-panel.ck-balloon-panel_position_border-side_right.ck-powered-by-balloon {
+    display: none;
+}

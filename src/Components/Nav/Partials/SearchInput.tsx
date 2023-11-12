@@ -16,7 +16,6 @@ const SearchInput = () => {
         <InputLeftElement
           pointerEvents="none"
           color="gray.400"
-        // children={<SearchIcon mb={2} />}
         >
           <SearchIcon mb={2} />
         </InputLeftElement>

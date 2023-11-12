@@ -66,6 +66,7 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                             fontSize="10pt"
                             fontWeight={700}
                             _hover={{ bg: "blue.500", color: "white" }}
+                            onClick={() => navigate("profile")}
                         >
                             <Flex alignItems="center">
                                 <Icon fontSize={20} mr={2} as={CgProfile} />

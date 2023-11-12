@@ -10,6 +10,7 @@ import CommArt from "../assets/images/CommsArt.png"
 import { setCommunities, setJoinedCommunities } from '../redux/slices/communitySlice';
 import { Community, JoinedCommunity } from '../Interface/CommunityInterface';
 import RecCommArt from '../assets/images/CommsArt.png'
+import { getPexelPhoto } from '../pexelsClient';
 
 const Recommendations = () => {
   const dispatch = useDispatch()
@@ -17,9 +18,19 @@ const Recommendations = () => {
   const toast = useToast()
     const [loading, setLoading] = useState(false)
     const [viewAll, setViewAll] = useState(false)
+    const [pexelThumbnail, setPexelThumbnail] = useState<any>()
     const [myCommmunities, setMyCommmunities] = useState<any[]>([])
     const {communities, joinedCommunities} = useSelector((state: RootState) => state.community)
     const [user] = useAuthState(auth)
+
+    const getThumbnail = async () => {
+      const photo = await getPexelPhoto()
+      setPexelThumbnail(photo)
+  }
+
+  useEffect(() => {
+      getThumbnail()
+  }, [])
     
     useEffect(() => {
         user?.uid && getUserCommunity(user?.uid)
@@ -90,7 +101,7 @@ const Recommendations = () => {
         borderRadius="4px 4px 0px 0px"
         fontWeight={600}
         backgroundSize="cover"
-        bgImage={RecCommArt}
+        bgImage={pexelThumbnail?.src?.original ?? RecCommArt}
       >
         <Flex
         width="100%"

@@ -5,10 +5,14 @@ import WelcomePicture from "../assets/images/welcome.png"
 import { setModal } from '../redux/slices/modalSlice'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '../firebaseClient'
+import { useEffect, useState } from 'react'
+import { getPexelPhoto } from '../pexelsClient'
+
 const PersonalHome = () => {
     const [user] = useAuthState(auth)
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const [pexelThumbnail, setPexelThumbnail] = useState<any>()
     const toast = useToast()
 
     const handleButton = (type: string = "add-community") => {
@@ -28,6 +32,15 @@ const PersonalHome = () => {
         }
     }
 
+    const getThumbnail = async () => {
+        const photo = await getPexelPhoto()
+        setPexelThumbnail(photo)
+    }
+
+    useEffect(() => {
+        getThumbnail()
+    }, [])
+
     return (
         <Flex
             direction="column"
@@ -44,10 +57,11 @@ const PersonalHome = () => {
                 color="white"
                 p="6px 10px"
                 bg="blue.500"
-                height="34px"
+                height="100px"
                 borderRadius="4px 4px 0px 0px"
                 fontWeight={600}
-                bgImage={WelcomePicture}
+                bgImage={pexelThumbnail?.src?.original ?? WelcomePicture}
+                bgPosition={"center"}
                 backgroundSize="cover"
             ></Flex>
             <Flex direction="column" p="12px">

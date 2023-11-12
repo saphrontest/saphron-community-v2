@@ -27,9 +27,8 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
     const [selectedFile, setSelectedFile] = useState<string>();
     const selectFileRef = useRef<HTMLInputElement>(null);
 
-    const onTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const {name, value} = e.target;
-      setTextInputs((prev) => ({ ...prev, [name]: value }));
+    const onTextChange = (name: string, data: string) => {
+      setTextInputs((prev) => ({ ...prev, [name]: data }));
     }
 
     const handleCreatePost = async () => {

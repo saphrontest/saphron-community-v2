@@ -39,7 +39,7 @@ const PostContent: FC<PostContentProps> = ({ post, communityName }) => {
       <Text fontSize="12pt" fontWeight={600} textAlign="left">
         {post.title}
       </Text>
-      <Text fontSize="10pt" textAlign={"left"}>{post.body}</Text>
+      <Text fontSize="10pt" textAlign={"left"} className='PostBody' dangerouslySetInnerHTML={{ __html: post.body }}></Text>
       {post.imageURL && (
         <Flex justify="center" align="center" p={2}>
           {loadingImage && (

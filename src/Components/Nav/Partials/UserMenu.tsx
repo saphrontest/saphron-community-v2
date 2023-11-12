@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { Box, Flex, Icon, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text } from '@chakra-ui/react'
+import { Avatar, Box, Flex, Icon, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text } from '@chakra-ui/react'
 import { CgProfile } from 'react-icons/cg'
 import { IoBookmarksSharp, IoSparkles } from 'react-icons/io5'
 import { MdOutlineLogin } from 'react-icons/md'
@@ -32,6 +32,7 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                         {user ? (
                             <>
                                 {/* Avatar should be user profile image */}
+                                {user.photoURL && <Avatar src={user.photoURL} width={"30px"} height={"30px"} mr={2}/>}
                                 <Box
                                     display={{ base: "none", lg: "flex" }}
                                     flexDirection="column"

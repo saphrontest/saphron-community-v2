@@ -1,5 +1,5 @@
 import { Box, Flex, SkeletonCircle, SkeletonText, Stack, Text } from '@chakra-ui/react'
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import CommentItem from './CommentItem';
 import { Comment } from '../../Interface/CommentsInterface';
 import { useAuthState } from 'react-firebase-hooks/auth';

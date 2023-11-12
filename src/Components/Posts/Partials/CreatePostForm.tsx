@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import TextInputs from './TextInputs';
 import ImageUpload from './ImageUpload';
 import { addDoc, collection, serverTimestamp, updateDoc } from 'firebase/firestore';
@@ -27,9 +27,8 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
     const [selectedFile, setSelectedFile] = useState<string>();
     const selectFileRef = useRef<HTMLInputElement>(null);
 
-    const onTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const {name, value} = e.target;
-      setTextInputs((prev) => ({ ...prev, [name]: value }));
+    const onTextChange = (name: string, data: string) => {
+      setTextInputs((prev) => ({ ...prev, [name]: data }));
     }
 
     const handleCreatePost = async () => {

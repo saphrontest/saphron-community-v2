@@ -32,7 +32,7 @@ const Router = () => {
   return (
     <BrowserRouter basename="/community">
         <Routes>
-        {RoutesArray.map(({ path, component }, index) => <Route path={path} Component={component} key={index} />)}
+          {RoutesArray.map(({ path, component }, index) => <Route path={path} Component={component} key={index} />)}
         </Routes>
       </BrowserRouter>
   )

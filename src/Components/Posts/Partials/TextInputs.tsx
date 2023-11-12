@@ -1,14 +1,13 @@
 import React from "react";
 import { Stack, Input, Textarea, Flex, Button } from "@chakra-ui/react";
+import TextEditor from "../../TextEditor";
 
 type TextInputsProps = {
   textInputs: {
     title: string;
     body: string;
   };
-  onChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
+  onChange: ( name: string, data: string ) => void;
   handleCreatePost: () => void;
   loading: boolean;
 };
@@ -24,7 +23,7 @@ const TextInputs: React.FC<TextInputsProps> = ({
       <Input
         name="title"
         value={textInputs.title}
-        onChange={onChange}
+        onChange={(e) => onChange("title", e.target.value)}
         _placeholder={{ color: "gray.500" }}
         _focus={{
           outline: "none",
@@ -36,7 +35,7 @@ const TextInputs: React.FC<TextInputsProps> = ({
         borderRadius={4}
         placeholder="Title"
       />
-      <Textarea
+      {/* <Textarea
         name="body"
         value={textInputs.body}
         onChange={onChange}
@@ -50,7 +49,8 @@ const TextInputs: React.FC<TextInputsProps> = ({
           borderColor: "black",
         }}
         height="100px"
-      />
+      /> */}
+      <TextEditor onChange={onChange} value={textInputs.body}/>
       <Flex justify="flex-end">
         <Button
           height="34px"

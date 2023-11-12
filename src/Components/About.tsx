@@ -12,6 +12,7 @@ import {
   Image,
   Spinner,
   useToast,
+  flexbox,
 } from "@chakra-ui/react";
 import { RiCakeLine } from "react-icons/ri";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -248,9 +249,14 @@ const About: React.FC<AboutProps> = ({
               {user?.uid === community?.creatorId && (
                 <>
                   <Divider />
-                  <Stack fontSize="10pt" spacing={1}>
-                    <Text fontWeight={600}>Admin</Text>
-                    <Flex align="left" justify="space-between" direction="column" gap={3}>
+                  <Stack display={"flex"} flexDirection={"row"} alignItems={"center"} fontSize="10pt" spacing={4}>
+                    <Image
+                    src={community?.imageURL || selectedFile}
+                    boxSize={community?.imageURL || selectedFile ? 10 : 30}
+                    borderRadius={"full"}
+                    alt="ICON" />
+                    <Flex align="start" justify="space-between" direction="column">
+                      <Text fontWeight={600}>Admin</Text>
                       <Text
                         color="blue.500"
                         cursor="pointer"
@@ -259,13 +265,12 @@ const About: React.FC<AboutProps> = ({
                       >
                         Change Image
                       </Text>
-                      <Image src={community?.imageURL || selectedFile} boxSize={community?.imageURL || selectedFile ? 40 : 30} alt="ICON" />
                     </Flex>
                     {selectedFile &&
                       (imageLoading ? (
                         <Spinner />
                       ) : (
-                        <Button height="30px" maxWidth={120}>Save Changes</Button>
+                        <Button height="30px" maxWidth={120} onClick={updateImage}>Save Changes</Button>
                       ))}
                     <input
                       id="file-upload"

@@ -25,6 +25,8 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                 cursor="pointer"
                 padding="0px 6px"
                 borderRadius="4px"
+                outline={"1px solid"}
+                outlineColor={"gray.100"}
                 _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
             >
                 <Flex alignItems="center">
@@ -41,10 +43,6 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                                     mr={8}
                                 >
                                     <Text fontWeight={700}>{user.displayName}</Text>
-                                    <Flex alignItems="center">
-                                        <Icon as={IoSparkles} color="brand.100" mr={1} />
-                                        <Text color="gray.400">1 karma</Text>
-                                    </Flex>
                                 </Box>
                             </>
                         ) : (

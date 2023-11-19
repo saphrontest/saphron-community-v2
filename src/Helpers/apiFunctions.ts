@@ -266,3 +266,37 @@ export const getUserCommunities = async (userId: string) => {
   return comm
   
 }
+
+export const searchPost = async (keyword: string) => {
+  
+  if(!!keyword === false) return;
+  
+  const bodyQuery = query(
+    collection(firestore, 'posts'),
+    where('body', '>=', keyword),
+    where('body', '<=', keyword + '\uf8ff')
+  );
+
+  const titleQuery = query(
+    collection(firestore, 'posts'),
+    where('title', '>=', keyword),
+    where('title', '<=', keyword + '\uf8ff')
+  );
+
+  const [bodySnap, titleSnap] = await Promise.all([
+    getDocs(bodyQuery),
+    getDocs(titleQuery)
+  ]);
+
+  const bodyResults: Post[] = [];
+  bodySnap.forEach((doc) => {
+    bodyResults.push({ id: doc.id, ...doc.data() } as Post);
+  });
+
+  const titleResults: Post[] = [];
+  titleSnap.forEach((doc) => {
+    titleResults.push({ id: doc.id, ...doc.data() } as Post);
+  });
+  const results = [...bodyResults, ...titleResults];
+  return results
+}

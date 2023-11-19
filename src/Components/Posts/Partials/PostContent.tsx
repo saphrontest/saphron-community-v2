@@ -1,6 +1,6 @@
 import { Avatar, Flex, Icon, Image, Skeleton, Stack, Text } from '@chakra-ui/react'
 import moment from 'moment'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FC } from 'react'
 import { Post } from '../../../Interface/PostInterface'
@@ -13,6 +13,13 @@ interface PostContentProps {
 
 const PostContent: FC<PostContentProps> = ({ post, communityName }) => {
   const [loadingImage, setLoadingImage] = useState(true);
+
+  useEffect(() => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(post.body, 'text/html');
+    doc.querySelector('a') !== null && doc.querySelector('a')?.setAttribute('target', '_blank');
+  }, [post])
+  
   return (
     <Stack spacing={1} p="10px 10px">
       <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">

@@ -53,14 +53,17 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
           return;
         }
         
+      const createSlugRegex = /(^ |- | -$)| +|( )+/g
 
       setLoading(true);
       const {title, body} = textInputs
+      
+      const parseEmptyChar = (data: string) => data[0] === " " ? data.slice(1) : data
 
       try {
         const postDocRef = await addDoc(collection(firestore, "posts"), {
-          body,
-          title,
+          body: parseEmptyChar(body),
+          title: parseEmptyChar(title),
           communityId: community.id,
           communityImageUrl: community.imageURL || "",
           creatorId: user?.uid,
@@ -68,7 +71,8 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
           numberOfComments: 0,
           voteStatus: 0,
           createdAt: serverTimestamp(),
-          editedAt: serverTimestamp()
+          editedAt: serverTimestamp(),
+          slug: parseEmptyChar(title).replace(createSlugRegex, "-")
         })
 
         if (selectedFile) {

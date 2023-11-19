@@ -19,7 +19,7 @@ const RoutesArray = [
     component: CommunityDetail, 
   },
   {
-    path: "post/:id",
+    path: "post/:slug",
     component: PostDetail, 
   },
   {

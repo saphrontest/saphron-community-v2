@@ -23,7 +23,8 @@ const TextEditor: FC<TextEditorProps> = ({onChange, value}) => {
             '|', 'link', 'blockQuote',
             '|', 'bulletedList', 'numberedList'
           ]
-        }
+        },
+        link: { addTargetToExternalLinks: true }
     }}
       onChange={ ( _event, editor ) => {
           const data = editor.getData();

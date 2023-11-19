@@ -7,7 +7,7 @@ import {
   getDoc,
   where,
   setDoc,
-  deleteDoc,
+  deleteDoc
 } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 // INTERFACES
@@ -73,7 +73,8 @@ export const getPosts = async () => {
       numberOfComments: doc.data().numberOfComments,
       title: doc.data().title,
       userDisplayText: doc.data().userDisplayText,
-      voteStatus: doc.data().voteStatus
+      voteStatus: doc.data().voteStatus,
+      slug: doc.data().slug
     };
   });
   store.dispatch(setPosts(posts))
@@ -91,10 +92,12 @@ export const getPostsByCommunities = async (id: string) => {
   return posts;
 };
 
-export const getPostDetails = async (id: string) => {
-  const post = await fetch.getDetail("posts", id);
-  const postObject = { id: post.id, ...post.data() };
-  return postObject as Post;
+export const getPostDetails = async (slug: string) => {
+  let post = {}
+  const q = query(collection(firestore, "posts"), where("slug", "==", slug));
+  const data = await getDocs(q);
+  data.forEach(doc => post = { id: doc.id, ...doc.data() } as Post)
+  return post
 };
 
 export const getCommunityDetail = async (id: string) => {

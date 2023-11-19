@@ -24,7 +24,6 @@ const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete,
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [user] = useAuthState(auth);
-
     const [isSaveLoading, setSaveLoading] = useState(false)
 
     const handleSave = async(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -55,7 +54,7 @@ const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete,
                 borderRadius={4}
                 _hover={{ bg: "gray.200" }}
                 cursor="pointer"
-                onClick={() => navigate(`/post/${post.id}`)}
+                onClick={() => navigate(`/post/${post.slug}`)}
             >
                 <Icon as={BsChat} mr={2} />
                 <Text fontSize="9pt" textAlign={"left"}>{post.numberOfComments}</Text>

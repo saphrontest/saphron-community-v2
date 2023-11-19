@@ -18,7 +18,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { setSelectedCommunity } from '../redux/slices/communitySlice'
 
 const PostDetail = () => {
-  const {id} = useParams()
+  const {slug} = useParams()
   const toast = useToast()
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -30,9 +30,9 @@ const PostDetail = () => {
   const {communities} = useSelector((state: RootState) => state.community)
   const isPageLoading = !(!!post && !!comments)
 
-  const getPost = async (id: string) => {
-    const postDetail = await getPostDetails(id)
-    setPost(postDetail)
+  const getPost = async (slug: string) => {
+    const postDetail = await getPostDetails(slug)
+    setPost(postDetail as Post)
   }
 
   const getComments = async (id: string) => {
@@ -40,30 +40,28 @@ const PostDetail = () => {
     setComments(commentsData)
   }
 
-  const getDetail = async () => {
-    getPost(id as string)
-    getComments(id as string)
-  }
+  useEffect(() => {
+    slug && getPost(slug as string)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug])
 
   useEffect(() => {
-    getDetail()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    post?.id && getComments(post.id as string)
+  }, [post])
 
   useEffect(() => {
     if(isVoteChange){
-      getDetail()
+      getComments(post?.id as string)
+      getPost(slug as string)
       return () => setVoteChange(false)
     }
   }, [isVoteChange])
 
   useEffect(() => {
-
     if(post?.communityId){
       const postCommunity = communities.find(community => community.id === post.communityId)
       dispatch(setSelectedCommunity(postCommunity as Community))
     } 
-
   }, [post])
 
   const handleDelete = async (post: Post): Promise<boolean> => {

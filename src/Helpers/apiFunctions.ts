@@ -300,3 +300,12 @@ export const searchPost = async (keyword: string) => {
   const results = [...bodyResults, ...titleResults];
   return results
 }
+
+export const getPostsByUsername = async (userDisplayText: string) => {
+  const posts: Post[] = []
+  const postsDoc = await fetch.getListWhere("posts", where("userDisplayText", "==", userDisplayText))
+  postsDoc.docs.forEach((doc) => {
+    posts.push({ id: doc.id, ...doc.data() } as Post);
+  });
+  return posts;
+}

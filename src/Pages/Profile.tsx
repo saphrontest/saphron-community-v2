@@ -106,7 +106,7 @@ const Profile = () => {
       <Flex justify={"center"} pt={1}>
         <PageLayout isNav={false}>
           <>
-          {userPosts && userPosts.map(post => <PostItem
+          {userPosts && userPosts.map((post: Post) => <PostItem
             key={post.id}
             post={post}
             handleDelete={handleDelete}

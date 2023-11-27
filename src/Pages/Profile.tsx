@@ -102,7 +102,7 @@ const Profile = () => {
   return (
     <>
       <Nav />
-      <ProfileHeader name={user?.displayName as string} username={user?.email?.split("@")[0] as string}/>
+      <ProfileHeader name={user?.displayName as string} username={user?.email?.split("@")[0] as string} profilePhoto={user?.photoURL ?? undefined}/>
       <Flex justify={"center"} pt={1}>
         <PageLayout isNav={false}>
           <>

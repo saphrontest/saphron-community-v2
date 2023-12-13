@@ -33,6 +33,7 @@ const SCEditButton: FC<SCEditButtonProps> = ({ onEdit, position = "relative", le
         style={{ transform }}
         height={"fit-content"}
         width="fit-content"
+        cursor={"pointer"}
         >
             <SCIcon name='edit' size={24} fill='#718096' />
         </Box>

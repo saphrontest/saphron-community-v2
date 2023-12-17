@@ -7,6 +7,7 @@ import { SCEditButton, SCFormItem, SCIcon } from '../SCElements'
 import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 import { getPexelPhoto } from '../../pexelsClient'
 import { doc, updateDoc } from 'firebase/firestore'
+import NotFoundUserPic from '../../assets/images/user.png'
 
 const EditProfileModal = () => {
 
@@ -101,7 +102,6 @@ const EditProfileModal = () => {
             </Flex>
         )
     }
-    
 
   return (  
     <ModalLayout>
@@ -123,16 +123,15 @@ const EditProfileModal = () => {
                 width={"100%"}
             >
                 <Flex bgImage={coverPhoto} w={"100%"} h={"fit-content"} borderRadius={5} justifyContent={"center"} alignItems={"center"}>
-                    <SCFormItem type='img' src={user?.photoURL as string} additionalStyles={{transform: "translateY(40px)"}}/>
+                    <SCFormItem type='img' src={user?.photoURL as string ?? NotFoundUserPic} additionalStyles={{transform: "translateY(40px)"}}/>
                     <input type='file' style={{display: 'none'}} accept="image/x-png,image/gif,image/jpeg" ref={imgInputRef} onChange={onImgChange}/>
                 </Flex>
                 {imageLoading ? <ImageSpinner /> : <SCEditButton onEdit={() => imgInputRef?.current && imgInputRef?.current?.click()} position='relative' top={-8} left={79} transform='translate(-2rem, 2rem)'/>}
                 <Divider mb={6} w="50%" />
                 {/* <SCFormItem placeholder={user?.email as string} label='E-mail' onChange={e => setFormValues(prev => ({email: e.target.value, ...prev}))}/> */}
                 <SCFormItem placeholder={user?.email?.split("@")[0] as string} label='Username'/>
-                <Divider mt={1} mb={3}/>
-                <SCFormItem placeholder={user?.displayName as string} label='Display Name'/>
-                <SCFormItem placeholder={user?.phoneNumber as string} label='Phone Number'/>
+                {/* <Divider mt={1} mb={3}/> */}
+                {/* <SCFormItem placeholder={user?.phoneNumber as string} label='Phone Number'/> */}
                 <Flex w={"100%"} justifyContent={"flex-end"} mt={3}>
                     <Button px={10} onClick={() => editUserInfo()}>Save</Button>
                 </Flex>

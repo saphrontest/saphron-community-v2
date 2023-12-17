@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { Button, Flex, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Text } from "@chakra-ui/react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../../../../firebaseClient";
-import { InputItem } from "../../../../Layouts";
 import { useDispatch } from "react-redux";
 import { setModal } from "../../../../redux/slices/modalSlice";
 import { ModalViewTypes } from "../../../../Interface/ModalInterface";
+import RegisterForm from "../../../Register/RegisterForm";
+import EditProfileModal from "../../EditProfileModal";
 
 type SignUpProps = {
 
@@ -19,8 +20,23 @@ const SignUp: React.FC<SignUpProps> = () => {
     confirmPassword: "",
   });
   const [formError, setFormError] = useState("");
+  const [isSubmit, setIsSubmit] = useState(false)
   const [createUserWithEmailAndPassword, _, loading, authError] =
     useCreateUserWithEmailAndPassword(auth);
+
+    useEffect(() => {
+
+      if(!isSubmit) return;
+
+      if(authError?.message){
+        setIsSubmit(false)
+        const message = authError.code === "auth/weak-password" ? "Password should be at least 6 characters." : authError.code === "auth/email-already-in-use" ? "Email already in use. Please try different email." : "Please try again later."
+        setFormError(message as string);
+      } else {
+        toggleView("editProfile")
+      }
+
+    }, [authError, isSubmit])
 
   const toggleView = (view: ModalViewTypes) => dispatch(setModal({isOpen: true, view: view}));
 
@@ -35,14 +51,8 @@ const SignUp: React.FC<SignUpProps> = () => {
       return setFormError("Passwords do not match");
     }
 
-    // Valid form inputs
-    await createUserWithEmailAndPassword(form.email, form.password);
-
-    if(authError?.message){
-      setFormError("Please try again!")
-    } else {
-      dispatch(setModal({isOpen: true, view: "login"}))
-    }
+    await createUserWithEmailAndPassword(form.email, form.password)
+    setIsSubmit(true);
 
   };
 
@@ -57,58 +67,16 @@ const SignUp: React.FC<SignUpProps> = () => {
 
   return (
     <>
-    {
-      formError && <Text
-        color="red.600"
-        fontWeight={500}
-        paddingBottom={3}
-      >
-        {formError}
-      </Text>
-    }
-    <form onSubmit={onSubmit}>
-      <InputItem
-        name="email"
-        placeholder="email"
-        type="text"
-        mb={2}
-        onChange={onChange}
-      />
-      <InputItem
-        name="password"
-        placeholder="password"
-        type="password"
-        mb={2}
-        onChange={onChange}
-      />
-      <InputItem
-        name="confirmPassword"
-        placeholder="confirm password"
-        type="password"
-        onChange={onChange}
-      />
-      <Button
-        width="100%"
-        height="36px"
-        mb={2}
-        mt={2}
-        type="submit"
-        isLoading={loading}
-      >
-        Sign Up
-      </Button>
-      <Flex fontSize="9pt" justifyContent="center">
-        <Text mr={1}>Have an account?</Text>
-        <Text
-          color="blue.500"
-          fontWeight={700}
-          cursor="pointer"
-          onClick={() => toggleView("login")}
+      {
+        formError && <Text
+          color="red.600"
+          fontWeight={500}
+          paddingBottom={3}
         >
-          LOG IN
+          {formError}
         </Text>
-      </Flex>
-    </form>
+      }
+      <RegisterForm onChange={onChange} onSubmit={onSubmit} toggleView={toggleView} loading={loading} />
     </>
   );
 };

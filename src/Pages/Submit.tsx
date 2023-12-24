@@ -4,12 +4,12 @@ import { Box, Text } from '@chakra-ui/react'
 import { NewPostForm } from '../Components'
 import { CommunitySelect } from '../Components/Community'
 import { useParams } from 'react-router-dom'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth } from '../firebaseClient'
+import { RootState } from '../redux/store'
+import { useSelector } from 'react-redux'
 
 const Submit = () => {
   const params = useParams()
-  const [user] = useAuthState(auth)
+  const user = useSelector((state: RootState) => state.user)
   const [communitySelectOpen, setCommunitySelectOpen] = useState(false)
   return (
     <PageLayout maxWidth="1060px">

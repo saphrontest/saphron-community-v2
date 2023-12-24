@@ -10,7 +10,7 @@ import { auth } from '../../../firebaseClient';
 import { useNavigate } from 'react-router-dom';
 import { setCommunities, setJoinedCommunities, setSelectedCommunity } from '../../../redux/slices/communitySlice';
 import { RootState } from '../../../redux/store';
-import { Community } from '../../../Interface/CommunityInterface';
+import { Community, JoinedCommunity } from '../../../Interface/CommunityInterface';
 
 interface CommunityProps {
     isOpen: boolean;
@@ -48,7 +48,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
     useEffect(() => {    
         getCommunityList()
         if(selectedCommunityId){
-            const comm = communities.find(community => community.id === selectedCommunityId)
+            const comm = communities.find((community: Community) => community.id === selectedCommunityId)
             comm && dispatch(setSelectedCommunity(comm))
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,8 +59,8 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
         if(joinedCommunities.length && communities.length) {
             setFormattedCommunities([])
 
-            joinedCommunities.forEach(joined => {
-                communities.forEach(community => {
+            joinedCommunities.forEach((joined: JoinedCommunity) => {
+                communities.forEach((community: Community) => {
                     if(joined.communityId === community.id) {
                         setFormattedCommunities(prev => ([{isModerator: joined?.isModerator, ...community}, ...prev])) 
                     }

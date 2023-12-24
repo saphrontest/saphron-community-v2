@@ -173,9 +173,9 @@ const Recommendations = () => {
                           }
                           onJoin(user?.id, item.id)
                         }}
-                        variant={!!joinedCommunities.find(joined => joined.communityId === item.id) ? "outline" : "solid"}
+                        variant={!!joinedCommunities.find((joined: JoinedCommunity) => joined.communityId === item.id) ? "outline" : "solid"}
                       >
-                        {joinedCommunities.find(joined => joined.communityId === item.id) ? "Joined" : "Join"}
+                        {joinedCommunities.find((joined: JoinedCommunity) => joined.communityId === item.id) ? "Joined" : "Join"}
                       </Button>
                     </Box>
                   </Flex>

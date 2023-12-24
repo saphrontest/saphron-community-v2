@@ -122,6 +122,7 @@ export const getPostComments = async (id: string) => {
 };
 
 export const getUserVotes = async (id: string) => {
+  if(!id) return;
   const postVotes = await fetch.getList(`users/${id}/postVotes`);
   if (postVotes.size) {
     const votes: PostVote[] = [];

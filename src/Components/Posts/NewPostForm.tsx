@@ -21,12 +21,12 @@ const formTabs = [
 
 const NewPostForm = () => {
   const toast = useToast()
-  const [user] = useAuthState(auth)
+  const user = useSelector((state: RootState) => state.user)
   const [selectedTab, setSelectedTab] = useState<string>(formTabs[0].title);
   const {selectedCommunity} = useSelector((state: RootState) => state.community)
 
   useEffect(() => {
-    if(!!user === false) {
+    if(!!user.id === false) {
       toast({
         title: "Please login, first!",
         status: "error",

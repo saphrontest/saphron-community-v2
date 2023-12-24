@@ -1,14 +1,14 @@
 import { FC, useEffect, useState } from 'react'
 import { Comment, CommentVote as CommentVoteInterface } from '../../Interface/CommentsInterface'
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, firestore } from '../../firebaseClient';
+import { firestore } from '../../firebaseClient';
 import { Avatar, Box, Flex, Spinner, Stack, Text } from '@chakra-ui/react';
 import moment from 'moment';
 import { collection, doc, increment, writeBatch } from 'firebase/firestore';
 import { getCommentVotesByUserId } from '../../Helpers/apiFunctions';
 import CommentVote from './CommentVote';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
+import { RootState } from '../../redux/store';
 
 interface CommentItemProps {
     comment: Comment;
@@ -19,14 +19,13 @@ interface CommentItemProps {
 
 const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading, getComments }) => {
     const dispatch = useDispatch()
-    const [user] = useAuthState(auth);
     const [voteLoading, setVoteLoading] = useState<boolean>(false)
     const [userVote, setUserVote] = useState<CommentVoteInterface>(null)
-
+    const user = useSelector((state: RootState) => state.user)
 
     useEffect(() => {
-        user?.uid && getUserVote(user.uid)
-    }, [user?.uid])
+        user?.id && getUserVote(user.id)
+    }, [user])
 
     const getUserVote = async (userId: string) => {
         setVoteLoading(true)
@@ -128,12 +127,12 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading, getCo
                     {
                         voteLoading ? <Spinner size="sm" /> : 
                             <CommentVote
-                            userId={user?.uid as string}
+                            userId={user?.id as string}
                             userVote={userVote}
                             onVote={onVote}
                             voteValue={comment?.voteValue as number} />
                     }
-                    {user?.uid === comment?.creatorId && (
+                    {user?.id === comment?.creatorId && (
                         <Text
                             fontSize="9pt"
                             _hover={{ color: "blue.500" }}

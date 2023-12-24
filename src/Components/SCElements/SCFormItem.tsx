@@ -3,16 +3,17 @@ import { FC } from 'react'
 import { InputItem } from '../../Layouts'
 
 interface SCFormItemProps {
-    label?: string;
-    placeholder?: string;
-    type?: string;
     src?: string;
+    type?: string;
+    label?: string;
+    name?: string;
+    placeholder?: string;
     margin?: string | number;
     additionalStyles?: object;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const SCFormItem:FC<SCFormItemProps> = ({ label='', placeholder, type="default", src, additionalStyles, onChange, ...props }) => {
+const SCFormItem:FC<SCFormItemProps> = ({ label='', name, placeholder, type="default", src, additionalStyles, onChange, ...props }) => {
     return type === 'img' ? (
         <Flex flexDir="column" align="center" gap={2} alignItems={"flex-start"} style={additionalStyles} {...props}>
             <Text fontWeight={600} whiteSpace={"nowrap"} w={"40%"}>
@@ -27,7 +28,7 @@ const SCFormItem:FC<SCFormItemProps> = ({ label='', placeholder, type="default",
             </Text>
             <InputItem
                 mb={2}
-                name="name"
+                name={name ?? ""}
                 type="text"
                 onChange={onChange}
                 placeholder={placeholder}

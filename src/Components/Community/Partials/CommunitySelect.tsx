@@ -22,7 +22,7 @@ interface CommunityProps {
 const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCommunityId}) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [user] = useAuthState(auth);
+    const user = useSelector((state: RootState) => state.user)
     const communityMenuRef = useRef(null)
     const [formattedCommunities, setFormattedCommunities] = useState<any[]>([])
     const {communities, selectedCommunity, joinedCommunities} = useSelector((state: RootState) => state.community)
@@ -42,7 +42,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
     }
 
     useEffect(() => {
-        user?.uid && getJoinedCommunities(user?.uid)
+        user?.id && getJoinedCommunities(user?.id)
     }, [user])
 
     useEffect(() => {    
@@ -139,7 +139,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                 {!!formattedCommunities.filter(com => com.isModerator).length && <Text pl={3} mb={1} fontSize="7pt" fontWeight={500} color="gray.500">
                 MY COMMUNITIES
                 </Text>}
-                {formattedCommunities.filter(com => com.isModerator).filter(comm => comm.creatorId !== user?.uid).map(comm => {
+                {formattedCommunities.filter(com => com.isModerator).filter(comm => comm.creatorId !== user?.id).map(comm => {
                     return (
                         <MenuItem
                             key={comm.id}

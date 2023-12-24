@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Text } from "@chakra-ui/react";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "../../../../firebaseClient";
+import { useAuthState, useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth, firestore } from "../../../../firebaseClient";
 import { useDispatch } from "react-redux";
 import { setModal } from "../../../../redux/slices/modalSlice";
 import { ModalViewTypes } from "../../../../Interface/ModalInterface";
 import RegisterForm from "../../../Register/RegisterForm";
-import EditProfileModal from "../../EditProfileModal";
+import { collection, doc, writeBatch } from "firebase/firestore";
+import { getUser, saveUserToFirestore } from "../../../../Helpers/apiFunctions";
 
 type SignUpProps = {
 
 };
 
 const SignUp: React.FC<SignUpProps> = () => {
-    const dispatch = useDispatch()
+  const dispatch = useDispatch()
+  const [user] = useAuthState(auth)
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -33,12 +35,15 @@ const SignUp: React.FC<SignUpProps> = () => {
         const message = authError.code === "auth/weak-password" ? "Password should be at least 6 characters." : authError.code === "auth/email-already-in-use" ? "Email already in use. Please try different email." : "Please try again later."
         setFormError(message as string);
       } else {
-        toggleView("editProfile")
+        user?.uid && saveUserToFirestore(null, user).then(() => {
+          getUser(user?.uid)
+          toggleView("editProfile")
+        })
       }
 
     }, [authError, isSubmit])
 
-  const toggleView = (view: ModalViewTypes) => dispatch(setModal({isOpen: true, view: view}));
+    const toggleView = (view: ModalViewTypes) => dispatch(setModal({isOpen: true, view: view}));
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

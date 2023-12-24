@@ -34,7 +34,7 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                         {user ? (
                             <>
                                 {/* Avatar should be user profile image */}
-                                {user.photoURL && <Avatar src={user.photoURL} width={"30px"} height={"30px"} mr={2}/>}
+                                <Avatar src={user.photoURL ?? undefined} boxSize={user.photoURL ? 28 : 30} style={{width: 30, height: 30}} mr={2}/>
                                 <Box
                                     display={{ base: "none", lg: "flex" }}
                                     flexDirection="column"
@@ -42,7 +42,7 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                                     alignItems="flex-start"
                                     mr={8}
                                 >
-                                    <Text fontWeight={700}>{user.displayName}</Text>
+                                    <Text fontWeight={700}>{user.displayName ?? user.email?.split("@")[0]}</Text>
                                 </Box>
                             </>
                         ) : (

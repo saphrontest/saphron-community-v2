@@ -7,7 +7,8 @@ import {
   getDoc,
   where,
   setDoc,
-  deleteDoc
+  deleteDoc,
+  writeBatch
 } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 // INTERFACES
@@ -16,6 +17,8 @@ import { Post, PostVote } from "../Interface/PostInterface";
 import { Comment, CommentVote } from "../Interface/CommentsInterface";
 import { store } from "../redux/store";
 import { setPosts, setSavedPosts } from "../redux/slices/postSlice";
+import { User } from "firebase/auth";
+import { setUserInfo } from "../redux/slices/userSlice";
 
 const fetch = {
   getDetail: async (query: string, id: string) => {
@@ -308,4 +311,67 @@ export const getPostsByUsername = async (userDisplayText: string) => {
     posts.push({ id: doc.id, ...doc.data() } as Post);
   });
   return posts;
+}
+
+const generateUsername = (email: string) => {
+  return email.split("@")[0].toLowerCase() ?? ""
+}
+
+export const saveUserToFirestore = async (provider: string | null, user: User) => {
+  
+  try {
+
+    const batch = writeBatch(firestore);
+    const userDocRef = doc(firestore, 'users', user.uid);
+
+    const docSnapshot = await getDoc(userDocRef);
+
+    if(docSnapshot.data()?.isRegistered){
+      return;
+    }
+
+    const newUser = {
+      username: generateUsername(user?.email ?? ""),
+      email: user?.email,
+      coverPhoto: "",
+      profilePhoto: "",
+      displayName: "",
+      phoneNumber: "",
+      emailVerified: false,
+      isRegistered: true,
+      provider
+    }
+
+    // Use the batch to set the data for the new user
+    batch.set(userDocRef, newUser);
+
+    // Commit the batch to Firestore
+    await batch.commit();
+    
+  } catch (error: any) {
+    throw new Error(error?.message);
+  }
+}
+
+export const updateUser = async (userId: string, value: object) => {
+  try {
+    const batch = writeBatch(firestore);
+    const userRef = doc(firestore, "users", userId);
+    batch.update(userRef, value);
+    await batch.commit();
+  } catch (error: any) {
+    throw new Error(error?.message);
+  }
+}
+
+export const getUser = async (userId: string) => {
+  try {
+    const userDocRef = doc(firestore, 'users', userId);
+    const docSnapshot = await getDoc(userDocRef);
+    if(docSnapshot.data()?.isRegistered){
+      store.dispatch(setUserInfo({id: userId, ...docSnapshot.data()}));
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }

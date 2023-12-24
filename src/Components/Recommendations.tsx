@@ -1,12 +1,9 @@
 import { Avatar, Box, Button, Flex, Skeleton, SkeletonCircle, Stack, Text, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
 import { getCommunities, getJoinedCommunitiesList, getUserCommunities, joinCommunity, leaveCommunity } from '../Helpers/apiFunctions';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../firebaseClient';
-import CommArt from "../assets/images/CommsArt.png"
 import { setCommunities, setJoinedCommunities } from '../redux/slices/communitySlice';
 import { Community, JoinedCommunity } from '../Interface/CommunityInterface';
 import RecCommArt from '../assets/images/CommsArt.png'
@@ -21,7 +18,7 @@ const Recommendations = () => {
     const [pexelThumbnail, setPexelThumbnail] = useState<any>()
     const [myCommmunities, setMyCommmunities] = useState<any[]>([])
     const {communities, joinedCommunities} = useSelector((state: RootState) => state.community)
-    const [user] = useAuthState(auth)
+    const user = useSelector((state: RootState) => state.user)
 
     const getThumbnail = async () => {
       const photo = await getPexelPhoto()
@@ -33,7 +30,10 @@ const Recommendations = () => {
   }, [])
     
     useEffect(() => {
-        user?.uid && getUserCommunity(user?.uid)
+      if(user.id) {
+        getUserCommunity(user.id)
+        getJoinedCommunities(user.id)
+      }
     }, [user])
     
     useEffect(() => {
@@ -53,11 +53,6 @@ const Recommendations = () => {
         dispatch(setCommunities(communityList as Community[]))
       })
     }, [])
-
-
-    useEffect(() => {
-      user?.uid && getJoinedCommunities(user?.uid)
-    }, [user?.uid])
 
     const getJoinedCommunities = async (userId: string) => {
       const joined : JoinedCommunity[] | false = await getJoinedCommunitiesList(userId)
@@ -167,7 +162,7 @@ const Recommendations = () => {
                         fontSize="8pt"
                         onClick={(event) => {
                           event.stopPropagation();
-                          if(!user?.uid) {
+                          if(!user.id) {
                             toast({
                               title: "Please login, first!",
                               status: "error",
@@ -176,7 +171,7 @@ const Recommendations = () => {
                             })
                             return;
                           }
-                          onJoin(user?.uid, item.id)
+                          onJoin(user?.id, item.id)
                         }}
                         variant={!!joinedCommunities.find(joined => joined.communityId === item.id) ? "outline" : "solid"}
                       >

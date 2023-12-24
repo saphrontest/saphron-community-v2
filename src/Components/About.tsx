@@ -12,20 +12,19 @@ import {
   Image,
   Spinner,
   useToast,
-  flexbox,
 } from "@chakra-ui/react";
 import { RiCakeLine } from "react-icons/ri";
-import { useAuthState } from "react-firebase-hooks/auth";
 import moment from "moment";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
 import { Community } from "../Interface/CommunityInterface";
-import { auth, firestore, storage } from "../firebaseClient";
+import { firestore, storage } from "../firebaseClient";
 import { Link } from "react-router-dom";
 import { getCommunityDetail } from "../Helpers/apiFunctions";
 import { InputItem } from "../Layouts";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSelectedCommunity } from "../redux/slices/communitySlice";
+import { RootState } from "../redux/store";
 
 type AboutProps = {
   community?: Community
@@ -44,7 +43,7 @@ const About: React.FC<AboutProps> = ({
 }) => {
   const toast = useToast()
   const dispatch = useDispatch()
-  const [user] = useAuthState(auth); // will revisit how 'auth' state is passed
+  const user = useSelector((state: RootState) => state.user)
   const selectFileRef = useRef<HTMLInputElement>(null);
 
   const [selectedFile, setSelectedFile] = useState<string>();
@@ -181,7 +180,7 @@ const About: React.FC<AboutProps> = ({
                   </Box>
                 </>
               )}
-              {user?.uid === community?.creatorId && <AddDescription />}
+              {user.id === community?.creatorId && <AddDescription />}
             <Stack spacing={2} >
               <Flex direction="column" flexGrow={1}  paddingTop={2} paddingBottom={2}>
                 <Text textAlign={"left"} fontWeight={700} fontSize={14} pb={2}>Name</Text>
@@ -234,7 +233,7 @@ const About: React.FC<AboutProps> = ({
                     nanoseconds: createdAt?.nanoseconds 
                   } 
               */}
-              {(!onCreatePage && user?.uid) && (
+              {(!onCreatePage && user.id) && (
                 <Link to={`/submit/${community?.id}`}>
                     <Button
                     mt={3} 
@@ -246,7 +245,7 @@ const About: React.FC<AboutProps> = ({
                 </Link>
               )}
               {/* !!!ADDED AT THE VERY END!!! INITIALLY DOES NOT EXIST */}
-              {user?.uid === community?.creatorId && (
+              {user.id === community?.creatorId && (
                 <>
                   <Divider />
                   <Stack display={"flex"} flexDirection={"row"} alignItems={"center"} fontSize="10pt" spacing={4}>

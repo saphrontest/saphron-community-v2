@@ -53,18 +53,22 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
           })
           return;
         }
-        
-      const createSlugRegex = /(^ |- | -$)| +|( )+/g
 
       setLoading(true);
       const {title, body} = textInputs
       
-      const parseEmptyChar = (data: string) => data[0] === " " ? data.slice(1) : data
+      function createSlug(str: string) {
+        return str
+          .toLowerCase()
+          .replace(/[^\w\s-]/g, '')    // Remove non-word characters (excluding spaces and hyphens)
+          .replace(/[\s]+/g, '-')      // Replace spaces with hyphens
+          .replace(/^-+|-+$/g, '');    // Remove leading and trailing hyphens
+      }
 
       try {
         const postDocRef = await addDoc(collection(firestore, "posts"), {
-          body: parseEmptyChar(body),
-          title: parseEmptyChar(title),
+          body: createSlug(body),
+          title: createSlug(title),
           communityId: community.id,
           communityImageUrl: community.imageURL || "",
           creatorId: user?.id,
@@ -73,7 +77,7 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
           voteStatus: 0,
           createdAt: serverTimestamp(),
           editedAt: serverTimestamp(),
-          slug: parseEmptyChar(title).replace(createSlugRegex, "-")
+          slug: createSlug(title)
         })
 
         if (selectedFile) {

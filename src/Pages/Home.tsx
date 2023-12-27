@@ -15,7 +15,6 @@ import { setModal } from '../redux/slices/modalSlice'
 const Home = () => {
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
   const [isVoteChange, setVoteChange] = useState<boolean>(false)
-  const [loading, setLoading] = useState<boolean>(true)
   const {communities} = useSelector((state: RootState) => state.community)
   const {posts} = useSelector((state: RootState) => state.post)
   const user = useSelector((state: RootState) => state.user)
@@ -24,8 +23,7 @@ const Home = () => {
 
   useEffect(() => {
     getPostsData()
-    return () => setLoading(false)
-  }, [user])
+  }, [])
   
   useEffect(() => {
     if(isVoteChange){
@@ -83,15 +81,14 @@ const Home = () => {
       <>
         <CreatePostLink />
         <Stack>
-          {!loading && posts.map((post: Post) => <PostItem
+          {posts.length ? posts.map((post: Post) => <PostItem
             key={post.id}
             post={post}
             handleDelete={handleDelete}
             isDeleteLoading={isDeleteLoading}
             communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
             setVoteChange={setVoteChange}
-          />)}
-          {!posts.length ? <NoEntry type="post"/> : null}
+          />) : <NoEntry type="post"/>}
         </Stack>
       </>
       <>

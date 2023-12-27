@@ -60,7 +60,7 @@ const PersonalHome = () => {
                 height="100px"
                 borderRadius="4px 4px 0px 0px"
                 fontWeight={600}
-                bgImage={pexelThumbnail?.src?.original ?? WelcomePicture}
+                bgImage={pexelThumbnail?.src?.original}
                 bgPosition={"center"}
                 backgroundSize="cover"
             ></Flex>

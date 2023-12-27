@@ -101,7 +101,7 @@ const Recommendations = () => {
         borderRadius="4px 4px 0px 0px"
         fontWeight={600}
         backgroundSize="cover"
-        bgImage={pexelThumbnail?.src?.original ?? RecCommArt}
+        bgImage={pexelThumbnail?.src?.original}
       >
         <Flex
         width="100%"

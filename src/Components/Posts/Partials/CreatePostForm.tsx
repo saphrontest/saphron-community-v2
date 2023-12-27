@@ -66,8 +66,8 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
 
       try {
         const postDocRef = await addDoc(collection(firestore, "posts"), {
-          body: createSlug(body),
-          title: createSlug(title),
+          body,
+          title: title,
           communityId: community.id,
           communityImageUrl: community.imageURL || "",
           creatorId: user?.uid,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { PageLayout } from '../Layouts'
 import { Box, Text } from '@chakra-ui/react'
 import { NewPostForm } from '../Components'

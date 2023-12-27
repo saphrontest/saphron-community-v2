@@ -1,15 +1,13 @@
 import { Avatar, Box, Button, Flex, Skeleton, SkeletonCircle, Stack, Text, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
 import { getCommunities, getJoinedCommunitiesList, getUserCommunities, joinCommunity, leaveCommunity } from '../Helpers/apiFunctions';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebaseClient';
-import CommArt from "../assets/images/CommsArt.png"
 import { setCommunities, setJoinedCommunities } from '../redux/slices/communitySlice';
 import { Community, JoinedCommunity } from '../Interface/CommunityInterface';
-import RecCommArt from '../assets/images/CommsArt.png'
 import { getPexelPhoto } from '../pexelsClient';
 
 const Recommendations = () => {
@@ -37,6 +35,7 @@ const Recommendations = () => {
     }, [user])
     
     useEffect(() => {
+      setLoading(true)
       getCommunities().then(communitiesData => {
         const communityList = [
           ...communitiesData.map(({ id, name, creatorId, privacyType, createdAt }) => ({
@@ -51,7 +50,7 @@ const Recommendations = () => {
           }))
         ]
         dispatch(setCommunities(communityList as Community[]))
-      })
+      }).finally(() => setLoading(false))
     }, [])
 
 

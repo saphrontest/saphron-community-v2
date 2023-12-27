@@ -1,7 +1,6 @@
 import { Button, Flex, Stack, Text, useToast } from '@chakra-ui/react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import WelcomePicture from "../assets/images/welcome.png"
 import { setModal } from '../redux/slices/modalSlice'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '../firebaseClient'

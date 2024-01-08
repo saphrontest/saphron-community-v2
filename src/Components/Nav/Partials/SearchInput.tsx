@@ -66,7 +66,7 @@ const SearchInput = () => {
           />
         </InputGroup>
       </Flex>
-      {showSearchResults ? <SearchResults searchResults={searchResults} /> : null}
+      {showSearchResults ? <SearchResults searchResults={searchResults} searchKey={searchKey}/> : null}
     </Flex>
   )
 }

@@ -39,7 +39,7 @@ const SearchPage = () => {
         </>
         <>
             <Flex bg="white" height="100%" p={2}>
-                Recent Searches
+                {view === "Post Search" ? "Recent Searches" : "Recent Dialogs"}
             </Flex>
         </>
     </PageLayout>

@@ -44,7 +44,7 @@ const PostSearch:FC<PostSearchProps> = ({searchKey, items}) => {
             <SearchIcon mb={2} />
           </InputLeftElement>
           <Input
-            placeholder="Search..."
+            placeholder={searchText ?? "Search..."}
             fontSize="10pt"
             _placeholder={{ color: "gray.500" }}
             _hover={{
@@ -63,7 +63,7 @@ const PostSearch:FC<PostSearchProps> = ({searchKey, items}) => {
             onChange={e => setSearchText(e.target.value)}
           />
         </InputGroup>
-        <SearchResults showMoreButton={false} searchResults={searchResult}/>
+        <SearchResults showMoreButton={false} searchResults={searchResult} zIndex={3}/>
     </Flex>
   )
 }

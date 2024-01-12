@@ -1,28 +1,34 @@
-import React from "react";
-import { Box, Flex } from "@chakra-ui/react";
-import { Modal, Nav } from "../Components";
+import React, { Fragment } from "react";
+import { Box, Divider, Flex, Link, List, Text, useMediaQuery } from "@chakra-ui/react";
+import { Modal, Nav, Sidebar } from "../Components";
 
 interface PageLayoutProps {
   children: React.ReactElement[] | React.ReactElement
   maxWidth?: string;
   isNav?: boolean;
+  showSidebar?: boolean;
 }
+
+
 
 // Assumes array of two children are passed
 const PageLayout: React.FC<PageLayoutProps> = ({
   children,
   maxWidth,
   isNav = true,
+  showSidebar = true
 }) => {
+  
   return (
     <>
       {isNav ? <Nav /> : null}
-      <Flex justify="center" p="16px 0px">
-        <Flex width="95%" justify="center" maxWidth={maxWidth || "860px"}>
+      <Flex justify="center" pt="16px" px={{base: "8px"}}>
+        <Flex width="100%" justify="center" maxWidth={maxWidth || "1320px"}>
+          {showSidebar && <Sidebar />}
           <Flex
             direction="column"
             width={{ base: "100%", md: "65%" }}
-            mr={{ base: 0, md: 6 }}
+            mx={{ base: 0, md: 6 }}
           >
             {children && children[0 as keyof typeof children]}
           </Flex>

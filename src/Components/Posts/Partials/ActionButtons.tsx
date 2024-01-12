@@ -4,12 +4,13 @@ import { AiOutlineDelete } from 'react-icons/ai'
 import { IoBookmarkOutline, IoBookmarkSharp } from 'react-icons/io5'
 import { Post } from '../../../Interface/PostInterface'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { auth } from '../../../firebaseClient'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getUserSavedPosts, savePost } from '../../../Helpers/apiFunctions'
 import { setModal } from '../../../redux/slices/modalSlice'
 import { BsChat } from 'react-icons/bs'
+import { RootState } from '../../../redux/store'
 
 interface ActionButtonsInterface {
     post: Post;
@@ -23,12 +24,12 @@ const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete,
     const toast = useToast()
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [user] = useAuthState(auth);
+    const user = useSelector((state: RootState) => state.user)
     const [isSaveLoading, setSaveLoading] = useState(false)
 
     const handleSave = async(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation();
-        if(!user?.uid){
+        if(!user?.id){
           toast({
             title: "Please login, first!",
             status: "error",
@@ -40,9 +41,9 @@ const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete,
         }
     
         setSaveLoading(true)
-        savePost(post, user?.uid as string)
+        savePost(post, user?.id as string)
         .finally(() => {
-          getUserSavedPosts(user?.uid as string)
+          getUserSavedPosts(user?.id as string)
           setSaveLoading(false)
         })
       }
@@ -74,7 +75,7 @@ const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete,
                     </>
                 )}
             </Flex>
-            {user?.uid === post.creatorId && <Flex
+            {user?.id === post.creatorId && <Flex
                 align="center"
                 p="8px 10px"
                 borderRadius={4}

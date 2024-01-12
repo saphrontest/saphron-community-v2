@@ -1,29 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useAuthState, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../../../../firebaseClient";
 import { InputItem } from "../../../../Layouts";
 import { useDispatch } from "react-redux";
 import { setModal } from "../../../../redux/slices/modalSlice";
 import { ModalViewTypes } from "../../../../Interface/ModalInterface";
+import { getUser } from "../../../../Helpers/apiFunctions";
 
 type LoginProps = {
 };
 
 const Login: React.FC<LoginProps> = () => {
-    const dispatch = useDispatch()
+  const dispatch = useDispatch()
+  const [isLoginSuccess, setLoginSuccess] = useState(false)
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
   const [formError, setFormError] = useState("");
-
+  const [user] = useAuthState(auth)
   const toggleView = (view: ModalViewTypes) => dispatch(setModal({isOpen: true, view: view}));
 
   const [signInWithEmailAndPassword, _, loading, error] =
     useSignInWithEmailAndPassword(auth);
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (formError) setFormError("");
     if (!form.email.includes("@")) {
@@ -34,10 +36,16 @@ const Login: React.FC<LoginProps> = () => {
     signInWithEmailAndPassword(form.email, form.password);
     if(error){
       setFormError("Invalid email or password!");
-    } else {
-      dispatch(setModal({isOpen: false, view: null}))
+    }else{
+      setLoginSuccess(true)
     }
   };
+
+  useEffect(() => {
+    if(isLoginSuccess && user) {
+      getUser(user?.uid).then(() => dispatch(setModal({isOpen: false, view: null})))
+    }
+  }, [user, isLoginSuccess])
 
   const onChange = ({
     target: { name, value },

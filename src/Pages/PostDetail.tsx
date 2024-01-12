@@ -4,7 +4,7 @@ import { getPostComments, getPostDetails } from '../Helpers/apiFunctions'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Post } from '../Interface/PostInterface'
 import { About, PostItem } from '../Components'
-import { auth, firestore, storage } from '../firebaseClient'
+import { firestore, storage } from '../firebaseClient'
 import { deleteObject, ref } from 'firebase/storage'
 import { deleteDoc, doc } from 'firebase/firestore'
 import { Comments } from '../Components/Posts'
@@ -14,7 +14,6 @@ import { RootState } from '../redux/store'
 import { Community } from '../Interface/CommunityInterface'
 import { useToast } from '@chakra-ui/react'
 import { setModal } from '../redux/slices/modalSlice'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { setSelectedCommunity } from '../redux/slices/communitySlice'
 
 const PostDetail = () => {
@@ -22,7 +21,7 @@ const PostDetail = () => {
   const toast = useToast()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [user] = useAuthState(auth)
+  const user = useSelector((state: RootState) => state.user)
   const [post, setPost] = useState<Post | null>(null)
   const [comments, setComments] = useState<(Comment | null)[]>()
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
@@ -59,14 +58,14 @@ const PostDetail = () => {
 
   useEffect(() => {
     if(post?.communityId){
-      const postCommunity = communities.find(community => community.id === post.communityId)
+      const postCommunity = communities.find((community: Community) => community.id === post.communityId)
       dispatch(setSelectedCommunity(postCommunity as Community))
     } 
   }, [post])
 
   const handleDelete = async (post: Post): Promise<boolean> => {
 
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({
         title: "Please login, first!",
         status: "error",
@@ -112,7 +111,7 @@ const PostDetail = () => {
         {!isPageLoading && <Comments comments={comments} post={post} getComments={getComments}/>}
       </>
       <>
-        {!isPageLoading && <About communityId={communities.filter(({id}) => id === post?.communityId)[0]?.id as string ?? ""}/>}
+        {!isPageLoading && <About communityId={communities.filter((community: Community) => community.id === post?.communityId)[0]?.id as string ?? ""}/>}
       </>
     </PageLayout>
   )

@@ -1,15 +1,11 @@
 import { Avatar, Box, Button, Flex, Skeleton, SkeletonCircle, Stack, Text, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
 import { getCommunities, getJoinedCommunitiesList, getUserCommunities, joinCommunity, leaveCommunity } from '../Helpers/apiFunctions';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../firebaseClient';
-import CommArt from "../assets/images/CommsArt.png"
 import { setCommunities, setJoinedCommunities } from '../redux/slices/communitySlice';
 import { Community, JoinedCommunity } from '../Interface/CommunityInterface';
-import RecCommArt from '../assets/images/CommsArt.png'
 import { getPexelPhoto } from '../pexelsClient';
 
 const Recommendations = () => {
@@ -21,7 +17,7 @@ const Recommendations = () => {
     const [pexelThumbnail, setPexelThumbnail] = useState<any>()
     const [myCommmunities, setMyCommmunities] = useState<any[]>([])
     const {communities, joinedCommunities} = useSelector((state: RootState) => state.community)
-    const [user] = useAuthState(auth)
+    const user = useSelector((state: RootState) => state.user)
 
     const getThumbnail = async () => {
       const photo = await getPexelPhoto()
@@ -33,10 +29,14 @@ const Recommendations = () => {
   }, [])
     
     useEffect(() => {
-        user?.uid && getUserCommunity(user?.uid)
+      if(user.id) {
+        getUserCommunity(user.id)
+        getJoinedCommunities(user.id)
+      }
     }, [user])
     
     useEffect(() => {
+      setLoading(true)
       getCommunities().then(communitiesData => {
         const communityList = [
           ...communitiesData.map(({ id, name, creatorId, privacyType, createdAt }) => ({
@@ -51,13 +51,8 @@ const Recommendations = () => {
           }))
         ]
         dispatch(setCommunities(communityList as Community[]))
-      })
+      }).finally(() => setLoading(false))
     }, [])
-
-
-    useEffect(() => {
-      user?.uid && getJoinedCommunities(user?.uid)
-    }, [user?.uid])
 
     const getJoinedCommunities = async (userId: string) => {
       const joined : JoinedCommunity[] | false = await getJoinedCommunitiesList(userId)
@@ -101,7 +96,7 @@ const Recommendations = () => {
         borderRadius="4px 4px 0px 0px"
         fontWeight={600}
         backgroundSize="cover"
-        bgImage={pexelThumbnail?.src?.original ?? RecCommArt}
+        bgImage={pexelThumbnail?.src?.original}
       >
         <Flex
         width="100%"
@@ -167,7 +162,7 @@ const Recommendations = () => {
                         fontSize="8pt"
                         onClick={(event) => {
                           event.stopPropagation();
-                          if(!user?.uid) {
+                          if(!user.id) {
                             toast({
                               title: "Please login, first!",
                               status: "error",
@@ -176,11 +171,11 @@ const Recommendations = () => {
                             })
                             return;
                           }
-                          onJoin(user?.uid, item.id)
+                          onJoin(user?.id, item.id)
                         }}
-                        variant={!!joinedCommunities.find(joined => joined.communityId === item.id) ? "outline" : "solid"}
+                        variant={!!joinedCommunities.find((joined: JoinedCommunity) => joined.communityId === item.id) ? "outline" : "solid"}
                       >
-                        {joinedCommunities.find(joined => joined.communityId === item.id) ? "Joined" : "Join"}
+                        {joinedCommunities.find((joined: JoinedCommunity) => joined.communityId === item.id) ? "Joined" : "Join"}
                       </Button>
                     </Box>
                   </Flex>

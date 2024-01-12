@@ -1,22 +1,20 @@
 import { Button, Flex, Stack, Text, useToast } from '@chakra-ui/react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import WelcomePicture from "../assets/images/welcome.png"
 import { setModal } from '../redux/slices/modalSlice'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth } from '../firebaseClient'
 import { useEffect, useState } from 'react'
 import { getPexelPhoto } from '../pexelsClient'
+import { RootState } from '../redux/store'
 
 const PersonalHome = () => {
-    const [user] = useAuthState(auth)
+    const user = useSelector((state: RootState) => state.user)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [pexelThumbnail, setPexelThumbnail] = useState<any>()
     const toast = useToast()
 
     const handleButton = (type: string = "add-community") => {
-        if(!!user === false) {
+        if(!!user.id === false) {
             toast({
                 title: "Please login, first!",
                 status: "error",
@@ -60,7 +58,7 @@ const PersonalHome = () => {
                 height="100px"
                 borderRadius="4px 4px 0px 0px"
                 fontWeight={600}
-                bgImage={pexelThumbnail?.src?.original ?? WelcomePicture}
+                bgImage={pexelThumbnail?.src?.original}
                 bgPosition={"center"}
                 backgroundSize="cover"
             ></Flex>

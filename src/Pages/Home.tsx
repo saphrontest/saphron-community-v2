@@ -6,11 +6,10 @@ import { Post } from '../Interface/PostInterface'
 import { getPosts, getUserSavedPosts } from '../Helpers/apiFunctions'
 import { deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
-import { auth, firestore, storage } from '../firebaseClient'
+import { firestore, storage } from '../firebaseClient'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { Community } from '../Interface/CommunityInterface'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { setModal } from '../redux/slices/modalSlice'
 
 const Home = () => {
@@ -18,12 +17,13 @@ const Home = () => {
   const [isVoteChange, setVoteChange] = useState<boolean>(false)
   const {communities} = useSelector((state: RootState) => state.community)
   const {posts} = useSelector((state: RootState) => state.post)
-  const [user] = useAuthState(auth);
+  const user = useSelector((state: RootState) => state.user)
   const toast = useToast()
   const dispatch = useDispatch()
 
   useEffect(() => {
     getPostsData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
   useEffect(() => {
@@ -31,15 +31,16 @@ const Home = () => {
       getPostsData()
       return () => setVoteChange(false)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVoteChange])
 
   const getPostsData = () => {
     getPosts()
-    user?.uid && getUserSavedPosts(user?.uid as string)
+    user?.id && getUserSavedPosts(user?.id as string)
   }
   
   const handleDelete = async (post: Post): Promise<boolean> => {
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({
         title: "Please login, first!",
         status: "error",

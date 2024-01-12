@@ -2,13 +2,13 @@ import { Box, Flex, SkeletonCircle, SkeletonText, Stack, Text } from '@chakra-ui
 import { FC, useState } from 'react'
 import CommentItem from './CommentItem';
 import { Comment } from '../../Interface/CommentsInterface';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, firestore } from '../../firebaseClient';
+import { firestore } from '../../firebaseClient';
 import { CommentInput } from './Partials';
 import { collection, collectionGroup, deleteDoc, doc, getDocs, increment, serverTimestamp, writeBatch } from 'firebase/firestore';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
 import { Post } from '../../Interface/PostInterface';
+import { RootState } from '../../redux/store';
 
 interface CommentsProps {
     comments: (Comment | null)[];
@@ -19,7 +19,7 @@ interface CommentsProps {
 const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
 
     const dispatch = useDispatch()
-    const [user] = useAuthState(auth)
+    const user = useSelector((state: RootState) => state.user)
     const [deleteLoading, setDeleteLoading] = useState("");
     const [comment, setComment] = useState("");
     const [commentCreateLoading, setCommentCreateLoading] = useState<boolean>(false);
@@ -75,9 +75,9 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
             const commentDocRef = doc(collection(firestore, "comments"));
             batch.set(commentDocRef, {
               postId: post.id,
-              creatorId: user.uid,
+              creatorId: user.id,
               creatorDisplayText: user.email!.split("@")[0],
-              creatorPhotoURL: user.photoURL,
+              creatorPhotoURL: user.profilePhotoURL,
               text: comment,
               postTitle: post.title,
               createdAt: serverTimestamp(),

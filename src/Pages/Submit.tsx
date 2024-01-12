@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { PageLayout } from '../Layouts'
 import { Box, Text } from '@chakra-ui/react'
 import { NewPostForm } from '../Components'
 import { CommunitySelect } from '../Components/Community'
 import { useParams } from 'react-router-dom'
+import { RootState } from '../redux/store'
+import { useSelector } from 'react-redux'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '../firebaseClient'
-import { useSelector } from 'react-redux'
-import { RootState } from '../redux/store'
+
 
 const Submit = () => {
   const params = useParams()
-  const [user] = useAuthState(auth)
+  const user = useSelector((state: RootState) => state.user)
   const [communitySelectOpen, setCommunitySelectOpen] = useState(false)
   const {communities} = useSelector((state: RootState) => state.community)
   return (

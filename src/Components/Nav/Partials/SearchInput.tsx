@@ -5,15 +5,12 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebaseClient";
 import { useEffect, useState } from "react";
 import SearchResults from "./SearchResults";
 import { Post } from "../../../Interface/PostInterface";
 import { searchPost } from "../../../Helpers/apiFunctions";
 
 const SearchInput = () => {
-  const [user] = useAuthState(auth);
   const [searchKey, setSearchKey] = useState("")
   const [searchResults, setSearchResults] = useState<Post[]>([])
   const [inputFocus, setInputFocus] = useState(false)

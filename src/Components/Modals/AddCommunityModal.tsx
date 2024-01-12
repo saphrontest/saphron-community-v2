@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import { ModalLayout } from '../../Layouts'
 import { Box, Button, Divider, Input, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text, useToast} from '@chakra-ui/react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
 import { useNavigate } from 'react-router-dom';
 import { auth, firestore } from '../../firebaseClient';
 import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import md5 from 'md5';
+import { RootState } from '../../redux/store';
 
 const AddCommunityModal = () => {
 
@@ -15,7 +16,7 @@ const AddCommunityModal = () => {
     const navigate = useNavigate()
     const toast = useToast()
 
-    const [user] = useAuthState(auth);
+    const user = useSelector((state: RootState) => state.user)
     const [name, setName] = useState("");
     const [charsRemaining, setCharsRemaining] = useState(21);
     const [nameError, setNameError] = useState("");
@@ -61,14 +62,14 @@ const AddCommunityModal = () => {
                 
                 transaction.set(communityDocRef, {
                     name: name,
-                    creatorId: user?.uid,
+                    creatorId: user?.id,
                     createdAt: serverTimestamp(),
                     numberOfMembers: 1,
                     privacyType: "public",
                 });
 
                 transaction.set(
-                    doc(firestore, `users/${user?.uid}/communities`, newCommunityId), {
+                    doc(firestore, `users/${user?.id}/communities`, newCommunityId), {
                         communityId: newCommunityId,
                         isModerator: true,
                     }

@@ -4,19 +4,19 @@ import { BsLink45Deg } from "react-icons/bs";
 import { IoImageOutline } from "react-icons/io5";
 import LogoIcon from '../../assets/Logo/logo-icon.png'
 import { useNavigate } from 'react-router-dom';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../../firebaseClient';
+import { RootState } from '../../redux/store';
+import { useSelector } from 'react-redux';
 
 interface CreatePostLinkProps {
   communityId?: string;
 }
 
 const CreatePostLink : FC <CreatePostLinkProps> = ({communityId}) => {
-  const [user] = useAuthState(auth)
+  const user = useSelector((state: RootState) => state.user)
   const navigate = useNavigate()
   const toast = useToast()
   const handleClick = () => {
-    if(user?.uid) {
+    if(user?.id) {
       navigate(`/submit${communityId ? `/${communityId}` : ''}`)
     } else {
       toast({

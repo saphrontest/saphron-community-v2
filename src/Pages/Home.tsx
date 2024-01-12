@@ -6,11 +6,10 @@ import { Post } from '../Interface/PostInterface'
 import { getPosts, getUserSavedPosts } from '../Helpers/apiFunctions'
 import { deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
-import { auth, firestore, storage } from '../firebaseClient'
+import { firestore, storage } from '../firebaseClient'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { Community } from '../Interface/CommunityInterface'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { setModal } from '../redux/slices/modalSlice'
 
 const Home = () => {
@@ -19,7 +18,7 @@ const Home = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const {communities} = useSelector((state: RootState) => state.community)
   const {posts} = useSelector((state: RootState) => state.post)
-  const [user] = useAuthState(auth);
+  const user = useSelector((state: RootState) => state.user)
   const toast = useToast()
   const dispatch = useDispatch()
 
@@ -37,11 +36,11 @@ const Home = () => {
 
   const getPostsData = () => {
     getPosts()
-    user?.uid && getUserSavedPosts(user?.uid as string)
+    user?.id && getUserSavedPosts(user?.id as string)
   }
   
   const handleDelete = async (post: Post): Promise<boolean> => {
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({
         title: "Please login, first!",
         status: "error",
@@ -84,7 +83,7 @@ const Home = () => {
       <>
         <CreatePostLink />
         <Stack>
-          {!loading && posts.map(post => <PostItem
+          {!loading && posts.map((post: Post) => <PostItem
             key={post.id}
             post={post}
             handleDelete={handleDelete}

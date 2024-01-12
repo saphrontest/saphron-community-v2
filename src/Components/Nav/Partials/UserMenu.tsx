@@ -1,24 +1,29 @@
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Avatar, Box, Flex, Icon, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text } from '@chakra-ui/react'
 import { CgProfile } from 'react-icons/cg'
-import { IoBookmarksSharp, IoSparkles } from 'react-icons/io5'
+import { IoBookmarksSharp } from 'react-icons/io5'
 import { MdOutlineLogin } from 'react-icons/md'
 import { VscAccount } from 'react-icons/vsc'
 import { setModal } from '../../../redux/slices/modalSlice'
 import { useDispatch } from 'react-redux'
-import { User, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { FC } from 'react'
 import { auth } from '../../../firebaseClient'
 import { useNavigate } from 'react-router-dom'
-
+import { UserInterface } from '../../../Interface/UserInterface'
+import { logoutUser } from '../../../redux/slices/userSlice'
+import NotFoundUserPic from '../../../assets/images/user.png'
 interface UserMenuProps {
-    user: User
+    user: UserInterface
 }
 
 const UserMenu: FC <UserMenuProps> = ({user}) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const logout = async () => await signOut(auth);
+    const logout = async () => {
+        await signOut(auth);
+        dispatch(logoutUser())
+    }
     return (
         <Menu>
             <MenuButton
@@ -31,10 +36,10 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
             >
                 <Flex alignItems="center">
                     <Flex alignItems="center">
-                        {user ? (
+                        {user.id ? (
                             <>
                                 {/* Avatar should be user profile image */}
-                                {user.photoURL && <Avatar src={user.photoURL} width={"30px"} height={"30px"} mr={2}/>}
+                                <Avatar src={user.profilePhotoURL ?? NotFoundUserPic} boxSize={user.profilePhotoURL ? 28 : 30} style={{width: 30, height: 30}} mr={2}/>
                                 <Box
                                     display={{ base: "none", lg: "flex" }}
                                     flexDirection="column"
@@ -42,7 +47,7 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                                     alignItems="flex-start"
                                     mr={8}
                                 >
-                                    <Text fontWeight={700}>{user.displayName}</Text>
+                                    <Text fontWeight={700}>{user.displayName ?? user.email?.split("@")[0]}</Text>
                                 </Box>
                             </>
                         ) : (
@@ -58,13 +63,13 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                 </Flex>
             </MenuButton>
             <MenuList>
-                {user ? (
+                {user.id ? (
                     <>
                         <MenuItem
                             fontSize="10pt"
                             fontWeight={700}
                             _hover={{ bg: "blue.500", color: "white" }}
-                            onClick={() => navigate("profile")}
+                            onClick={() => navigate("/profile")}
                         >
                             <Flex alignItems="center">
                                 <Icon fontSize={20} mr={2} as={CgProfile} />

@@ -9,9 +9,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
-import { auth, firestore, storage } from '../firebaseClient'
+import { firestore, storage } from '../firebaseClient'
 import { useToast } from '@chakra-ui/react'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { setModal } from '../redux/slices/modalSlice'
 
 const CommunityDetail = () => {
@@ -19,7 +18,7 @@ const CommunityDetail = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [user] = useAuthState(auth)
+  const user = useSelector((state: RootState) => state.user)
   const communityId = useRef(location.pathname.split('/').at(-1)).current
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
   const [isVoteChange, setVoteChange] = useState<boolean>(false)
@@ -53,7 +52,7 @@ const CommunityDetail = () => {
   }, [isVoteChange])
   
   const handleDelete = async (post: Post): Promise<boolean> => {
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({
         title: "Please login, first!",
         status: "error",

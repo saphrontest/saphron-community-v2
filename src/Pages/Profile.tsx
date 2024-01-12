@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
-import { Box, Flex, Image, useToast } from '@chakra-ui/react'
-import { getPexelPhoto } from '../pexelsClient'
-import Cover from "../assets/images/cover.jpeg"
-import { Nav, PostItem } from '../Components'
+import { Flex, Stack, useToast } from '@chakra-ui/react'
+import { Nav, NoEntry, PostItem, Recommendations } from '../Components'
 import { ProfileHeader } from '../Components/Profile'
-import { getPostsByUsername, getUser } from '../Helpers/apiFunctions'
-import { auth, firestore, storage } from '../firebaseClient'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import { getPostsByUsername } from '../Helpers/apiFunctions'
+import { firestore, storage } from '../firebaseClient'
 import { Post } from '../Interface/PostInterface'
 import { useDispatch, useSelector } from 'react-redux'
 import { setModal } from '../redux/slices/modalSlice'
@@ -81,6 +78,8 @@ const Profile = () => {
     getPosts(user.username)
   }, [voteChange])
 
+  const MyCommunitiesView = () => <Recommendations type="user-profile"/>
+
   return (
     <>
       <Nav />
@@ -88,16 +87,22 @@ const Profile = () => {
       <Flex justify={"center"} pt={1}>
         <PageLayout isNav={false}>
           <>
-          {userPosts && userPosts.map((post: Post) => <PostItem
-            key={post.id}
-            post={post}
-            handleDelete={handleDelete}
-            isDeleteLoading={isDeleteLoading}
-            communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
-            setVoteChange={setVoteChange}
-          />)}
+          <Stack>
+          {userPosts?.length ? userPosts.map((post: Post) => 
+            <PostItem
+              key={post.id}
+              post={post}
+              handleDelete={handleDelete}
+              isDeleteLoading={isDeleteLoading}
+              communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
+              setVoteChange={setVoteChange}
+            />
+          ) : <NoEntry type="post"/>}
+          </Stack>
           </>
-          <></>
+          <>
+            <MyCommunitiesView />
+          </>
         </PageLayout>
       </Flex>
     </>

@@ -369,8 +369,10 @@ export const getUser = async (userId: string) => {
   try {
     const userDocRef = doc(firestore, 'users', userId);
     const docSnapshot = await getDoc(userDocRef);
-    if(docSnapshot.data()?.isRegistered){
-      store.dispatch(setUserInfo({id: userId, ...docSnapshot.data()}));
+    const data = docSnapshot.data();
+    if(data?.isRegistered){
+      console.log(data)
+      store.dispatch(setUserInfo({id: userId, ...data}));
     }
   } catch (error) {
     console.error(error)

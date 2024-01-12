@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Flex, Skeleton, SkeletonCircle, Stack, Text, useToast } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
@@ -8,7 +8,11 @@ import { setCommunities, setJoinedCommunities } from '../redux/slices/communityS
 import { Community, JoinedCommunity } from '../Interface/CommunityInterface';
 import { getPexelPhoto } from '../pexelsClient';
 
-const Recommendations = () => {
+interface RecommendationsProps {
+  type?: string;
+}
+
+const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const toast = useToast()
@@ -19,9 +23,9 @@ const Recommendations = () => {
     const {communities, joinedCommunities} = useSelector((state: RootState) => state.community)
     const user = useSelector((state: RootState) => state.user)
 
-    const getThumbnail = async () => {
-      const photo = await getPexelPhoto()
-      setPexelThumbnail(photo)
+  const getThumbnail = async () => {
+    const photo = await getPexelPhoto()
+    setPexelThumbnail(photo)
   }
 
   useEffect(() => {
@@ -33,6 +37,7 @@ const Recommendations = () => {
         getUserCommunity(user.id)
         getJoinedCommunities(user.id)
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user])
     
     useEffect(() => {
@@ -79,7 +84,12 @@ const Recommendations = () => {
     }
 
 
-  return (
+  return !!communities.filter((c: Community) => {
+    if (type === "home") {
+      return true;
+    }
+    return joinedCommunities.some((joined : JoinedCommunity) => joined.communityId === c.id)
+  }).length ? (
     <Flex
       direction="column"
       bg="white"
@@ -106,7 +116,7 @@ const Recommendations = () => {
         p="6px 10px"
         bgGradient="linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75))"
         >
-          Top Communities
+          {type === "home" ? "Top Communities" : "My Communities"}
         </Flex>
       </Flex>
       <Flex direction="column">
@@ -127,7 +137,14 @@ const Recommendations = () => {
           </Stack>
         ) : (
           <>
-            {(viewAll ? communities : communities.slice(0, 3)).map((item: Community, index: number) => {
+            {(viewAll ? communities : communities.slice(0, 3))
+              .filter((c: Community) => {
+                if (type === "home") {
+                  return true;
+                }
+                return joinedCommunities.some((joined : JoinedCommunity) => joined.communityId === c.id)
+              })
+              .map((item: Community, index: number) => {
               return (
                 // <Link key={item.id} to={`/community/${item.id}`}>
                 <Box key={item.id} >
@@ -172,6 +189,10 @@ const Recommendations = () => {
                             return;
                           }
                           onJoin(user?.id, item.id)
+                            .finally(() => {
+                              getUserCommunity(user.id)
+                              getJoinedCommunities(user.id)
+                            })
                         }}
                         variant={!!joinedCommunities.find((joined: JoinedCommunity) => joined.communityId === item.id) ? "outline" : "solid"}
                       >
@@ -193,7 +214,7 @@ const Recommendations = () => {
         )}
       </Flex>
     </Flex>
-  )
+  ) : null
 }
 
 export default Recommendations

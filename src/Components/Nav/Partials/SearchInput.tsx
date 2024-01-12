@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import SearchResults from "./SearchResults";
 import { Post } from "../../../Interface/PostInterface";
 import { searchPost } from "../../../Helpers/apiFunctions";
+import NoEntry from "../../NoEntry";
 
 const SearchInput = () => {
   const [searchKey, setSearchKey] = useState("")
@@ -66,7 +67,7 @@ const SearchInput = () => {
           />
         </InputGroup>
       </Flex>
-      {showSearchResults ? <SearchResults searchResults={searchResults} /> : null}
+      {inputFocus && <SearchResults searchResults={searchResults} />}
     </Flex>
   )
 }

@@ -1,19 +1,24 @@
-import { Button, Divider, Flex, Input, ModalBody, ModalCloseButton, ModalHeader, Spinner, Text, useToast } from '@chakra-ui/react'
-import React, { ChangeEvent, Fragment, useEffect, useRef, useState } from 'react'
-import { InputItem, ModalLayout } from '../../Layouts'
+import { Button, Divider, Flex, ModalBody, ModalCloseButton, ModalHeader, Spinner, Text, useDisclosure, useToast } from '@chakra-ui/react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { ModalLayout } from '../../Layouts'
 import { auth, firestore, storage } from '../../firebaseClient'
 import { useAuthState, useUpdateProfile } from 'react-firebase-hooks/auth'
-import { SCEditButton, SCFormItem, SCIcon } from '../SCElements'
+import { SCEditButton, SCFormItem } from '../SCElements'
 import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 import { getPexelPhoto } from '../../pexelsClient'
 import { doc, updateDoc } from 'firebase/firestore'
 import NotFoundUserPic from '../../assets/images/user.png'
-import { updateUser } from '../../Helpers/apiFunctions'
+import { getUser, updateUser } from '../../Helpers/apiFunctions'
+import { RootState } from '../../redux/store'
+import { useSelector } from 'react-redux'
+import { UserInterface } from '../../Interface/UserInterface'
 
 const EditProfileModal = () => {
 
+    const { isOpen, onClose } = useDisclosure()
     const toast = useToast()
     const [user] = useAuthState(auth)
+    const userFromDB = useSelector((state: RootState) => state.user) as UserInterface
     const [updateProfile, error] = useUpdateProfile(auth);
     const profileImgInputRef = useRef<HTMLInputElement | null>(null)
     const coverImgInputRef = useRef<HTMLInputElement | null>(null)
@@ -88,7 +93,9 @@ const EditProfileModal = () => {
         } catch (error: any) {
             console.log(error.message)
         } finally {
+            user && getUser(user?.uid)
             setIsSaving(false)
+            onClose()
         }
       }
 
@@ -96,6 +103,19 @@ const EditProfileModal = () => {
         const {name, value} = ev.target
         setFormValues(prev => ({ ...prev, [name]: value }))
       }
+
+      const updatePP = async (userId: string) => {
+        await updateDoc(doc(firestore, "users", userId), {
+            profilePhotoURL: user?.photoURL,
+          });
+      }
+
+    useEffect(() => {
+        if(!!user?.photoURL && !(!!userFromDB.profilePhotoURL)) {
+            user?.photoURL && updatePP(user.uid).finally(() => getUser(user.uid))
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
 
     const ImageSpinner = () => {
@@ -119,9 +139,9 @@ const EditProfileModal = () => {
     }
 
   return (  
-    <ModalLayout>
+    <ModalLayout isOpen={isOpen} onClose={onClose}>
         <ModalHeader display="flex" flexDirection="column" alignItems="center">
-            EditProfile
+            Edit Profile
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody
@@ -137,19 +157,19 @@ const EditProfileModal = () => {
                 justifyContent="flex-start"
                 width={"100%"}
             >
-                <Flex bgImage={coverPhoto} w={"100%"} h={"fit-content"} borderRadius={5} justifyContent={"center"} alignItems={"center"}>
-                    <SCFormItem type='img' src={user?.photoURL as string ?? NotFoundUserPic} additionalStyles={{transform: "translateY(40px)"}}/>
+                <Flex bgImage={userFromDB.coverPhotoURL ?? coverPhoto} w={"100%"} h={"fit-content"} borderRadius={5} justifyContent={"center"} alignItems={"center"}>
+                    <SCFormItem type='img' src={!!userFromDB.profilePhotoURL ? userFromDB.profilePhotoURL : (user?.photoURL as string ?? NotFoundUserPic)} additionalStyles={{transform: "translateY(40px)"}}/>
                     <input type='file' style={{display: 'none'}} accept="image/x-png,image/gif,image/jpeg" ref={profileImgInputRef} onChange={ev => onImgChange(ev, "profile_photo")}/>
                     <input type='file' style={{display: 'none'}} accept="image/x-png,image/gif,image/jpeg" ref={coverImgInputRef} onChange={ev => onImgChange(ev, "cover_photo")}/>
                 </Flex>
                 {imageLoading.status && imageLoading.type === "profile_photo" ? <ImageSpinner /> : <SCEditButton onEdit={() => profileImgInputRef?.current && profileImgInputRef?.current?.click()} position='relative' top={-8} left={79} transform='translate(-2rem, 2rem)'/>}
                 {imageLoading.status && imageLoading.type === "cover_photo" ? <ImageSpinner /> : <SCEditButton onEdit={() => coverImgInputRef?.current && coverImgInputRef?.current?.click()} transform='translate(12rem, -10rem)'/>}
                 <Divider mb={6} w="50%" />
-                <SCFormItem placeholder={user?.email as string} label='E-mail' name="email" onChange={handleChange}/>
-                <SCFormItem placeholder={user?.email?.split("@")[0] as string} label='Username' name="username" onChange={handleChange}/>
+                <SCFormItem placeholder={userFromDB.email ?? user?.email as string} label='E-mail' name="email" onChange={handleChange}/>
+                <SCFormItem placeholder={userFromDB.username ?? user?.email?.split("@")[0] as string} label='Username' name="username" onChange={handleChange}/>
                 <Divider mt={1} mb={3}/>
-                <SCFormItem placeholder={user?.displayName as string} label='Display Name' name="displayName" onChange={handleChange}/>
-                <SCFormItem placeholder={user?.phoneNumber as string} label='Phone Number' name="phoneNumber" onChange={handleChange}/>
+                <SCFormItem placeholder={userFromDB.displayName ?? user?.displayName as string} label='Display Name' name="displayName" onChange={handleChange}/>
+                <SCFormItem placeholder={userFromDB.phoneNumber ?? user?.phoneNumber as string} label='Phone Number' name="phoneNumber" onChange={handleChange}/>
                 <Flex w={"100%"} justifyContent={"flex-end"} mt={3}>
                     <Button px={10} onClick={() => editUserInfo()}>
                         {isSaving ? <Spinner /> : "Save"}

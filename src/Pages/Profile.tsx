@@ -5,7 +5,7 @@ import { getPexelPhoto } from '../pexelsClient'
 import Cover from "../assets/images/cover.jpeg"
 import { Nav, PostItem } from '../Components'
 import { ProfileHeader } from '../Components/Profile'
-import { getPostsByUsername } from '../Helpers/apiFunctions'
+import { getPostsByUsername, getUser } from '../Helpers/apiFunctions'
 import { auth, firestore, storage } from '../firebaseClient'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { Post } from '../Interface/PostInterface'
@@ -15,12 +15,13 @@ import { deleteObject, ref } from 'firebase/storage'
 import { deleteDoc, doc } from 'firebase/firestore'
 import { Community } from '../Interface/CommunityInterface'
 import { RootState } from '../redux/store'
-
+import NotFoundUserPic from '../assets/images/user.png'
 
 const Profile = () => {
-  const [user] = useAuthState(auth)
   const dispatch = useDispatch()
   const toast = useToast()
+  
+  const user = useSelector((state: RootState) => state.user)
 
   const [voteChange, setVoteChange] = useState<boolean>(false)
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
@@ -28,27 +29,13 @@ const Profile = () => {
 
   const {communities} = useSelector((state: RootState) => state.community)
 
-
-  const [coverPhoto, setCoverPhoto] = useState<any>()
-  const [profilePhoto, setProfilePhoto] = useState<any>()
-
-  const getCoverPhoto = async () => {
-    const photo = await getPexelPhoto("cover photo about menthal health")
-    setCoverPhoto(photo)
-  }
-
-  const getProfilePhoto = async () => {
-    const image = await getPexelPhoto("profile picture")
-    setProfilePhoto(image?.src?.original as string)
-  }
-
   const getPosts = async (displayName: string) => {
     const posts = await getPostsByUsername(displayName)
     setUserPosts(posts)
   }
 
   const handleDelete = async (post: Post): Promise<boolean> => {
-    if (!user?.uid) {
+    if (!!user.id === false) {
       toast({
         title: "Please login, first!",
         status: "error",
@@ -87,22 +74,17 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    getProfilePhoto()
-    getCoverPhoto()
-  }, [])
-
-  useEffect(() => {
-    user?.email && getPosts(user?.email?.split("@")[0] as string)
+    getPosts(user.username)
   }, [user])
   
   useEffect(() => {
-    user?.email && getPosts(user?.email?.split("@")[0] as string)
+    getPosts(user.username)
   }, [voteChange])
 
   return (
     <>
       <Nav />
-      <ProfileHeader name={user?.displayName as string} username={user?.email?.split("@")[0] as string}/>
+      <ProfileHeader name={user?.displayName} username={user.username} profilePhoto={user?.profilePhotoURL ?? NotFoundUserPic} email={user?.email} coverPhoto={user.coverPhotoURL}/>
       <Flex justify={"center"} pt={1}>
         <PageLayout isNav={false}>
           <>

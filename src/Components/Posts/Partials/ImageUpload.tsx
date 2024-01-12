@@ -2,6 +2,8 @@ import React, { Ref } from "react";
 import { Flex, Stack, Button, Image, useToast } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../firebaseClient";
+import { RootState } from "../../../redux/store";
+import { useSelector } from "react-redux";
 
 type ImageUploadProps = {
   selectedFile?: string;
@@ -18,7 +20,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   selectFileRef,
   onSelectImage,
 }) => {
-  const [user] = useAuthState(auth)
+  const user = useSelector((state: RootState) => state.user)
   const toast = useToast()
   return (
     <Flex direction="column" justify="center" align="center" width="100%">
@@ -56,7 +58,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             variant="outline"
             height="28px"
             onClick={() => {
-                !!user ? selectFileRef.current?.click() : toast({
+                !!user.id ? selectFileRef.current?.click() : toast({
                 title: "Please login, first!",
                 status: "error",
                 isClosable: true,

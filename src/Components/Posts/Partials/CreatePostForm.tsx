@@ -2,12 +2,13 @@ import React, { FC, useRef, useState } from 'react'
 import TextInputs from './TextInputs';
 import ImageUpload from './ImageUpload';
 import { addDoc, collection, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { auth, firestore, storage } from '../../../firebaseClient';
+import { firestore, storage } from '../../../firebaseClient';
 import { Community } from '../../../Interface/CommunityInterface';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react';
+import { RootState } from '../../../redux/store';
+import { useSelector } from 'react-redux';
 
 interface CreatePostFormInterface {
     selectedTab: string;
@@ -16,7 +17,7 @@ interface CreatePostFormInterface {
 }
 
 const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTab, community}) => {
-  const [user] = useAuthState(auth)
+  const user = useSelector((state: RootState) => state.user)
   const toast = useToast()
   const navigate = useNavigate()
     const [textInputs, setTextInputs] = useState({
@@ -33,7 +34,7 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
 
     const handleCreatePost = async () => {
 
-        if(!!user === false){
+        if(!!user.id === false){
           toast({
             title: "Please login, first!",
             status: "error",
@@ -70,7 +71,7 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
           title: createSlug(title),
           communityId: community.id,
           communityImageUrl: community.imageURL || "",
-          creatorId: user?.uid,
+          creatorId: user?.id,
           userDisplayText: user?.email!.split("@")[0],
           numberOfComments: 0,
           voteStatus: 0,

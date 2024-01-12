@@ -12,6 +12,7 @@ import { RootState } from '../../../redux/store';
 import VoteComponent from './VoteComponent';
 import ActionButtons from './ActionButtons';
 import PostContent from './PostContent';
+import { Community } from '../../../Interface/CommunityInterface';
 
 export type PostItemContentProps = {
   post: Post;
@@ -33,7 +34,7 @@ const PostItem: FC<PostItemContentProps> = ({
   const toast = useToast()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [user] = useAuthState(auth);
+  const user = useSelector((state: RootState) => state.user)
   const [userVote, setUserVote] = useState<PostVote | null>(null)
   const [isVoteLoading, setVoteLoading] = useState<boolean>(false)
   const [isSaved, setSaved] = useState(false)
@@ -56,8 +57,8 @@ const PostItem: FC<PostItemContentProps> = ({
   }, [post, savedPosts])
 
   const getUserVotesData = async () => {
-    const data = user && await getUserVotes(user.uid)
-    data ? setUserVote(data.filter(vote => vote.postId === post.id)[0] as PostVote) : setUserVote(null)
+    const data = user && await getUserVotes(user.id)
+    data ? setUserVote(data.filter((vote: PostVote) => vote.postId === post.id)[0] as PostVote) : setUserVote(null)
   }
 
   const onVote = async (
@@ -67,7 +68,7 @@ const PostItem: FC<PostItemContentProps> = ({
     setVoteLoading(true)
     const batch = writeBatch(firestore);
     event.stopPropagation();
-    if (!user?.uid) {
+    if (!user?.id) {
       toast({
         title: "Please login, first!",
         status: "error",
@@ -77,18 +78,17 @@ const PostItem: FC<PostItemContentProps> = ({
       dispatch(setModal({isOpen: true, view: 'login'}))
       return;
     }
-    const community = communities.filter(c => c.name === communityName)[0]
+    const community = communities.filter((community:Community) => community.name === communityName)[0]
     try {
       const newVote: PostVote = {
         postId: post.id,
         communityId: community.id,
         voteValue: vote,
       };
-
       
       if(userVote){
         // UPDATE, IF USER HAS PREVIOUS VOTE
-        const postVoteRef = doc( firestore, "users", `${user.uid}/postVotes/${userVote.id}` );
+        const postVoteRef = doc( firestore, "users", `${user.id}/postVotes/${userVote.id}` );
 
         if(userVote.voteValue === vote) {
           batch.delete(postVoteRef);
@@ -99,7 +99,7 @@ const PostItem: FC<PostItemContentProps> = ({
         }
       }else{
         // CREATE, IF USER HAS NOT PREVIOUS VOTE
-        const postVoteRef = doc(collection(firestore, "users", `${user.uid}/postVotes`));
+        const postVoteRef = doc(collection(firestore, "users", `${user.id}/postVotes`));
         newVote.id= postVoteRef.id;
         batch.set(postVoteRef, newVote);
       }
@@ -137,7 +137,7 @@ const PostItem: FC<PostItemContentProps> = ({
         post={post}
         communityName={communityName}
         />
-        {user?.uid && <ActionButtons
+        {user?.id && <ActionButtons
         post={post}
         isSaved={isSaved}
         handleDelete={handleDelete}

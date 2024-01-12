@@ -5,8 +5,7 @@ import { RootState } from '../redux/store'
 import { NoEntry, PersonalHome, PostItem, SCIcon } from '../Components'
 import { Post } from '../Interface/PostInterface'
 import { Community } from '../Interface/CommunityInterface'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth, firestore, storage } from '../firebaseClient'
+import { firestore, storage } from '../firebaseClient'
 import { Box, Flex, Text, useToast } from '@chakra-ui/react'
 import { setModal } from '../redux/slices/modalSlice'
 import { deleteObject, ref } from 'firebase/storage'
@@ -14,7 +13,7 @@ import { deleteDoc, doc } from 'firebase/firestore'
 import { getUserSavedPosts } from '../Helpers/apiFunctions'
 
 const SavedPosts = () => {
-    const [user] = useAuthState(auth)
+    const user = useSelector((state: RootState) => state.user)
     const toast = useToast()
     const dispatch = useDispatch()
     const [isDeleteLoading, setDeleteLoading] = useState(false)
@@ -24,7 +23,7 @@ const SavedPosts = () => {
 
     useEffect(() => {
 
-      if(!!user === false) {
+      if(!!user.id === false) {
         toast({
           title: "Please login, first!",
           status: "error",
@@ -39,7 +38,7 @@ const SavedPosts = () => {
 
 
     const handleDelete = async (post: Post): Promise<boolean> => {
-        if (!user?.uid) {
+        if (!user?.id) {
             toast({
               title: "Please login, first!",
               status: "error",
@@ -73,13 +72,13 @@ const SavedPosts = () => {
               return false;
             } finally {
               setDeleteLoading(false)
-              getUserSavedPosts(user?.uid as string)
+              getUserSavedPosts(user?.id as string)
             }
     }
 
     useEffect(() => {
         if(isVoteChange) {
-            getUserSavedPosts(user?.uid as string)
+            getUserSavedPosts(user?.id as string)
             return () => setVoteChange(false)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,7 +93,7 @@ const SavedPosts = () => {
               <Box p="14px 0px" >
                 <Text fontWeight={600} textAlign="left">Saved Posts</Text>
               </Box>
-              {savedPosts.map((post: any, index) => (
+              {savedPosts.map((post: Post, index: number) => (
                 <PostItem
                   key={index}
                   post={post}

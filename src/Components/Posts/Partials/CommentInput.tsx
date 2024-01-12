@@ -1,13 +1,12 @@
-import React, { MouseEventHandler, useState } from "react";
 import { Flex, Textarea, Button, Text } from "@chakra-ui/react";
-import { User } from "firebase/auth";
 import { AuthButtons } from "../../Nav/Partials";
+import { UserInterface } from "../../../Interface/UserInterface";
 
 type CommentInputProps = {
   comment: string;
   setComment: (value: string) => void;
   loading: boolean;
-  user?: User | null;
+  user?: UserInterface | null;
   onCreateComment: (comment: string) => void;
 };
 
@@ -25,7 +24,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
           <Text mb={1} textAlign="left">
             Comment as{" "}
             <span style={{ color: "#3182CE" }}>
-              {user?.email?.split("@")[0]}
+              {user?.username}
             </span>
           </Text>
           <Textarea

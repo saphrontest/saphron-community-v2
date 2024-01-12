@@ -10,7 +10,7 @@ import { auth } from '../../../firebaseClient';
 import { useNavigate } from 'react-router-dom';
 import { setCommunities, setJoinedCommunities, setSelectedCommunity } from '../../../redux/slices/communitySlice';
 import { RootState } from '../../../redux/store';
-import { Community } from '../../../Interface/CommunityInterface';
+import { Community, JoinedCommunity } from '../../../Interface/CommunityInterface';
 
 interface CommunityProps {
     isOpen: boolean;
@@ -22,7 +22,7 @@ interface CommunityProps {
 const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCommunityId}) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [user] = useAuthState(auth);
+    const user = useSelector((state: RootState) => state.user)
     const communityMenuRef = useRef(null)
     const [formattedCommunities, setFormattedCommunities] = useState<any[]>([])
     const {communities, selectedCommunity, joinedCommunities} = useSelector((state: RootState) => state.community)
@@ -42,13 +42,13 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
     }
 
     useEffect(() => {
-        user?.uid && getJoinedCommunities(user?.uid)
+        user?.id && getJoinedCommunities(user?.id)
     }, [user])
 
     useEffect(() => {    
         getCommunityList()
         if(selectedCommunityId){
-            const comm = communities.find(community => community.id === selectedCommunityId)
+            const comm = communities.find((community: Community) => community.id === selectedCommunityId)
             comm && dispatch(setSelectedCommunity(comm))
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,8 +59,8 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
         if(joinedCommunities.length && communities.length) {
             setFormattedCommunities([])
 
-            joinedCommunities.forEach(joined => {
-                communities.forEach(community => {
+            joinedCommunities.forEach((joined: JoinedCommunity) => {
+                communities.forEach((community: Community) => {
                     if(joined.communityId === community.id) {
                         setFormattedCommunities(prev => ([{isModerator: joined?.isModerator, ...community}, ...prev])) 
                     }
@@ -139,7 +139,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                 {!!formattedCommunities.filter(com => com.isModerator).length && <Text pl={3} mb={1} fontSize="7pt" fontWeight={500} color="gray.500">
                 MY COMMUNITIES
                 </Text>}
-                {formattedCommunities.filter(com => com.isModerator).filter(comm => comm.creatorId !== user?.uid).map(comm => {
+                {formattedCommunities.filter(com => com.isModerator).filter(comm => comm.creatorId !== user?.id).map(comm => {
                     return (
                         <MenuItem
                             key={comm.id}

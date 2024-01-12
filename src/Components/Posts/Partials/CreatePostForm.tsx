@@ -88,11 +88,11 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
             imageURL: downloadURL
           })
         }
-        navigate("/")
       } catch (error) {
         console.log("on create post", error)
       } finally {
         setLoading(false)
+        navigate(`/post/${createSlug(title)}`)
       }
 
     }

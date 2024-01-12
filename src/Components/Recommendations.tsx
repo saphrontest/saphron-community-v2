@@ -6,7 +6,6 @@ import { RootState } from '../redux/store';
 import { getCommunities, getJoinedCommunitiesList, getUserCommunities, joinCommunity, leaveCommunity } from '../Helpers/apiFunctions';
 import { setCommunities, setJoinedCommunities } from '../redux/slices/communitySlice';
 import { Community, JoinedCommunity } from '../Interface/CommunityInterface';
-import RecCommArt from '../assets/images/CommsArt.png'
 import { getPexelPhoto } from '../pexelsClient';
 
 const Recommendations = () => {
@@ -37,6 +36,7 @@ const Recommendations = () => {
     }, [user])
     
     useEffect(() => {
+      setLoading(true)
       getCommunities().then(communitiesData => {
         const communityList = [
           ...communitiesData.map(({ id, name, creatorId, privacyType, createdAt }) => ({
@@ -51,7 +51,7 @@ const Recommendations = () => {
           }))
         ]
         dispatch(setCommunities(communityList as Community[]))
-      })
+      }).finally(() => setLoading(false))
     }, [])
 
     const getJoinedCommunities = async (userId: string) => {
@@ -96,7 +96,7 @@ const Recommendations = () => {
         borderRadius="4px 4px 0px 0px"
         fontWeight={600}
         backgroundSize="cover"
-        bgImage={pexelThumbnail?.src?.original ?? RecCommArt}
+        bgImage={pexelThumbnail?.src?.original}
       >
         <Flex
         width="100%"

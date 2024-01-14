@@ -63,7 +63,10 @@ const SearchInput = () => {
             width="100%"
             onChange={e => setSearchKey(e.target.value)}
             onFocus={e => setInputFocus(true)}
-            onBlur={e => setInputFocus(false)}
+            onBlur={e => {
+              const timeout = setTimeout(() => setInputFocus(false), 300)
+              return () => clearTimeout(timeout)
+            }}
           />
         </InputGroup>
       </Flex>

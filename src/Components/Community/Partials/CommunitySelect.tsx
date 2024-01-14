@@ -42,6 +42,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
 
     useEffect(() => {
         user?.id && getJoinedCommunities(user?.id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user])
 
     useEffect(() => {    

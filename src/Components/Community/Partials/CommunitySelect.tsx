@@ -107,7 +107,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
             </MenuButton>
             <MenuList ref={communityMenuRef}>
                 {
-                    true ? <NoEntry type="community"/> : (
+                    !!formattedCommunities.length === false ? <NoEntry type="community"/> : (
                         <>
                         
                 <Box mt={3} mb={4}>

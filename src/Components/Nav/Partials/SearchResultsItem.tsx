@@ -13,15 +13,15 @@ const SearchResultsItem: FC<SearchResultsItemProps> = ({item}) => {
   return (
     <Flex
     p={2}
-    bg={"gray.50"}
+    gap={3}
+    bg="gray.50"
+    align="center"
     borderRadius={4}
-    flexDirection={"row"}
-    align={"center"}
-    justify={"flex-start"}
+    flexDirection="row"
+    justify="flex-start"
     _hover={{bg: "gray.100"}}
     cursor="pointer"
-    onClick={() => navigate(`/post/${item.slug}`)}
-    gap={3}
+    onClick={(e) => navigate(`/post/${item.slug}`)}
     >
       <LinkIcon />
       <Flex flexDirection={"column"} align={"flex-start"}>

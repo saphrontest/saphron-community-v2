@@ -8,6 +8,7 @@ export interface UserInterface {
     provider: string | null;
     coverPhotoURL: string;
     profilePhotoURL: string;
+    phoneNumber: string;
 }
 
 export const defaultUserState: UserInterface = {
@@ -19,5 +20,6 @@ export const defaultUserState: UserInterface = {
     isRegistered: false,
     provider: null,
     coverPhotoURL: "",
-    profilePhotoURL: ""
+    profilePhotoURL: "",
+    phoneNumber: ""
 }

@@ -25,7 +25,7 @@ const TextEditor: FC<TextEditorProps> = ({onChange, value}) => {
           ]
         },
         link: { addTargetToExternalLinks: true }
-    }}
+      }}
       onChange={ ( _event, editor ) => {
           const data = editor.getData();
           onChange("body", data)

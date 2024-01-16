@@ -5,12 +5,11 @@ import { GrAdd } from 'react-icons/gr';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../../redux/slices/modalSlice';
 import { getCommunities, getJoinedCommunitiesList } from '../../../Helpers/apiFunctions';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../../../firebaseClient';
 import { useNavigate } from 'react-router-dom';
 import { setCommunities, setJoinedCommunities, setSelectedCommunity } from '../../../redux/slices/communitySlice';
 import { RootState } from '../../../redux/store';
 import { Community, JoinedCommunity } from '../../../Interface/CommunityInterface';
+import NoEntry from '../../NoEntry';
 
 interface CommunityProps {
     isOpen: boolean;
@@ -43,6 +42,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
 
     useEffect(() => {
         user?.id && getJoinedCommunities(user?.id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user])
 
     useEffect(() => {    
@@ -70,6 +70,8 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
 
         }
     }, [communities, joinedCommunities])
+
+    
 
 
     return (
@@ -105,6 +107,10 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                 </Flex>
             </MenuButton>
             <MenuList ref={communityMenuRef}>
+                {
+                    !!formattedCommunities.length === false ? <NoEntry type="community"/> : (
+                        <>
+                        
                 <Box mt={3} mb={4}>
                     {!!formattedCommunities.filter(com => !com.isModerator).length ? <Text
                         pl={3}
@@ -139,7 +145,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                 {!!formattedCommunities.filter(com => com.isModerator).length && <Text pl={3} mb={1} fontSize="7pt" fontWeight={500} color="gray.500">
                 MY COMMUNITIES
                 </Text>}
-                {formattedCommunities.filter(com => com.isModerator).filter(comm => comm.creatorId !== user?.id).map(comm => {
+                {formattedCommunities.filter(com => com.isModerator).map(comm => {
                     return (
                         <MenuItem
                             key={comm.id}
@@ -170,6 +176,9 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                 </Flex>
                 </MenuItem>
             </Box>
+
+            </>
+                    )}
             </MenuList>
         </Menu>
     )

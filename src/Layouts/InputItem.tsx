@@ -3,7 +3,6 @@ import React from "react";
 
 type InputItemProps = {
   name: string;
-  value?: string;
   placeholder?: string;
   type: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -15,7 +14,6 @@ type InputItemProps = {
 const InputItem: React.FC<InputItemProps> = ({
   name,
   placeholder,
-  value,
   type,
   onChange,
   mb,
@@ -26,8 +24,6 @@ const InputItem: React.FC<InputItemProps> = ({
     <Input
       name={name}
       placeholder={placeholder}
-      value={value}
-      required
       onChange={onChange}
       mb={mb}
       fontSize="10pt"

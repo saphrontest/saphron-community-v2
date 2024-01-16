@@ -1,10 +1,11 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react'
-import React, { FC, useEffect, useState } from 'react'
-import { getPexelPhoto } from '../../pexelsClient'
+import React, { FC } from 'react'
 import ProfileIcon from '../../assets/images/Vectors/profile.svg'
-import { SCEditButton, SCIcon } from '../SCElements';
+import { SCEditButton } from '../SCElements';
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
+import defaultCover from '../../assets/images/default-cover.jpg'
+
 interface ProfileHeaderProps {
     name: string;
     username: string;
@@ -16,16 +17,6 @@ interface ProfileHeaderProps {
 const ProfileHeader: FC<ProfileHeaderProps> = ({name, email, username, profilePhoto, coverPhoto}) => {
 
     const dispatch = useDispatch()
-    const [exampleCoverPhoto, setCoverPhoto] = useState<any>()
-
-    const getCoverPhoto = async () => {
-        const image = await getPexelPhoto("cover photo")
-        setCoverPhoto(image?.src?.original as string)
-    }
-
-    useEffect(() => {
-        getCoverPhoto()
-    }, [])
 
     const handleEdit = (type: string) => {
         if(type === 'profile-photo')  {
@@ -35,7 +26,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({name, email, username, profilePh
 
     return (
         <>
-            <Box bg="white" height="228px" bgImage={coverPhoto ?? exampleCoverPhoto} bgPos="center" />
+            <Box bg="white" height="228px" bgImage={coverPhoto ?? defaultCover} bgPos="center" />
             <Flex minHeight="100px" bg={"white"}>
                 <Image src={profilePhoto ?? ProfileIcon} width={"120px"} height={"120px"} border={"5px solid"} borderColor="gray.50" borderRadius={"80px"} pos="relative" left="5%" top="-40px"/>
                 <Box pos="absolute" left="20%" p="16px" display="flex" alignItems="flex-start" flexDirection="column">

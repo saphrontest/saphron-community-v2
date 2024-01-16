@@ -1,12 +1,10 @@
 import { Flex, useToast } from '@chakra-ui/react'
 import { CreatePostForm, Tabs } from './Partials'
 import { IoDocumentText, IoImageOutline } from "react-icons/io5";
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { Community } from '../../Interface/CommunityInterface';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../../firebaseClient';
 
 const formTabs = [
   {
@@ -19,12 +17,16 @@ const formTabs = [
   }
 ];
 
-const NewPostForm = () => {
+interface NewPostFormPropsInterface {
+  selectedCommunityId?: string;
+}
+
+const NewPostForm: FC<NewPostFormPropsInterface> = ({selectedCommunityId}) => {
   const toast = useToast()
   const user = useSelector((state: RootState) => state.user)
   const [selectedTab, setSelectedTab] = useState<string>(formTabs[0].title);
-  const {selectedCommunity} = useSelector((state: RootState) => state.community)
-
+  const {communities} = useSelector((state: RootState) => state.community)
+  const selectedCommunity = communities.find((community:Community) => community.id === selectedCommunityId)
   useEffect(() => {
     if(!!user.id === false) {
       toast({
@@ -43,6 +45,7 @@ const NewPostForm = () => {
         title: "Please select a community, first!",
         status: "error",
         isClosable: true,
+        position: "top-right"
       })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

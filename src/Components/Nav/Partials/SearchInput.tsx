@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import SearchResults from "./SearchResults";
 import { Post } from "../../../Interface/PostInterface";
 import { searchPost } from "../../../Helpers/apiFunctions";
+import NoEntry from "../../NoEntry";
 
 const SearchInput = () => {
   const [searchKey, setSearchKey] = useState("")
@@ -62,11 +63,14 @@ const SearchInput = () => {
             width="100%"
             onChange={e => setSearchKey(e.target.value)}
             onFocus={e => setInputFocus(true)}
-            onBlur={e => setInputFocus(false)}
+            onBlur={e => {
+              const timeout = setTimeout(() => setInputFocus(false), 300)
+              return () => clearTimeout(timeout)
+            }}
           />
         </InputGroup>
       </Flex>
-      {showSearchResults ? <SearchResults searchResults={searchResults} /> : null}
+      {inputFocus && <SearchResults searchResults={searchResults} />}
     </Flex>
   )
 }

@@ -10,6 +10,8 @@ import { RootState } from "../redux/store";
 
 type ModalLayoutProps = {
   children: React.ReactElement[] | React.ReactElement
+  isOpen?: boolean;
+  onClose?: () => void;
 };
 
 const ModalLayout: React.FC<ModalLayoutProps> = ({

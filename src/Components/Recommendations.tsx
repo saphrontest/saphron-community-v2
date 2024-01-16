@@ -1,85 +1,94 @@
 import { Avatar, Box, Button, Flex, Skeleton, SkeletonCircle, Stack, Text, useToast } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
 import { getCommunities, getJoinedCommunitiesList, getUserCommunities, joinCommunity, leaveCommunity } from '../Helpers/apiFunctions';
 import { setCommunities, setJoinedCommunities } from '../redux/slices/communitySlice';
 import { Community, JoinedCommunity } from '../Interface/CommunityInterface';
-import { getPexelPhoto } from '../pexelsClient';
+import communitiesBackground from '../assets/images/communities.jpg'
 
-const Recommendations = () => {
+interface RecommendationsProps {
+  type?: string;
+}
+
+const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const toast = useToast()
-    const [loading, setLoading] = useState(false)
-    const [viewAll, setViewAll] = useState(false)
-    const [pexelThumbnail, setPexelThumbnail] = useState<any>()
-    const [myCommmunities, setMyCommmunities] = useState<any[]>([])
-    const {communities, joinedCommunities} = useSelector((state: RootState) => state.community)
-    const user = useSelector((state: RootState) => state.user)
+  const [loading, setLoading] = useState(false)
+  const [viewAll, setViewAll] = useState(false)
+  const [myCommmunities, setMyCommmunities] = useState<any[]>([])
+  const {communities, joinedCommunities} = useSelector((state: RootState) => state.community)
+  const user = useSelector((state: RootState) => state.user)
+  
+  useEffect(() => {
+    !!user.id && get(user.id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
-    const getThumbnail = async () => {
-      const photo = await getPexelPhoto()
-      setPexelThumbnail(photo)
+  const get = async (userId: string) => {
+    await getUserCommunity(userId)
+    await getJoinedCommunities(userId)
+  }
+  
+  useEffect(() => {
+    if(type === "home") {
+      setLoading(true)
+      getAllCommunities()
+        .finally(() => setLoading(false))
+    }
+  }, [])
+
+  const getAllCommunities = async () => {
+    getCommunities().then(communitiesData => {
+      const communityList = [
+        ...communitiesData.map(({ id, name, creatorId, privacyType, createdAt }) => ({
+          id,
+          name,
+          creatorId,
+          privacyType,
+          createdAt: {
+            seconds: createdAt?.seconds,
+            nanoseconds: createdAt?.nanoseconds 
+          } 
+        }))
+      ]
+      dispatch(setCommunities(communityList as Community[]))
+    })
   }
 
-  useEffect(() => {
-      getThumbnail()
-  }, [])
-    
-    useEffect(() => {
-      if(user.id) {
-        getUserCommunity(user.id)
-        getJoinedCommunities(user.id)
+  const getJoinedCommunities = async (userId: string) => {
+    const joined : JoinedCommunity[] | false = await getJoinedCommunitiesList(userId)
+    !!joined && dispatch(setJoinedCommunities(joined))
+  }
+
+  const getUserCommunity = async (userId: string) => {
+      const comms = await getUserCommunities(userId)
+      setMyCommmunities(comms)
+  }
+  
+  const onJoin = async (userId: string, communityId: string) => {
+    const mine = myCommmunities.find(mine => mine.communityId === communityId)
+    if(!!mine){
+      if(mine.isModerator) {
+        return
       }
-    }, [user])
-    
-    useEffect(() => {
-      setLoading(true)
-      getCommunities().then(communitiesData => {
-        const communityList = [
-          ...communitiesData.map(({ id, name, creatorId, privacyType, createdAt }) => ({
-            id,
-            name,
-            creatorId,
-            privacyType,
-            createdAt: {
-              seconds: createdAt?.seconds,
-              nanoseconds: createdAt?.nanoseconds 
-            } 
-          }))
-        ]
-        dispatch(setCommunities(communityList as Community[]))
-      }).finally(() => setLoading(false))
-    }, [])
-
-    const getJoinedCommunities = async (userId: string) => {
-      const joined : JoinedCommunity[] | false = await getJoinedCommunitiesList(userId)
-      joined && dispatch(setJoinedCommunities(joined as JoinedCommunity[]))
+      await leaveCommunity(userId, communityId)
+      await getJoinedCommunities(userId)
+      return;
     }
+    await joinCommunity(userId, communityId)
+    await getJoinedCommunities(userId)
+  }
 
-    const getUserCommunity = async (userId: string) => {
-        const comms = await getUserCommunities(userId)
-        setMyCommmunities(comms)
+
+  return !!communities.filter((c: Community) => {
+    if (type === "home") {
+      return true;
     }
-    
-    const onJoin = async (userId: string, communityId: string) => {
-      const mine = myCommmunities.find(mine => mine.communityId === communityId)
-      if(!!mine){
-        if(mine.isModerator) {
-          return
-        }
-        const res = await leaveCommunity(userId, communityId)
-        res && getJoinedCommunitiesList(userId)
-        return;
-      }
-      const res = await joinCommunity(userId, communityId)
-      res && getJoinedCommunitiesList(userId)
-    }
-
-
-  return (
+    return joinedCommunities.some((joined : JoinedCommunity) => joined.communityId === c.id)
+  }).length ? (
     <Flex
       direction="column"
       bg="white"
@@ -96,7 +105,8 @@ const Recommendations = () => {
         borderRadius="4px 4px 0px 0px"
         fontWeight={600}
         backgroundSize="cover"
-        bgImage={pexelThumbnail?.src?.original}
+        bgPos={"center"}
+        bgImage={communitiesBackground}
       >
         <Flex
         width="100%"
@@ -106,7 +116,7 @@ const Recommendations = () => {
         p="6px 10px"
         bgGradient="linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75))"
         >
-          Top Communities
+          {type === "home" ? "Top Communities" : "My Communities"}
         </Flex>
       </Flex>
       <Flex direction="column">
@@ -127,7 +137,14 @@ const Recommendations = () => {
           </Stack>
         ) : (
           <>
-            {(viewAll ? communities : communities.slice(0, 3)).map((item: Community, index: number) => {
+            {(viewAll ? communities : communities.slice(0, 3))
+              .filter((c: Community) => {
+                if (type === "home") {
+                  return true;
+                }
+                return joinedCommunities.some((joined : JoinedCommunity) => joined.communityId === c.id)
+              })
+              .map((item: Community, index: number) => {
               return (
                 // <Link key={item.id} to={`/community/${item.id}`}>
                 <Box key={item.id} >
@@ -172,6 +189,10 @@ const Recommendations = () => {
                             return;
                           }
                           onJoin(user?.id, item.id)
+                            .finally(async () => {
+                              await getUserCommunity(user.id)
+                              await getJoinedCommunities(user.id)
+                            })
                         }}
                         variant={!!joinedCommunities.find((joined: JoinedCommunity) => joined.communityId === item.id) ? "outline" : "solid"}
                       >
@@ -193,7 +214,7 @@ const Recommendations = () => {
         )}
       </Flex>
     </Flex>
-  )
+  ) : null
 }
 
 export default Recommendations

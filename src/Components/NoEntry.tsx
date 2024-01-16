@@ -3,7 +3,7 @@ import { SCIcon } from "./SCElements"
 
 const NoEntry = (props: any) => {
     return (
-      <Flex zIndex={999} width={"95%"} bgColor={"white"} height={props.type === "community" ? "fit-content" : "50vh"} direction={"column"} alignItems={"center"} justifyContent={"center"} gap={4} borderRadius={4} p={"2rem"}>
+      <Flex zIndex={999} width="100%" bgColor={"white"} height={props.type === "community" ? "fit-content" : "50vh"} direction={"column"} alignItems={"center"} justifyContent={"center"} gap={4} borderRadius={4} p={"2rem"}>
         <SCIcon
           name='no-entry'
           width={300}

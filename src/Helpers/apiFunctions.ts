@@ -8,7 +8,8 @@ import {
   where,
   setDoc,
   deleteDoc,
-  writeBatch
+  writeBatch,
+  increment
 } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 // INTERFACES
@@ -150,9 +151,15 @@ export const getJoinedCommunitiesList = async (id: string) => {
 export const joinCommunity = async (userId: string, communityId: string) => {
 
   const joinCommunityRef = doc(firestore, "users", userId, "communities", communityId);
-
+  const communityRef = doc(firestore, "communities", communityId)
+  
   try {
     await setDoc(joinCommunityRef, { communityId, isModerator: false })
+    const batch = writeBatch(firestore)
+    batch.update(communityRef, {
+      numberOfMembers: increment(+1)
+    })
+    batch.commit()
     return true
   } catch (err) {
     return false
@@ -163,10 +170,16 @@ export const joinCommunity = async (userId: string, communityId: string) => {
 
 export const leaveCommunity = async (userId: string, communityId: string) => {
 
-  const communityRef = doc(firestore, "users", userId, "communities", communityId);
-
+  const userCommunityRef = doc(firestore, "users", userId, "communities", communityId);
+  const communityRef = doc(firestore, "communities", communityId)
+  
   try {
-    await deleteDoc(communityRef)
+    await deleteDoc(userCommunityRef)
+    const batch = writeBatch(firestore)
+    batch.update(communityRef, {
+      numberOfMembers: increment(-1)
+    })
+    batch.commit()
     return true
   } catch (err) {
     return false

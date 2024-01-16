@@ -1,17 +1,17 @@
-import { Button, Divider, Flex, ModalBody, ModalCloseButton, ModalHeader, Spinner, Text, useDisclosure, useToast } from '@chakra-ui/react'
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { Button, Divider, Flex, ModalBody, ModalCloseButton, ModalHeader, useDisclosure, Spinner, useToast } from '@chakra-ui/react'
+import React, { ChangeEvent, useRef, useState, useEffect } from 'react'
 import { ModalLayout } from '../../Layouts'
 import { auth, firestore, storage } from '../../firebaseClient'
 import { useAuthState, useUpdateProfile } from 'react-firebase-hooks/auth'
 import { SCEditButton, SCFormItem } from '../SCElements'
 import { getDownloadURL, ref, uploadString } from 'firebase/storage'
-import { getPexelPhoto } from '../../pexelsClient'
 import { doc, updateDoc } from 'firebase/firestore'
 import NotFoundUserPic from '../../assets/images/user.png'
 import { getUser, updateUser } from '../../Helpers/apiFunctions'
 import { RootState } from '../../redux/store'
 import { useSelector } from 'react-redux'
 import { UserInterface } from '../../Interface/UserInterface'
+import defaultCover from '../../assets/images/default-cover.jpg'
 
 const EditProfileModal = () => {
 
@@ -24,22 +24,12 @@ const EditProfileModal = () => {
     const coverImgInputRef = useRef<HTMLInputElement | null>(null)
     const [imageLoading, setImageLoading] = useState<{status: boolean, type: string}>({status: false, type: ''})
     const [isSaving, setIsSaving] = useState(false)
-    const [coverPhoto, setCoverPhoto] = useState<any>()
     const [formValues, setFormValues] = useState({
         email: user?.email,
         username: user?.email?.split("@")[0],
         displayName: user?.displayName,
         phoneNumber: user?.phoneNumber
     })
-
-    const getCoverPhoto = async () => {
-        const image = await getPexelPhoto("cover photo")
-        setCoverPhoto(image?.src?.original as string)
-    }
-
-    useEffect(() => {
-        getCoverPhoto()
-    }, [])
 
 
     const onImgChange = (event: ChangeEvent<HTMLInputElement>, type: string = "profile_photo") => {
@@ -157,7 +147,7 @@ const EditProfileModal = () => {
                 justifyContent="flex-start"
                 width={"100%"}
             >
-                <Flex bgImage={userFromDB.coverPhotoURL ?? coverPhoto} w={"100%"} h={"fit-content"} borderRadius={5} justifyContent={"center"} alignItems={"center"}>
+                <Flex bgImage={userFromDB.coverPhotoURL ?? defaultCover} w={"100%"} h={"fit-content"} borderRadius={5} justifyContent={"center"} alignItems={"center"}>
                     <SCFormItem type='img' src={!!userFromDB.profilePhotoURL ? userFromDB.profilePhotoURL : (user?.photoURL as string ?? NotFoundUserPic)} additionalStyles={{transform: "translateY(40px)"}}/>
                     <input type='file' style={{display: 'none'}} accept="image/x-png,image/gif,image/jpeg" ref={profileImgInputRef} onChange={ev => onImgChange(ev, "profile_photo")}/>
                     <input type='file' style={{display: 'none'}} accept="image/x-png,image/gif,image/jpeg" ref={coverImgInputRef} onChange={ev => onImgChange(ev, "cover_photo")}/>

@@ -6,7 +6,7 @@ import { RootState } from '../redux/store';
 import { getCommunities, getJoinedCommunitiesList, getUserCommunities, joinCommunity, leaveCommunity } from '../Helpers/apiFunctions';
 import { setCommunities, setJoinedCommunities } from '../redux/slices/communitySlice';
 import { Community, JoinedCommunity } from '../Interface/CommunityInterface';
-import { getPexelPhoto } from '../pexelsClient';
+import communitiesBackground from '../assets/images/communities.jpg'
 
 interface RecommendationsProps {
   type?: string;
@@ -16,72 +16,71 @@ const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const toast = useToast()
-    const [loading, setLoading] = useState(false)
-    const [viewAll, setViewAll] = useState(false)
-    const [pexelThumbnail, setPexelThumbnail] = useState<any>()
-    const [myCommmunities, setMyCommmunities] = useState<any[]>([])
-    const {communities, joinedCommunities} = useSelector((state: RootState) => state.community)
-    const user = useSelector((state: RootState) => state.user)
+  const [loading, setLoading] = useState(false)
+  const [viewAll, setViewAll] = useState(false)
+  const [myCommmunities, setMyCommmunities] = useState<any[]>([])
+  const {communities, joinedCommunities} = useSelector((state: RootState) => state.community)
+  const user = useSelector((state: RootState) => state.user)
+  
+  useEffect(() => {
+    !!user.id && get(user.id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
-  const getThumbnail = async () => {
-    const photo = await getPexelPhoto()
-    setPexelThumbnail(photo)
+  const get = async (userId: string) => {
+    await getUserCommunity(userId)
+    await getJoinedCommunities(userId)
+  }
+  
+  useEffect(() => {
+    if(type === "home") {
+      setLoading(true)
+      getAllCommunities()
+        .finally(() => setLoading(false))
+    }
+  }, [])
+
+  const getAllCommunities = async () => {
+    getCommunities().then(communitiesData => {
+      const communityList = [
+        ...communitiesData.map(({ id, name, creatorId, privacyType, createdAt }) => ({
+          id,
+          name,
+          creatorId,
+          privacyType,
+          createdAt: {
+            seconds: createdAt?.seconds,
+            nanoseconds: createdAt?.nanoseconds 
+          } 
+        }))
+      ]
+      dispatch(setCommunities(communityList as Community[]))
+    })
   }
 
-  useEffect(() => {
-      getThumbnail()
-  }, [])
-    
-    useEffect(() => {
-      if(user.id) {
-        getUserCommunity(user.id)
-        getJoinedCommunities(user.id)
-      }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user])
-    
-    useEffect(() => {
-      setLoading(true)
-      getCommunities().then(communitiesData => {
-        const communityList = [
-          ...communitiesData.map(({ id, name, creatorId, privacyType, createdAt }) => ({
-            id,
-            name,
-            creatorId,
-            privacyType,
-            createdAt: {
-              seconds: createdAt?.seconds,
-              nanoseconds: createdAt?.nanoseconds 
-            } 
-          }))
-        ]
-        dispatch(setCommunities(communityList as Community[]))
-      }).finally(() => setLoading(false))
-    }, [])
+  const getJoinedCommunities = async (userId: string) => {
+    const joined : JoinedCommunity[] | false = await getJoinedCommunitiesList(userId)
+    !!joined && dispatch(setJoinedCommunities(joined))
+  }
 
-    const getJoinedCommunities = async (userId: string) => {
-      const joined : JoinedCommunity[] | false = await getJoinedCommunitiesList(userId)
-      joined && dispatch(setJoinedCommunities(joined as JoinedCommunity[]))
-    }
-
-    const getUserCommunity = async (userId: string) => {
-        const comms = await getUserCommunities(userId)
-        setMyCommmunities(comms)
-    }
-    
-    const onJoin = async (userId: string, communityId: string) => {
-      const mine = myCommmunities.find(mine => mine.communityId === communityId)
-      if(!!mine){
-        if(mine.isModerator) {
-          return
-        }
-        const res = await leaveCommunity(userId, communityId)
-        res && getJoinedCommunitiesList(userId)
-        return;
+  const getUserCommunity = async (userId: string) => {
+      const comms = await getUserCommunities(userId)
+      setMyCommmunities(comms)
+  }
+  
+  const onJoin = async (userId: string, communityId: string) => {
+    const mine = myCommmunities.find(mine => mine.communityId === communityId)
+    if(!!mine){
+      if(mine.isModerator) {
+        return
       }
-      const res = await joinCommunity(userId, communityId)
-      res && getJoinedCommunitiesList(userId)
+      await leaveCommunity(userId, communityId)
+      await getJoinedCommunities(userId)
+      return;
     }
+    await joinCommunity(userId, communityId)
+    await getJoinedCommunities(userId)
+  }
 
 
   return !!communities.filter((c: Community) => {
@@ -106,7 +105,8 @@ const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
         borderRadius="4px 4px 0px 0px"
         fontWeight={600}
         backgroundSize="cover"
-        bgImage={pexelThumbnail?.src?.original}
+        bgPos={"center"}
+        bgImage={communitiesBackground}
       >
         <Flex
         width="100%"
@@ -189,9 +189,9 @@ const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
                             return;
                           }
                           onJoin(user?.id, item.id)
-                            .finally(() => {
-                              getUserCommunity(user.id)
-                              getJoinedCommunities(user.id)
+                            .finally(async () => {
+                              await getUserCommunity(user.id)
+                              await getJoinedCommunities(user.id)
                             })
                         }}
                         variant={!!joinedCommunities.find((joined: JoinedCommunity) => joined.communityId === item.id) ? "outline" : "solid"}

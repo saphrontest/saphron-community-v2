@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
 import { Flex, Stack, useToast } from '@chakra-ui/react'
-import { Nav, NoEntry, PostItem, Recommendations } from '../Components'
+import { Nav, NoEntry, PostItem } from '../Components'
 import { ProfileHeader } from '../Components/Profile'
 import { getPostsByUsername } from '../Helpers/apiFunctions'
 import { firestore, storage } from '../firebaseClient'
@@ -71,14 +71,13 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    getPosts(user.username)
+    !!user.username && getPosts(user.username)
   }, [user])
   
   useEffect(() => {
-    getPosts(user.username)
+    voteChange && getPosts(user.username)
   }, [voteChange])
 
-  const MyCommunitiesView = () => <Recommendations type="user-profile"/>
 
   return (
     <>
@@ -101,7 +100,6 @@ const Profile = () => {
           </Stack>
           </>
           <>
-            <MyCommunitiesView />
           </>
         </PageLayout>
       </Flex>

@@ -230,6 +230,7 @@ export const savePost = async (post: Post, userId: string) => {
           voteStatus: post.voteStatus,
           createdAt: post.createdAt,
           userDisplayText: post.userDisplayText,
+          slug: post.slug
         })
           .then(() => {
             console.log("Post saved.");

@@ -7,7 +7,8 @@ import { firestore } from '../../firebaseClient';
 import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
 import md5 from 'md5';
 import { RootState } from '../../redux/store';
-import { getCommunities } from '../../Helpers/apiFunctions';
+import { getCommunities, getJoinedCommunitiesList } from '../../Helpers/apiFunctions';
+import { setCommunities, setJoinedCommunities } from '../../redux/slices/communitySlice';
 
 const AddCommunityModal = () => {
 
@@ -73,7 +74,10 @@ const AddCommunityModal = () => {
                     }
                 );
             });
-
+            const joined = await getJoinedCommunitiesList(user.id)
+            joined && dispatch(setJoinedCommunities(joined))
+            const communities = await getCommunities()
+            dispatch(setCommunities(communities))
             handleClose();
 
         } catch (error: any) {

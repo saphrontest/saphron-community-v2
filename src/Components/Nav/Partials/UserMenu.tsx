@@ -23,6 +23,7 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
     const logout = async () => {
         await signOut(auth);
         dispatch(logoutUser())
+        navigate("/")
     }
     return (
         <Menu>

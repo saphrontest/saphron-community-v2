@@ -112,7 +112,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                         <>
                         
                 <Box mt={3} mb={4}>
-                    {!!formattedCommunities.filter(com => !com.isModerator).length ? <Text
+                    {!!formattedCommunities.filter(com => com.isModerator).length ? <Text
                         pl={3}
                         mb={1}
                         fontSize="7pt"
@@ -121,7 +121,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                     >
                         MODERATING
                     </Text> : null}
-                    {formattedCommunities.filter(com => !com.isModerator).map(comm => {
+                    {formattedCommunities.filter(com => com.isModerator).map(comm => {
                         return (
                             <MenuItem
                                 key={comm.id}
@@ -142,10 +142,10 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                     
                 </Box>
                 <Box mt={3} mb={4}>
-                {!!formattedCommunities.filter(com => com.isModerator).length && <Text pl={3} mb={1} fontSize="7pt" fontWeight={500} color="gray.500">
+                {!!formattedCommunities.filter(com => !com.isModerator).length && <Text pl={3} mb={1} fontSize="7pt" fontWeight={500} color="gray.500">
                 MY COMMUNITIES
                 </Text>}
-                {formattedCommunities.filter(com => com.isModerator).map(comm => {
+                {formattedCommunities.filter(com => !com.isModerator).map(comm => {
                     return (
                         <MenuItem
                             key={comm.id}

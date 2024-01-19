@@ -2,8 +2,7 @@ import { Flex, useToast } from '@chakra-ui/react'
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Post, PostVote } from '../../../Interface/PostInterface';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, firestore } from '../../../firebaseClient';
+import { firestore } from '../../../firebaseClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../../redux/slices/modalSlice';
 import { collection, doc, writeBatch } from 'firebase/firestore';
@@ -13,7 +12,6 @@ import VoteComponent from './VoteComponent';
 import ActionButtons from './ActionButtons';
 import PostContent from './PostContent';
 import { Community } from '../../../Interface/CommunityInterface';
-import { AiOutlineConsoleSql } from 'react-icons/ai';
 
 export type PostItemContentProps = {
   post: Post;

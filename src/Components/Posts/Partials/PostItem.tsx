@@ -13,6 +13,7 @@ import VoteComponent from './VoteComponent';
 import ActionButtons from './ActionButtons';
 import PostContent from './PostContent';
 import { Community } from '../../../Interface/CommunityInterface';
+import { AiOutlineConsoleSql } from 'react-icons/ai';
 
 export type PostItemContentProps = {
   post: Post;
@@ -67,6 +68,7 @@ const PostItem: FC<PostItemContentProps> = ({
   ) => {
     setVoteLoading(true)
     const batch = writeBatch(firestore);
+    let sentVote = vote
     event.stopPropagation();
     if (!user?.id) {
       toast({
@@ -76,6 +78,7 @@ const PostItem: FC<PostItemContentProps> = ({
         position: "top-right"
       })
       dispatch(setModal({isOpen: true, view: 'login'}))
+      setVoteLoading(false)
       return;
     }
     const community = communities.filter((community:Community) => community.name === communityName)[0]
@@ -88,11 +91,13 @@ const PostItem: FC<PostItemContentProps> = ({
       
       if(userVote){
         // UPDATE, IF USER HAS PREVIOUS VOTE
-        const postVoteRef = doc( firestore, "users", `${user.id}/postVotes/${userVote.id}` );
+        const postVoteRef = doc(firestore, "users", `${user.id}/postVotes/${userVote.id}` );
 
         if(userVote.voteValue === vote) {
+          sentVote = -vote
           batch.delete(postVoteRef);
         }else{
+          sentVote = userVote.voteValue > 0 ? -1 + vote : 1 + vote
           batch.update(postVoteRef, {
             voteValue: vote,
           });
@@ -103,8 +108,9 @@ const PostItem: FC<PostItemContentProps> = ({
         newVote.id= postVoteRef.id;
         batch.set(postVoteRef, newVote);
       }
+
       const postRef = doc(firestore, "posts", post.id);
-      batch.update(postRef, { voteStatus: post.voteStatus + vote });
+      batch.update(postRef, { voteStatus: post.voteStatus + sentVote });
       await batch.commit();
       setVoteChange(true)
     } catch (error) {

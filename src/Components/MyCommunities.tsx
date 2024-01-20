@@ -19,13 +19,10 @@ const MyCommunities = () => {
         await getJoinedCommunities(userId)
     }
 
-
     const getJoinedCommunities = async (userId: string) => {
         const joined : JoinedCommunity[] | false = await getJoinedCommunitiesList(userId)
         !!joined && dispatch(setJoinedCommunities(joined))
     }
-
-
 
     return (
       <Flex bg="white" p={1} direction="column">
@@ -68,7 +65,7 @@ const MyCommunities = () => {
                       <Flex width="15%">
                         <Text mr={2}>{index + 1}</Text>
                       </Flex>
-                      <Flex align="center" width="80%" gap={2} cursor="pointer" onClick={() => navigate(`/community-detail/${item.id}`)}>
+                      <Flex align="center" width="70%" gap={2} cursor="pointer" onClick={() => navigate(`/community-detail/${item.id}`)}>
                         <Avatar src={item.imageURL} boxSize={item.imageURL ? 28 : 30} style={{width: 30, height: 30}} />
                         <span
                           style={{
@@ -99,7 +96,7 @@ const MyCommunities = () => {
                               await getJoinedCommunities(user.id)
                             })
                         }}
-                        variant={!!joinedCommunities.find((joined: JoinedCommunity) => joined.communityId === item.id) ? "outline" : "solid"}
+                        variant="outline"
                       >
                         Leave
                       </Button>

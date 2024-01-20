@@ -2,15 +2,13 @@ import { Button, Flex, Stack, Text, useToast } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { setModal } from '../redux/slices/modalSlice'
-import { useEffect, useState } from 'react'
-import { getPexelPhoto } from '../pexelsClient'
 import { RootState } from '../redux/store'
+import menthalHealth from '../assets/images/menthal.jpg'
 
 const PersonalHome = () => {
     const user = useSelector((state: RootState) => state.user)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [pexelThumbnail, setPexelThumbnail] = useState<any>()
     const toast = useToast()
 
     const handleButton = (type: string = "add-community") => {
@@ -29,15 +27,6 @@ const PersonalHome = () => {
             dispatch(setModal({ isOpen: true, view: "addCommunity" }))
         }
     }
-
-    const getThumbnail = async () => {
-        const photo = await getPexelPhoto()
-        setPexelThumbnail(photo)
-    }
-
-    useEffect(() => {
-        getThumbnail()
-    }, [])
 
     return (
         <Flex
@@ -58,7 +47,7 @@ const PersonalHome = () => {
                 height="100px"
                 borderRadius="4px 4px 0px 0px"
                 fontWeight={600}
-                bgImage={pexelThumbnail?.src?.original}
+                bgImage={menthalHealth}
                 bgPosition={"center"}
                 backgroundSize="cover"
             ></Flex>

@@ -18,8 +18,10 @@ const Nav = () => {
           padding="6px 12px"
           justifyContent={{ md: "space-between" }}
         >
-          <NavLogo />
-          {user.id && <CommunitySelect isOpen={dropdown} setOpen={toggleDropdown} isNav/>}
+          <Flex gap={"2rem"}>
+            <NavLogo />
+            {user.id && <CommunitySelect isOpen={dropdown} setOpen={toggleDropdown} isNav/>}
+          </Flex>
           <SearchInput />
           <Flex justifyContent="space-between" alignItems="center">
             {user.id ? <GoSubmit /> : <AuthButtons />}

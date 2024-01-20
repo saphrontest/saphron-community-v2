@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -49,7 +49,7 @@ const About: React.FC<AboutProps> = ({
   const [selectedFile, setSelectedFile] = useState<string>();
   const [imageLoading, setImageLoading] = useState(false);
   const [addDescriptionView, setAddDescriptionView] = useState(false)
-  const [descriptionText, setDescriptionText] = useState("")
+  const [descriptionText, setDescriptionText] = useState<string>()
   const [community, setCommunity] = useState<Community>()
 
 
@@ -92,13 +92,17 @@ const About: React.FC<AboutProps> = ({
       community && await updateDoc(doc(firestore, "communities", community?.id), {
         imageURL: downloadURL,
       });
-      console.log("HERE IS DOWNLOAD URL", downloadURL);
     } catch (error: any) {
       console.log("updateImage error", error.message);
     }
     // April 24 - removed reload
     // window.location.reload();
-
+    getCommunityDetail(communityId).then((result) => {
+      setCommunity(result)
+    }).catch((err) => {
+      console.error("GET COMMUNITY DETAIL ERROR: ", err)
+    });
+    setSelectedFile(undefined)
     setImageLoading(false);
   };
 
@@ -137,15 +141,15 @@ const About: React.FC<AboutProps> = ({
       </Box>
     ) : (
     <>
-          <InputItem
-            name="description"
-            placeholder="Description"
-            type="text"
-            onChange={({target: { value }}: React.ChangeEvent<HTMLInputElement>) => setDescriptionText(value)}
-          />
-          <Button onClick={addDescription}>
-            <Text>Add</Text>
-          </Button>
+      <InputItem
+        name="description"
+        placeholder="Description"
+        type="text"
+        onChange={(ev: ChangeEvent<HTMLInputElement>) => setDescriptionText(ev.target.value)}
+      />
+      <Button onClick={addDescription}>
+        <Text>Add</Text>
+      </Button>
     </>
   )
   }
@@ -249,11 +253,11 @@ const About: React.FC<AboutProps> = ({
                 <>
                   <Divider />
                   <Stack display={"flex"} flexDirection={"row"} alignItems={"center"} fontSize="10pt" spacing={4}>
-                    <Image
+                    {(community?.imageURL || selectedFile) && <Image
                     src={community?.imageURL || selectedFile}
                     boxSize={community?.imageURL || selectedFile ? 10 : 30}
                     borderRadius={"full"}
-                    alt="ICON" />
+                    alt="ICON" />}
                     <Flex align="start" justify="space-between" direction="column">
                       <Text fontWeight={600}>Admin</Text>
                       <Text
@@ -262,7 +266,7 @@ const About: React.FC<AboutProps> = ({
                         _hover={{ textDecoration: "underline" }}
                         onClick={() => selectFileRef.current?.click()}
                       >
-                        Change Image
+                        {community?.imageURL ? "Change Image" : "Add Image"}
                       </Text>
                     </Flex>
                     {selectedFile &&

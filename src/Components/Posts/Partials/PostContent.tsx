@@ -1,6 +1,6 @@
 import { Avatar, Flex, Icon, Image, Skeleton, Stack, Text } from '@chakra-ui/react'
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FC } from 'react'
 import { Post } from '../../../Interface/PostInterface'

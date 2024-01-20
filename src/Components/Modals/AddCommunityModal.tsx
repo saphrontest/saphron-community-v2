@@ -3,17 +3,16 @@ import { ModalLayout } from '../../Layouts'
 import { Box, Button, Divider, Input, ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Text, useToast} from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
-import { useNavigate } from 'react-router-dom';
-import { auth, firestore } from '../../firebaseClient';
+import { firestore } from '../../firebaseClient';
 import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import md5 from 'md5';
 import { RootState } from '../../redux/store';
+import { getCommunities, getJoinedCommunitiesList } from '../../Helpers/apiFunctions';
+import { setCommunities, setJoinedCommunities } from '../../redux/slices/communitySlice';
 
 const AddCommunityModal = () => {
 
     const dispatch = useDispatch()
-    const navigate = useNavigate()
     const toast = useToast()
 
     const user = useSelector((state: RootState) => state.user)
@@ -75,13 +74,17 @@ const AddCommunityModal = () => {
                     }
                 );
             });
-
+            const joined = await getJoinedCommunitiesList(user.id)
+            joined && dispatch(setJoinedCommunities(joined))
+            const communities = await getCommunities()
+            dispatch(setCommunities(communities))
             handleClose();
 
         } catch (error: any) {
             console.log("Transaction error", error);
             setNameError(error.message);
         } finally {
+            getCommunities()
             setLoading(false);
         }
         

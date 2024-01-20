@@ -23,6 +23,7 @@ const Home = () => {
 
   useEffect(() => {
     getPostsData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
   useEffect(() => {
@@ -30,6 +31,7 @@ const Home = () => {
       getPostsData()
       return () => setVoteChange(false)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVoteChange])
 
   const getPostsData = () => {

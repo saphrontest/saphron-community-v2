@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
 import { Flex, Stack, useToast } from '@chakra-ui/react'
-import { Nav, NoEntry, PostItem } from '../Components'
+import { MyCommunities, Nav, NoEntry, PostItem } from '../Components'
 import { ProfileHeader } from '../Components/Profile'
 import { getPostsByUsername } from '../Helpers/apiFunctions'
 import { firestore, storage } from '../firebaseClient'
@@ -17,7 +17,6 @@ import NotFoundUserPic from '../assets/images/user.png'
 const Profile = () => {
   const dispatch = useDispatch()
   const toast = useToast()
-  
   const user = useSelector((state: RootState) => state.user)
 
   const [voteChange, setVoteChange] = useState<boolean>(false)
@@ -69,7 +68,7 @@ const Profile = () => {
         getPosts(user?.email?.split("@")[0] as string)
       }
   }
-
+  
   useEffect(() => {
     !!user.username && getPosts(user.username)
   }, [user])
@@ -77,7 +76,6 @@ const Profile = () => {
   useEffect(() => {
     voteChange && getPosts(user.username)
   }, [voteChange])
-
 
   return (
     <>
@@ -100,6 +98,7 @@ const Profile = () => {
           </Stack>
           </>
           <>
+            <MyCommunities />
           </>
         </PageLayout>
       </Flex>

@@ -1,28 +1,31 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
 import { Flex } from '@chakra-ui/react'
 import { Tabs } from '../Components/Posts/Partials'
 import { IoSearch } from 'react-icons/io5'
 import { SiSmartthings } from "react-icons/si";
 import { useLocation } from 'react-router-dom'
-import { PostSearch, AskAI } from '../Components/Search'
+import { PostSearch, AskAI, RecentSearches } from '../Components/Search'
 
 const SearchPage = () => {
-    const {state: {searchKey, searchResults}} = useLocation();
-    // console.log(searchKey)
-    // console.log(searchResults)
-    const [view, setSelectedView] = useState<"Post Search" | "AI Search">("Post Search")
-    const toggleView = () => setSelectedView(prev => prev === "Post Search" ? "AI Search" : "Post Search")
-    const searchTabs = [
-        {
-          title: "Post Search",
-          icon: IoSearch,
-        },
-        {
-          title: "AI Search",
-          icon: SiSmartthings,
-        }
-      ];
+  const location = useLocation();
+  const [view, setSelectedView] = useState<"Post Search" | "AI Search">("Post Search")
+  const toggleView = () => setSelectedView(prev => prev === "Post Search" ? "AI Search" : "Post Search")
+  const searchTabs = [
+      {
+        title: "Post Search",
+        icon: IoSearch,
+      },
+      {
+        title: "AI Search",
+        icon: SiSmartthings,
+      }
+    ];
+
+  useEffect(() => {
+    location.state?.activeTab && setSelectedView(location.state?.activeTab)
+  }, [location.state.activeTab])
+
   return (
     <PageLayout showSidebar={false}>
         <>
@@ -34,12 +37,16 @@ const SearchPage = () => {
                 />
             </Flex>
             <Flex bg="white" p="2">
-                {view === "Post Search" ? <PostSearch searchKey={searchKey} items={searchResults}/> : <AskAI />}
+                {
+                  view === "Post Search" ?
+                    <PostSearch searchKey={location.state?.searchKey} items={location.state?.searchResults}/> :
+                    <AskAI />
+                }
             </Flex>
         </>
         <>
             <Flex bg="white" height="100%" p={2}>
-                {view === "Post Search" ? "Recent Searches" : "Recent Dialogs"}
+                {view === "Post Search" ? <RecentSearches /> : "Recent Dialogs"}
             </Flex>
         </>
     </PageLayout>

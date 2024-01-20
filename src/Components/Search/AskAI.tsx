@@ -15,16 +15,15 @@ const AskAI = () => {
   
 
   const send = async () => {
-    console.log(params)
     const response = await openai.chat.completions.create(params);
-    console.log(response)
+    setSendMessage(false)
   }
 
   useEffect(() => {
     if(sendMessage) {
       send()
-      return () => setSendMessage(false)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sendMessage])
 
   return (

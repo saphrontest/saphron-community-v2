@@ -5,8 +5,8 @@ import SearchResults from '../Nav/Partials/SearchResults';
 import { searchPost } from '../../Helpers/apiFunctions';
 
 interface PostSearchProps {
-  searchKey: string;
-  items: any;
+  searchKey?: string;
+  items?: any;
 }
 
 const PostSearch:FC<PostSearchProps> = ({searchKey, items}) => {
@@ -63,7 +63,7 @@ const PostSearch:FC<PostSearchProps> = ({searchKey, items}) => {
             onChange={e => setSearchText(e.target.value)}
           />
         </InputGroup>
-        <SearchResults showMoreButton={false} searchResults={searchResult} zIndex={3}/>
+        <SearchResults showMoreButton={false} searchResults={searchResult || []} zIndex={3}/>
     </Flex>
   )
 }

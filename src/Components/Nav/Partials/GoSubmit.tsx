@@ -19,7 +19,7 @@ const GoSubmit = () => {
                 outline={"1px solid"}
                 outlineColor={"gray.100"}
                 _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
-                onClick={() => navigate("/submit")}
+                onClick={() => navigate("/search", {state: {activeTab: "AI Search"}})}
             >
                 <Icon as={GrAdd} fontSize={20} color="red.100"/>
                 <Text fontSize={16} fontWeight={500} color="black.500">

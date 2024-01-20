@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { modalSlice, communitySlice, postSlice, userSlice } from './slices'
+import { modalSlice, communitySlice, postSlice, userSlice, searchSlice } from './slices'
 import { persistCombineReducers, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
 import autoMergeLevel1 from "redux-persist/es/stateReconciler/autoMergeLevel1";
@@ -7,14 +7,15 @@ const persistConfig = {
   key: 'root',
   storage,
   stateReconciler: autoMergeLevel1,
-  whitelist: ['user']
+  whitelist: ['user', 'search']
 }
 
 const defaultReducer = {
   modal: modalSlice,
   community: communitySlice,
   post: postSlice,
-  user: userSlice
+  user: userSlice,
+  search: searchSlice
 }
 
 export const store = configureStore({

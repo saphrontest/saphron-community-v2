@@ -59,7 +59,7 @@ const SearchInput = () => {
           />
         </InputGroup>
       </Flex>
-      {inputFocus && <SearchResults searchResults={searchResults} />}
+      {inputFocus && <SearchResults searchResults={searchResults} showMoreButton={true}/>}
     </Flex>
   )
 }

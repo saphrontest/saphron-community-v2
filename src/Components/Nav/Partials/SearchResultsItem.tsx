@@ -3,13 +3,20 @@ import { Post } from '../../../Interface/PostInterface';
 import { Flex, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { LinkIcon } from '@chakra-ui/icons';
+import { useDispatch } from 'react-redux';
+import { setRecentSearches } from '../../../redux/slices/searchSlice';
 
 interface SearchResultsItemProps {
   item: Post;
 }
 
 const SearchResultsItem: FC<SearchResultsItemProps> = ({item}) => {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
+  const onItemClick = () => {
+    navigate(`/post/${item.slug}`)
+    dispatch(setRecentSearches(item))
+  }
   return (
     <Flex
     p={2}
@@ -21,7 +28,7 @@ const SearchResultsItem: FC<SearchResultsItemProps> = ({item}) => {
     justify="flex-start"
     _hover={{bg: "gray.100"}}
     cursor="pointer"
-    onClick={(e) => navigate(`/post/${item.slug}`)}
+    onClick={onItemClick}
     >
       <LinkIcon />
       <Flex flexDirection={"column"} align={"flex-start"}>

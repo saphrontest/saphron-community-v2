@@ -22,7 +22,7 @@ const SideBar = () => {
   
     return (
       <Flex
-        w="5%"
+        w="10%"
         h="fit-content"
         display={{ base: "none", sm: "none", md: "flex" }}
         flexDirection="column"

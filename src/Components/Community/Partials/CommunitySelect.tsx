@@ -25,14 +25,23 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
     const communityMenuRef = useRef(null)
     const [formattedCommunities, setFormattedCommunities] = useState<any[]>([])
     const {communities, selectedCommunity, joinedCommunities} = useSelector((state: RootState) => state.community)
+    
     useOutsideClick({
         ref: communityMenuRef,
-        handler: () => isOpen && setOpen(isOpen)
+        handler: () => isOpen && setOpen(!isOpen)
       });
 
     const getCommunityList = async () => {
         const res = await getCommunities()
-        const communityList = [...res.map(({ id, name, creatorId, privacyType, createdAt }) => ({ id, name, creatorId, privacyType, createdAt: { seconds: createdAt?.seconds, nanoseconds: createdAt?.nanoseconds } }))]
+        const communityList = [
+            ...res.map(({ id, name, creatorId, privacyType, createdAt }) => ({
+                 id,
+                 name,
+                 creatorId,
+                 privacyType,
+                 createdAt: { seconds: createdAt?.seconds, nanoseconds: createdAt?.nanoseconds }
+                }))
+            ]
         dispatch(setCommunities(communityList as Community[]))
     }
     const getJoinedCommunities = async (userId: string) => {
@@ -106,7 +115,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                     <ChevronDownIcon color="gray.500" />
                 </Flex>
             </MenuButton>
-            <MenuList ref={communityMenuRef}>
+            <MenuList ref={communityMenuRef} zIndex={9999}>
                 {
                     !!formattedCommunities.length === false ? <NoEntry type="community"/> : (
                         <>

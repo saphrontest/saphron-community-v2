@@ -9,13 +9,11 @@ import { useEffect, useState } from "react";
 import SearchResults from "./SearchResults";
 import { Post } from "../../../Interface/PostInterface";
 import { searchPost } from "../../../Helpers/apiFunctions";
-import NoEntry from "../../NoEntry";
 
 const SearchInput = () => {
   const [searchKey, setSearchKey] = useState("")
   const [searchResults, setSearchResults] = useState<Post[]>([])
   const [inputFocus, setInputFocus] = useState(false)
-  const [showSearchResults, setShowSearchResults] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -24,15 +22,6 @@ const SearchInput = () => {
     }, 1000);
     return () => clearTimeout(timer)
   }, [searchKey])
-
-  useEffect(() => {
-    if(searchResults.length && searchKey && inputFocus) {
-      setShowSearchResults(true)
-    }else{
-      const timeout = setTimeout(() => setShowSearchResults(false), 200)
-      return () => clearTimeout(timeout)
-    }
-  }, [searchKey, searchResults, inputFocus])
 
   return (
     <Flex flexDirection="column" align={"center"} maxWidth={"600px"} flexGrow={1} mr={2}>

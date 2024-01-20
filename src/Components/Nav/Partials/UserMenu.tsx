@@ -40,23 +40,28 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                         {user.id ? (
                             <>
                                 {/* Avatar should be user profile image */}
-                                <Avatar src={user.profilePhotoURL ?? NotFoundUserPic} boxSize={user.profilePhotoURL ? 28 : 30} style={{width: 30, height: 30}} mr={2}/>
+                                <Avatar
+                                mr={2}
+                                style={{width: 30, height: 30}}
+                                boxSize={user.profilePhotoURL ? 28 : 30}
+                                src={user.profilePhotoURL ?? NotFoundUserPic}
+                                />
                                 <Box
-                                    display={{ base: "none", lg: "flex" }}
-                                    flexDirection="column"
-                                    fontSize="8pt"
-                                    alignItems="flex-start"
-                                    mr={8}
+                                mr={8}
+                                fontSize="8pt"
+                                flexDirection="column"
+                                alignItems="flex-start"
+                                display={{ base: "none", lg: "flex" }}
                                 >
                                     <Text fontWeight={700}>{user.displayName ?? user.email?.split("@")[0]}</Text>
                                 </Box>
                             </>
                         ) : (
                             <Icon
-                                fontSize={24}
-                                mr={1}
-                                color="gray.400"
-                                as={VscAccount}
+                            fontSize={24}
+                            mr={1}
+                            color="gray.400"
+                            as={VscAccount}
                             />
                         )}
                     </Flex>
@@ -67,10 +72,10 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                 {user.id ? (
                     <>
                         <MenuItem
-                            fontSize="10pt"
-                            fontWeight={700}
-                            _hover={{ bg: "blue.500", color: "white" }}
-                            onClick={() => navigate("/profile")}
+                        fontSize="10pt"
+                        fontWeight={700}
+                        _hover={{ bg: "blue.500", color: "white" }}
+                        onClick={() => navigate("/profile")}
                         >
                             <Flex alignItems="center">
                                 <Icon fontSize={20} mr={2} as={CgProfile} />
@@ -78,10 +83,10 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                             </Flex>
                         </MenuItem>
                         <MenuItem
-                            fontSize="10pt"
-                            fontWeight={700}
-                            _hover={{ bg: "blue.500", color: "white" }}
-                            onClick={() => navigate("/saved-posts")}
+                        fontSize="10pt"
+                        fontWeight={700}
+                        _hover={{ bg: "blue.500", color: "white" }}
+                        onClick={() => navigate("/saved-posts")}
                         >
                             <Flex alignItems="center">
                                 <Icon as={IoBookmarksSharp} fontSize={20} mr={2}/>
@@ -90,10 +95,10 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                         </MenuItem>
                         <MenuDivider />
                         <MenuItem
-                            fontSize="10pt"
-                            fontWeight={700}
-                            _hover={{ bg: "blue.500", color: "white" }}
-                            onClick={() => logout()}
+                        fontSize="10pt"
+                        fontWeight={700}
+                        _hover={{ bg: "blue.500", color: "white" }}
+                        onClick={() => logout()}
                         >
                             <Flex alignItems="center">
                                 <Icon fontSize={20} mr={2} as={MdOutlineLogin} />
@@ -104,10 +109,10 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                 ) : (
                     <>
                         <MenuItem
-                            fontSize="10pt"
-                            fontWeight={700}
-                            _hover={{ bg: "blue.500", color: "white" }}
-                            onClick={() => dispatch(setModal({ isOpen: true, view: "login" }))}
+                        fontSize="10pt"
+                        fontWeight={700}
+                        _hover={{ bg: "blue.500", color: "white" }}
+                        onClick={() => dispatch(setModal({ isOpen: true, view: "login" }))}
                         >
                             <Flex alignItems="center">
                                 <Icon fontSize={20} mr={2} as={MdOutlineLogin} />

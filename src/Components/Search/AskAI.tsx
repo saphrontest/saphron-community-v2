@@ -1,5 +1,5 @@
-import { Box, Button, Flex, Heading, Stack, Text, Textarea } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import { Box, Button, Flex, Heading, Spinner, Stack, Text, Textarea } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 import AIDialog from './AIDialog'
 import SuggestedQuestions from './SuggestedQuestions'
 import { openai } from '../../openAIClient'
@@ -8,12 +8,14 @@ import moment from 'moment'
 
 const AskAI = () => {
   const [text, setText] = useState<string>("")
+  const [loading, setLoading] = useState(false)
   const [params, setParams] = useState<ChatCompletionCreateParamsNonStreaming>({
     messages: [{ role: "system", content: "You are a helpful assistant."}],
     model: "gpt-3.5-turbo",
   })
   const [sendMessage, setSendMessage] = useState<boolean>(false)
   const [messages, setMessages] = useState<any>([])
+  const [lastQuestion, setLastQuestion] = useState("")
 
   const send = async () => {
     const response = await openai.chat.completions.create(params);
@@ -30,6 +32,7 @@ const AskAI = () => {
       model: "gpt-3.5-turbo"
     }))
     setSendMessage(false)
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -39,13 +42,23 @@ const AskAI = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sendMessage])
 
-  useEffect(() => {
-    console.log(messages.sort((a: any, b: any): number => {
-      const dateComparison = new Date(b.date).getTime() - new Date(a.date).getTime();
-      return dateComparison !== 0 ? dateComparison : b.from - a.from;
+  const handleButton = (question: string | null = null) => {
+    setLoading(true)
+    setMessages((prev: any) => ([
+      ...prev,
+      {
+        date: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+        from: 'user',
+        content: question ?? text
+      }
+    ]))
+    setParams(prev => ({
+      messages: [...prev.messages, {role: 'user', content: question ?? text}],
+      model: "gpt-3.5-turbo"
     }))
-  }, [messages])
-
+    setLastQuestion(question ?? text)
+    setSendMessage(true)
+  }
   return (
     <Flex p="1" width="100%" direction="column">
       <Box  m={2} mt={0}>
@@ -63,23 +76,10 @@ const AskAI = () => {
             w="fit-content" 
             height="34px"
             padding="0px 30px"
-            onClick={() => {
-              setMessages((prev: any) => ([
-                ...prev,
-                {
-                  date: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
-                  from: 'user',
-                  content: text
-                }
-              ]))
-              setParams(prev => ({
-                messages: [...prev.messages, {role: 'user', content: text}],
-                model: "gpt-3.5-turbo"
-              }))
-              setSendMessage(true)
-            }}
+            onClick={() => handleButton(null)}
+            disabled={loading}
           >
-            Ask to Saphron AI
+            {loading ? <Spinner /> : "Ask to Saphron AI"}
           </Button>
         </Stack>
       </Flex>
@@ -89,11 +89,11 @@ const AskAI = () => {
         }).map((message: any, index: number) => {
           if(message.role === 'system') return null;
           return (
-            <AIDialog key={index} item={{text: message.content as string, from: message.from}} />
+            <AIDialog key={index} item={{text: message.content as string, from: message.from, date: message.date}} />
           )
         })}
       </Flex>
-      <SuggestedQuestions />
+      <SuggestedQuestions question={lastQuestion} sendMessage={handleButton}/>
     </Flex>
   )
 }

@@ -15,7 +15,7 @@ const AIDialog: FC<AIDialogItemProps> = ({item}) => {
       color={"gray.700"}
       fontWeight={600}
       >
-        {item.text} {item.from}
+        {item.text}
       </Text>
       <Text textAlign={!isUser ? "left" : "right"}>
         {moment(item.date as string, "DD.MM.YYYY hh:mm:ss").fromNow()}

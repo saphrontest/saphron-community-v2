@@ -39,15 +39,17 @@ const SearchPage = () => {
             <Flex bg="white" p="2">
                 {
                   view === "Post Search" ?
-                    <PostSearch searchKey={location.state?.searchKey} items={location.state?.searchResults}/> :
-                    <AskAI />
+                    <PostSearch
+                    searchKey={location.state?.searchKey}
+                    items={location.state?.searchResults}
+                    /> : <AskAI />
                 }
             </Flex>
         </>
         <>
-            <Flex bg="white" height="100%" p={2}>
-                {view === "Post Search" ? <RecentSearches /> : "Recent Dialogs"}
-            </Flex>
+          <Flex bg="white" height="100%" p={2}>
+            <RecentSearches />
+          </Flex>
         </>
     </PageLayout>
   )

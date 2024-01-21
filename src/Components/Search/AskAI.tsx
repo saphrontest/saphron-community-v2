@@ -4,6 +4,7 @@ import AIDialog from './AIDialog'
 import SuggestedQuestions from './SuggestedQuestions'
 import { openai } from '../../openAIClient'
 import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources'
+import moment from 'moment'
 
 const AskAI = () => {
   const [text, setText] = useState<string>("")
@@ -12,10 +13,22 @@ const AskAI = () => {
     model: "gpt-3.5-turbo",
   })
   const [sendMessage, setSendMessage] = useState<boolean>(false)
-  
+  const [messages, setMessages] = useState<any>([])
 
   const send = async () => {
     const response = await openai.chat.completions.create(params);
+    setMessages((prev: any) => ([
+      ...prev,
+      {
+        date: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+        from: response.choices[0].message.role,
+        content: response.choices[0].message.content
+      }
+    ]))
+    setParams(prev => ({
+      messages: [...prev.messages, response.choices[0].message],
+      model: "gpt-3.5-turbo"
+    }))
     setSendMessage(false)
   }
 
@@ -25,6 +38,13 @@ const AskAI = () => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sendMessage])
+
+  useEffect(() => {
+    console.log(messages.sort((a: any, b: any): number => {
+      const dateComparison = new Date(b.date).getTime() - new Date(a.date).getTime();
+      return dateComparison !== 0 ? dateComparison : b.from - a.from;
+    }))
+  }, [messages])
 
   return (
     <Flex p="1" width="100%" direction="column">
@@ -44,6 +64,14 @@ const AskAI = () => {
             height="34px"
             padding="0px 30px"
             onClick={() => {
+              setMessages((prev: any) => ([
+                ...prev,
+                {
+                  date: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+                  from: 'user',
+                  content: text
+                }
+              ]))
               setParams(prev => ({
                 messages: [...prev.messages, {role: 'user', content: text}],
                 model: "gpt-3.5-turbo"
@@ -56,21 +84,14 @@ const AskAI = () => {
         </Stack>
       </Flex>
       <Flex direction="column" width="100%" gap={"1rem"} mt={"2rem"}>
-        <AIDialog item={{
-          text: "What are some common symptoms of OCPD?",
-          from: "user",
-          date: "12.03.1233 12:07"
-        }}/>
-        <AIDialog item={{
-          text: "Minim est fugiat aliquip ipsum sint nisi ullamco. Adipisicing irure mollit enim nisi exercitation tempor in cillum id. Amet aute amet in officia anim. Amet nostrud aute consectetur velit culpa consectetur Lorem consectetur exercitation et exercitation ullamco velit est.",
-          from: "saphron_ai",
-          date: "12.03.1233 12:08"
-        }}/>
-        <AIDialog item={{
-          text: "thank you",
-          from: "user",
-          date: "12.03.1233 12:09"
-        }}/>
+        {messages.sort((a: any, b: any): number => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime(); 
+        }).map((message: any, index: number) => {
+          if(message.role === 'system') return null;
+          return (
+            <AIDialog key={index} item={{text: message.content as string, from: message.from}} />
+          )
+        })}
       </Flex>
       <SuggestedQuestions />
     </Flex>

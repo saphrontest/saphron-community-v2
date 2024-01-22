@@ -72,6 +72,7 @@ const EditProfileModal = () => {
         } catch (error: any) {
           console.log("updateImage error", error.message);
         } finally {
+            user && getUser(user?.uid)
             setImageLoading({status: false, type: ''});
         }
       };

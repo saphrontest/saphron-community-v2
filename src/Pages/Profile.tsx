@@ -80,7 +80,13 @@ const Profile = () => {
   return (
     <>
       <Nav />
-      <ProfileHeader name={user?.displayName} username={user.username} profilePhoto={user?.profilePhotoURL ?? NotFoundUserPic} email={user?.email} coverPhoto={user.coverPhotoURL}/>
+      <ProfileHeader
+      isEmailVerified={user?.emailVerified}
+      name={user?.displayName}
+      username={user.username}
+      profilePhoto={user?.profilePhotoURL ?? NotFoundUserPic}
+      email={user?.email} coverPhoto={user.coverPhotoURL}
+      />
       <Flex justify={"center"} pt={1}>
         <PageLayout isNav={false}>
           <>

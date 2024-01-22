@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Text } from "@chakra-ui/react";
+import { Text, useToast } from "@chakra-ui/react";
 import { useAuthState, useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth, firestore } from "../../../../firebaseClient";
+import { auth } from "../../../../firebaseClient";
 import { useDispatch } from "react-redux";
 import { setModal } from "../../../../redux/slices/modalSlice";
 import { ModalViewTypes } from "../../../../Interface/ModalInterface";
 import RegisterForm from "../../../Register/RegisterForm";
-import { collection, doc, writeBatch } from "firebase/firestore";
 import { getUser, saveUserToFirestore } from "../../../../Helpers/apiFunctions";
+import { sendEmailVerification } from "firebase/auth";
 
 type SignUpProps = {
 
@@ -15,6 +15,7 @@ type SignUpProps = {
 
 const SignUp: React.FC<SignUpProps> = () => {
   const dispatch = useDispatch()
+  const toast = useToast()
   const [user] = useAuthState(auth)
   const [form, setForm] = useState({
     email: "",
@@ -36,11 +37,19 @@ const SignUp: React.FC<SignUpProps> = () => {
         setFormError(message as string);
       } else {
         user?.uid && saveUserToFirestore(null, user).then(() => {
+          sendEmailVerification(user).then(() => {
+            toast({
+              title: "Please, check your email to complete verification.",
+              status: "warning",
+              isClosable: true,
+            })
+          })
           getUser(user?.uid)
           toggleView("editProfile")
         })
       }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [authError, isSubmit])
 
     const toggleView = (view: ModalViewTypes) => dispatch(setModal({isOpen: true, view: view}));

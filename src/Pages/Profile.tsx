@@ -3,7 +3,7 @@ import { PageLayout } from '../Layouts'
 import { Flex, Stack, useToast } from '@chakra-ui/react'
 import { MyCommunities, Nav, NoEntry, PostItem } from '../Components'
 import { ProfileHeader } from '../Components/Profile'
-import { getPostsByUsername } from '../Helpers/apiFunctions'
+import { getPostsByUser } from '../Helpers/apiFunctions'
 import { firestore, storage } from '../firebaseClient'
 import { Post } from '../Interface/PostInterface'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,16 +17,17 @@ import NotFoundUserPic from '../assets/images/user.png'
 const Profile = () => {
   const dispatch = useDispatch()
   const toast = useToast()
+  
   const user = useSelector((state: RootState) => state.user)
+  const {communities} = useSelector((state: RootState) => state.community)
 
   const [voteChange, setVoteChange] = useState<boolean>(false)
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
   const [userPosts, setUserPosts] = useState<Post[]>()
 
-  const {communities} = useSelector((state: RootState) => state.community)
 
-  const getPosts = async (displayName: string) => {
-    const posts = await getPostsByUsername(displayName)
+  const getPosts = async (userId: string) => {
+    const posts = await getPostsByUser(userId)
     setUserPosts(posts)
   }
 
@@ -65,16 +66,16 @@ const Profile = () => {
         return false;
       } finally {
         setDeleteLoading(false)
-        getPosts(user?.email?.split("@")[0] as string)
+        getPosts(user?.id as string)
       }
   }
   
   useEffect(() => {
-    !!user.username && getPosts(user.username)
+    !!user.username && getPosts(user.id)
   }, [user])
   
   useEffect(() => {
-    voteChange && getPosts(user.username)
+    voteChange && getPosts(user.id)
   }, [voteChange])
 
   return (

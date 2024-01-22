@@ -6,15 +6,19 @@ export const postSlice = createSlice({
   initialState: defaultPostState,
   reducers: {
     setPosts: (state, action) => {
-        state.posts = action.payload
+      state.posts = action.payload
     },
     setSavedPosts: (state, action) => {
-        state.savedPosts = action.payload
+      state.savedPosts = action.payload
+    },
+    resetPosts: (state) => {
+      state = defaultPostState
     }
   },
 })
 export const {
     setPosts,
-    setSavedPosts
+    setSavedPosts,
+    resetPosts
 } = postSlice.actions
 export default postSlice.reducer

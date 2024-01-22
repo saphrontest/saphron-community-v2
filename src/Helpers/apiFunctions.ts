@@ -142,7 +142,6 @@ export const getJoinedCommunitiesList = async (id: string) => {
     joinedCommunitiesDocs.forEach((doc) => {
       joinedCommunities.push(doc.data() as JoinedCommunity);
     });
-
     return joinedCommunities;
   }
   return false;
@@ -385,7 +384,6 @@ export const getUser = async (userId: string) => {
     const docSnapshot = await getDoc(userDocRef);
     const data = docSnapshot.data();
     if(data?.isRegistered){
-      console.log(data)
       store.dispatch(setUserInfo({id: userId, ...data}));
     }
   } catch (error) {

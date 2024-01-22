@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom'
 import { UserInterface } from '../../../Interface/UserInterface'
 import { logoutUser } from '../../../redux/slices/userSlice'
 import NotFoundUserPic from '../../../assets/images/user.png'
+import { resetCommunities } from '../../../redux/slices/communitySlice'
+import { resetPosts } from '../../../redux/slices/postSlice'
 interface UserMenuProps {
     user: UserInterface
 }
@@ -23,6 +25,8 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
     const logout = async () => {
         await signOut(auth);
         dispatch(logoutUser())
+        dispatch(resetCommunities())
+        dispatch(resetPosts())
         navigate("/")
     }
     return (

@@ -6,7 +6,7 @@ export const userSlice = createSlice({
   initialState: defaultUserState,
   reducers: {
     setUserInfo: (state, action) => {
-        return { ...state, ...action.payload };
+      return { ...state, ...action.payload };
     },
     logoutUser: (state) => {
       return { ...state, ...defaultUserState };

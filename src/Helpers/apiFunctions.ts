@@ -142,7 +142,6 @@ export const getJoinedCommunitiesList = async (id: string) => {
     joinedCommunitiesDocs.forEach((doc) => {
       joinedCommunities.push(doc.data() as JoinedCommunity);
     });
-    console.log(joinedCommunities)
     return joinedCommunities;
   }
   return false;

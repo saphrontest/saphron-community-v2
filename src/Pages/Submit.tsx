@@ -12,15 +12,15 @@ const Submit = () => {
   const params = useParams()
   const user = useSelector((state: RootState) => state.user)
   const [communitySelectOpen, setCommunitySelectOpen] = useState(false)
-  const {communities} = useSelector((state: RootState) => state.community)
+  const {joinedCommunities} = useSelector((state: RootState) => state.community)
   return (
     <PageLayout maxWidth="1060px">
       <>
           <Box p="14px 0px" borderBottom="1px solid" borderColor="white" mb={2}>
               <Text fontWeight={600} textAlign="left">Create a post</Text>
           </Box>
-          {!!user && <CommunitySelect isOpen={communitySelectOpen} setOpen={setCommunitySelectOpen} selectedCommunityId={params.communityId ?? communities[0]?.id}/>}
-          <NewPostForm selectedCommunityId={params.communityId ?? communities[0]?.id}/>
+          {!!user && <CommunitySelect isOpen={communitySelectOpen} setOpen={setCommunitySelectOpen} selectedCommunityId={params.communityId ?? joinedCommunities[0]?.communityId}/>}
+          <NewPostForm selectedCommunityId={params.communityId ?? joinedCommunities[0]?.communityId}/>
       </>
       <></>
     </PageLayout>

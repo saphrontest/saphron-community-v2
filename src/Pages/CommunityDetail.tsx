@@ -49,6 +49,7 @@ const CommunityDetail = () => {
       getPosts(communityId)
       return () => setVoteChange(false)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVoteChange])
   
   const handleDelete = async (post: Post): Promise<boolean> => {

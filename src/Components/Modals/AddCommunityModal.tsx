@@ -32,6 +32,8 @@ const AddCommunityModal = () => {
 
     const handleCreateCommunity = async () => {
         if (nameError) setNameError("");
+        
+        // eslint-disable-next-line no-useless-escape
         const format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
 
         if (format.test(name) || name.length < 3) {

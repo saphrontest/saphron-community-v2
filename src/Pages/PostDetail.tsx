@@ -54,6 +54,7 @@ const PostDetail = () => {
       getPost(slug as string)
       return () => setVoteChange(false)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVoteChange])
 
   useEffect(() => {
@@ -61,6 +62,7 @@ const PostDetail = () => {
       const postCommunity = communities.find((community: Community) => community.id === post.communityId)
       dispatch(setSelectedCommunity(postCommunity as Community))
     } 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [post])
 
   const handleDelete = async (post: Post): Promise<boolean> => {

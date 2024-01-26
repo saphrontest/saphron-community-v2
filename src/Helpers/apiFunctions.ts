@@ -318,9 +318,9 @@ export const searchPost = async (keyword: string) => {
   return results
 }
 
-export const getPostsByUsername = async (userDisplayText: string) => {
+export const getPostsByUser = async (creatorId: string) => {
   const posts: Post[] = []
-  const postsDoc = await fetch.getListWhere("posts", where("userDisplayText", "==", userDisplayText))
+  const postsDoc = await fetch.getListWhere("posts", where("creatorId", "==", creatorId))
   postsDoc.docs.forEach((doc) => {
     posts.push({ id: doc.id, ...doc.data() } as Post);
   });

@@ -19,13 +19,13 @@ interface ProfileHeaderProps {
     isEmailVerified: boolean;
 }
 
-const ProfileHeader: FC<ProfileHeaderProps> = ({name, email, username, profilePhoto, coverPhoto, isEmailVerified}) => {
+const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profilePhoto, coverPhoto, isEmailVerified }) => {
     const [user] = useAuthState(auth)
     const dispatch = useDispatch()
 
     const handleEdit = (type: string) => {
-        if(type === 'profile-photo')  {
-            dispatch(setModal({isOpen: true, view: "editProfile"}))
+        if (type === 'profile-photo') {
+            dispatch(setModal({ isOpen: true, view: "editProfile" }))
         }
     }
 
@@ -34,11 +34,11 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({name, email, username, profilePh
     }
 
     useEffect(() => {
-        if(user?.emailVerified && !isEmailVerified) {
+        if (user?.emailVerified && !isEmailVerified) {
             updateUser(user.uid, { emailVerified: true })
             getUser(user.uid)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?.emailVerified])
 
     return (
@@ -47,51 +47,36 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({name, email, username, profilePh
             <Flex minHeight="140px" bg={"white"}>
                 {
                     !!profilePhoto ?
-                    <Image
-                    src={profilePhoto}
-                    width={{
-                        base: "90px",
-                        sm: "120px"
-                    }}
-                    height={{
-                        base: "90px",
-                        sm: "120px"
-                    }}
-                    border={"5px solid"}
-                    borderColor="gray.50"
-                    borderRadius={"80px"}
-                    pos="relative"
-                    left="5%"
-                    top="-40px"
-                    /> :
-                    <Icon
-                    fontSize={{
-                        base: "90px",
-                        sm: "120px"
-                    }}
-                    mr={1}
-                    color="gray.400"
-                    as={VscAccount}
-                    border={"5px solid"}
-                    borderColor="gray.50"
-                    borderRadius={"80px"}
-                    pos="relative"
-                    left="5%"
-                    top="-40px"
-                    />
+                        <Image
+                            src={profilePhoto}
+                            width={{ base: "90px", sm: "120px" }}
+                            height={{ base: "90px", sm: "120px" }}
+                            border={"5px solid"}
+                            borderColor="gray.50"
+                            borderRadius={"80px"}
+                            pos="relative"
+                            left="5%"
+                            top="-40px"
+                        /> :
+                        <Icon
+                            fontSize={{ base: "90px", sm: "120px" }}
+                            mr={1}
+                            color="gray.400"
+                            as={VscAccount}
+                            border={"5px solid"}
+                            borderColor="gray.50"
+                            borderRadius={"80px"}
+                            pos="relative"
+                            left="5%"
+                            top="-40px"
+                        />
                 }
-                
+
                 <Box
-                pos="absolute"
-                left={{
-                    base: "6rem",
-                    sm: "15%"
-                }}
-                transform={{
-                    base: "translateY(40%)",
-                    sm: "none"
-                }}
-                p="16px" display="flex" alignItems="flex-start" flexDirection="column">
+                    pos="absolute"
+                    left={{ base: "6rem", sm: "15%" }}
+                    transform={{ base: "translateY(40%)", sm: "none" }}
+                    p="16px" display="flex" alignItems="flex-start" flexDirection="column">
                     <Text fontSize={["16px", "28px"]} fontWeight={700}>{name}</Text>
                     <Text fontSize={["12px", "16px"]} fontWeight={500} color="gray.600">u/{username}</Text>
                     <Text fontSize={["12px", "16px"]} fontWeight={500} fontStyle={"italic"}>{email}</Text>
@@ -100,7 +85,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({name, email, username, profilePh
                         <Text fontWeight={600} textDecor="underline" cursor="pointer" onClick={verifyAccount}>Verify</Text>
                     </Flex>}
                 </Box>
-                <SCEditButton onEdit={() => handleEdit("profile-photo")} position='absolute' right={16} transform="translateY(-16px)"/>
+                <SCEditButton onEdit={() => handleEdit("profile-photo")} position='absolute' right={16} transform="translateY(-16px)" />
             </Flex>
         </>
     )

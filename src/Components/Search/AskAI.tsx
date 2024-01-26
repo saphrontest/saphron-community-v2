@@ -1,10 +1,16 @@
-import { Box, Button, Flex, Heading, Spinner, Stack, Text, Textarea } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import AIDialog from './AIDialog'
 import SuggestedQuestions from './SuggestedQuestions'
 import { openai } from '../../openAIClient'
 import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources'
 import moment from 'moment'
+import { AIMessages, AskAIForm, SearchHeader } from './Partials'
+import { Flex } from '@chakra-ui/react'
+
+interface AIMessage {
+  date: string,
+  from: string,
+  content: string
+}
 
 const AskAI = () => {
   const [text, setText] = useState<string>("")
@@ -14,7 +20,7 @@ const AskAI = () => {
     model: "gpt-3.5-turbo",
   })
   const [sendMessage, setSendMessage] = useState<boolean>(false)
-  const [messages, setMessages] = useState<any>([])
+  const [messages, setMessages] = useState<AIMessage[]>([])
   const [lastQuestion, setLastQuestion] = useState("")
 
   const send = async () => {
@@ -61,38 +67,13 @@ const AskAI = () => {
   }
   return (
     <Flex p="1" width="100%" direction="column">
-      <Box  m={2} mt={0}>
-        <Heading size="md" textAlign="left">
-          Ask to Saphron AI
-        </Heading>
-        <Text textAlign="left">
-          You can ask the Saphron AI, which is developed using ChatGPT for our community members.
-        </Text>
-      </Box>
-      <Flex direction="column" width="100%">
-        <Textarea  width="100%" onChange={e => setText(e.target.value)}/>
-        <Stack w={"100%"} display={"flex"} align="flex-end" pt={"1rem"}>
-          <Button
-            w="fit-content" 
-            height="34px"
-            padding="0px 30px"
-            onClick={() => handleButton(null)}
-            disabled={loading}
-          >
-            {loading ? <Spinner /> : "Ask to Saphron AI"}
-          </Button>
-        </Stack>
-      </Flex>
-      <Flex direction="column" width="100%" gap={"1rem"} mt={"2rem"}>
-        {messages.sort((a: any, b: any): number => {
-          return new Date(b.date).getTime() - new Date(a.date).getTime(); 
-        }).map((message: any, index: number) => {
-          if(message.role === 'system') return null;
-          return (
-            <AIDialog key={index} item={{text: message.content as string, from: message.from, date: message.date}} />
-          )
-        })}
-      </Flex>
+      <SearchHeader title='Ask to Saphron AI' description='You can ask the Saphron AI, which is developed using ChatGPT for our community members.'/>
+      <AskAIForm 
+      handleButton={handleButton}
+      loading={loading}
+      setText={setText}
+      />
+      <AIMessages messages={messages}/>
       <SuggestedQuestions question={lastQuestion} sendMessage={handleButton}/>
     </Flex>
   )

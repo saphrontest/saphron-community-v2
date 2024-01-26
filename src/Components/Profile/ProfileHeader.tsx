@@ -3,7 +3,7 @@ import { FC, useEffect } from 'react'
 import { SCEditButton } from '../SCElements';
 import { useDispatch } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
-import defaultCover from '../../assets/images/default-cover.jpg'
+import menthalHealth from '../../assets/images/menthal.jpg'
 import { sendEmailVerification } from 'firebase/auth';
 import { auth } from '../../firebaseClient';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -43,11 +43,12 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
 
     return (
         <>
-            <Box bg="white" height="228px" bgImage={coverPhoto ?? defaultCover} bgPos="center" />
+            <Box bg="white" height="228px" bgImage={!!coverPhoto ? coverPhoto : menthalHealth} bgPos="center" backgroundSize="cover"/>
             <Flex minHeight="140px" bg={"white"}>
                 {
                     !!profilePhoto ?
                         <Image
+                            bg="white"
                             src={profilePhoto}
                             width={{ base: "90px", sm: "120px" }}
                             height={{ base: "90px", sm: "120px" }}
@@ -59,6 +60,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
                             top="-40px"
                         /> :
                         <Icon
+                            bg="white"
                             fontSize={{ base: "90px", sm: "120px" }}
                             mr={1}
                             color="gray.400"

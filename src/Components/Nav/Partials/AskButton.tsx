@@ -1,19 +1,20 @@
-import { Flex, Icon, Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import { GrAdd } from "react-icons/gr";
 import { useNavigate } from 'react-router-dom';
 
-const GoSubmit = () => {
+const AskButton = () => {
     const navigate = useNavigate()
     return (
         <Flex alignItems="center" flexGrow={1}>
             <Flex
-                display={{ base: "none", md: "flex" }}
+                minH="34px"
+                minW="34px"
                 justify="center"
                 align="center"
                 gap={2}
                 mr={3}
                 ml={1.5}
-                padding={1}
+                paddingX={2}
                 cursor="pointer"
                 borderRadius={4}
                 outline={"1px solid"}
@@ -21,8 +22,8 @@ const GoSubmit = () => {
                 _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
                 onClick={() => navigate("/submit")}
             >
-                <Icon as={GrAdd} fontSize={20} color="red.100"/>
-                <Text fontSize={16} fontWeight={500} color="black.500">
+                <GrAdd  fontSize={18} className='AddButton' color='gray.500'/>
+                <Text display={{ base: "none", md: "flex" }} fontSize={16} fontWeight={500} color="gray.500">
                     Ask Question
                 </Text>
             </Flex>
@@ -30,4 +31,4 @@ const GoSubmit = () => {
     )
 }
 
-export default GoSubmit
+export default AskButton

@@ -87,31 +87,29 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
         <Menu isOpen={isOpen}>
             <MenuButton
                 width={"fit-content"}
-                height={"32px"}
+                minH="34px"
+                minW="34px"
                 background={"white"}
                 cursor="pointer"
                 padding="0px 6px"
+                border="1px solid"
+                borderColor="gray.100"
                 borderRadius="4px"
                 _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
-                mr={2}
                 onClick={() => setOpen(!isOpen)}
+                mr={2}
             >
                 <Flex
                     alignItems="center"
                     justifyContent="space-between"
                     width={{ base: "auto", lg: "200px" }}
                 >
-                    <Flex alignItems="center">
-                        <>
-                            <Box
-                                display={{ base: "none", lg: "flex" }}
-                                flexDirection="column"
-                                fontSize="10pt"
-                            >
-                                <Text fontWeight={600}>{selectedCommunity?.name ?? "Select Community"}</Text>
-                            </Box>
-                        </>
-                    </Flex>
+                    <Text
+                    fontWeight={600}
+                    display={{ base: "none", lg: "flex" }}
+                    flexDirection="column"
+                    fontSize="10pt"
+                    >{selectedCommunity?.name ?? "Select Community"}</Text>
                     <ChevronDownIcon color="gray.500" />
                 </Flex>
             </MenuButton>

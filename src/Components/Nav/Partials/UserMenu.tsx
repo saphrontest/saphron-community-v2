@@ -32,6 +32,7 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
     return (
         <Menu>
             <MenuButton
+                minH="34px"
                 cursor="pointer"
                 padding="0px 6px"
                 borderRadius="4px"
@@ -46,7 +47,7 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                                 {/* Avatar should be user profile image */}
                                 <Avatar
                                 mr={2}
-                                style={{width: 30, height: 30}}
+                                style={{width: 26, height: 26}}
                                 boxSize={user.profilePhotoURL ? 28 : 30}
                                 src={user.profilePhotoURL ?? NotFoundUserPic}
                                 />

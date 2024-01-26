@@ -11,7 +11,7 @@ interface SCEditButtonProps {
     left?: number | string | object;
     right?: number | string | object,
     top?: number | string | object,
-    transform?: string
+    transform?: string | object
 }
 
 const SCEditButton: FC<SCEditButtonProps> = ({ onEdit, position = "relative", left, top, right, transform }) => {
@@ -30,7 +30,7 @@ const SCEditButton: FC<SCEditButtonProps> = ({ onEdit, position = "relative", le
         flexDirection={"row"}
         border={"2px solid"}
         borderColor={"white"}
-        style={{ transform }}
+        transform={transform}
         height={"fit-content"}
         width="fit-content"
         cursor={"pointer"}

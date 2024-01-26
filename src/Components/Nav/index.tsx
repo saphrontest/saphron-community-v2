@@ -17,7 +17,6 @@ const Nav = () => {
           height="44px"
           padding="6px 12px"
           justifyContent={{ md: "space-between" }}
-          align={"center"}
         >
           <Flex gap={{base: "0.5rem", sm: "2rem"}}>
             <NavLogo />

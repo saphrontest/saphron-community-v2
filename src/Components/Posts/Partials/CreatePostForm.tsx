@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react';
 import { RootState } from '../../../redux/store';
 import { useSelector } from 'react-redux';
+import { createSlug } from '../../../Helpers';
 
 interface CreatePostFormInterface {
     selectedTab: string;
@@ -56,14 +57,6 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
 
       setLoading(true);
       const {title, body} = textInputs
-      
-      function createSlug(str: string) {
-        return str
-          .toLowerCase()
-          .replace(/[^\w\s-]/g, '')    // Remove non-word characters (excluding spaces and hyphens)
-          .replace(/[\s]+/g, '-')      // Replace spaces with hyphens
-          .replace(/^-+|-+$/g, '');    // Remove leading and trailing hyphens
-      }
 
       try {
         const postDocRef = await addDoc(collection(firestore, "posts"), {

@@ -1,1 +1,2 @@
-export {apiFunctions} from './apiFunctions';
+export * from './apiFunctions';
+export * from './globalFunctions';

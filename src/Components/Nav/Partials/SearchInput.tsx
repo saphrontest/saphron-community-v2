@@ -6,9 +6,9 @@ import {
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
-import SearchResults from "./SearchResults";
 import { Post } from "../../../Interface/PostInterface";
 import { searchPost } from "../../../Helpers/apiFunctions";
+import SearchResults from "./SearchResults";
 
 const SearchInput = () => {
   const [searchKey, setSearchKey] = useState("")
@@ -59,7 +59,7 @@ const SearchInput = () => {
           />
         </InputGroup>
       </Flex>
-      {inputFocus && <SearchResults searchResults={searchResults} />}
+      {inputFocus && <SearchResults searchResults={searchResults} showMoreButton={true}/>}
     </Flex>
   )
 }

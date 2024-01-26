@@ -13,3 +13,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.AddButton path{
+  stroke: #718096 !important;
+}

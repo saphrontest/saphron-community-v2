@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import {CommunityDetail, Home, PostDetail, SavedPosts, Submit, Profile} from './Pages'
+import {CommunityDetail, Home, PostDetail, SavedPosts, Submit, Profile, SearchPage} from './Pages'
 
 const RoutesArray = [
   {
@@ -29,6 +29,10 @@ const RoutesArray = [
   {
     path: "profile",
     component: Profile
+  },
+  {
+    path: "search",
+    component: SearchPage
   }
 ]
 

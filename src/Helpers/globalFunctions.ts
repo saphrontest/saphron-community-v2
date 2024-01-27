@@ -1,7 +1,12 @@
-export function createSlug(str: string) {
-  return str
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "") // Remove non-word characters (excluding spaces and hyphens)
-    .replace(/[\s]+/g, "-") // Replace spaces with hyphens
-    .replace(/^-+|-+$/g, ""); // Remove leading and trailing hyphens
+import slugify from "slugify";
+
+export const createSlug = (str: string) => {
+  return slugify(str, {
+    replacement: "-",
+    remove: undefined,
+    lower: true,
+    strict: true,
+    locale: "en",
+    trim: true,
+  });
 }

@@ -116,7 +116,7 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading, getCo
                     )}
                     {isLoading && <Spinner size="sm" />}
                 </Stack>
-                <Text fontSize="10pt" textAlign={"left"}>{comment?.text}</Text>
+                {comment?.text && <Text className='CommentText' fontSize="10pt" textAlign={"left"} dangerouslySetInnerHTML={{ __html: comment.text }} />}
                 <Stack
                     direction="row"
                     align="center"

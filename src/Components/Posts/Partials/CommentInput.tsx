@@ -1,12 +1,13 @@
-import { Flex, Textarea, Button, Text } from "@chakra-ui/react";
+import { Flex, Button, Text } from "@chakra-ui/react";
 import { AuthButtons } from "../../Nav/Partials";
 import { UserInterface } from "../../../Interface/UserInterface";
+import TextEditor from "../../TextEditor";
 
 type CommentInputProps = {
   comment: string;
-  setComment: (value: string) => void;
   loading: boolean;
   user?: UserInterface | null;
+  setComment: (value: string) => void;
   onCreateComment: (comment: string) => void;
 };
 
@@ -17,6 +18,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
   user,
   onCreateComment,
 }) => {
+
   return (
     <Flex direction="column" position="relative">
       {user ? (
@@ -27,22 +29,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
               {user?.username}
             </span>
           </Text>
-          <Textarea
-            value={comment}
-            onChange={(event) => setComment(event.target.value)}
-            placeholder="What are your thoughts?"
-            fontSize="10pt"
-            borderRadius={4}
-            minHeight="160px"
-            pb={10}
-            resize={"none"}
-            _placeholder={{ color: "gray.500" }}
-            _focus={{
-              outline: "none",
-              bg: "white",
-              border: "1px solid black",
-            }}
-          />
+          <TextEditor onChange={(_, data: string) => setComment(data)} value={comment}/>
           <Flex
             position="absolute"
             width={"calc(100% - 1px)"}

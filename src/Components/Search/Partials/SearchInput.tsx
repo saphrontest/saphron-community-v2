@@ -2,7 +2,11 @@ import { SearchIcon } from '@chakra-ui/icons'
 import { InputGroup, InputLeftElement, Input } from '@chakra-ui/react'
 import { FC } from 'react'
 
-const SearchInput: FC<{text: string | undefined; setText: (text: string) => void}> = ({text, setText}) => {
+interface SearchInputProps {
+    text: string | undefined;
+    setText: (text: string) => void;
+}
+const SearchInput: FC<SearchInputProps> = ({ text, setText }) => {
     return (
         <InputGroup width={"100%"}>
             <InputLeftElement

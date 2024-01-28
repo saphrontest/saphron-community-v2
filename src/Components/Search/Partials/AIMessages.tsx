@@ -1,23 +1,26 @@
 import { Flex } from '@chakra-ui/react';
 import AIDialog from '../AIDialog';
 import { FC } from 'react';
+import { AIMessageInterface } from '../../../Interface/AIMessageInterface';
 
-const AIMessages: FC<{
-  messages: {
-    date: string,
-    from: string,
-    content: string
-  }[]
-}> = ({ messages }) => {
+
+interface AIMessagesProps {
+  messages: AIMessageInterface[]
+}
+
+const AIMessages: FC<AIMessagesProps> = ({ messages }) => {
   return (
     <Flex direction="column" width="100%" gap={"1rem"} mt={"2rem"}>
-      {messages.sort((a: any, b: any): number => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-      }).map((message: any, index: number) => {
+      {messages.map((message: AIMessageInterface, index: number) => {
         if (message.role === 'system') return null;
-        return (
-          <AIDialog key={index} item={{ text: message.content as string, from: message.from, date: message.date }} />
-        )
+
+        const item = {
+          date: message.date,
+          from: message.from,
+          text: message.content as string
+        }
+
+        return <AIDialog key={index} item={item} />
       })}
     </Flex>
   )

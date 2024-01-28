@@ -4,41 +4,47 @@ import { openai } from '../../openAIClient'
 import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources'
 import moment from 'moment'
 import { AIMessages, AskAIForm, SearchHeader } from './Partials'
-import { Flex } from '@chakra-ui/react'
-
-interface AIMessage {
-  date: string,
-  from: string,
-  content: string
-}
+import { Flex, useToast } from '@chakra-ui/react'
+import { AIMessageInterface } from '../../Interface/AIMessageInterface'
 
 const AskAI = () => {
+  const toast = useToast()
   const [text, setText] = useState<string>("")
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<boolean>(false)
   const [params, setParams] = useState<ChatCompletionCreateParamsNonStreaming>({
     messages: [{ role: "system", content: "You are a helpful assistant."}],
     model: "gpt-3.5-turbo",
   })
   const [sendMessage, setSendMessage] = useState<boolean>(false)
-  const [messages, setMessages] = useState<AIMessage[]>([])
-  const [lastQuestion, setLastQuestion] = useState("")
+  const [messages, setMessages] = useState<AIMessageInterface[]>([])
+  const [lastQuestion, setLastQuestion] = useState<string>("")
 
   const send = async () => {
-    const response = await openai.chat.completions.create(params);
-    setMessages((prev: any) => ([
-      ...prev,
-      {
-        date: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
-        from: response.choices[0].message.role,
-        content: response.choices[0].message.content
-      }
-    ]))
-    setParams(prev => ({
-      messages: [...prev.messages, response.choices[0].message],
-      model: "gpt-3.5-turbo"
-    }))
-    setSendMessage(false)
-    setLoading(false)
+    try {
+      const response = await openai.chat.completions.create(params);
+      setMessages((prev: any) => ([
+        ...prev,
+        {
+          date: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+          from: response.choices[0].message.role,
+          content: response.choices[0].message.content
+        }
+      ]))
+      setParams(prev => ({
+        messages: [...prev.messages, response.choices[0].message],
+        model: "gpt-3.5-turbo"
+      }))
+    } catch (err) {
+      toast({
+        title: "Try Again later..",
+        status: "error",
+        isClosable: true,
+        position: "top-right"
+      })
+    } finally {
+      setSendMessage(false)
+      setLoading(false)
+    }
   }
 
   useEffect(() => {

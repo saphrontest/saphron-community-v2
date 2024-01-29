@@ -9,6 +9,7 @@ export const modalSlice = createSlice({
     setModal : (state, action: PayloadAction<ModalInterface>) => {
       state.view = action.payload.view;
       state.isOpen = action.payload.isOpen;
+      state.data = action.payload.data
     }
   },
 })

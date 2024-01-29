@@ -12,17 +12,21 @@ type ModalLayoutProps = {
   children: React.ReactElement[] | React.ReactElement
   isOpen?: boolean;
   onClose?: () => void;
+  size?: string;
+  isCentered?: boolean;
 };
 
 const ModalLayout: React.FC<ModalLayoutProps> = ({
-  children
+  children,
+  size='lg',
+  isCentered=true
 }) => {
   const dispatch = useDispatch()
   const modal = useSelector((state: RootState) => state.modal)
   
   return (
     <>
-      <Modal isOpen={modal.isOpen} onClose={() => dispatch(setModal({isOpen: false, view: null}))} size="lg">
+      <Modal isOpen={modal.isOpen} onClose={() => dispatch(setModal({isOpen: false, view: null}))} size={size} isCentered={isCentered}>
         <ModalOverlay />
         <ModalContent width={{ base: "sm", md: "xl" }}>{children}</ModalContent>
       </Modal>

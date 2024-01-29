@@ -5,8 +5,8 @@ import { Workshop } from '../../Interface/WorkshopInterface'
 
 interface WorkshopCardProps {
   workshop: Workshop;
-  selected: Workshop | undefined;
-  setSelected: (workshop: Workshop) => void;
+  selected?: Workshop | undefined;
+  setSelected?: (workshop: Workshop) => void;
 }
 
 const WorkshopCard: FC<WorkshopCardProps> = ({ workshop, selected, setSelected }) => {
@@ -16,7 +16,7 @@ const WorkshopCard: FC<WorkshopCardProps> = ({ workshop, selected, setSelected }
     bg="gray.100"
     direction="column"
     borderRadius="12px"
-    onClick={() => setSelected(workshop)}
+    onClick={() => setSelected && setSelected(workshop)}
     border={(!!selected && selected.id === workshop.id) ? "2.5px solid" : "none"}
     borderColor={"blue.500"}
     >

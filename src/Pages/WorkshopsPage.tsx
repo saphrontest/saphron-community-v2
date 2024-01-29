@@ -93,7 +93,7 @@ const WorkshopsPage = () => {
               bgGradient="linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75))"
             >
               <Flex width="100%" height={"50%"} justify="space-between" align={["flex-start", "flex-end"]} direction={["column", "row"]}>
-                <Text fontSize={18} fontWeight={700}>
+                <Text fontSize={24} fontWeight={700}>
                   Workshops
                 </Text>
                 <Button onClick={() => dispatch(setModal({isOpen: true, view: "createWorkshop"}))}>
@@ -170,7 +170,7 @@ const WorkshopsPage = () => {
                   thoughts and compulsive behaviors.
                 </Text>
                 <Flex paddingY="1rem" w="100%" justify="flex-end">
-                  <Button w="fit-content" h="fit-content" p="0.4rem 1.5rem">
+                  <Button w="fit-content" h="fit-content" p="0.4rem 1.5rem" onClick={() => dispatch(setModal({ isOpen: true, view: "joinWorkshop", data: selected }))}>
                     I wan't to join!
                   </Button>
                 </Flex>

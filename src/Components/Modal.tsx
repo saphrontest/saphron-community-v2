@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import { AddCommunityModal, AuthModal, EditProfileModal } from './Modals'
+import { AddCommunityModal, AuthModal, CreateWorkshopModal, EditProfileModal } from './Modals'
 import { useDebounce } from '../Hooks'
 
 const Modal = () => {
@@ -29,7 +29,9 @@ const Modal = () => {
         case "signup":
             return <AuthModal />    
         case "editProfile":
-            return <EditProfileModal />    
+            return <EditProfileModal />
+        case "createWorkshop": 
+            return <CreateWorkshopModal />
         default:
             return null
     }

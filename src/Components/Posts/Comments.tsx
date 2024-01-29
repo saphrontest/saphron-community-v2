@@ -21,7 +21,7 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.user)
     const [deleteLoading, setDeleteLoading] = useState("");
-    const [comment, setComment] = useState("");
+    const [comment, setComment] = useState<string>("");
     const [commentCreateLoading, setCommentCreateLoading] = useState<boolean>(false);
     const commentArray = comments as (Comment | null)[];
     

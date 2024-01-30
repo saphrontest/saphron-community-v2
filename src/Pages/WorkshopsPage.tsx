@@ -1,66 +1,38 @@
 import { PageLayout } from '../Layouts'
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react'
 import communitiesBackground from '../assets/images/communities.jpg'
-import WorkshopImg from '../assets/images/workshop.jpg'
 import Avatar from '../assets/images/avatar.jpeg'
 import { WorkshopCard } from '../Components'
 import { useEffect, useState } from 'react'
 import { Workshop } from '../Interface/WorkshopInterface'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setModal } from '../redux/slices/modalSlice'
+import { getWorkshops } from '../Helpers'
+import moment from 'moment'
+import { UserInterface } from '../Interface/UserInterface'
+import { RootState } from '../redux/store'
 
 const WorkshopsPage = () => {
 
+  const user: UserInterface = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
   const [selected, setSelected] = useState<Workshop | undefined>()
+  const [workshops, setWorkshops] = useState<Workshop[]>([])
+
+  const getWorkshopList = async () => {
+    const data = await getWorkshops()
+    data && setWorkshops(data)
+  }
 
   useEffect(() => {
-    setSelected(dummy[0])
+    getWorkshopList()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const dummy = [
-    {
-      id: 0,
-      name: "Navigating Life With ADHD",
-      manager: "John Doe",
-      date: "21.04.2024",
-      time: "12:00",
-      category: "workshop"
-    },
-    {
-      id: 1,
-      name: "Unwind Your Mind - An Anxiety Workshop",
-      manager: "Alex Thompson",
-      date: "21.04.2024",
-      time: "12:00",
-      category: "workshop"
-    },
-    {
-      id: 2,
-      name: "Understanding Autism",
-      manager: "Jamie Rodriguez",
-      date: "21.04.2024",
-      time: "12:00",
-      category: "workshop"
-    },
-    {
-      id: 3,
-      name: "Unlocking your potention",
-      manager: "Jordan Reynolds",
-      date: "21.04.2024",
-      time: "12:00",
-      category: "workshop"
-    },
-    {
-      id: 4,
-      name: "Overcoming Obsessive Compulsive Disorder",
-      manager: "Morgan Anderson",
-      date: "21.04.2024",
-      time: "12:00",
-      category: "workshop"
-    }
-  ]
+  useEffect(() => {
+    !!selected === false && setSelected(workshops[0])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workshops])
 
   return (
     <PageLayout showSidebar={false} leftWidth="100%">
@@ -104,7 +76,7 @@ const WorkshopsPage = () => {
           </Flex>
           <Flex direction="row" padding="1rem">
             <Flex direction="row" align="flex-start" gap="1rem" w="50%" flexWrap="wrap">
-              {dummy.map((workshop: Workshop, idx) => <WorkshopCard key={idx} workshop={workshop} selected={selected} setSelected={setSelected} />)}
+              {workshops.map((workshop: Workshop, idx: number) => <WorkshopCard key={idx} workshop={workshop} selected={selected} setSelected={setSelected} />)}
             </Flex>
             <Flex w="50%" h="fit-content" align="flex-start" justify="flex-start" direction="column" bg="gray.100" borderRadius="16px">
               <Flex
@@ -117,7 +89,7 @@ const WorkshopsPage = () => {
                 fontWeight={600}
                 backgroundSize="cover"
                 bgPos={"center"}
-                bgImage={WorkshopImg}
+                bgImage={selected?.cover_img}
               >
                 <Flex
                   width="100%"
@@ -130,7 +102,7 @@ const WorkshopsPage = () => {
                   <Flex width="100%" justify="space-between" align="flex-end" direction="row">
                     <Box>
                       <Text fontSize={22} fontWeight={700} marginBottom="0.3rem" align="left">
-                        {selected?.name}
+                        {selected?.workshop_name}
                       </Text>
                       <Box bg="white" w="fit-content" h="fit-content" p="0.2rem 0.6rem" borderRadius="99px">
                         <Text fontWeight="600" color="black">
@@ -141,7 +113,7 @@ const WorkshopsPage = () => {
                     <Flex align="center" gap={"0.7rem"}>
                       <Image src={Avatar} w="30px" borderRadius="30px" />
                       <Text align="left" noOfLines={1}>
-                        {selected?.manager}
+                        {selected?.workshop_manager_name}
                       </Text>
                     </Flex>
                   </Flex>
@@ -149,31 +121,17 @@ const WorkshopsPage = () => {
               </Flex>
               <Flex p="1rem" direction="column">
                 <Text fontWeight={700} align="left" mb="0.7rem">
-                  {`${selected?.date} - ${selected?.time}`}
+                  {selected?.date && moment(new Date(selected?.date)).format("DD.MM.YYYY hh:mm")}
                 </Text>
                 <Text fontStyle="italic" align="left" mb="0.7rem">
-                  Discover freedom from the grip of Obsessive-Compulsive Disorder. Our workshop provides
-                  practical strategies, expert insights, and peer support to help you overcome OCD's
-                  challenges. Join us on a journey to regain control and embrace a life of balance and tranquility.
+                  {selected?.short_description}
                 </Text>
-                <Text align="left" fontWeight="600">
-                  Embark on a transformative journey toward inner peace with our workshop,
-                  'Overcoming Obsessive Compulsive Disorder.' This empowering session is designed to guide
-                  participants through a comprehensive exploration of OCD, offering insights into the
-                  complexities of the disorder while providing practical strategies for regaining control and
-                  fostering a sense of calm.
-                  <br />
-                  Through a blend of expert guidance, peer support, and evidence-based techniques,
-                  attendees will gain valuable tools to navigate the challenges of OCD, ultimately paving
-                  the way towards a more balanced and fulfilling life. Join us as we unravel the layers of
-                  OCD and embark on a path of understanding, acceptance, and triumph over intrusive
-                  thoughts and compulsive behaviors.
-                </Text>
-                <Flex paddingY="1rem" w="100%" justify="flex-end">
+                {selected?.detailed_description && <Text align="left" fontWeight="600" dangerouslySetInnerHTML={{ __html: selected?.detailed_description }}/>}
+                {selected?.workshop_manager_id !== user.id && <Flex paddingY="1rem" w="100%" justify="flex-end">
                   <Button w="fit-content" h="fit-content" p="0.4rem 1.5rem" onClick={() => dispatch(setModal({ isOpen: true, view: "joinWorkshop", data: selected }))}>
                     I wan't to join!
                   </Button>
-                </Flex>
+                </Flex>}
               </Flex>
             </Flex>
           </Flex>

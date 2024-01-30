@@ -42,7 +42,7 @@ const FormItem: FC<{
 }
 
 interface FormInterface {
-    your_name: string;
+    workshop_manager_name: string;
     workshop_name: string;
     short_description: string;
     detailed_description: string;
@@ -58,7 +58,7 @@ const CreateWorkshopForm = () => {
     const [loading, setLoading] = useState<boolean>(false)
     const [coverImg, setCoverImg] = useState('')
     const [form, setForm] = useState<FormInterface>({
-        your_name: "",
+        workshop_manager_name: "",
         workshop_name: "",
         short_description: "",
         detailed_description: "",
@@ -111,9 +111,6 @@ const CreateWorkshopForm = () => {
             coverImg: {success: !!coverImg.length, message: "Please, enter cover image!"},
             checkbox: {success: termsCheckbox, message: "Please, accept Terms and Conditions!"}
         })
-        if(!!form.your_name === false) {
-            setForm(prev => ({...prev, your_name: user.displayName}))
-        }
         if(!!form.workshop_name && !!form.date && !!form.detailed_description && !!form.short_description && !!coverImg && termsCheckbox) {
             return true
         }
@@ -126,6 +123,10 @@ const CreateWorkshopForm = () => {
             return;
         }
 
+        if(!!form.workshop_manager_name === false) {
+            setForm(prev => ({...prev, workshop_manager_name: user.displayName}))
+        }
+
         setLoading(true)
         try {        
             const newWorkshopId = md5(`${form.workshop_name}.${new Date().getTime().toString()}`)
@@ -136,7 +137,12 @@ const CreateWorkshopForm = () => {
                 
                 const photoURL = await updateImage(coverImg, newWorkshopId)
 
-                transaction.set(newWorkshopDocRef, {...form, coverImg: photoURL});
+                transaction.set(newWorkshopDocRef, {
+                    ...form,
+                    cover_img: photoURL,
+                    workshop_manager_id: user?.id,
+                    category: "workshop"
+                });
                 transaction.set(
                     doc(firestore, `users/${user?.id}/workshops`, newWorkshopId), {
                         workshopId: newWorkshopId,
@@ -145,9 +151,7 @@ const CreateWorkshopForm = () => {
                     }
                 );
             });
-        } catch (error) {
-            
-        } finally {
+        } catch (error) { } finally {
             setLoading(false)
             toast({
                 status: "success",
@@ -166,7 +170,7 @@ const CreateWorkshopForm = () => {
             isOptional={true}
             description='Giving your name provides a more trustworthy environment for participants, otherwise your username will be used.'
             >
-                <InputItem type='text' name='your_name' onChange={onChange} />
+                <InputItem type='text' name='workshop_manager_name' onChange={onChange} />
             </FormItem>
             <FormItem error={!formErrors.workshop_name.success} errorMessage={formErrors.workshop_name.message}  label='Workshop Name' description='Choosing an interesting workshop name will help you attract more participants.'>
                 <InputItem type='text' name='workshop_name' onChange={onChange} />

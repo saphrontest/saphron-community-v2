@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Avatar, Box, Flex, Icon, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text } from '@chakra-ui/react'
 import { CgProfile } from 'react-icons/cg'
-import { IoBookmarksSharp } from 'react-icons/io5'
+import { FaRegBookmark } from "react-icons/fa";
 import { MdOutlineLogin } from 'react-icons/md'
 import { VscAccount } from 'react-icons/vsc'
 import { setModal } from '../../../redux/slices/modalSlice'
@@ -15,6 +15,7 @@ import { logoutUser } from '../../../redux/slices/userSlice'
 import NotFoundUserPic from '../../../assets/images/user.png'
 import { resetCommunities } from '../../../redux/slices/communitySlice'
 import { resetPosts } from '../../../redux/slices/postSlice'
+import { GrWorkshop } from "react-icons/gr";
 interface UserMenuProps {
     user: UserInterface
 }
@@ -94,8 +95,19 @@ const UserMenu: FC <UserMenuProps> = ({user}) => {
                         onClick={() => navigate("/saved-posts")}
                         >
                             <Flex alignItems="center">
-                                <Icon as={IoBookmarksSharp} fontSize={20} mr={2}/>
+                                <Icon as={FaRegBookmark} fontSize={20} mr={2}/>
                                 Saved Posts
+                            </Flex>
+                        </MenuItem>
+                        <MenuItem
+                        fontSize="10pt"
+                        fontWeight={700}
+                        _hover={{ bg: "blue.500", color: "white" }}
+                        onClick={() => navigate("/my-workshops")}
+                        >
+                            <Flex alignItems="center">
+                                <Icon as={GrWorkshop} fontSize={20} mr={2}/>
+                                My Workshops
                             </Flex>
                         </MenuItem>
                         <MenuDivider />

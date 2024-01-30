@@ -1,10 +1,11 @@
 export interface Workshop {
-    id: number;
-    name: string;
-    manager: string;
-    date: string;
-    time: string;
+    id: string;
+    cover_img: string;
     category: string;
-    detailedDescription?: string;
-    shortDescription?: string;
+    date: string;
+    detailed_description: string;
+    short_description: string;
+    workshop_name: string;
+    workshop_manager_id: string;
+    workshop_manager_name: string;
 }

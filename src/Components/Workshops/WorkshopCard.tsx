@@ -1,5 +1,4 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react'
-import WorkshopImg from '../../assets/images/workshop.jpg'
 import { FC } from 'react'
 import { Workshop } from '../../Interface/WorkshopInterface'
 
@@ -20,13 +19,13 @@ const WorkshopCard: FC<WorkshopCardProps> = ({ workshop, selected, setSelected }
     border={(!!selected && selected.id === workshop.id) ? "2.5px solid" : "none"}
     borderColor={"blue.500"}
     >
-      <Image src={WorkshopImg} borderTopLeftRadius="12px" borderTopRightRadius="12px" />
+      <Image src={workshop.cover_img} borderTopLeftRadius="12px" borderTopRightRadius="12px" />
       <Box p={"0.5rem"}>
         <Text align="left" noOfLines={2} fontWeight="600">
-          {workshop.name}
+          {workshop.workshop_name}
         </Text>
         <Text align="left" fontWeight="700">
-          {workshop.manager}
+          {workshop.workshop_manager_name}
         </Text>
         <Flex align="flex-end" justify="space-between" marginTop="1rem">
           {/* <Box>

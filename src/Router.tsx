@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { CommunityDetail, Home, PostDetail, SavedPosts, Submit, Profile, SearchPage, WorkshopsPage, WorkshopDetail } from './Pages'
+import { CommunityDetail, Home, PostDetail, SavedPosts, Submit, Profile, SearchPage, WorkshopsPage, WorkshopDetail, MyWorkshopsPage } from './Pages'
 
 const RoutesArray = [
   { path: "/", component: Home },
@@ -12,6 +12,7 @@ const RoutesArray = [
   { path: "search", component: SearchPage },
   { path: "workshops", component: WorkshopsPage },
   { path: "workshops/:slug", component: WorkshopDetail },
+  { path: "my-workshops", component: MyWorkshopsPage },
 ]
 
 const Router = () => {

@@ -20,6 +20,7 @@ import { store } from "../redux/store";
 import { setPosts, setSavedPosts } from "../redux/slices/postSlice";
 import { User } from "firebase/auth";
 import { setUserInfo } from "../redux/slices/userSlice";
+import { Workshop } from "../Interface/WorkshopInterface";
 
 const fetch = {
   getDetail: async (query: string, id: string) => {
@@ -131,6 +132,18 @@ export const getUserVotes = async (id: string) => {
       votes.push({ id: doc.id, ...doc.data() } as PostVote);
     });
     return votes;
+  }
+  return false;
+};
+
+export const getWorkshops = async () => {
+  const workshopsRef = await fetch.getList(`workshops`);
+  if (workshopsRef.size) {
+    const workshops: Workshop[] = [];
+    workshopsRef.forEach((doc) => {
+      workshops.push({ id: doc.id, ...doc.data() } as Workshop);
+    });
+    return workshops;
   }
   return false;
 };

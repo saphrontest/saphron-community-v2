@@ -1,32 +1,40 @@
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useState } from 'react'
 import { InputItem, ModalLayout } from '../../Layouts'
 import { ModalBody, Flex, Text, Box, ModalCloseButton, Textarea, Button } from '@chakra-ui/react'
 import { WorkshopCard } from '../Workshops'
 import { Workshop } from '../../Interface/WorkshopInterface'
 
-const JoinWorkshopModal: FC<{ data: any }> = ({ data: workshop }) => {
-    console.log(workshop)
-
-    const FormItem: FC<{
-        children: ReactNode;
-        label: string;
-        isOptional?: boolean;
-        description?: string;
-    }> = ({ children, label, isOptional = false, description }) => {
-        return (
-            <Flex gap="0.3rem" direction="column" w="100%">
-                <Flex gap="0.4rem" align="center">
-                    <Text fontWeight="600">{label}</Text>
-                    {isOptional && <Text fontSize="12px" color="gray" fontStyle="italic">Optional</Text>}
-                </Flex>
-                <Text fontSize="14px" color="gray">
-                    {description}
-
-                </Text>
-                {children}
+const FormItem: FC<{
+    children: ReactNode;
+    label: string;
+    isOptional?: boolean;
+    description?: string;
+}> = ({ children, label, isOptional = false, description }) => {
+    return (
+        <Flex gap="0.3rem" direction="column" w="100%">
+            <Flex gap="0.4rem" align="center">
+                <Text fontWeight="600">{label}</Text>
+                {isOptional && <Text fontSize="12px" color="gray" fontStyle="italic">Optional</Text>}
             </Flex>
-        )
+            <Text fontSize="14px" color="gray">
+                {description}
+
+            </Text>
+            {children}
+        </Flex>
+    )
+}
+
+const JoinWorkshopModal: FC<{ data: any }> = ({ data: workshop }) => {
+
+    const [formItems, setFormItems]= useState<{ name: string; motivation: string; }>({
+        name: "", motivation: ""
+    })
+
+    const handleSubmit = () => {
+        console.log(formItems)
     }
+
     return (
         <ModalLayout size='xl' isCentered={false}>
             <ModalCloseButton />
@@ -58,7 +66,7 @@ const JoinWorkshopModal: FC<{ data: any }> = ({ data: workshop }) => {
                         </Box>
                         <Flex gap="1rem" direction="column">
                             <FormItem label='Name' isOptional={true}>
-                                <InputItem type='text' name='name' />
+                                <InputItem type='text' name='name' onChange={ev => setFormItems((prev) => ({ ...prev, "name": ev.target.value }))}/>
                             </FormItem>
                             <FormItem label='Could you please tell us your motivation for attending this workshop?'>
                                 <Textarea
@@ -79,9 +87,10 @@ const JoinWorkshopModal: FC<{ data: any }> = ({ data: workshop }) => {
                                     bg={"gray.50"}
                                     borderRadius={4}
                                     fontSize="10pt"
+                                    onChange={ev => setFormItems((prev) => ({ ...prev, "motivation": ev.target.value }))}
                                 />
                             </FormItem>
-                            <Button>
+                            <Button onClick={handleSubmit}>
                                 Send
                             </Button>
                         </Flex>

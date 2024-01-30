@@ -24,8 +24,9 @@ const InputItem: React.FC<InputItemProps> = ({
     <Input
       name={name}
       placeholder={placeholder}
-      onChange={onChange}
+      onInput={onChange}
       mb={mb}
+      maxLength={9999}
       fontSize="10pt"
       _placeholder={{ color: "gray.500" }}
       _hover={{

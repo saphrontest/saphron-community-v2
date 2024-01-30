@@ -4,6 +4,7 @@ import { ModalLayout } from '../../Layouts'
 import { CreateWorkshopForm } from './Views'
 
 const CreateWorkshopModal = () => {
+
     return (
         <ModalLayout>
             <ModalHeader display="flex" flexDirection="column" alignItems="flex-start">

@@ -18,3 +18,10 @@ export interface WorkshopRequest {
     name: string;
     workshopId: string;
 }
+
+export interface UserWorkshops {
+    id: string;
+    isModerator: boolean;
+    isVerified: boolean;
+    workshopId: string;
+}

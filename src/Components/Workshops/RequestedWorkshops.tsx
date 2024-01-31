@@ -1,7 +1,27 @@
-import { Flex } from '@chakra-ui/react'
+import { FC, Fragment } from 'react'
+import { Box, Divider, Flex, Text } from '@chakra-ui/react'
+import { Workshop } from '../../Interface/WorkshopInterface'
 import communitiesBackground from '../../assets/images/communities.jpg'
+import moment from 'moment'
 
-const RequestedWorkshops = () => {
+const WorkshopItem: FC<{ workshop: Workshop }> = ({ workshop }) => {
+    return (
+        <Flex direction="row" textAlign="left" w="100%" align="center" justify="space-between">
+            <Box>
+                <Text>{workshop.workshop_name}</Text>
+                <Text fontWeight={600}>{moment(new Date(workshop.date)).format("DD.MM.YYYY hh:mm")}</Text>
+            </Box>
+            <Box bg={workshop.isVerified ? "green.300" : "gray"} h="fit-content" p="0.2rem 0.6rem" borderRadius={999}>
+                <Text color="white" fontWeight={600}>{workshop.isVerified ? "verified" : "waiting"}</Text>
+            </Box>
+        </Flex>
+    )
+}
+
+const RequestedWorkshops: FC<{
+    requestedWorkshops: Workshop[]
+}> = ({ requestedWorkshops }) => {
+
     return (
         <Flex bg="white" w="35%" direction="column">
             <Flex
@@ -26,8 +46,13 @@ const RequestedWorkshops = () => {
                     Requested Workshops
                 </Flex>
             </Flex>
-            <Flex p="6px 10px">
-                test
+            <Flex p="6px 10px" direction="column">
+                {requestedWorkshops.map((workshop, idx) => (
+                    <Fragment key={workshop.id}>
+                        <WorkshopItem workshop={workshop}/>
+                        {requestedWorkshops.length - 1 !== idx && <Divider />}
+                    </Fragment>
+                ))}
             </Flex>
         </Flex>
     )

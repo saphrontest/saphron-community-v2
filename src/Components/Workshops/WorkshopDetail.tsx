@@ -1,0 +1,93 @@
+import { Flex, Button, Box, Text, Image } from '@chakra-ui/react'
+import moment from 'moment'
+import { setModal } from '../../redux/slices/modalSlice'
+import { FC } from 'react'
+import { Workshop } from '../../Interface/WorkshopInterface'
+import { UserInterface } from '../../Interface/UserInterface'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../redux/store'
+import Avatar from '../../assets/images/avatar.jpeg'
+
+const JoinButton: FC<{ showJoinButton: boolean; onClick: () => void; }> = ({ showJoinButton, onClick }) => {
+    if (showJoinButton) {
+        return (
+            <Flex paddingY="1rem" w="100%" justify="flex-end">
+                <Button w="fit-content" h="fit-content" p="0.4rem 1.5rem" onClick={onClick}>
+                    I wan't to join!
+                </Button>
+            </Flex>
+        )
+    }
+    return null
+}
+
+const CustomLabel: FC<{ text: string }> = ({ text }) => {
+    return (
+        <Flex w="100%" justify="flex-end" paddingY="1rem">
+            <Flex bg="gray" w="fit-content" padding="0.4rem 1.5rem" borderRadius={9999}>
+                <Text fontWeight={600} color="white">{text}</Text>
+            </Flex>
+        </Flex>
+    )
+}
+
+const WorkshopDetail: FC<{ selected: Workshop | undefined, isRequested: boolean; }> = ({ selected, isRequested }) => {
+    const dispatch = useDispatch()
+    const user: UserInterface = useSelector((state: RootState) => state.user)
+    return selected ? (
+        <Flex w="50%" h="fit-content" align="flex-start" justify="flex-start" direction="column" bg="gray.100" borderRadius="16px">
+            <Flex
+                w="100%"
+                align="flex-end"
+                color="white"
+                bg="blue.500"
+                height={"150px"}
+                borderRadius="16px 16px 0px 0px"
+                fontWeight={600}
+                backgroundSize="cover"
+                bgPos={"center"}
+                bgImage={selected?.cover_img}
+            >
+                <Flex
+                    width="100%"
+                    height="100%"
+                    align="flex-end"
+                    color="white"
+                    p="6px 10px"
+                    bgGradient="linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75))"
+                >
+                    <Flex width="100%" justify="space-between" align="flex-end" direction="row">
+                        <Box>
+                            <Text fontSize={22} fontWeight={700} marginBottom="0.3rem" align="left">
+                                {selected?.workshop_name}
+                            </Text>
+                            <Box bg="white" w="fit-content" h="fit-content" p="0.2rem 0.6rem" borderRadius="99px">
+                                <Text fontWeight="600" color="black">
+                                    {selected?.category}
+                                </Text>
+                            </Box>
+                        </Box>
+                        <Flex align="center" gap={"0.7rem"}>
+                            <Image src={Avatar} w="30px" borderRadius="30px" />
+                            <Text align="left" noOfLines={1}>
+                                {selected?.workshop_manager_name}
+                            </Text>
+                        </Flex>
+                    </Flex>
+                </Flex>
+            </Flex>
+            <Flex p="1rem" direction="column">
+                <Text fontWeight={700} align="left" mb="0.7rem">
+                    {selected?.date && moment(new Date(selected?.date)).format("DD.MM.YYYY hh:mm")}
+                </Text>
+                <Text fontStyle="italic" align="left" mb="0.7rem">
+                    {selected?.short_description}
+                </Text>
+                {selected?.detailed_description && <Text align="left" fontWeight="600" dangerouslySetInnerHTML={{ __html: selected?.detailed_description }} />}
+                {selected?.isVerified ? <JoinButton showJoinButton={selected?.workshop_manager_id !== user.id} onClick={() => dispatch(setModal({ isOpen: true, view: "joinWorkshop", data: selected }))} /> : <CustomLabel text={isRequested ? "Requested" : "Not verified yet"} />}
+            </Flex>
+        </Flex>
+    ) : null
+}
+
+export default WorkshopDetail

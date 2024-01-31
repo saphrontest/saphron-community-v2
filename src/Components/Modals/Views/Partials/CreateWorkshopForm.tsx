@@ -56,7 +56,7 @@ const CreateWorkshopForm = () => {
     const workshopPicRef = useRef<HTMLInputElement | null>(null)
     const [termsCheckbox, setTermsCheckbox] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
-    const [coverImg, setCoverImg] = useState('')
+    const [coverImg, setCoverImg] = useState<string>('')
     const [form, setForm] = useState<FormInterface>({
         workshop_manager_name: "",
         workshop_name: "",
@@ -122,26 +122,21 @@ const CreateWorkshopForm = () => {
         if(!validate()) {
             return;
         }
-
         if(!!form.workshop_manager_name === false) {
             setForm(prev => ({...prev, workshop_manager_name: user.displayName}))
         }
-
         setLoading(true)
         try {        
             const newWorkshopId = md5(`${form.workshop_name}.${new Date().getTime().toString()}`)
-
             const newWorkshopDocRef = doc(firestore, "workshops", newWorkshopId);
-
             await runTransaction(firestore, async (transaction) => {
-                
                 const photoURL = await updateImage(coverImg, newWorkshopId)
-
                 transaction.set(newWorkshopDocRef, {
                     ...form,
                     cover_img: photoURL,
                     workshop_manager_id: user?.id,
-                    category: "workshop"
+                    category: "workshop",
+                    isVerified: false
                 });
                 transaction.set(
                     doc(firestore, `users/${user?.id}/workshops`, newWorkshopId), {

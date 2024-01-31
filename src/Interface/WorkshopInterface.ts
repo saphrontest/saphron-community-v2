@@ -8,4 +8,13 @@ export interface Workshop {
     workshop_name: string;
     workshop_manager_id: string;
     workshop_manager_name: string;
+    isVerified: boolean;
+}
+
+export interface WorkshopRequest {
+    id: string;
+    isConfirmed: boolean;
+    motivation: string;
+    name: string;
+    workshopId: string;
 }

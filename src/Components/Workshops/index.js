@@ -1,2 +1,5 @@
 export {default as WorkshopSide} from './WorkshopSide'
 export {default as WorkshopCard} from './WorkshopCard'
+export {default as RequestedWorkshops} from './RequestedWorkshops'
+export {default as JoinedWorkshops} from './JoinedWorkshops'
+export {default as WorkshopDetail} from './WorkshopDetail'

@@ -13,11 +13,12 @@ const WorkshopCard: FC<WorkshopCardProps> = ({ workshop, selected, setSelected }
     <Flex
     w="180px"
     bg="gray.100"
+    cursor="pointer"
     direction="column"
     borderRadius="12px"
     onClick={() => setSelected && setSelected(workshop)}
     border={(!!selected && selected.id === workshop.id) ? "2.5px solid" : "none"}
-    borderColor={"blue.500"}
+    borderColor="blue.500"
     >
       <Image src={workshop.cover_img} borderTopLeftRadius="12px" borderTopRightRadius="12px" />
       <Box p={"0.5rem"}>

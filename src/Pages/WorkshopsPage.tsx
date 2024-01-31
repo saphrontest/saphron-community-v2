@@ -6,34 +6,37 @@ import { useEffect, useState } from 'react'
 import { Workshop, WorkshopRequest } from '../Interface/WorkshopInterface'
 import { useDispatch, useSelector } from 'react-redux'
 import { setModal } from '../redux/slices/modalSlice'
-import { getUserWorkshopRequestList, getWorkshops } from '../Helpers'
+import { createSlug, getUserWorkshopRequestList, getWorkshops } from '../Helpers'
 import WorkshopList from './WorkshopList'
 import { UserInterface } from '../Interface/UserInterface'
 import { RootState } from '../redux/store'
+import { useParams } from 'react-router-dom'
 
 const WorkshopsPage = () => {
 
   const dispatch = useDispatch()
+  const params = useParams()
   const [selected, setSelected] = useState<Workshop | undefined>()
   const [workshops, setWorkshops] = useState<Workshop[]>([])
   const [workshopRequests, setWorkshopRequests] = useState<WorkshopRequest[]>()
   const user: UserInterface = useSelector((state: RootState) => state.user)
 
-  const getWorkshopList = async () => {
-    const data = await getWorkshops()
-    data && setWorkshops(data)
-  }
-
   useEffect(() => {
-    getWorkshopList()
+    getWorkshops()
+    .then(result => result && setWorkshops(result))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
-    !!selected === false && setSelected(workshops[0])
+    if(!!selected === false) {  
+      if(params.slug) {
+        setSelected(workshops.find(workshop => createSlug(workshop.workshop_name) === params.slug))
+      }else{
+        setSelected(workshops[0])
+      }
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workshops])
-
 
   useEffect(() => {
     getUserWorkshopRequestList(user.id)

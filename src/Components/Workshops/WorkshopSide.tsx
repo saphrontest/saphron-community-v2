@@ -1,16 +1,20 @@
 import { Flex, Text, Divider } from '@chakra-ui/react'
 import communitiesBackground from '../../assets/images/communities.jpg'
 import { Link } from 'react-router-dom'
-import { FC, Fragment } from 'react'
-import { createSlug } from '../../Helpers'
+import { FC, Fragment, useEffect, useState } from 'react'
+import { createSlug, getWorkshops } from '../../Helpers'
+import { Workshop } from '../../Interface/WorkshopInterface'
 
 const WorkshopSide: FC<{
   showButton?: boolean
 }> = ({showButton = true}) => {
-  const dummy = [
-    {id: 0, label: "FocusFlow: Navigating Life with ADHD" },
-    {id: 1, label: "CalmCanvas: Unwind Your Mind - An Anxiety Workshop", }
-  ]
+
+  const [workshops, setWorkshops] = useState<Workshop[]>()
+
+  useEffect(() => {
+    getWorkshops()
+    .then(result => result && setWorkshops(result))
+  }, [])
 
   return (
     <Flex
@@ -44,14 +48,14 @@ const WorkshopSide: FC<{
         </Flex>
       </Flex>
       <Flex direction="column">
-        {dummy.map((w, idx) => (
+        {workshops?.map((w, idx) => (
           <Fragment key={w.id}>
-            <Link to={`/workshops/${createSlug(w.label)}`}>
+            <Link to={`/workshops/${createSlug(w.workshop_name)}`}>
               <Text  textAlign="left" fontSize={14} fontWeight={500} padding="6px 4px">
-                {w.label}
+                {w.workshop_name}
               </Text>
             </Link>
-            {idx !== dummy.length-1 && <Divider/>}
+            {idx !== workshops?.length-1 && <Divider/>}
           </Fragment>
         ))}
         {showButton && (

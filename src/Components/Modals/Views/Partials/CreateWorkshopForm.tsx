@@ -122,7 +122,7 @@ const CreateWorkshopForm = () => {
         if(!validate()) {
             return;
         }
-        if(!!form.workshop_manager_name === false) {
+        if(form.workshop_manager_name === '') {
             setForm(prev => ({...prev, workshop_manager_name: user.displayName}))
         }
         setLoading(true)
@@ -135,6 +135,7 @@ const CreateWorkshopForm = () => {
                     ...form,
                     cover_img: photoURL,
                     workshop_manager_id: user?.id,
+                    workshop_manager_avatar: user.profilePhotoURL,
                     category: "workshop",
                     isVerified: false
                 });

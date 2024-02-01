@@ -19,8 +19,9 @@ const WorkshopItem: FC<{ workshop: Workshop }> = ({ workshop }) => {
 }
 
 const RequestedWorkshops: FC<{
-    requestedWorkshops: Workshop[]
-}> = ({ requestedWorkshops }) => {
+    newWorkshopRequests: Workshop[];
+    joinRequests: Workshop[]
+}> = ({ newWorkshopRequests, joinRequests }) => {
 
     return (
         <Flex bg="white" w="35%" direction="column">
@@ -47,10 +48,18 @@ const RequestedWorkshops: FC<{
                 </Flex>
             </Flex>
             <Flex p="6px 10px" direction="column">
-                {requestedWorkshops.map((workshop, idx) => (
+                {!!newWorkshopRequests.length && <Text fontWeight={700} align="left" pb="0.4rem">New Workshop Requests</Text>}
+                {newWorkshopRequests.map((workshop, idx) => (
                     <Fragment key={workshop.id}>
                         <WorkshopItem workshop={workshop}/>
-                        {requestedWorkshops.length - 1 !== idx && <Divider />}
+                        {newWorkshopRequests.length - 1 !== idx && <Divider />}
+                    </Fragment>
+                ))}
+                {!!joinRequests.length && <Text fontWeight={700} align="left" paddingTop="1rem" paddingBottom="0.4rem">Join Requests</Text>}
+                {joinRequests.map((workshop, idx) => (
+                    <Fragment key={workshop.id}>
+                        <WorkshopItem workshop={workshop}/>
+                        {joinRequests.length - 1 !== idx && <Divider />}
                     </Fragment>
                 ))}
             </Flex>

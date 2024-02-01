@@ -8,6 +8,7 @@ export interface Workshop {
     workshop_name: string;
     workshop_manager_id: string;
     workshop_manager_name: string;
+    workshop_manager_avatar: string;
     isVerified: boolean;
 }
 

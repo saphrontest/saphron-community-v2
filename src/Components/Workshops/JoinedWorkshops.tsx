@@ -26,7 +26,7 @@ const JoinedWorkshops: FC<{
         
         joinWorkshops.forEach(workshop => {
 
-            const workshop_date = moment(new Date(workshop.date))
+            const workshop_date = moment(new Date(workshop?.date))
             const current_date = moment()
 
             if (workshop_date.isBefore(current_date)) {
@@ -67,22 +67,24 @@ const JoinedWorkshops: FC<{
                 </Flex>
             </Flex>
             <Flex p="6px 10px" direction="column">
-                
                 {!!upcomingWorkshops?.length && <Text p="0.5rem 0" textAlign="left" fontWeight={600}>Upcoming</Text>}
-                {upcomingWorkshops?.map((workshop, idx) => (
-                    <Fragment key={idx}>
-                        <WorkshopItem workshop={workshop}/>
-                        {upcomingWorkshops.length - 1 !== idx && <Divider />}
-                    </Fragment>
-                ))}
-
+                <Flex direction="column" gap="0.4rem">
+                    {upcomingWorkshops?.map((workshop, idx) => (
+                        <Fragment key={idx}>
+                            <WorkshopItem workshop={workshop}/>
+                            {upcomingWorkshops.length - 1 !== idx && <Divider />}
+                        </Fragment>
+                    ))}
+                </Flex>
                 {!!pastWorkshops?.length && <Text p="0.5rem 0" textAlign="left" fontWeight={600}>Past</Text>}
-                {pastWorkshops?.map((workshop, idx) => (
-                    <Fragment key={idx}>
-                        <WorkshopItem workshop={workshop}/>
-                        {pastWorkshops.length - 1 !== idx && <Divider />}
-                    </Fragment>
-                ))}
+                <Flex direction="column" gap="0.4rem">
+                    {pastWorkshops?.map((workshop, idx) => (
+                        <Fragment key={idx}>
+                            <WorkshopItem workshop={workshop}/>
+                            {pastWorkshops.length - 1 !== idx && <Divider />}
+                        </Fragment>
+                    ))}
+                </Flex>
 
             </Flex>
         </Flex>

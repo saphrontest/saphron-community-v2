@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react"
+import { Flex, Text } from "@chakra-ui/react"
 import { PageLayout } from "../Layouts"
 import { JoinedWorkshops, RequestedWorkshops } from "../Components"
 import { useEffect, useState } from "react"
@@ -15,6 +15,32 @@ const MyWorkshopsPage = () => {
   const [workshops, setWorkshops] = useState<Workshop[]>()
   const [userWorkshops, setUserWorkshops] = useState<UserWorkshops[]>()
   const [requestedWorkshops, setRequestedWorkshops] = useState<WorkshopRequest[]>()
+  const [joinWorkshops, setJoinWorkshops] = useState<Workshop[]>([])
+
+  useEffect(() => {
+
+    workshops?.forEach(workshop => {
+
+      if(!!requestedWorkshops?.length) {
+        requestedWorkshops.forEach(requested => {
+          if(requested.workshopId === workshop.id && requested.isConfirmed) {
+            setJoinWorkshops(prev => ([...prev, workshop]))
+          }
+        })
+      }
+
+      if(!!userWorkshops?.length) {
+        userWorkshops.forEach(userW => {
+          if(userW.id === workshop.id && workshop.isVerified){
+            setJoinWorkshops(prev => ([...prev, workshop]))
+          }
+        })
+      }
+
+    })
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requestedWorkshops, userWorkshops])
 
   useEffect(() => {
 
@@ -37,25 +63,19 @@ const MyWorkshopsPage = () => {
           {
             !!userWorkshops &&
               <RequestedWorkshops
-                requestedWorkshops={
-                  userWorkshops
-                    .map(workshop => workshops?.find(w => w.id === workshop.workshopId)) as Workshop[]
-                }
+                newWorkshopRequests={userWorkshops.map(workshop => workshops?.find(w => w.id === workshop.workshopId)) as Workshop[]}
+                joinRequests={requestedWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)) as Workshop[]}
               />
           }
-          <Flex bg="white" flex={1}>MAIN</Flex>
+          <Flex bg="white" flex={1} p="1rem" direction="column" align="flex-start">
+            <Text fontSize="18" fontWeight={600}>
+              Summary
+            </Text>
+          </Flex>
         </Flex>
       </>
       <>
-        {
-          !!requestedWorkshops &&
-            <JoinedWorkshops
-              joinWorkshops={
-                requestedWorkshops
-                  .map(workshop => workshops?.find(w => w.id === workshop.workshopId)) as Workshop[]
-              }
-            />
-        }
+        {!!joinWorkshops && <JoinedWorkshops joinWorkshops={joinWorkshops} />}
       </>
     </PageLayout>
   )

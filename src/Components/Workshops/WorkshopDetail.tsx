@@ -6,7 +6,6 @@ import { Workshop } from '../../Interface/WorkshopInterface'
 import { UserInterface } from '../../Interface/UserInterface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
-import Avatar from '../../assets/images/avatar.jpeg'
 
 const JoinButton: FC<{ showJoinButton: boolean; onClick: () => void; }> = ({ showJoinButton, onClick }) => {
     if (showJoinButton) {
@@ -31,7 +30,10 @@ const CustomLabel: FC<{ text: string }> = ({ text }) => {
     )
 }
 
-const WorkshopDetail: FC<{ selected: Workshop | undefined, isRequested: boolean; }> = ({ selected, isRequested }) => {
+const WorkshopDetail: FC<{
+    selected: Workshop | undefined;
+    isRequested: boolean;
+}> = ({ selected, isRequested }) => {
     const dispatch = useDispatch()
     const user: UserInterface = useSelector((state: RootState) => state.user)
     return selected ? (
@@ -41,11 +43,11 @@ const WorkshopDetail: FC<{ selected: Workshop | undefined, isRequested: boolean;
                 align="flex-end"
                 color="white"
                 bg="blue.500"
-                height={"150px"}
+                height="150px"
                 borderRadius="16px 16px 0px 0px"
                 fontWeight={600}
                 backgroundSize="cover"
-                bgPos={"center"}
+                bgPos="center"
                 bgImage={selected?.cover_img}
             >
                 <Flex
@@ -68,7 +70,7 @@ const WorkshopDetail: FC<{ selected: Workshop | undefined, isRequested: boolean;
                             </Box>
                         </Box>
                         <Flex align="center" gap={"0.7rem"}>
-                            <Image src={Avatar} w="30px" borderRadius="30px" />
+                            {selected.workshop_manager_avatar && <Image src={selected.workshop_manager_avatar} w="30px" borderRadius="30px" />}
                             <Text align="left" noOfLines={1}>
                                 {selected?.workshop_manager_name}
                             </Text>
@@ -84,7 +86,11 @@ const WorkshopDetail: FC<{ selected: Workshop | undefined, isRequested: boolean;
                     {selected?.short_description}
                 </Text>
                 {selected?.detailed_description && <Text align="left" fontWeight="600" dangerouslySetInnerHTML={{ __html: selected?.detailed_description }} />}
-                {selected?.isVerified ? <JoinButton showJoinButton={selected?.workshop_manager_id !== user.id} onClick={() => dispatch(setModal({ isOpen: true, view: "joinWorkshop", data: selected }))} /> : <CustomLabel text={isRequested ? "Requested" : "Not verified yet"} />}
+                {
+                    selected?.isVerified  && !isRequested ?
+                        <JoinButton showJoinButton={selected?.workshop_manager_id !== user.id} onClick={() => dispatch(setModal({ isOpen: true, view: "joinWorkshop", data: selected }))} /> :
+                        <CustomLabel text={isRequested ? "Requested" : "Not verified yet"} />
+                }
             </Flex>
         </Flex>
     ) : null

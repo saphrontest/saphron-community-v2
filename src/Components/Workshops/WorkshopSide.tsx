@@ -48,7 +48,7 @@ const WorkshopSide: FC<{
         </Flex>
       </Flex>
       <Flex direction="column">
-        {workshops?.map((w, idx) => (
+        {workshops?.map((w, idx) => w.isVerified && (
           <Fragment key={w.id}>
             <Link to={`/workshops/${createSlug(w.workshop_name)}`}>
               <Text  textAlign="left" fontSize={14} fontWeight={500} padding="6px 4px">

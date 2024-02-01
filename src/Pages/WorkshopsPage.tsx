@@ -43,7 +43,7 @@ const WorkshopsPage = () => {
     .then((res: WorkshopRequest[] | false) => res && setWorkshopRequests(res))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  
+
   return (
     <PageLayout showSidebar={false} leftWidth="100%">
       <>
@@ -86,7 +86,7 @@ const WorkshopsPage = () => {
           </Flex>
           <Flex direction="row" padding="1rem">
             <WorkshopList selected={selected} setSelected={setSelected} workshops={workshops}/>
-            <WorkshopDetail selected={selected} isRequested={!!workshopRequests?.find((workshop: WorkshopRequest) => workshop?.workshopId === selected?.id)}/>
+            <WorkshopDetail selected={selected} isRequested={!!workshopRequests?.some((workshop: WorkshopRequest) => workshop?.workshopId === selected?.id)}/>
           </Flex>
         </Flex>
       </>

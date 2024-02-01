@@ -78,11 +78,11 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
         runTransaction(firestore, async (transaction) => {
             transaction.set(
                 doc(collection(firestore, `users/${user?.id}/workshopJoinRequests`), newWorkshopRequestId),
-                { ...formItems, isConfirmed: false, workshopId: workshop.id }
+                { isConfirmed: false, workshopId: workshop.id }
             );
             transaction.set(
-                doc(collection(firestore, `workshops/${workshop.id}/joinRequests`), newWorkshopRequestId),
-                { isConfirmed: false, userId: user.id }
+                doc(collection(firestore, `workshops/${workshop.id}p/participants`), newWorkshopRequestId),
+                { ...formItems, isConfirmed: false, userId: user.id }
             );
         }).finally(() => {
             setLoading(false)

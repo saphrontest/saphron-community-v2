@@ -26,7 +26,7 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
   
   return (
     <>
-      <Modal isOpen={modal.isOpen} onClose={() => dispatch(setModal({isOpen: false, view: null}))} size={size} isCentered={isCentered}>
+      <Modal isOpen={modal.isOpen} onClose={() => dispatch(setModal({isOpen: false, view: null}))} size={size} isCentered={isCentered} scrollBehavior="inside">
         <ModalOverlay />
         <ModalContent width={{ base: "sm", md: "xl" }}>{children}</ModalContent>
       </Modal>

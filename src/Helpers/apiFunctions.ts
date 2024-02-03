@@ -160,6 +160,18 @@ export const getUserWorkshopRequestList = async (userId: string) => {
   return false;
 }
 
+export const getParticipantsByWorkshop = async (workshopId: string) => {
+  const participantsRef = await fetch.getList(`workshops/${workshopId}/participants`);
+  const participants: WorkshopRequest[] = [];
+  if(!!participantsRef) {
+    participantsRef.forEach(doc => {
+      participants.push({ id: doc.id, ...doc.data() } as WorkshopRequest);
+    });
+    return participants;
+  }
+  return false
+}
+
 export const getUserWorkshops = async (userId: string) => {
   const workshopsRef = await fetch.getList(`users/${userId}/workshops`);
   if (workshopsRef.size) {
@@ -168,6 +180,18 @@ export const getUserWorkshops = async (userId: string) => {
       workshops.push({ id: doc.id, ...doc.data() } as UserWorkshops);
     });
     return workshops;
+  }
+  return false;
+}
+
+export const getWorkshopJoinRequests = async (workshopId: string) => {
+  const participantsRef = await fetch.getList(`workshops/${workshopId}/participants`);
+  if (participantsRef.size) {
+    const participants: WorkshopRequest[] = [];
+    participantsRef.forEach((doc) => {
+      participants.push({ id: doc.id, ...doc.data()} as WorkshopRequest);
+    });
+    return participants;
   }
   return false;
 }

@@ -3,16 +3,19 @@ import { Box, Divider, Flex, Text } from '@chakra-ui/react'
 import { Workshop } from '../../Interface/WorkshopInterface'
 import communitiesBackground from '../../assets/images/communities.jpg'
 import moment from 'moment'
+import { useNavigate } from 'react-router-dom'
+import { createSlug } from '../../Helpers'
 
 const WorkshopItem: FC<{ workshop: Workshop }> = ({ workshop }) => {
+    const navigate = useNavigate()
     return (
-        <Flex direction="row" textAlign="left" w="100%" align="center" justify="space-between">
+        <Flex direction="row" textAlign="left" w="100%" align="center" justify="space-between" onClick={() => navigate(`/workshops/${createSlug(workshop.workshop_name)}`)} cursor="pointer">
             <Box>
                 <Text>{workshop.workshop_name}</Text>
                 <Text fontWeight={600}>{moment(new Date(workshop.date)).format("DD.MM.YYYY hh:mm")}</Text>
             </Box>
-            <Box bg={workshop.isVerified ? "green.300" : "gray"} h="fit-content" p="0.2rem 0.6rem" borderRadius={999}>
-                <Text color="white" fontWeight={600}>{workshop.isVerified ? "verified" : "waiting"}</Text>
+            <Box bg={workshop.status === "confirmed" ? "green.300" : "gray"} h="fit-content" p="0.2rem 0.6rem" borderRadius={999}>
+                <Text color="white" fontWeight={600}>{workshop.status === "confirmed" ? "verified" : "waiting"}</Text>
             </Box>
         </Flex>
     )
@@ -24,7 +27,7 @@ const RequestedWorkshops: FC<{
 }> = ({ newWorkshopRequests, joinRequests }) => {
 
     return (
-        <Flex bg="white" w="35%" direction="column">
+        <Flex bg="white" w="35%" h="fit-content" direction="column">
             <Flex
                 align="flex-end"
                 color="white"
@@ -47,8 +50,8 @@ const RequestedWorkshops: FC<{
                     Requested Workshops
                 </Flex>
             </Flex>
-            <Flex p="6px 10px" direction="column">
-                {!!newWorkshopRequests.length && <Text fontWeight={700} align="left" pb="0.4rem">New Workshop Requests</Text>}
+            <Flex p="6px 10px" direction="column" gap="0.5rem">
+                {!!newWorkshopRequests?.length && <Text fontWeight={700} align="left" pb="0.4rem">New Workshop Requests</Text>}
                 {newWorkshopRequests.map((workshop, idx) => (
                     <Fragment key={workshop.id}>
                         <WorkshopItem workshop={workshop}/>

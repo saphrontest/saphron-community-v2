@@ -2,14 +2,15 @@ import { FC, ReactNode, useState } from 'react'
 import { InputItem, ModalLayout } from '../../Layouts'
 import { ModalBody, Flex, Text, Box, ModalCloseButton, Textarea, Button, useToast, Spinner } from '@chakra-ui/react'
 import { WorkshopCard } from '../Workshops'
-import { Workshop } from '../../Interface/WorkshopInterface'
+import { Workshop, WorkshopRequest } from '../../Interface/WorkshopInterface'
 import md5 from 'md5'
-import { collection, doc, runTransaction } from 'firebase/firestore'
+import { collection, doc, increment, runTransaction } from 'firebase/firestore'
 import { firestore } from '../../firebaseClient'
 import { UserInterface } from '../../Interface/UserInterface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { setModal } from '../../redux/slices/modalSlice'
+import moment from 'moment'
 
 const FormItem: FC<{
     children: ReactNode;
@@ -75,14 +76,25 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
         }
         setLoading(true)
         const newWorkshopRequestId = md5(`${new Date().getTime().toString()}`)
+        const workshopRequest = {
+            ...formItems,
+            userId: user.id,
+            status: "waiting",
+            name: formItems.name ?? user.displayName,
+            date: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+        } as WorkshopRequest
         runTransaction(firestore, async (transaction) => {
             transaction.set(
                 doc(collection(firestore, `users/${user?.id}/workshopJoinRequests`), newWorkshopRequestId),
-                { isConfirmed: false, workshopId: workshop.id }
+                { workshopId: workshop.id }
             );
             transaction.set(
-                doc(collection(firestore, `workshops/${workshop.id}p/participants`), newWorkshopRequestId),
-                { ...formItems, isConfirmed: false, userId: user.id }
+                doc(collection(firestore, `workshops/${workshop.id}/participants`), newWorkshopRequestId),
+                workshopRequest
+            );
+            transaction.update(
+                doc(collection(firestore, `workshops/${workshop.id}`)),
+                { requstCount: increment(1) }
             );
         }).finally(() => {
             setLoading(false)

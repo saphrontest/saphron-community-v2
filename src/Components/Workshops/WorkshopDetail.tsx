@@ -1,11 +1,12 @@
-import { Flex, Button, Box, Text, Image } from '@chakra-ui/react'
+import { Flex, Button, Box, Text, Image, Spinner, useBoolean } from '@chakra-ui/react'
 import moment from 'moment'
 import { setModal } from '../../redux/slices/modalSlice'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Workshop } from '../../Interface/WorkshopInterface'
 import { UserInterface } from '../../Interface/UserInterface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
+import { getParticipantsByWorkshop } from '../../Helpers'
 
 const JoinButton: FC<{ showJoinButton: boolean; onClick: () => void; }> = ({ showJoinButton, onClick }) => {
     if (showJoinButton) {
@@ -36,6 +37,20 @@ const WorkshopDetail: FC<{
 }> = ({ selected, isRequested }) => {
     const dispatch = useDispatch()
     const user: UserInterface = useSelector((state: RootState) => state.user)
+    const [participantsSize, setParticipantsSize] = useState<number | null>()
+    const [participantSizeLoading, setParticipantSizeLoading] = useBoolean()
+
+    useEffect(() => {
+        if(selected?.id) {
+            setParticipantSizeLoading.toggle()
+            getParticipantsByWorkshop(selected?.id).then(result => {
+                result && setParticipantsSize(result.length ?? 0)
+            }).finally(() => {
+                setParticipantSizeLoading.toggle()
+            })
+        }
+    }, [selected])
+
     return selected ? (
         <Flex w="50%" h="fit-content" align="flex-start" justify="flex-start" direction="column" bg="gray.100" borderRadius="16px">
             <Flex
@@ -56,9 +71,10 @@ const WorkshopDetail: FC<{
                     align="flex-end"
                     color="white"
                     p="6px 10px"
-                    bgGradient="linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75))"
+                    bgGradient="linear-gradient(to bottom, rgba(0, 0, 0, 0.20), rgba(0, 0, 0, 0.75))"
                 >
-                    <Flex width="100%" justify="space-between" align="flex-end" direction="row">
+                    
+                    <Flex width="100%" justify="space-between" align="flex-end" h="100%" direction="row">
                         <Box>
                             <Text fontSize={22} fontWeight={700} marginBottom="0.3rem" align="left">
                                 {selected?.workshop_name}
@@ -69,11 +85,16 @@ const WorkshopDetail: FC<{
                                 </Text>
                             </Box>
                         </Box>
-                        <Flex align="center" gap={"0.7rem"}>
-                            {selected.workshop_manager_avatar && <Image src={selected.workshop_manager_avatar} w="30px" borderRadius="30px" />}
-                            <Text align="left" noOfLines={1}>
-                                {selected?.workshop_manager_name}
-                            </Text>
+                        <Flex direction="column" align="flex-end" justify="flex-end" h="100%">
+                            {/* <Flex gap="0.3rem" align="center">
+                                {!participantSizeLoading ? <Text>{participantsSize} joining request</Text> : <Spinner />}
+                            </Flex> */}
+                            <Flex align="center" gap={"0.7rem"}>
+                                {selected.workshop_manager_avatar && <Image src={selected.workshop_manager_avatar} w="30px" borderRadius="30px" />}
+                                <Text align="left" noOfLines={1}>
+                                    {selected?.workshop_manager_name}
+                                </Text>
+                            </Flex>
                         </Flex>
                     </Flex>
                 </Flex>
@@ -87,7 +108,7 @@ const WorkshopDetail: FC<{
                 </Text>
                 {selected?.detailed_description && <Text align="left" fontWeight="600" dangerouslySetInnerHTML={{ __html: selected?.detailed_description }} />}
                 {
-                    selected?.isVerified  && !isRequested ?
+                    selected?.status === "confirmed"  && !isRequested ?
                         <JoinButton showJoinButton={selected?.workshop_manager_id !== user.id} onClick={() => dispatch(setModal({ isOpen: true, view: "joinWorkshop", data: selected }))} /> :
                         <CustomLabel text={isRequested ? "Requested" : "Not verified yet"} />
                 }

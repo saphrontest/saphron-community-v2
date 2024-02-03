@@ -1,3 +1,5 @@
+export type WorkshopStatusTypes = "waiting" | "confirmed" | "rejected"
+
 export interface Workshop {
     id: string;
     cover_img: string;
@@ -9,20 +11,30 @@ export interface Workshop {
     workshop_manager_id: string;
     workshop_manager_name: string;
     workshop_manager_avatar: string;
-    isVerified: boolean;
+    workshop_manager_mail: string;
+    status: WorkshopStatusTypes
 }
+
+
 
 export interface WorkshopRequest {
     id: string;
-    isConfirmed: boolean;
+    status: WorkshopStatusTypes;
     motivation: string;
     name: string;
     workshopId: string;
+    userId: string;
+    date: string;
 }
 
 export interface UserWorkshops {
     id: string;
     isModerator: boolean;
-    isVerified: boolean;
     workshopId: string;
+}
+
+export interface WorkshopStatusSelectOptionInterface {
+    id: number;
+    label: string;
+    select: boolean;
 }

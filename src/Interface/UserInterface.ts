@@ -9,6 +9,7 @@ export interface UserInterface {
     coverPhotoURL: string;
     profilePhotoURL: string;
     phoneNumber: string;
+    role: string;
 }
 
 export const defaultUserState: UserInterface = {
@@ -21,5 +22,6 @@ export const defaultUserState: UserInterface = {
     provider: null,
     coverPhotoURL: "",
     profilePhotoURL: "",
-    phoneNumber: ""
+    phoneNumber: "",
+    role: "",
 }

@@ -19,37 +19,35 @@ const MyWorkshopsPage = () => {
   const [reloadWorkshops, setReloadWorkshops] = useBoolean(false)
 
 
-  useEffect(() => {
+  const getAllWorkshops = () => {
 
     getWorkshops()
-      .then(result => result && setWorkshops(result))
+    .then(result => result && setWorkshops(result))
 
     getUserWorkshopRequestList(user.id)
-      .then(result => result && setRequestedWorkshops(result))
+      .then(result => {
+        result && setRequestedWorkshops(result)
+      })
 
     getUserWorkshops(user.id)
       .then(result => result && setUserWorkshops(result))
 
+  }
+
+  useEffect(() => {
+    getAllWorkshops()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
-
     if(!reloadWorkshops) return;
-
-    getWorkshops()
-      .then(result => result && setWorkshops(result))
-
-    getUserWorkshopRequestList(user.id)
-      .then(result => result && setRequestedWorkshops(result))
-
-    getUserWorkshops(user.id)
-      .then(result => result && setUserWorkshops(result))
-
+    getAllWorkshops()
     return () => setReloadWorkshops.toggle()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadWorkshops])
+  
+
 
   useEffect(() => {
 
@@ -57,16 +55,17 @@ const MyWorkshopsPage = () => {
 
       if (!!requestedWorkshops?.length) {
         requestedWorkshops.forEach(requested => {
-          if (requested.workshopId === workshop.id && requested.status === "confirmed") {
-            setJoinWorkshops(prev => ([...prev, workshop]))
+          const isParticipatingConfirmed = workshop.participants.some(participant => participant.userId === user.id && participant.status === "confirmed")
+          if (requested.workshopId === workshop.id && isParticipatingConfirmed) {
+            setJoinWorkshops(prev => ([workshop, ...prev]));
           }
         })
       }
 
       if (!!userWorkshops?.length) {
         userWorkshops.forEach(userW => {
-          if (userW.id === workshop.id && workshop.status === "confirmed") {
-            setJoinWorkshops(prev => ([...prev, workshop]))
+          if (userW.workshopId === workshop.id && workshop.status === "confirmed") {
+            setJoinWorkshops(prev => ([workshop, ...prev]));
           }
         })
       }
@@ -74,7 +73,7 @@ const MyWorkshopsPage = () => {
     })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [requestedWorkshops, userWorkshops])
+  }, [requestedWorkshops, userWorkshops, workshops])
 
   return (
     <>
@@ -85,7 +84,7 @@ const MyWorkshopsPage = () => {
               newWorkshopRequests={userWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)) as Workshop[] ?? []}
               joinRequests={requestedWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)) as Workshop[] ?? []}
             />
-            <Flex bg="white" flex={1} p="1rem" direction="column" align="flex-start">
+            <Flex bg="white" flex={1} p="1rem" direction="column" align="flex-start" h="fit-content">
               <Text fontSize="22" fontWeight={600} pb="1rem">
                 My Workshops
               </Text>

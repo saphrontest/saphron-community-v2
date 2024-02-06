@@ -32,7 +32,7 @@ const ParticipantItem: FC<ParticipantItemProps> = ({ participant, isLoading, han
             {isClicked && (
                 <>
                     <Divider w="20%" borderColor="gray" my="1rem" />
-                    {participant.date && <Text mb="0.4rem" fontSize={12} color="gray" textAlign="left"><strong>{participant.status}</strong> from {moment().format("DD.MM.YYYY HH:mm:ss")}</Text>}
+                    {participant.updatedAt && <Text mb="0.4rem" fontSize={12} color="gray" textAlign="left">Status is <strong>{participant.status}</strong> from {moment(participant.updatedAt).format("DD.MM.YYYY HH:mm:ss")}.</Text>}
                     <Text align="left" mb="0.5rem">{participant.motivation}</Text>
                     <Text fontWeight={600}>{participant.name}</Text>
                     <Divider w="20%" borderColor="gray" my="1rem" />

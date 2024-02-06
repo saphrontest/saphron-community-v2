@@ -23,7 +23,7 @@ const AdminWorkshops = () => {
     }
     const selectOptions: WorkshopStatusSelectOptionInterface[] = [
         { id: 0, label: 'confirmed', select: false },
-        { id: 1, label: 'wait', select: true },
+        { id: 1, label: 'waiting', select: true },
         { id: 2, label: 'rejected', select: false }
     ]
 

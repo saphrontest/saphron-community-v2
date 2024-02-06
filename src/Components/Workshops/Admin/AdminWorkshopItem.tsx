@@ -2,12 +2,12 @@ import { Box, Divider, Flex, Image, Text } from '@chakra-ui/react'
 import moment from 'moment'
 import AdminStatusSelect from './AdminStatusSelect'
 import { FC } from 'react'
-import { Workshop } from '../../../Interface/WorkshopInterface'
+import { Workshop, WorkshopStatusSelectOptionInterface } from '../../../Interface/WorkshopInterface'
 
 const AdminWorkshopItem: FC<{
   idx: number;
   workshop: Workshop;
-  selectOptions: { id: number; label: string; select: boolean; }[];
+  selectOptions: WorkshopStatusSelectOptionInterface[];
   onSelect: (worksopId: string, optionId: number) => Promise<Boolean>
 }> = ({workshop, idx, onSelect, selectOptions}) => {
   return (
@@ -18,7 +18,7 @@ const AdminWorkshopItem: FC<{
             <Image src={workshop.cover_img} w="7rem" h="5rem" mr="1rem" borderRadius="1rem" />
             <Box>
               <Text textAlign="left" fontWeight="600" fontSize="18" noOfLines={2}>{workshop.workshop_name}</Text>
-              <Text textAlign="left">{moment(new Date(workshop.date)).format("DD.MM.YYYY hh:mm")}</Text>
+              <Text textAlign="left">{moment(new Date(workshop.createdAt)).format("DD.MM.YYYY hh:mm")}</Text>
             </Box>
           </Flex>
           <Divider orientation='vertical' borderColor="gray" h="100%"/>

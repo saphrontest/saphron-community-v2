@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
-import { Flex, Stack, useToast } from '@chakra-ui/react'
+import { Stack, useToast } from '@chakra-ui/react'
 import { MyCommunities, Nav, NoEntry, PostItem } from '../Components'
 import { ProfileHeader } from '../Components/Profile'
 import { getPostsByUser } from '../Helpers/apiFunctions'

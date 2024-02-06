@@ -1,14 +1,16 @@
-import { Flex, Button, Box, Text, Image, Spinner, useBoolean } from '@chakra-ui/react'
+import { Flex, Button, Box, Text, Image } from '@chakra-ui/react'
 import moment from 'moment'
 import { setModal } from '../../redux/slices/modalSlice'
-import { FC, useEffect, useState } from 'react'
+import { FC } from 'react'
 import { Workshop } from '../../Interface/WorkshopInterface'
 import { UserInterface } from '../../Interface/UserInterface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
-import { getParticipantsByWorkshop } from '../../Helpers'
 
-const JoinButton: FC<{ showJoinButton: boolean; onClick: () => void; }> = ({ showJoinButton, onClick }) => {
+const JoinButton: FC<{
+    showJoinButton: boolean;
+    onClick: () => void;
+}> = ({ showJoinButton, onClick }) => {
     if (showJoinButton) {
         return (
             <Flex paddingY="1rem" w="100%" justify="flex-end">
@@ -21,10 +23,13 @@ const JoinButton: FC<{ showJoinButton: boolean; onClick: () => void; }> = ({ sho
     return null
 }
 
-const CustomLabel: FC<{ text: string }> = ({ text }) => {
+const CustomLabel: FC<{
+    text: string;
+    bg: string; 
+}> = ({ text, bg }) => {
     return (
         <Flex w="100%" justify="flex-end" paddingY="1rem">
-            <Flex bg="gray" w="fit-content" padding="0.4rem 1.5rem" borderRadius={9999}>
+            <Flex bg={bg} w="fit-content" padding="0.4rem 1.5rem" borderRadius={9999}>
                 <Text fontWeight={600} color="white">{text}</Text>
             </Flex>
         </Flex>
@@ -37,19 +42,6 @@ const WorkshopDetail: FC<{
 }> = ({ selected, isRequested }) => {
     const dispatch = useDispatch()
     const user: UserInterface = useSelector((state: RootState) => state.user)
-    const [participantsSize, setParticipantsSize] = useState<number | null>()
-    const [participantSizeLoading, setParticipantSizeLoading] = useBoolean()
-
-    useEffect(() => {
-        if(selected?.id) {
-            setParticipantSizeLoading.toggle()
-            getParticipantsByWorkshop(selected?.id).then(result => {
-                result && setParticipantsSize(result.length ?? 0)
-            }).finally(() => {
-                setParticipantSizeLoading.toggle()
-            })
-        }
-    }, [selected])
 
     return selected ? (
         <Flex w="50%" h="fit-content" align="flex-start" justify="flex-start" direction="column" bg="gray.100" borderRadius="16px">
@@ -86,9 +78,6 @@ const WorkshopDetail: FC<{
                             </Box>
                         </Box>
                         <Flex direction="column" align="flex-end" justify="flex-end" h="100%">
-                            {/* <Flex gap="0.3rem" align="center">
-                                {!participantSizeLoading ? <Text>{participantsSize} joining request</Text> : <Spinner />}
-                            </Flex> */}
                             <Flex align="center" gap={"0.7rem"}>
                                 {selected.workshop_manager_avatar && <Image src={selected.workshop_manager_avatar} w="30px" borderRadius="30px" />}
                                 <Text align="left" noOfLines={1}>
@@ -101,7 +90,7 @@ const WorkshopDetail: FC<{
             </Flex>
             <Flex p="1rem" direction="column">
                 <Text fontWeight={700} align="left" mb="0.7rem">
-                    {selected?.date && moment(new Date(selected?.date)).format("DD.MM.YYYY hh:mm")}
+                    {selected?.createdAt && moment(new Date(selected?.createdAt)).format("DD.MM.YYYY hh:mm")}
                 </Text>
                 <Text fontStyle="italic" align="left" mb="0.7rem">
                     {selected?.short_description}
@@ -110,7 +99,10 @@ const WorkshopDetail: FC<{
                 {
                     selected?.status === "confirmed"  && !isRequested ?
                         <JoinButton showJoinButton={selected?.workshop_manager_id !== user.id} onClick={() => dispatch(setModal({ isOpen: true, view: "joinWorkshop", data: selected }))} /> :
-                        <CustomLabel text={isRequested ? "Requested" : "Not verified yet"} />
+                        <CustomLabel
+                        bg={isRequested && selected?.participants.find(participant => participant.userId === user.id)?.status === "confirmed" ? "green" : "gray"}
+                        text={isRequested ? `Request is ${selected?.participants.find(participant => participant.userId === user.id)?.status}` : "Not verified yet"}
+                        />
                 }
             </Flex>
         </Flex>

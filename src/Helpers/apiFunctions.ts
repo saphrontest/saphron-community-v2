@@ -140,11 +140,16 @@ export const getWorkshops = async () => {
   const workshopsRef = await fetch.getList(`workshops`);
   if (workshopsRef.size) {
     const workshops: Workshop[] = [];
-    workshopsRef.forEach((doc) => {
-      workshops.push({ id: doc.id, ...doc.data() } as Workshop);
-    });
-    return workshops;
-  }
+      await Promise.all(workshopsRef.docs.map(async (doc) => {
+        try {
+          const participants = await getParticipantsByWorkshop(doc.id);
+          workshops.push({ id: doc.id, participants: participants || [], ...doc.data() } as Workshop);
+        } catch (error) {
+          console.error('Error fetching participants:', error);
+          workshops.push({ id: doc.id, participants: [], ...doc.data() } as Workshop);
+        }
+      }));
+    return workshops;}
   return false;
 };
 
@@ -167,6 +172,7 @@ export const getParticipantsByWorkshop = async (workshopId: string) => {
     participantsRef.forEach(doc => {
       participants.push({ id: doc.id, ...doc.data() } as WorkshopRequest);
     });
+
     return participants;
   }
   return false

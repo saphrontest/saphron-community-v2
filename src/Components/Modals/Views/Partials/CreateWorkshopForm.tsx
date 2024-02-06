@@ -13,6 +13,7 @@ import { RootState } from '../../../../redux/store'
 import { UserInterface } from '../../../../Interface/UserInterface'
 import { setModal } from '../../../../redux/slices/modalSlice'
 import { Workshop } from '../../../../Interface/WorkshopInterface'
+import moment from 'moment'
 
 const FormItem: FC<{
     children: ReactNode;
@@ -47,7 +48,7 @@ interface FormInterface {
     workshop_name: string;
     short_description: string;
     detailed_description: string;
-    date: string
+    createdAt: string
 }
 
 const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggleModal?: () => void; }> = ({
@@ -65,13 +66,13 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
         workshop_name: "",
         short_description: "",
         detailed_description: "",
-        date: ""
+        createdAt: ""
     })
     const [formErrors, setFormErrors] = useState({
         workshop_name: {success: true, message: ""},
         short_description: {success: true, message: ""},
         detailed_description: {success: true, message: ""},
-        date: {success: true, message: ""},
+        createdAt: {success: true, message: ""},
         coverImg: {success: true, message: ""},
         checkbox: {success: true, message: ""},
     })
@@ -83,7 +84,7 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
                 workshop_manager_name: workshopData.workshop_manager_name,
                 short_description: workshopData.short_description,
                 detailed_description: workshopData.detailed_description,
-                date: workshopData.date
+                createdAt: workshopData.createdAt
             })
             setCoverImg(workshopData.cover_img)
         }
@@ -122,13 +123,13 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
     const validate = () => {
         setFormErrors({
             workshop_name: {success: !!form.workshop_name, message: "Please, enter workshop name!"},
-            date: {success: !!form.date, message: "Please, enter date!"},
+            createdAt: {success: !!form.createdAt, message: "Please, enter date!"},
             detailed_description: {success: !!form.detailed_description, message: "Please, enter detailed description!"},
             short_description: {success: !!form.short_description, message: "Please, enter short description!"},
             coverImg: {success: !!coverImg.length, message: "Please, enter cover image!"},
             checkbox: {success: termsCheckbox, message: "Please, accept Terms and Conditions!"}
         })
-        if(!!form.workshop_name && !!form.date && !!form.detailed_description && !!form.short_description && !!coverImg && termsCheckbox) {
+        if(!!form.workshop_name && !!form.createdAt && !!form.detailed_description && !!form.short_description && !!coverImg && termsCheckbox) {
             return true
         }
         return false
@@ -144,6 +145,8 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
                     const photoURL = await updateImage(coverImg, newWorkshopId)
                     transaction.set(newWorkshopDocRef, {
                         ...form,
+                        createdAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+                        updatedAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
                         workshop_manager_name: form.workshop_manager_name || user.displayName,
                         cover_img: photoURL,
                         workshop_manager_id: user?.id,
@@ -243,8 +246,8 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
             <FormItem error={!formErrors.detailed_description.success} errorMessage={formErrors.detailed_description.message} label='Detailed Description' description='A detailed description can be really helpful in directing the right users to attend the workshop, while also preventing irrelevant people from attending. This can make the workshop more productive and efficient.' isFormElement={false}>
                 <TextEditor onChange={(_, data) => onChange({ target: { name: 'detailed_description', value: data } } as React.ChangeEvent<HTMLInputElement>)} value={form.detailed_description} />
             </FormItem>
-            <FormItem  error={!formErrors.date.success} errorMessage={formErrors.date.message} label='Date and Time' description='Workshops prepared on weekends and outside working hours reach more users'>
-                <InputItem type='datetime-local' name='date' onChange={onChange} placeholder={workshopData?.date}/>
+            <FormItem  error={!formErrors.createdAt.success} errorMessage={formErrors.createdAt.message} label='Date and Time' description='Workshops prepared on weekends and outside working hours reach more users'>
+                <InputItem type='datetime-local' name='date' onChange={onChange} placeholder={workshopData?.createdAt}/>
             </FormItem>
             <FormItem error={!formErrors.coverImg.success} errorMessage={formErrors.coverImg.message} label='Cover Photo' isFormElement={false}>
                 <input type="file" style={{ display: "none" }} accept="image/x-png,image/gif,image/jpeg" ref={workshopPicRef} onChange={onImgChange} />

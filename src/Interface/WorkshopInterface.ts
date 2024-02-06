@@ -13,6 +13,7 @@ export interface Workshop {
     workshop_manager_avatar: string;
     workshop_manager_mail: string;
     status: WorkshopStatusTypes
+    participants: WorkshopRequest[] | []
 }
 
 

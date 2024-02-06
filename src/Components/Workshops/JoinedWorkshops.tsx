@@ -3,15 +3,19 @@ import { Box, Divider, Flex, Text } from '@chakra-ui/react'
 import { Workshop } from '../../Interface/WorkshopInterface'
 import communitiesBackground from '../../assets/images/communities.jpg'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
+import { createSlug } from '../../Helpers'
 
 const WorkshopItem: FC<{workshop: Workshop}> = ({workshop}) => {
     return (
-        <Flex pl="0.3rem" direction="row" textAlign="left" w="100%" align="center" justify="space-between">
-            <Box>
-                <Text>{workshop.workshop_name}</Text>
-                <Text fontWeight={600}>{moment(new Date(workshop.date)).format("DD.MM.YYYY hh:mm")}</Text>
-            </Box>
-        </Flex>
+        <Link to={`/workshops/${createSlug(workshop.workshop_name)}`}>
+            <Flex pl="0.3rem" direction="row" textAlign="left" w="100%" align="center" justify="space-between">
+                <Box>
+                    <Text>{workshop.workshop_name}</Text>
+                    <Text fontWeight={600}>{moment(new Date(workshop.date)).format("DD.MM.YYYY hh:mm")}</Text>
+                </Box>
+            </Flex>
+        </Link>
     )
 }
 

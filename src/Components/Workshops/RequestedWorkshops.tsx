@@ -3,21 +3,22 @@ import { Box, Divider, Flex, Text } from '@chakra-ui/react'
 import { Workshop } from '../../Interface/WorkshopInterface'
 import communitiesBackground from '../../assets/images/communities.jpg'
 import moment from 'moment'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { createSlug } from '../../Helpers'
 
 const WorkshopItem: FC<{ workshop: Workshop }> = ({ workshop }) => {
-    const navigate = useNavigate()
     return (
-        <Flex direction="row" textAlign="left" w="100%" align="center" justify="space-between" onClick={() => navigate(`/workshops/${createSlug(workshop.workshop_name)}`)} cursor="pointer">
-            <Box>
-                <Text>{workshop.workshop_name}</Text>
-                <Text fontWeight={600}>{moment(new Date(workshop.date)).format("DD.MM.YYYY hh:mm")}</Text>
-            </Box>
-            <Box bg={workshop.status === "confirmed" ? "green.300" : "gray"} h="fit-content" p="0.2rem 0.6rem" borderRadius={999}>
-                <Text color="white" fontWeight={600}>{workshop.status === "confirmed" ? "verified" : "waiting"}</Text>
-            </Box>
-        </Flex>
+        <Link to={`/workshops/${createSlug(workshop.workshop_name)}`}>
+            <Flex direction="row" textAlign="left" w="100%" align="center" justify="space-between">
+                <Box>
+                    <Text>{workshop.workshop_name}</Text>
+                    <Text fontWeight={600}>{moment(new Date(workshop.date)).format("DD.MM.YYYY hh:mm")}</Text>
+                </Box>
+                <Box bg={workshop.status === "confirmed" ? "green.300" : "gray"} h="fit-content" p="0.2rem 0.6rem" borderRadius={999}>
+                    <Text color="white" fontWeight={600}>{workshop.status === "confirmed" ? "verified" : "waiting"}</Text>
+                </Box>
+            </Flex>
+        </Link>
     )
 }
 

@@ -14,11 +14,12 @@ import { useParams } from 'react-router-dom'
 
 const WorkshopsPage = () => {
 
-  const dispatch = useDispatch()
   const params = useParams()
+  const dispatch = useDispatch()
   const [selected, setSelected] = useState<Workshop | undefined>()
   const [workshops, setWorkshops] = useState<Workshop[]>([])
   const [workshopRequests, setWorkshopRequests] = useState<WorkshopRequest[]>()
+
   const user: UserInterface = useSelector((state: RootState) => state.user)
 
   useEffect(() => {

@@ -43,19 +43,16 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
     const toast = useToast()
     const dispatch = useDispatch()
 
+    const [formItems, setFormItems] = useState<FormItemInterface>({ name: "", motivation: "" })
+    const [formErrors, setFormErrors] = useState<{ motivation: ErrorInterface; }>({ motivation: { success: true, message: "" } })
+    const [loading, setLoading] = useState<boolean>(false)
+
     interface ErrorInterface { success: boolean; message: string; }
+    interface FormItemInterface { name: string; motivation: string; }
 
     const user: UserInterface = useSelector((state: RootState) => state.user)
 
-    const [formItems, setFormItems] = useState<{ name: string; motivation: string; }>({
-        name: "", motivation: ""
-    })
 
-    const [formErrors, setFormErrors] = useState<{ motivation: ErrorInterface; }>({
-        motivation: { success: true, message: "" }
-    })
-
-    const [loading, setLoading] = useState<boolean>(false)
 
     const validate = () => {
         setFormErrors({
@@ -93,7 +90,7 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
                 workshopRequest
             );
             transaction.update(
-                doc(collection(firestore, `workshops/${workshop.id}`)),
+                doc(firestore, `workshops/${workshop.id}`),
                 { requstCount: increment(1) }
             );
         }).finally(() => {

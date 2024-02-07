@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
-import { Flex, Stack, useToast } from '@chakra-ui/react'
+import { Stack, useToast } from '@chakra-ui/react'
 import { MyCommunities, Nav, NoEntry, PostItem } from '../Components'
 import { ProfileHeader } from '../Components/Profile'
 import { getPostsByUser } from '../Helpers/apiFunctions'
@@ -88,27 +88,25 @@ const Profile = () => {
       profilePhoto={user?.profilePhotoURL ?? NotFoundUserPic}
       email={user?.email} coverPhoto={user.coverPhotoURL}
       />
-      <Flex justify={"center"} pt={1}>
-        <PageLayout isNav={false}>
-          <>
-          <Stack>
-          {userPosts?.length ? userPosts.map((post: Post) => 
-            <PostItem
-              key={post.id}
-              post={post}
-              handleDelete={handleDelete}
-              isDeleteLoading={isDeleteLoading}
-              communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
-              setVoteChange={setVoteChange}
-            />
-          ) : <NoEntry type="post"/>}
-          </Stack>
-          </>
-          <>
-            <MyCommunities />
-          </>
-        </PageLayout>
-      </Flex>
+      <PageLayout isNav={false} leftWidth='100%'>
+        <>
+        <Stack>
+        {userPosts?.length ? userPosts.map((post: Post) => 
+          <PostItem
+            key={post.id}
+            post={post}
+            handleDelete={handleDelete}
+            isDeleteLoading={isDeleteLoading}
+            communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
+            setVoteChange={setVoteChange}
+          />
+        ) : <NoEntry type="post"/>}
+        </Stack>
+        </>
+        <>
+          <MyCommunities />
+        </>
+      </PageLayout>
     </>
   )
 }

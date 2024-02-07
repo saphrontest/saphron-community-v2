@@ -1,3 +1,6 @@
 export {default as AuthModal} from './AuthModal'
 export {default as AddCommunityModal} from './AddCommunityModal'
 export {default as EditProfileModal} from './EditProfileModal'
+export {default as CreateWorkshopModal} from './CreateWorkshopModal'
+export {default as JoinWorkshopModal} from './JoinWorkshopModal'
+export {default as EditWorkshopModal} from './EditWorkshopModal'

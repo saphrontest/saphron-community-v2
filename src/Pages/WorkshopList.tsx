@@ -1,0 +1,25 @@
+import { FC } from 'react'
+import { Flex } from '@chakra-ui/react'
+import { WorkshopCard } from '../Components'
+import { Workshop } from '../Interface/WorkshopInterface'
+
+interface WorkshopListProps {
+    workshops: Workshop[];
+    selected: Workshop | undefined;
+    setSelected: (workshop: Workshop) => void
+}
+
+const WorkshopList: FC<WorkshopListProps> = ({ workshops, selected, setSelected }) => {
+    return (
+        <Flex direction="row" align="flex-start" gap="1rem" w="50%" h="fit-content" flexWrap="wrap">
+            {
+                workshops
+                    .map((workshop: Workshop, idx: number) => (
+                        <WorkshopCard key={idx} workshop={workshop} selected={selected} setSelected={setSelected} />
+                    ))
+            }
+        </Flex>
+    )
+}
+
+export default WorkshopList

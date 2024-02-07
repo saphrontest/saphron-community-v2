@@ -1,12 +1,14 @@
-import React, { Fragment } from "react";
-import { Box, Divider, Flex, Link, List, Text, useMediaQuery } from "@chakra-ui/react";
-import { Modal, Nav, Sidebar } from "../Components";
+import React from "react";
+import { Box, Flex} from "@chakra-ui/react";
+import { Modal, Nav, Sidebar, WorkshopSide } from "../Components";
 
 interface PageLayoutProps {
   children: React.ReactElement[] | React.ReactElement
   maxWidth?: string;
   isNav?: boolean;
   showSidebar?: boolean;
+  showWorkshops?: boolean;
+  leftWidth?: string;
 }
 
 
@@ -16,7 +18,9 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   children,
   maxWidth,
   isNav = true,
-  showSidebar = true
+  showSidebar = true,
+  showWorkshops = false,
+  leftWidth = "65%"
 }) => {
   
   return (
@@ -24,15 +28,17 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       {isNav ? <Nav /> : null}
       <Flex justify="center" pt="16px" px={{base: "8px"}}>
         <Flex width="100%" justify="center" maxWidth={maxWidth || "1320px"}>
-          {showSidebar && <Sidebar />}
+          {(showSidebar || showWorkshops) && <Flex direction={"column"} display={{base: 'none', md: 'flex'}} width="20%" gap={"0.5rem"}>
+            {showSidebar && <Sidebar />}
+            {showWorkshops && <WorkshopSide />}
+          </Flex>}
           <Flex
             direction="column"
-            width={{ base: "100%", md: "65%" }}
+            width={{ base: "100%", md: leftWidth }}
             mx={{ base: 0, md: 6 }}
           >
             {children && children[0 as keyof typeof children]}
           </Flex>
-          {/* Right Layout */}
           <Box
             display={{ base: "none", md: "flex" }}
             flexDirection="column"

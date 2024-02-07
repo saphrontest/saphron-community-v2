@@ -22,13 +22,11 @@ const SideBar = () => {
   
     return (
       <Flex
-        w="20%"
-        h="fit-content"
+        p={1}
+        w="100%"
         display={{ base: "none", sm: "none", md: "flex" }}
         flexDirection="column"
-        flexGrow={1}
         bg="white"
-        p={1}
         pos="relative"
       >
         <Image src={pexelPic?.src?.original} h={"175px"}/>

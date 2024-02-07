@@ -9,7 +9,7 @@ export interface UserInterface {
     coverPhotoURL: string;
     profilePhotoURL: string;
     phoneNumber: string;
-    role: string;
+    role: 'admin' | 'user' | '';
 }
 
 export const defaultUserState: UserInterface = {

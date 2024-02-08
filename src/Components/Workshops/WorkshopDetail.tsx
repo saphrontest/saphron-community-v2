@@ -1,4 +1,4 @@
-import { Flex, Button, Box, Text, Image } from '@chakra-ui/react'
+import { Flex, Button, Box, Text, Image, useToast } from '@chakra-ui/react'
 import moment from 'moment'
 import { setModal } from '../../redux/slices/modalSlice'
 import { FC } from 'react'
@@ -40,6 +40,8 @@ const WorkshopDetail: FC<{
     selected: Workshop | undefined;
     isRequested: boolean;
 }> = ({ selected, isRequested }) => {
+    
+    const toast = useToast()
     const dispatch = useDispatch()
     const user: UserInterface = useSelector((state: RootState) => state.user)
 
@@ -98,7 +100,18 @@ const WorkshopDetail: FC<{
                 {selected?.detailed_description && <Text align="left" fontWeight="600" dangerouslySetInnerHTML={{ __html: selected?.detailed_description }} />}
                 {
                     selected?.status === "confirmed"  && !isRequested ?
-                        <JoinButton showJoinButton={selected?.workshop_manager_id !== user.id} onClick={() => dispatch(setModal({ isOpen: true, view: "joinWorkshop", data: selected }))} /> :
+                        <JoinButton showJoinButton={selected?.workshop_manager_id !== user.id} onClick={() => {
+                            if(!user.id) {
+                                toast({
+                                    title: "Please login, first!",
+                                    status: "error",
+                                    isClosable: true,
+                                    position: "top-right"
+                                })
+                                return;
+                            }
+                            dispatch(setModal({ isOpen: true, view: "joinWorkshop", data: selected }))
+                        }} /> :
                         <CustomLabel
                         bg={isRequested && selected?.participants.find(participant => participant.userId === user.id)?.status === "confirmed" ? "green" : "gray"}
                         text={isRequested ? `Request is ${selected?.participants.find(participant => participant.userId === user.id)?.status}` : "Not verified yet"}

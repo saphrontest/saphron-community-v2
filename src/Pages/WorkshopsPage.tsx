@@ -1,5 +1,5 @@
 import { PageLayout } from '../Layouts'
-import { Button, Flex, Text } from '@chakra-ui/react'
+import { Button, Flex, Text, useMediaQuery } from '@chakra-ui/react'
 import communitiesBackground from '../assets/images/communities.jpg'
 import { WorkshopDetail } from '../Components'
 import { useEffect, useState } from 'react'
@@ -16,6 +16,9 @@ const WorkshopsPage = () => {
 
   const params = useParams()
   const dispatch = useDispatch()
+
+  const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
+
   const [selected, setSelected] = useState<Workshop | undefined>()
   const [workshops, setWorkshops] = useState<Workshop[]>([])
   const [workshopRequests, setWorkshopRequests] = useState<WorkshopRequest[]>()
@@ -24,25 +27,25 @@ const WorkshopsPage = () => {
 
   useEffect(() => {
     getWorkshops()
-    .then(result => result && setWorkshops(result))
+      .then(result => result && setWorkshops(result))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
-    if(!!selected === false) {  
-      if(params.slug) {
+    if (!!selected === false) {
+      if (params.slug) {
         setSelected(workshops.find(workshop => createSlug(workshop.workshop_name) === params.slug))
-      }else{
+      } else {
         setSelected(workshops[0])
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workshops])
 
   useEffect(() => {
     getUserWorkshopRequestList(user.id)
-    .then((res: WorkshopRequest[] | false) => res && setWorkshopRequests(res))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      .then((res: WorkshopRequest[] | false) => res && setWorkshopRequests(res))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -79,15 +82,21 @@ const WorkshopsPage = () => {
                 <Text fontSize={24} fontWeight={700}>
                   Workshops
                 </Text>
-                <Button onClick={() => dispatch(setModal({isOpen: true, view: "createWorkshop"}))}>
+                <Button onClick={() => dispatch(setModal({ isOpen: true, view: "createWorkshop" }))}>
                   I wan’t to be a workshop manager!
                 </Button>
               </Flex>
             </Flex>
           </Flex>
           <Flex direction="row" padding="1rem">
-            <WorkshopList selected={selected} setSelected={setSelected} workshops={workshops}/>
-            <WorkshopDetail selected={selected} isRequested={!!workshopRequests?.some((workshop: WorkshopRequest) => workshop?.workshopId === selected?.id)}/>
+            {isSmallerThan766 ? (
+              <WorkshopList.Mobile workshops={workshops} />
+            ) : (
+              <>
+                <WorkshopList.Desktop selected={selected} setSelected={setSelected} workshops={workshops} />
+                <WorkshopDetail selected={selected} isRequested={!!workshopRequests?.some((workshop: WorkshopRequest) => workshop?.workshopId === selected?.id)} />
+              </>
+            )}
           </Flex>
         </Flex>
       </>

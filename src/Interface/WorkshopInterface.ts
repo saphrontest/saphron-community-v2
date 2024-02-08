@@ -24,6 +24,7 @@ export interface WorkshopRequest {
     createdAt: string;
     updatedAt: string;
     name: string;
+    email: string;
     userId: string;
     workshopId: string;
     motivation: string;

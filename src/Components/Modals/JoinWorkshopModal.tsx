@@ -1,6 +1,6 @@
 import { FC, ReactNode, useState } from 'react'
 import { InputItem, ModalLayout } from '../../Layouts'
-import { ModalBody, Flex, Text, Box, ModalCloseButton, Textarea, Button, useToast, Spinner } from '@chakra-ui/react'
+import { ModalBody, Flex, Text, Box, ModalCloseButton, Textarea, Button, useToast, Spinner, useMediaQuery } from '@chakra-ui/react'
 import { WorkshopCard } from '../Workshops'
 import { Workshop, WorkshopRequest } from '../../Interface/WorkshopInterface'
 import md5 from 'md5'
@@ -42,13 +42,14 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
 
     const toast = useToast()
     const dispatch = useDispatch()
+    const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
 
-    const [formItems, setFormItems] = useState<FormItemInterface>({ name: "", motivation: "" })
-    const [formErrors, setFormErrors] = useState<{ motivation: ErrorInterface; }>({ motivation: { success: true, message: "" } })
+    const [formItems, setFormItems] = useState<FormItemInterface>({ name: "", email: "", motivation: "" })
+    const [formErrors, setFormErrors] = useState<{ motivation: ErrorInterface; email: ErrorInterface; }>({ motivation: { success: true, message: "" }, email: { success: true, message: "" }  })
     const [loading, setLoading] = useState<boolean>(false)
 
     interface ErrorInterface { success: boolean; message: string; }
-    interface FormItemInterface { name: string; motivation: string; }
+    interface FormItemInterface { name: string; email: string; motivation: string; }
 
     const user: UserInterface = useSelector((state: RootState) => state.user)
 
@@ -56,9 +57,10 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
 
     const validate = () => {
         setFormErrors({
-            motivation: { success: !!formItems.motivation, message: "Please, enter motivation!" }
+            motivation: { success: !!formItems.motivation, message: "Please, enter motivation!" },
+            email: { success: !!formItems.email, message: "Please, enter e-mail!" }
         })
-        if (!!formItems.motivation) {
+        if (!!formItems.motivation && !!formItems.email) {
             return true
         }
         return false
@@ -124,9 +126,11 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
                     gap="1rem"
                     h="100%"
                 >
-                    <Flex minW="40%" h="100%" align="center" justify="center" pt="1rem">
-                        <WorkshopCard workshop={workshop as Workshop} />
-                    </Flex>
+                    {!isSmallerThan766 &&
+                        <Flex minW="40%" h="100%" align="center" justify="center" pt="1rem">
+                            <WorkshopCard.Desktop workshop={workshop as Workshop} />
+                        </Flex>
+                    }
                     <Flex direction="column" >
                         <Box marginBottom="3rem">
                             <Text align="left" fontSize={22} fontWeight={400} pb="0.4rem">
@@ -138,6 +142,9 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
                         </Box>
                         <Flex gap="1rem" direction="column">
                             <FormItem label='Name' isOptional={true} >
+                                <InputItem type='text' name='name' onChange={ev => setFormItems((prev) => ({ ...prev, "name": ev.target.value }))} />
+                            </FormItem>
+                            <FormItem label='E-mail'>
                                 <InputItem type='text' name='name' onChange={ev => setFormItems((prev) => ({ ...prev, "name": ev.target.value }))} />
                             </FormItem>
                             <FormItem error={!formErrors.motivation.success} errorMessage={formErrors.motivation.message} label='Could you please tell us your motivation for attending this workshop?'>

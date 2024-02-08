@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Post } from '../../../Interface/PostInterface';
+import { IPost } from '../../../Interface/PostInterface';
 import { Flex, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { LinkIcon } from '@chakra-ui/icons';
@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { setRecentSearches } from '../../../redux/slices/searchSlice';
 
 interface SearchResultsItemProps {
-  item: Post;
+  item: IPost;
 }
 
 const SearchResultsItem: FC<SearchResultsItemProps> = ({item}) => {

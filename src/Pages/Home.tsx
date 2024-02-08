@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
 import { CreatePostLink, NoEntry, PersonalHome, PostItem, Recommendations } from '../Components'
 import {Stack, useToast} from '@chakra-ui/react'
-import { Post } from '../Interface/PostInterface'
+import { IPost } from '../Interface/PostInterface'
 import { getPosts, getUserSavedPosts } from '../Helpers/apiFunctions'
 import { deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
@@ -39,7 +39,7 @@ const Home = () => {
     user?.id && getUserSavedPosts(user?.id as string)
   }
   
-  const handleDelete = async (post: Post): Promise<boolean> => {
+  const handleDelete = async (post: IPost): Promise<boolean> => {
     if (!user?.id) {
       toast({
         title: "Please login, first!",
@@ -83,7 +83,7 @@ const Home = () => {
       <>
         <CreatePostLink />
         <Stack>
-          {posts.length ? posts.map((post: Post) => <PostItem
+          {posts.length ? posts.map((post: IPost) => <PostItem
             key={post.id}
             post={post}
             handleDelete={handleDelete}

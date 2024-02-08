@@ -3,11 +3,11 @@ import moment from 'moment'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FC } from 'react'
-import { Post } from '../../../Interface/PostInterface'
+import { IPost } from '../../../Interface/PostInterface'
 import { BsDot } from 'react-icons/bs'
 
 interface PostContentProps {
-  post: Post;
+  post: IPost;
   communityName: string;
 }
 

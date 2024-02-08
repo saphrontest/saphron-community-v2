@@ -7,12 +7,12 @@ import { CommentInput } from './Partials';
 import { collection, collectionGroup, deleteDoc, doc, getDocs, increment, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
-import { Post } from '../../Interface/PostInterface';
+import { IPost } from '../../Interface/PostInterface';
 import { RootState } from '../../redux/store';
 
 interface CommentsProps {
     comments: (Comment | null)[];
-    post: Post;
+    post: IPost;
     getComments: (id: string) => void
 }
 

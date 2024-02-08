@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
-export type Post = {
+export type IPost = {
   id: string;
   communityId: string;
   communityImageURL?: string;
@@ -21,7 +21,7 @@ export type Post = {
   slug?: string;
 };
 
-export type PostVote = {
+export type IPostVote = {
 id?: string;
 postId: string;
 communityId: string;
@@ -30,8 +30,8 @@ voteValue: number;
 
 
 interface PostState {
-  posts: Post[];
-  postVotes: PostVote[];
+  posts: IPost[];
+  postVotes: IPostVote[];
   savedPosts: String[]
 }
 

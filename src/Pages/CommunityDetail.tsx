@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Community } from '../Interface/CommunityInterface'
 import { PageLayout } from '../Layouts'
 import { getCommunityDetail, getPostsByCommunities } from '../Helpers/apiFunctions'
-import { Post } from '../Interface/PostInterface'
+import { IPost } from '../Interface/PostInterface'
 import { About, CreatePostLink, NoEntry, PostItem } from '../Components'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
@@ -23,7 +23,7 @@ const CommunityDetail = () => {
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
   const [isVoteChange, setVoteChange] = useState<boolean>(false)
   const [community, setCommunity] = useState<Community>()
-  const [posts, setPosts] = useState<Post[]>([])
+  const [posts, setPosts] = useState<IPost[]>([])
   const {communities} = useSelector((state: RootState) => state.community)
 
   const getDetail = async (id: string) => {
@@ -52,7 +52,7 @@ const CommunityDetail = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVoteChange])
   
-  const handleDelete = async (post: Post): Promise<boolean> => {
+  const handleDelete = async (post: IPost): Promise<boolean> => {
     if (!user?.id) {
       toast({
         title: "Please login, first!",

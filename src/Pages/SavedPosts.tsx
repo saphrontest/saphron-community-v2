@@ -3,7 +3,7 @@ import { PageLayout } from '../Layouts'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { NoEntry, PersonalHome, PostItem } from '../Components'
-import { Post } from '../Interface/PostInterface'
+import { IPost } from '../Interface/PostInterface'
 import { Community } from '../Interface/CommunityInterface'
 import { firestore, storage } from '../firebaseClient'
 import { Box, Text, useToast } from '@chakra-ui/react'
@@ -37,7 +37,7 @@ const SavedPosts = () => {
     }, [user])
 
 
-    const handleDelete = async (post: Post): Promise<boolean> => {
+    const handleDelete = async (post: IPost): Promise<boolean> => {
         if (!user?.id) {
             toast({
               title: "Please login, first!",
@@ -93,7 +93,7 @@ const SavedPosts = () => {
               <Box p="14px 0px" >
                 <Text fontWeight={600} textAlign="left">Saved Posts</Text>
               </Box>
-              {savedPosts.map((post: Post, index: number) => (
+              {savedPosts.map((post: IPost, index: number) => (
                 <PostItem
                   key={index}
                   post={post}

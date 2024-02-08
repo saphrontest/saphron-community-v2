@@ -2,20 +2,18 @@ import { Flex, Icon, Spinner, Text, useToast } from '@chakra-ui/react'
 import React, { FC, useState } from 'react'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { IoBookmarkOutline, IoBookmarkSharp } from 'react-icons/io5'
-import { Post } from '../../../Interface/PostInterface'
+import { IPost } from '../../../Interface/PostInterface'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { auth } from '../../../firebaseClient'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { getUserSavedPosts, savePost } from '../../../Helpers/apiFunctions'
 import { setModal } from '../../../redux/slices/modalSlice'
 import { BsChat } from 'react-icons/bs'
 import { RootState } from '../../../redux/store'
 
 interface ActionButtonsInterface {
-    post: Post;
+    post: IPost;
     isSaved: boolean;
-    handleDelete: (post: Post) => Promise<boolean>;
+    handleDelete: (post: IPost) => Promise<boolean>;
     isDeleteLoading: boolean;
 }
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
 import { getPostComments, getPostDetails } from '../Helpers/apiFunctions'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Post } from '../Interface/PostInterface'
+import { IPost } from '../Interface/PostInterface'
 import { About, PostItem } from '../Components'
 import { firestore, storage } from '../firebaseClient'
 import { deleteObject, ref } from 'firebase/storage'
@@ -22,7 +22,7 @@ const PostDetail = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const user = useSelector((state: RootState) => state.user)
-  const [post, setPost] = useState<Post | null>(null)
+  const [post, setPost] = useState<IPost | null>(null)
   const [comments, setComments] = useState<(Comment | null)[]>()
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
   const [isVoteChange, setVoteChange] = useState<boolean>(false)
@@ -31,7 +31,7 @@ const PostDetail = () => {
 
   const getPost = async (slug: string) => {
     const postDetail = await getPostDetails(slug)
-    setPost(postDetail as Post)
+    setPost(postDetail as IPost)
   }
 
   const getComments = async (id: string) => {
@@ -65,7 +65,7 @@ const PostDetail = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [post])
 
-  const handleDelete = async (post: Post): Promise<boolean> => {
+  const handleDelete = async (post: IPost): Promise<boolean> => {
 
     if (!user?.id) {
       toast({

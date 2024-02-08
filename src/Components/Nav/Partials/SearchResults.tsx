@@ -1,12 +1,12 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
 import { FC } from 'react'
 import SearchResultsItem from './SearchResultsItem';
-import { Post } from '../../../Interface/PostInterface';
+import { IPost } from '../../../Interface/PostInterface';
 import NoEntry from '../../NoEntry';
 import { useNavigate } from 'react-router-dom';
 
 interface SearchResultsProps {
-  searchResults: Post[];
+  searchResults: IPost[];
   searchKey?: string;
   showMoreButton?: boolean;
   zIndex?: number;

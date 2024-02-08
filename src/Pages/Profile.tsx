@@ -5,7 +5,7 @@ import { MyCommunities, Nav, NoEntry, PostItem } from '../Components'
 import { ProfileHeader } from '../Components/Profile'
 import { getPostsByUser } from '../Helpers/apiFunctions'
 import { firestore, storage } from '../firebaseClient'
-import { Post } from '../Interface/PostInterface'
+import { IPost } from '../Interface/PostInterface'
 import { useDispatch, useSelector } from 'react-redux'
 import { setModal } from '../redux/slices/modalSlice'
 import { deleteObject, ref } from 'firebase/storage'
@@ -23,7 +23,7 @@ const Profile = () => {
 
   const [voteChange, setVoteChange] = useState<boolean>(false)
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
-  const [userPosts, setUserPosts] = useState<Post[]>()
+  const [userPosts, setUserPosts] = useState<IPost[]>()
 
 
   const getPosts = async (userId: string) => {
@@ -31,7 +31,7 @@ const Profile = () => {
     setUserPosts(posts)
   }
 
-  const handleDelete = async (post: Post): Promise<boolean> => {
+  const handleDelete = async (post: IPost): Promise<boolean> => {
     if (!!user.id === false) {
       toast({
         title: "Please login, first!",
@@ -91,7 +91,7 @@ const Profile = () => {
       <PageLayout isNav={false} leftWidth='100%'>
         <>
         <Stack>
-        {userPosts?.length ? userPosts.map((post: Post) => 
+        {userPosts?.length ? userPosts.map((post: IPost) => 
           <PostItem
             key={post.id}
             post={post}

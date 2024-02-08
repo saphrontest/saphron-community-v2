@@ -14,7 +14,7 @@ import {
 import { firestore } from "../firebaseClient";
 // INTERFACES
 import { Community, JoinedCommunity } from "../Interface/CommunityInterface";
-import { Post, PostVote } from "../Interface/PostInterface";
+import { IPost, IPostVote } from "../Interface/PostInterface";
 import { Comment, CommentVote } from "../Interface/CommentsInterface";
 import { store } from "../redux/store";
 import { setPosts, setSavedPosts } from "../redux/slices/postSlice";
@@ -86,13 +86,13 @@ export const getPosts = async () => {
 };
 
 export const getPostsByCommunities = async (id: string) => {
-  const posts: Post[] = [];
+  const posts: IPost[] = [];
   const postsDoc = await fetch.getListWhere(
     "posts",
     where("communityId", "==", id)
   );
   postsDoc.docs.forEach((doc) => {
-    posts.push({ id: doc.id, ...doc.data() } as Post);
+    posts.push({ id: doc.id, ...doc.data() } as IPost);
   });
   return posts;
 };
@@ -101,7 +101,7 @@ export const getPostDetails = async (slug: string) => {
   let post = {}
   const q = query(collection(firestore, "posts"), where("slug", "==", slug));
   const data = await getDocs(q);
-  data.forEach(doc => post = { id: doc.id, ...doc.data() } as Post)
+  data.forEach(doc => post = { id: doc.id, ...doc.data() } as IPost)
   return post
 };
 
@@ -127,9 +127,9 @@ export const getUserVotes = async (id: string) => {
   if(!id) return;
   const postVotes = await fetch.getList(`users/${id}/postVotes`);
   if (postVotes.size) {
-    const votes: PostVote[] = [];
+    const votes: IPostVote[] = [];
     postVotes.forEach((doc) => {
-      votes.push({ id: doc.id, ...doc.data() } as PostVote);
+      votes.push({ id: doc.id, ...doc.data() } as IPostVote);
     });
     return votes;
   }
@@ -267,7 +267,7 @@ export const getCommentVotesByUserId = async (id: string) => {
 };
 
 
-export const savePost = async (post: Post, userId: string) => {
+export const savePost = async (post: IPost, userId: string) => {
   const savePostRef = doc(firestore, "users", userId, "savedPosts", post.id);
   await getDoc(savePostRef)
     .then(async (docSnapshot) => {
@@ -372,24 +372,24 @@ export const searchPost = async (keyword: string) => {
     getDocs(titleQuery)
   ]);
 
-  const bodyResults: Post[] = [];
+  const bodyResults: IPost[] = [];
   bodySnap.forEach((doc) => {
-    bodyResults.push({ id: doc.id, ...doc.data() } as Post);
+    bodyResults.push({ id: doc.id, ...doc.data() } as IPost);
   });
 
-  const titleResults: Post[] = [];
+  const titleResults: IPost[] = [];
   titleSnap.forEach((doc) => {
-    titleResults.push({ id: doc.id, ...doc.data() } as Post);
+    titleResults.push({ id: doc.id, ...doc.data() } as IPost);
   });
   const results = [...bodyResults, ...titleResults];
   return results
 }
 
 export const getPostsByUser = async (creatorId: string) => {
-  const posts: Post[] = []
+  const posts: IPost[] = []
   const postsDoc = await fetch.getListWhere("posts", where("creatorId", "==", creatorId))
   postsDoc.docs.forEach((doc) => {
-    posts.push({ id: doc.id, ...doc.data() } as Post);
+    posts.push({ id: doc.id, ...doc.data() } as IPost);
   });
   return posts;
 }

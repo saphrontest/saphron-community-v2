@@ -1,7 +1,7 @@
 import { Flex, useToast } from '@chakra-ui/react'
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { Post, PostVote } from '../../../Interface/PostInterface';
+import { IPost, IPostVote } from '../../../Interface/PostInterface';
 import { firestore } from '../../../firebaseClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../../redux/slices/modalSlice';
@@ -14,10 +14,10 @@ import PostContent from './PostContent';
 import { Community } from '../../../Interface/CommunityInterface';
 
 export type PostItemContentProps = {
-  post: Post;
+  post: IPost;
   homePage?: boolean;
   isDeleteLoading: boolean;
-  handleDelete: (post: Post) => Promise<boolean>;
+  handleDelete: (post: IPost) => Promise<boolean>;
   communityName: string;
   setVoteChange: (isChanged: boolean) => void;
 };
@@ -34,7 +34,7 @@ const PostItem: FC<PostItemContentProps> = ({
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const user = useSelector((state: RootState) => state.user)
-  const [userVote, setUserVote] = useState<PostVote | null>(null)
+  const [userVote, setUserVote] = useState<IPostVote | null>(null)
   const [isVoteLoading, setVoteLoading] = useState<boolean>(false)
   const [isSaved, setSaved] = useState(false)
   const {communities} = useSelector((state:RootState) => state.community)
@@ -57,7 +57,7 @@ const PostItem: FC<PostItemContentProps> = ({
 
   const getUserVotesData = async () => {
     const data = user && await getUserVotes(user.id)
-    data ? setUserVote(data.filter((vote: PostVote) => vote.postId === post.id)[0] as PostVote) : setUserVote(null)
+    data ? setUserVote(data.filter((vote: IPostVote) => vote.postId === post.id)[0] as IPostVote) : setUserVote(null)
   }
 
   const onVote = async (
@@ -81,7 +81,7 @@ const PostItem: FC<PostItemContentProps> = ({
     }
     const community = communities.filter((community:Community) => community.name === communityName)[0]
     try {
-      const newVote: PostVote = {
+      const newVote: IPostVote = {
         postId: post.id,
         communityId: community.id,
         voteValue: vote,

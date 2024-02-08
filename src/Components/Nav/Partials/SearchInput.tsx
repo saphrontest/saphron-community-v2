@@ -6,13 +6,13 @@ import {
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
-import { Post } from "../../../Interface/PostInterface";
+import { IPost } from "../../../Interface/PostInterface";
 import { searchPost } from "../../../Helpers/apiFunctions";
 import SearchResults from "./SearchResults";
 
 const SearchInput = () => {
   const [searchKey, setSearchKey] = useState("")
-  const [searchResults, setSearchResults] = useState<Post[]>([])
+  const [searchResults, setSearchResults] = useState<IPost[]>([])
   const [inputFocus, setInputFocus] = useState(false)
 
   useEffect(() => {

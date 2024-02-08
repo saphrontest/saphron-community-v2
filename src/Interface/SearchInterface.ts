@@ -1,6 +1,6 @@
-import { Post } from "./PostInterface";
+import { IPost } from "./PostInterface";
 
-export type SearchItemInterface = Post
+export type SearchItemInterface = IPost
 export type RecentSearchsInterface = SearchItemInterface[]
 
 interface SearchStateInterface {

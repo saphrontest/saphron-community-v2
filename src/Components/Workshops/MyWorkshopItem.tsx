@@ -82,25 +82,25 @@ const MyWorkshopItem: FC<MyWorkshopItemProps> = ({ workshop, idx, toggleReloadWo
                         <Text fontWeight={600} mr="1rem">#{idx + 1}</Text>
                         <Image src={workshop.cover_img} w="7rem" h="5rem" mr="1rem" borderRadius="1rem" />
                         <Box>
-                            <Text textAlign="left" fontWeight="600" fontSize="18" noOfLines={2}>{workshop.workshop_name}</Text>
-                            <Text textAlign="left">{moment(new Date(workshop.createdAt)).format("DD.MM.YYYY hh:mm")}</Text>
+                            <Text textAlign="left" fontWeight="600" fontSize={["12", "18"]} noOfLines={2}>{workshop.workshop_name}</Text>
+                            <Text textAlign="left" fontSize={["12", "16"]}>{moment(new Date(workshop.createdAt)).format("DD.MM.YYYY hh:mm")}</Text>
                         </Box>
                     </Flex>
                     {!isClicked ? <MdKeyboardArrowDown size={24} /> : participantsLoading ? <Spinner /> : <MdKeyboardArrowUp size={24} />}
                 </Flex>
-                {isClicked ? (
+                {isClicked && !isLoading ? (
                     <>
                         {
                             !participantsLoading && (
                                 <Flex mt="1rem" direction="column" w="100%" align="flex-start" gap="1rem" p="1rem">
                                     <Divider borderColor="gray" />
                                     <Box>
-                                        <Text textAlign="left" fontStyle="italic">{workshop.short_description}</Text>
-                                        <Text textAlign="left" fontWeight="600" mt="1rem" dangerouslySetInnerHTML={{ __html: workshop.detailed_description }} />
+                                        <Text textAlign="left" fontStyle="italic" fontSize={["12", "16"]}>{workshop.short_description}</Text>
+                                        <Text textAlign="left" fontSize={["12", "16"]} fontWeight="600" mt="1rem" dangerouslySetInnerHTML={{ __html: workshop.detailed_description }} />
                                     </Box>
                                     <Divider borderColor="gray" />
                                     <Box w="100%">
-                                        {!!participants?.length ? <Text fontWeight={600} pb="1rem" textAlign="left">Join Requests</Text> : <Text>No join request, yet!</Text>}
+                                        {!!participants?.length ? <Text fontSize={["12", "16"]} fontWeight={600} pb="1rem" textAlign="left">Join Requests</Text> : <Text fontSize={["12", "16"]}>No join request, yet!</Text>}
                                         <Flex w="100%" direction="column" gap="1rem">
                                             {participants?.map(participant => (
                                                 <Fragment key={participant.id} >
@@ -115,8 +115,9 @@ const MyWorkshopItem: FC<MyWorkshopItemProps> = ({ workshop, idx, toggleReloadWo
                                             ev.stopPropagation()
                                             setEditOpen.toggle()
                                         }}
+                                        fontSize={["12", "16"]}
                                         >Edit Workshop</Button>
-                                        <Button variant="outline" onClick={(ev) => {
+                                        <Button variant="outline" fontSize={["12", "16"]} onClick={(ev) => {
                                             ev.stopPropagation()
                                             setDeleteOpen.toggle()
                                         }}>Delete Workshop</Button>

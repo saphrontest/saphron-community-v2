@@ -9,7 +9,7 @@ import { createSlug } from '../../Helpers'
 const WorkshopItem: FC<{ workshop: Workshop }> = ({ workshop }) => {
     return (
         <Link to={`/workshops/${createSlug(workshop.workshop_name)}`}>
-            <Flex direction="row" textAlign="left" w="100%" align="center" justify="space-between">
+            <Flex direction={["row", "column", "column", "row"]} textAlign="left" w="100%" align={["center", "flex-start", "flex-start", "center"]} justify="space-between">
                 <Box>
                     <Text>{workshop.workshop_name}</Text>
                     <Text fontWeight={600}>{moment(new Date(workshop.createdAt)).format("DD.MM.YYYY hh:mm")}</Text>
@@ -28,7 +28,7 @@ const RequestedWorkshops: FC<{
 }> = ({ newWorkshopRequests, joinRequests }) => {
 
     return (
-        <Flex bg="white" w="35%" h="fit-content" direction="column">
+        <Flex bg="white" w="35%" h="fit-content" direction="column" display={["none", "flex"]}>
             <Flex
                 align="flex-end"
                 color="white"

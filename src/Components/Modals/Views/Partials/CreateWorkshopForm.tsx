@@ -176,7 +176,6 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
         },
         edit: async () => {
             setLoading(true)
-            console.log(form)
             try {
                 const workshopDocRef = doc(firestore, `workshops/${workshopData?.id}`)
                 const photoURL = workshopData?.cover_img !== coverImg && workshopData?.id ? await updateImage(coverImg, workshopData?.id) : workshopData?.cover_img
@@ -247,7 +246,7 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
                 <TextEditor onChange={(_, data) => onChange({ target: { name: 'detailed_description', value: data } } as React.ChangeEvent<HTMLInputElement>)} value={form.detailed_description} />
             </FormItem>
             <FormItem  error={!formErrors.createdAt.success} errorMessage={formErrors.createdAt.message} label='Date and Time' description='Workshops prepared on weekends and outside working hours reach more users'>
-                <InputItem type='datetime-local' name='date' onChange={onChange} placeholder={workshopData?.createdAt}/>
+                <InputItem type='datetime-local' name='createdAt' onChange={onChange} placeholder={workshopData?.createdAt}/>
             </FormItem>
             <FormItem error={!formErrors.coverImg.success} errorMessage={formErrors.coverImg.message} label='Cover Photo' isFormElement={false}>
                 <input type="file" style={{ display: "none" }} accept="image/x-png,image/gif,image/jpeg" ref={workshopPicRef} onChange={onImgChange} />

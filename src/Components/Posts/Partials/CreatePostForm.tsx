@@ -10,6 +10,7 @@ import { useToast } from '@chakra-ui/react';
 import { RootState } from '../../../redux/store';
 import { useSelector } from 'react-redux';
 import { createSlug } from '../../../Helpers';
+import { UserInterface } from '../../../Interface/UserInterface';
 
 interface CreatePostFormInterface {
     selectedTab: string;
@@ -18,7 +19,7 @@ interface CreatePostFormInterface {
 }
 
 const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTab, community}) => {
-  const user = useSelector((state: RootState) => state.user)
+  const user: UserInterface = useSelector((state: RootState) => state.user)
   const toast = useToast()
   const navigate = useNavigate()
   const [textInputs, setTextInputs] = useState<{ title: string; body: string; }>({
@@ -65,7 +66,7 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
         communityId: community.id,
         communityImageUrl: community.imageURL || "",
         creatorId: user?.id,
-        userDisplayText: user?.email!.split("@")[0],
+        userDisplayText: user.username,
         numberOfComments: 0,
         voteStatus: 0,
         createdAt: serverTimestamp(),

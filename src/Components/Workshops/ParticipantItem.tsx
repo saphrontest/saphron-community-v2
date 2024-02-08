@@ -33,17 +33,17 @@ const ParticipantItem: FC<ParticipantItemProps> = ({ participant, isLoading, han
                 <>
                     <Divider w="20%" borderColor="gray" my="1rem" />
                     {participant.updatedAt && <Text mb="0.4rem" fontSize={12} color="gray" textAlign="left">Status is <strong>{participant.status}</strong> from {moment(participant.updatedAt).format("DD.MM.YYYY HH:mm:ss")}.</Text>}
-                    <Text align="left" mb="0.5rem">{participant.motivation}</Text>
-                    <Text fontWeight={600}>{participant.name}</Text>
+                    <Text align="left" mb="0.5rem" fontSize={["12", "16"]}>{participant.motivation}</Text>
+                    <Text fontWeight={600} fontSize={["12", "16"]}>{participant.name}</Text>
                     <Divider w="20%" borderColor="gray" my="1rem" />
-                    {participant.status === "confirmed" ? <Text fontWeight={600}>Join Request Confirmed</Text> : participant.status === "waiting" ? (
+                    {participant.status === "confirmed" ? <Text fontWeight={600} fontSize={["12", "16"]}>Join Request Confirmed</Text> : participant.status === "waiting" ? (
                         <>
-                            <Text fontWeight={600} textAlign="center" w="100%" mb="0.8rem">Do you want to accept the request?</Text>
+                            <Text fontWeight={600} textAlign="center" w="100%" mb="0.8rem" fontSize={["12", "16"]}>Do you want to accept the request?</Text>
                             <Flex w="100%" justify="center" gap="1rem">
                                 {isLoading ? <Spinner /> : (
                                     <>
-                                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" onClick={ev => handleButton(ev, participant.id, "confirmed")}>Accept</Button>
-                                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" variant="outline" onClick={ev => handleButton(ev, participant.id, "rejected")}>Reject</Button>
+                                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} onClick={ev => handleButton(ev, participant.id, "confirmed")}>Accept</Button>
+                                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} variant="outline" onClick={ev => handleButton(ev, participant.id, "rejected")}>Reject</Button>
                                     </>
                                 )}
                             </Flex>

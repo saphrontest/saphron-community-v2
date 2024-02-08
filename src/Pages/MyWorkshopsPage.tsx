@@ -7,10 +7,13 @@ import { UserWorkshops, Workshop, WorkshopRequest } from "../Interface/WorkshopI
 import { UserInterface } from "../Interface/UserInterface"
 import { useSelector } from "react-redux"
 import { RootState } from "../redux/store"
+import { useMediaQuery } from '@chakra-ui/react'
 
 const MyWorkshopsPage = () => {
 
   const user: UserInterface = useSelector((state: RootState) => state.user)
+
+  const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
 
   const [workshops, setWorkshops] = useState<Workshop[]>()
   const [userWorkshops, setUserWorkshops] = useState<UserWorkshops[]>()
@@ -84,6 +87,8 @@ const MyWorkshopsPage = () => {
               newWorkshopRequests={userWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)) as Workshop[] ?? []}
               joinRequests={requestedWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)) as Workshop[] ?? []}
             />
+            <Flex direction="column" gap="1rem">
+            {isSmallerThan766 && <JoinedWorkshops joinWorkshops={joinWorkshops} />}
             <Flex bg="white" flex={1} p="1rem" direction="column" align="flex-start" h="fit-content">
               <Text fontSize="22" fontWeight={600} pb="1rem">
                 My Workshops
@@ -96,10 +101,11 @@ const MyWorkshopsPage = () => {
                 ))}
               </Flex>
             </Flex>
+            </Flex>
           </Flex>
         </>
         <>
-          {!!joinWorkshops && <JoinedWorkshops joinWorkshops={joinWorkshops} />}
+          {(!!joinWorkshops && !isSmallerThan766) && <JoinedWorkshops joinWorkshops={joinWorkshops} />}
         </>
       </PageLayout>
     </>

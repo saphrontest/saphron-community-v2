@@ -1,5 +1,5 @@
 import { PageLayout } from '../Layouts'
-import { Button, Flex, Text, useMediaQuery } from '@chakra-ui/react'
+import { Button, Flex, Text, useMediaQuery, useToast } from '@chakra-ui/react'
 import communitiesBackground from '../assets/images/communities.jpg'
 import { WorkshopDetail } from '../Components'
 import { useEffect, useState } from 'react'
@@ -16,6 +16,7 @@ const WorkshopsPage = () => {
 
   const params = useParams()
   const dispatch = useDispatch()
+  const toast = useToast()
 
   const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
 
@@ -43,8 +44,18 @@ const WorkshopsPage = () => {
   }, [workshops])
 
   useEffect(() => {
-    getUserWorkshopRequestList(user.id)
-      .then((res: WorkshopRequest[] | false) => res && setWorkshopRequests(res))
+    if(user.id) {
+      getUserWorkshopRequestList(user.id)
+        .then((res: WorkshopRequest[] | false) => res && setWorkshopRequests(res))
+    }else {
+      toast({
+        title: "Please login, first!",
+        status: "error",
+        isClosable: true,
+        position: "top-right"
+      })
+      return;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -82,7 +93,18 @@ const WorkshopsPage = () => {
                 <Text fontSize={24} fontWeight={700}>
                   Workshops
                 </Text>
-                <Button onClick={() => dispatch(setModal({ isOpen: true, view: "createWorkshop" }))}>
+                <Button onClick={() => {
+                  if(user.id) {
+                    dispatch(setModal({ isOpen: true, view: "createWorkshop" }))
+                  } else {
+                    toast({
+                      title: "Please login, first!",
+                      status: "error",
+                      isClosable: true,
+                      position: "top-right"
+                    })
+                  }
+                }}>
                   I wan’t to be a workshop manager!
                 </Button>
               </Flex>

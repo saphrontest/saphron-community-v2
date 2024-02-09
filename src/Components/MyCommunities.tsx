@@ -65,7 +65,7 @@ const MyCommunities = () => {
                       <Flex width="15%">
                         <Text mr={2}>{index + 1}</Text>
                       </Flex>
-                      <Flex align="center" width="70%" gap={2} cursor="pointer" onClick={() => navigate(`/community-detail/${item.id}`)}>
+                      <Flex align="center" width="70%" gap={2} cursor="pointer" onClick={() => navigate(`/community/community-detail/${item.id}`)}>
                         <Avatar src={item.imageURL} boxSize={item.imageURL ? 28 : 30} style={{width: 30, height: 30}} />
                         <span
                           style={{

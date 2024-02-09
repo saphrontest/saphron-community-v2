@@ -6,7 +6,7 @@ import { useMediaQuery } from '@chakra-ui/react'
 const NavLogo = () => {
     const [isBase] = useMediaQuery('(max-width: 30em)')
     return (
-        <Link to="/">
+        <Link to="/community">
             <Flex
                 align="center"
                 mr={{ base: 0, md: 2 }}

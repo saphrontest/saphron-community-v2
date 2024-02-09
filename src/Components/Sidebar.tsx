@@ -1,11 +1,12 @@
-import { Box, Divider, Flex, Image, Link } from "@chakra-ui/react"
+import { Box, Divider, Flex, Image, Text } from "@chakra-ui/react"
 import { getPexelPhoto } from "../pexelsClient"
-import { useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 
 const SideBar = () => {
     const [pexelPic, setPexelPic] = useState<any>()
     const Links = [
-      {id: 0, name: "about", link: ""},
+      {id: 0, name: "about", link: "/about"},
       {id: 1, name: "careers", link: ""},
       {id: 2, name: "terms", link: ""},
       {id: 3, name: "privacy", link: ""}
@@ -34,10 +35,14 @@ const SideBar = () => {
           <Divider />
           <Flex float="right" wrap="wrap">
             {Links.map((link, idx) => (
-                <Flex key={idx} height="100%" alignItems="center">
-                  <Link fontWeight={500} textTransform="capitalize" mr={1} color={"gray"}>{link.name}</Link>
-                  {idx !== (Links.length - 1) && <span>.</span>}
-                </Flex>
+              <Fragment key={idx}>
+                <Link to={link.link}>
+                  <Flex height="100%" alignItems="center" _hover={{textDecoration: "underline"}}>
+                    <Text fontWeight={500} textTransform="capitalize" mr={1} color={"gray"}>{link.name}</Text>
+                    {idx !== (Links.length - 1) && <span>.</span>}
+                  </Flex>
+                </Link>
+                </Fragment>
               ))
             }
           </Flex>

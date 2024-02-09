@@ -273,7 +273,7 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
                     _checked={{ "& .chakra-checkbox__control": { background: "unset" } }}
                     onChange={ev => setTermsCheckbox(ev.target.checked)}
                 >
-                    <Text color="gray">Accept <Link to={"/"} style={{ color: "blue" }}>Terms & Conditions</Link></Text>
+                    <Text color="gray">Accept <Link to={"/community"} style={{ color: "blue" }}>Terms & Conditions</Link></Text>
                 </Checkbox>
             </Flex>
             <Button w={"100%"} onClick={handleSubmit}>

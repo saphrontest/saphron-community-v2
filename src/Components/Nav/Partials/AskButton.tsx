@@ -20,7 +20,7 @@ const AskButton = () => {
                 outline={"1px solid"}
                 outlineColor={"gray.100"}
                 _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
-                onClick={() => navigate("/search", {state: {activeTab: "AI Search"}})}
+                onClick={() => navigate("/community/search", {state: {activeTab: "AI Search"}})}
             >
                 <GrAdd  fontSize={18} className='AddButton' color='gray.500'/>
                 <Text display={{ base: "none", md: "flex" }} fontSize={16} fontWeight={500} color="gray.500">

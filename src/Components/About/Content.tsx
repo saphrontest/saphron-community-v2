@@ -114,7 +114,7 @@ const Content: FC<IContentProps> = ({
               )}
             </Flex>
             {(!onCreatePage && user.id) && (
-              <Link to={`/submit/${community?.id}`}>
+              <Link to={`/community/submit/${community?.id}`}>
                 <Button
                   mt={3}
                   height="30px"

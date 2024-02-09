@@ -88,7 +88,7 @@ const CommunityDetail = () => {
     } finally {
       setDeleteLoading(false)
       communityId && getPosts(communityId)
-      navigate("/")
+      navigate("/community")
     }
 }
   return (

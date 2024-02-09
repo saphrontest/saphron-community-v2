@@ -102,7 +102,7 @@ const PostDetail = () => {
       return false;
     } finally {
       setDeleteLoading(false)
-      navigate("/")
+      navigate("/community")
     }
 }
 

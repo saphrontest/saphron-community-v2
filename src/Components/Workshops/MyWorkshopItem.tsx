@@ -92,7 +92,7 @@ const MyWorkshopItem: FC<MyWorkshopItemProps> = ({ workshop, idx, toggleReloadWo
                     <>
                         {
                             !participantsLoading && (
-                                <Flex mt="1rem" direction="column" w="100%" align="flex-start" gap="1rem" p="1rem">
+                                <Flex direction="column" w="100%" align="flex-start" gap="1rem" p="1rem" onClick={ev => ev.stopPropagation()}>
                                     <Divider borderColor="gray" />
                                     <Box>
                                         <Text textAlign="left" fontStyle="italic" fontSize={["12", "16"]}>{workshop.short_description}</Text>

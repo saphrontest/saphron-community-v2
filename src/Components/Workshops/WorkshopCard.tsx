@@ -20,33 +20,33 @@ const Mobile: FC<IMobileCard> = ({
   const [isClicked, { toggle: toggleClick }] = useBoolean(false)
   return (
     <Flex direction="column" w="100%" justify="space-between" align="flex-start" cursor="pointer" bg="gray.100" borderRadius="1rem" p="1rem" onClick={toggleClick}>
-    <Flex direction="row" align="center">
-      <Text fontWeight={600} mr="1rem">#{idx + 1}</Text>
-      <Image src={workshop.cover_img} w="5rem" h="3rem" mr="1rem" borderRadius="0.2rem" />
-      <Box>
-        <Text textAlign="left" fontWeight="600" fontSize={["12", "18"]} noOfLines={2}>{workshop.workshop_name}</Text>
-        <Text textAlign="left" fontSize={["12", "16"]}>{moment(new Date(workshop.createdAt)).format("DD.MM.YYYY hh:mm")}</Text>
-      </Box>
-      {!isClicked ? <MdKeyboardArrowDown size={24} /> : <MdKeyboardArrowUp size={24} />}
-    </Flex>
-    {isClicked ? (
-      <Flex mt="1rem" direction="column" w="100%" align="flex-start" gap="1rem" p="1rem">
-        <Divider borderColor="gray" />
+      <Flex direction="row" align="center">
+        <Text fontWeight={600} mr="1rem">#{idx + 1}</Text>
+        <Image src={workshop.cover_img} w="5rem" h="3rem" mr="1rem" borderRadius="0.2rem" />
         <Box>
-          <Text textAlign="left" fontStyle="italic" fontSize={["12", "16"]}>{workshop.short_description}</Text>
-          <Text textAlign="left" fontSize={["12", "16"]} fontWeight="600" mt="1rem" dangerouslySetInnerHTML={{ __html: workshop.detailed_description }} />
+          <Text textAlign="left" fontWeight="600" fontSize={["12", "18"]} noOfLines={2}>{workshop.workshop_name}</Text>
+          <Text textAlign="left" fontSize={["12", "16"]}>{moment(new Date(workshop.createdAt)).format("DD.MM.YYYY hh:mm")}</Text>
         </Box>
-        <Flex gap="1rem" w="100%" justify="flex-end">
-          <Button onClick={(ev) => {
-            ev.stopPropagation()
-            dispatch(setModal({ isOpen: true, view: "joinWorkshop", data: workshop }))
-          }}
-            fontSize={["12", "16"]}
-          >Join Workshop</Button>
-        </Flex>
+        {!isClicked ? <MdKeyboardArrowDown size={24} /> : <MdKeyboardArrowUp size={24} />}
       </Flex>
-    ) : null}
-  </Flex>
+      {isClicked ? (
+        <Flex direction="column" w="100%" align="flex-start" gap="1rem" p="1rem" onClick={ev => ev.stopPropagation()}>
+          <Divider borderColor="gray" />
+          <Box>
+            <Text textAlign="left" fontStyle="italic" fontSize={["12", "16"]}>{workshop.short_description}</Text>
+            <Text textAlign="left" fontSize={["12", "16"]} fontWeight="600" mt="1rem" dangerouslySetInnerHTML={{ __html: workshop.detailed_description }} />
+          </Box>
+          <Flex gap="1rem" w="100%" justify="flex-end">
+            <Button onClick={(ev) => {
+              ev.stopPropagation()
+              dispatch(setModal({ isOpen: true, view: "joinWorkshop", data: workshop }))
+            }}
+              fontSize={["12", "16"]}
+            >Join Workshop</Button>
+          </Flex>
+        </Flex>
+      ) : null}
+    </Flex>
   )
 }
 

@@ -17,7 +17,7 @@ const SearchResults: FC<SearchResultsProps> = ({searchResults, showMoreButton, s
   return !!searchResults.length ? (
     <Flex bg={"white"} p={2} zIndex={1} width={"100%"} border="1px solid" borderColor={"gray.50"} flexDirection={"column"} gap={2}>
         {searchResults.map((res, idx) => <SearchResultsItem key={idx} item={res}/>)}
-        {showMoreButton && <Text fontWeight={600} textAlign={"right"} cursor="pointer" onClick={() => navigate("/search", {state: {searchKey, searchResults}})}>
+        {showMoreButton && <Text fontWeight={600} textAlign={"right"} cursor="pointer" onClick={() => navigate("/community/search", {state: {searchKey, searchResults}})}>
           Show More...
         </Text>}
     </Flex>

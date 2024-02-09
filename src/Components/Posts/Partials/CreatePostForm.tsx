@@ -86,7 +86,7 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
       console.log("on create post", error)
     } finally {
       setLoading(false)
-      navigate(`/post/${createSlug(title)}`)
+      navigate(`/community/post/${createSlug(title)}`)
     }
 
   }

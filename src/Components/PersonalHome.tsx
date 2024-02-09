@@ -22,7 +22,7 @@ const PersonalHome = () => {
             return;
         }
         if(type === "create-post") {
-            navigate("/submit")
+            navigate("/community/submit")
         } else {
             dispatch(setModal({ isOpen: true, view: "addCommunity" }))
         }

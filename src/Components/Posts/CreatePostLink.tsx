@@ -17,7 +17,7 @@ const CreatePostLink : FC <CreatePostLinkProps> = ({communityId}) => {
   const toast = useToast()
   const handleClick = () => {
     if(user?.id) {
-      navigate(`/submit${communityId ? `/${communityId}` : ''}`)
+      navigate(`/community/submit${communityId ? `/${communityId}` : ''}`)
     } else {
       toast({
         title: "Please login, first!",

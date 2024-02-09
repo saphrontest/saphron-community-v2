@@ -55,7 +55,7 @@ const UserMenu: FC<UserMenuProps> = ({ user }) => {
         dispatch(logoutUser())
         dispatch(resetCommunities())
         dispatch(resetPosts())
-        navigate("/")
+        navigate("/community")
     }
 
     return (
@@ -105,10 +105,10 @@ const UserMenu: FC<UserMenuProps> = ({ user }) => {
                 {user.id ? (
                     <>
                         <CustomMenuItem>
-                            <MenuItemInner to='/profile' icon={CgProfile} label="Profile" />
+                            <MenuItemInner to='/community/profile' icon={CgProfile} label="Profile" />
                         </CustomMenuItem>
                         <CustomMenuItem>
-                            <MenuItemInner to='/saved-posts' icon={FaRegBookmark} label="Saved Posts" />
+                            <MenuItemInner to='/community/saved-posts' icon={FaRegBookmark} label="Saved Posts" />
                         </CustomMenuItem>
                         <CustomMenuItem>
                             <MenuItemInner to='/my-workshops' icon={GrWorkshop} label="My Workshops" />

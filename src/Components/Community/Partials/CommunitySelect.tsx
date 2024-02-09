@@ -138,7 +138,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                                 _hover={{ bg: "gray.100" }}
                                 onClick={() => {
                                     dispatch(setSelectedCommunity(comm))
-                                    !!isNav && navigate(`/community-detail/${comm.id}`)
+                                    !!isNav && navigate(`/community/community-detail/${comm.id}`)
                                     setOpen(false)
                                 }}
                             >
@@ -162,7 +162,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                             _hover={{ bg: "gray.100" }}
                             onClick={() => {
                                 dispatch(setSelectedCommunity(comm))
-                                !!isNav && navigate(`/community-detail/${comm.id}`)
+                                !!isNav && navigate(`/community/community-detail/${comm.id}`)
                                 setOpen(false)
                             }}
                         >

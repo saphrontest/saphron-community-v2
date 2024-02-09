@@ -1,15 +1,19 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { CommunityDetail, Home, PostDetail, SavedPosts, Submit, Profile, SearchPage, WorkshopsPage, MyWorkshopsPage, AdminWorkshops } from './Pages'
+import { CommunityDetail, Home, PostDetail, SavedPosts, Submit, Profile, SearchPage, WorkshopsPage, MyWorkshopsPage, AdminWorkshops, AboutPage } from './Pages'
+
+const base = "community"
 
 const RoutesArray = [
   { path: "/", component: Home },
-  { path: "submit", component: Submit },
-  { path: "submit/:communityId", component: Submit },
-  { path: "community-detail/:id", component: CommunityDetail },
-  { path: "post/:slug", component: PostDetail },
-  { path: "saved-posts", component: SavedPosts },
-  { path: "profile", component: Profile },
-  { path: "search", component: SearchPage },
+  { path: "community", component: Home },
+  { path: "about", component: AboutPage },
+  { path: `${base}/submit`, component: Submit },
+  { path: `${base}/submit/:communityId`, component: Submit },
+  { path: `${base}/community-detail/:id`, component: CommunityDetail },
+  { path: `${base}/post/:slug`, component: PostDetail },
+  { path: `${base}/saved-posts`, component: SavedPosts },
+  { path: `${base}/profile`, component: Profile },
+  { path: `${base}/search`, component: SearchPage },
   { path: "workshops", component: WorkshopsPage },
   { path: "workshops/:slug", component: WorkshopsPage },
   { path: "my-workshops", component: MyWorkshopsPage },
@@ -19,7 +23,7 @@ const RoutesArray = [
 
 const Router = () => {
   return (
-    <BrowserRouter basename="/community">
+    <BrowserRouter>
       <Routes>
         {RoutesArray.map(({ path, component }, index) => <Route path={path} Component={component} key={index} />)}
       </Routes>

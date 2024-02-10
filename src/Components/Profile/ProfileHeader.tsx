@@ -25,7 +25,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
 
     const handleEdit = (type: string) => {
         if (type === 'profile-photo') {
-            dispatch(setModal({ isOpen: true, view: "editProfile" }))
+            dispatch(setModal({ isOpen: true, view: "editProfile", data: {isEdit: true} }))
         }
     }
 

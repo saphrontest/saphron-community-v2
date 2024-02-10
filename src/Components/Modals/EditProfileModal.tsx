@@ -1,5 +1,5 @@
-import { Button, Divider, Flex, ModalBody, ModalCloseButton, ModalHeader, useDisclosure, Spinner, useToast } from '@chakra-ui/react'
-import React, { ChangeEvent, useRef, useState, useEffect } from 'react'
+import { Button, Divider, Flex, ModalBody, ModalCloseButton, ModalHeader, Spinner, useToast } from '@chakra-ui/react'
+import React, { ChangeEvent, useRef, useState, useEffect, FC } from 'react'
 import { ModalLayout } from '../../Layouts'
 import { auth, firestore, storage } from '../../firebaseClient'
 import { useAuthState, useUpdateProfile } from 'react-firebase-hooks/auth'
@@ -9,15 +9,24 @@ import { doc, updateDoc } from 'firebase/firestore'
 import NotFoundUserPic from '../../assets/images/user.png'
 import { getUser, updateUser } from '../../Helpers/apiFunctions'
 import { RootState } from '../../redux/store'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { UserInterface } from '../../Interface/UserInterface'
 import defaultCover from '../../assets/images/default-cover.jpg'
+import { setModal } from '../../redux/slices/modalSlice'
+import {usernames} from '../../assets/usernames'
+import md5 from 'md5'
 
-const EditProfileModal = () => {
+const generateUsername = () => {
+    const username = usernames[Math.floor(Math.random() * 200)];
+    const generatedUsername = `${username.slice(0,1).toLowerCase()}${username.slice(1,username.length)}${md5("#" + Math.floor(Math.random() * 200)).slice(0, 2)}`;
+    return generatedUsername
+}
 
-    const { isOpen, onClose } = useDisclosure()
+const EditProfileModal: FC<{data: any}> = ({data}) => {
+
     const toast = useToast()
     const [user] = useAuthState(auth)
+    const dispatch = useDispatch()
     const userFromDB = useSelector((state: RootState) => state.user) as UserInterface
     const [updateProfile, error] = useUpdateProfile(auth);
     const profileImgInputRef = useRef<HTMLInputElement | null>(null)
@@ -26,11 +35,10 @@ const EditProfileModal = () => {
     const [isSaving, setIsSaving] = useState(false)
     const [formValues, setFormValues] = useState({
         email: user?.email,
-        username: user?.email?.split("@")[0],
+        username: data.isEdit ? userFromDB.username : generateUsername(),
         displayName: user?.displayName,
         phoneNumber: user?.phoneNumber
     })
-
 
     const onImgChange = (event: ChangeEvent<HTMLInputElement>, type: string = "profile_photo") => {
         const reader = new FileReader();
@@ -86,7 +94,7 @@ const EditProfileModal = () => {
         } finally {
             user && getUser(user?.uid)
             setIsSaving(false)
-            onClose()
+            dispatch(setModal({isOpen: false, view: "editProfile"}))
         }
     }
 
@@ -100,15 +108,7 @@ const EditProfileModal = () => {
             profilePhotoURL: user?.photoURL,
         });
     }
-
-    useEffect(() => {
-        if (!!user?.photoURL && !(!!userFromDB.profilePhotoURL)) {
-            user?.photoURL && updatePP(user.uid).finally(() => getUser(user.uid))
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-
+        
     const ImageSpinner = () => {
         return (
             <Flex
@@ -129,8 +129,15 @@ const EditProfileModal = () => {
         )
     }
 
+    useEffect(() => {
+        if (!!user?.photoURL && !(!!userFromDB.profilePhotoURL)) {
+            user?.photoURL && updatePP(user.uid).finally(() => getUser(user.uid))
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     return (
-        <ModalLayout isOpen={isOpen} onClose={onClose}>
+        <ModalLayout>
             <ModalHeader display="flex" flexDirection="column" alignItems="center">
                 Edit Profile
             </ModalHeader>
@@ -162,7 +169,7 @@ const EditProfileModal = () => {
                     />}
                     <Divider mb={6} w="50%" />
                     <SCFormItem placeholder={userFromDB.email ?? user?.email as string} label='E-mail' name="email" onChange={handleChange} />
-                    <SCFormItem placeholder={userFromDB.username ?? user?.email?.split("@")[0] as string} label='Username' name="username" onChange={handleChange} />
+                    <SCFormItem placeholder={data.isEdit ? userFromDB.username : formValues.username} label='Username' name="username" onChange={handleChange} />
                     <Divider mt={1} mb={3} />
                     <SCFormItem placeholder={userFromDB.displayName ?? user?.displayName as string} label='Display Name' name="displayName" onChange={handleChange} />
                     <SCFormItem placeholder={userFromDB.phoneNumber ?? user?.phoneNumber as string} label='Phone Number' name="phoneNumber" onChange={handleChange} />

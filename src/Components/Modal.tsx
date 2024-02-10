@@ -29,7 +29,7 @@ const Modal = () => {
         case "signup":
             return <AuthModal />    
         case "editProfile":
-            return <EditProfileModal />
+            return <EditProfileModal data={data}/>
         case "createWorkshop": 
             return <CreateWorkshopModal />
         case "joinWorkshop": 

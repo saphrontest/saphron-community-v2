@@ -12,8 +12,9 @@ import { RootState } from '../../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
 import { UserInterface } from '../../Interface/UserInterface'
 import defaultCover from '../../assets/images/default-cover.jpg'
-import { openai } from '../../openAIClient'
 import { setModal } from '../../redux/slices/modalSlice'
+import {usernames} from '../../assets/usernames'
+import md5 from 'md5'
 
 const EditProfileModal: FC<{data: any}> = ({data}) => {
 
@@ -122,17 +123,12 @@ const EditProfileModal: FC<{data: any}> = ({data}) => {
         )
     }
 
-    const generateUsername = async () => {
-        const response = await openai.chat.completions.create({
-            messages: [
-                { role: "system", content: "You are a helpful assistant."},
-                { role: "user", content: "Generate an the new unique username for my mental health support platform and do not use 'mind' word and serve it like 'Here is your username: <username>' and it should be camel case and start with lower case" }
-            ],
-            model: "gpt-3.5-turbo",
-        });
+    
 
-        const generatedUsername = response.choices[0].message.content?.split("Here is your username: ")[1]
-        setFormValues(prev => ({ ...prev, username:  generatedUsername}))
+    const generateUsername = async () => {
+        const username = usernames[Math.floor(Math.random() * 200)];
+        const generatedUsername = `${username.slice(0,1).toLowerCase()}${username.slice(1,username.length)}${md5("#" + Math.floor(Math.random() * 200)).slice(0, 2)}`;
+        setFormValues(prev => ({ ...prev, username:  generatedUsername}));
     }
 
     useEffect(() => {

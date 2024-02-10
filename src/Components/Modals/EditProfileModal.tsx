@@ -16,6 +16,12 @@ import { setModal } from '../../redux/slices/modalSlice'
 import {usernames} from '../../assets/usernames'
 import md5 from 'md5'
 
+const generateUsername = () => {
+    const username = usernames[Math.floor(Math.random() * 200)];
+    const generatedUsername = `${username.slice(0,1).toLowerCase()}${username.slice(1,username.length)}${md5("#" + Math.floor(Math.random() * 200)).slice(0, 2)}`;
+    return generatedUsername
+}
+
 const EditProfileModal: FC<{data: any}> = ({data}) => {
 
     const toast = useToast()
@@ -29,7 +35,7 @@ const EditProfileModal: FC<{data: any}> = ({data}) => {
     const [isSaving, setIsSaving] = useState(false)
     const [formValues, setFormValues] = useState({
         email: user?.email,
-        username: user?.email?.split("@")[0],
+        username: data.isEdit ? userFromDB.username : generateUsername(),
         displayName: user?.displayName,
         phoneNumber: user?.phoneNumber
     })
@@ -123,23 +129,11 @@ const EditProfileModal: FC<{data: any}> = ({data}) => {
         )
     }
 
-    
-
-    const generateUsername = async () => {
-        const username = usernames[Math.floor(Math.random() * 200)];
-        const generatedUsername = `${username.slice(0,1).toLowerCase()}${username.slice(1,username.length)}${md5("#" + Math.floor(Math.random() * 200)).slice(0, 2)}`;
-        setFormValues(prev => ({ ...prev, username:  generatedUsername}));
-    }
-
     useEffect(() => {
         if (!!user?.photoURL && !(!!userFromDB.profilePhotoURL)) {
             user?.photoURL && updatePP(user.uid).finally(() => getUser(user.uid))
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    useEffect(() => {
-        !data.isEdit && generateUsername()
     }, [])
 
     return (

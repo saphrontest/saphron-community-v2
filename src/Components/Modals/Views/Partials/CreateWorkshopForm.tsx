@@ -276,9 +276,14 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
                     <Text color="gray">Accept <Link to={"/community"} style={{ color: "blue" }}>Terms & Conditions</Link></Text>
                 </Checkbox>
             </Flex>
+            <Flex w="100%" direction="column" align="center" gap="0.3rem">
             <Button w={"100%"} onClick={handleSubmit}>
                 {loading ? <Spinner /> : "Submit"}
             </Button>
+            <Text fontSize={12} color="gray">
+                After your application is reviewed, you will be notified by e-mail.
+            </Text>
+            </Flex>
         </Flex>
     )
 }

@@ -1,8 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import { AddCommunityModal, AuthModal, CreateWorkshopModal, EditProfileModal, JoinWorkshopModal } from './Modals'
 import { useDebounce } from '../Hooks'
+import {
+    AddCommunityModal,
+    AuthModal,
+    CreateSupportGroupModal,
+    CreateWorkshopModal,
+    EditProfileModal,
+    JoinSupportGroupModal,
+    JoinWorkshopModal
+} from './Modals'
 
 const Modal = () => {
     const debounce = useDebounce()
@@ -34,6 +42,10 @@ const Modal = () => {
             return <CreateWorkshopModal />
         case "joinWorkshop": 
             return <JoinWorkshopModal data={data}/>
+        case "createSupportGroup": 
+            return <CreateSupportGroupModal />
+        case "joinSupportGroup": 
+            return <JoinSupportGroupModal data={data}/>
         default:
             return null
     }

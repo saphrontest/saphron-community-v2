@@ -79,7 +79,7 @@ const Home = () => {
   }
 
   return (
-    <PageLayout showWorkshops={true}>
+    <PageLayout showWorkshops={true} showGroupChats={true}>
       <>
         <CreatePostLink />
         <Stack>

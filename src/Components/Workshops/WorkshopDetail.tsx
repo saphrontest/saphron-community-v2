@@ -46,7 +46,15 @@ const WorkshopDetail: FC<{
     const user: UserInterface = useSelector((state: RootState) => state.user)
 
     return selected ? (
-        <Flex w="50%" h="fit-content" align="flex-start" justify="flex-start" direction="column" bg="gray.100" borderRadius="16px">
+        <Flex
+        w="50%"
+        h="fit-content"
+        align="flex-start"
+        justify="flex-start"
+        direction="column"
+        bg="gray.100"
+        borderRadius="16px"
+        >
             <Flex
                 w="100%"
                 align="flex-end"

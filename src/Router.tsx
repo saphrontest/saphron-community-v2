@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { CommunityDetail, Home, PostDetail, SavedPosts, Submit, Profile, SearchPage, WorkshopsPage, MyWorkshopsPage, AdminWorkshops, AboutPage } from './Pages'
+import { CommunityDetail, Home, PostDetail, SavedPosts, Submit, Profile, SearchPage, WorkshopsPage, MyWorkshopsPage, AdminWorkshops, AboutPage, SupportGroups } from './Pages'
 
 const base = "community"
 
@@ -18,6 +18,7 @@ const RoutesArray = [
   { path: "workshops/:slug", component: WorkshopsPage },
   { path: "my-workshops", component: MyWorkshopsPage },
   { path: "workshops/admin", component: AdminWorkshops },
+  { path: "support-groups", component: SupportGroups },
 
 ]
 

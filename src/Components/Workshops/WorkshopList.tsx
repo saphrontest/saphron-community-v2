@@ -1,7 +1,7 @@
 import { FC, Fragment } from 'react'
 import { Flex } from '@chakra-ui/react'
-import { WorkshopCard } from '../Components'
-import { Workshop } from '../Interface/WorkshopInterface'
+import { WorkshopCard } from '..'
+import { Workshop } from '../../Interface/WorkshopInterface'
 
 interface WorkshopListProps {
     workshops: Workshop[];

@@ -92,10 +92,6 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
                 doc(collection(firestore, `workshops/${workshop.id}/participants`), newWorkshopRequestId),
                 workshopRequest
             );
-            transaction.update(
-                doc(firestore, `workshops/${workshop.id}`),
-                { requstCount: increment(1) }
-            );
         }).finally(() => {
             setLoading(false)
             toast({

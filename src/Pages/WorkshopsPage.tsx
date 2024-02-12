@@ -1,5 +1,5 @@
-import { PageLayout } from '../Layouts'
-import { Button, Flex, Text, useMediaQuery, useToast } from '@chakra-ui/react'
+import { PlatformPageLayout } from '../Layouts'
+import { useMediaQuery, useToast } from '@chakra-ui/react'
 import communitiesBackground from '../assets/images/communities.jpg'
 import { WorkshopDetail, WorkshopList } from '../Components'
 import { useEffect, useState } from 'react'
@@ -43,10 +43,10 @@ const WorkshopsPage = () => {
   }, [workshops])
 
   useEffect(() => {
-    if(user.id) {
+    if (user.id) {
       getUserWorkshopRequestList(user.id)
         .then((res: WorkshopRequest[] | false) => res && setWorkshopRequests(res))
-    }else {
+    } else {
       toast({
         title: "Please login, first!",
         status: "error",
@@ -58,72 +58,36 @@ const WorkshopsPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const actionButtonOnClick = () => {
+    if (user.id) {
+      dispatch(setModal({ isOpen: true, view: "createWorkshop" }))
+    } else {
+      toast({
+        title: "Please login, first!",
+        status: "error",
+        isClosable: true,
+        position: "top-right"
+      })
+    }
+  }
+
   return (
-    <PageLayout showSidebar={false} leftWidth="100%">
-      <>
-        <Flex
-          p={1}
-          w="100%"
-          h="fit-content"
-          bg="white"
-          flexDirection="column"
-          display="flex"
-        >
-          <Flex
-            align="flex-end"
-            color="white"
-            bg="blue.500"
-            height={["150px", "250px"]}
-            borderRadius="4px 4px 0px 0px"
-            fontWeight={600}
-            backgroundSize="cover"
-            bgPos={"center"}
-            bgImage={communitiesBackground}
-          >
-            <Flex
-              width="100%"
-              height="100%"
-              align="flex-end"
-              color="white"
-              p="6px 10px"
-              bgGradient="linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75))"
-            >
-              <Flex width="100%" height={"50%"} justify="space-between" align={["flex-start", "flex-end"]} direction={["column", "row"]}>
-                <Text fontSize={24} fontWeight={700}>
-                  Workshops
-                </Text>
-                <Button onClick={() => {
-                  if(user.id) {
-                    dispatch(setModal({ isOpen: true, view: "createWorkshop" }))
-                  } else {
-                    toast({
-                      title: "Please login, first!",
-                      status: "error",
-                      isClosable: true,
-                      position: "top-right"
-                    })
-                  }
-                }}>
-                  I wan’t to be a workshop manager!
-                </Button>
-              </Flex>
-            </Flex>
-          </Flex>
-          <Flex direction="row" padding="1rem">
-            {isSmallerThan766 ? (
-              <WorkshopList.Mobile workshops={workshops} />
-            ) : (
-              <>
-                <WorkshopList.Desktop selected={selected} setSelected={setSelected} workshops={workshops} />
-                <WorkshopDetail selected={selected} isRequested={!!workshopRequests?.some((workshop: WorkshopRequest) => workshop?.workshopId === selected?.id)} />
-              </>
-            )}
-          </Flex>
-        </Flex>
-      </>
-      <>
-      </>
-    </PageLayout>
+    <PlatformPageLayout
+      title="Workshops"
+      coverImg={communitiesBackground}
+      actionButtonText="I wan’t to be a workshop manager!"
+      actionButtonOnClick={actionButtonOnClick}
+    >
+      {isSmallerThan766 ? (
+        <WorkshopList.Mobile workshops={workshops} />
+      ) : (
+        <>
+          <WorkshopList.Desktop selected={selected} setSelected={setSelected} workshops={workshops} />
+          <WorkshopDetail selected={selected} isRequested={!!workshopRequests?.some((workshop: WorkshopRequest) => workshop?.workshopId === selected?.id)} />
+        </>
+      )}
+    </PlatformPageLayout>
+
   )
 }
 

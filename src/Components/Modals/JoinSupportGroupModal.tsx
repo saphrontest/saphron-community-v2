@@ -17,7 +17,7 @@ const JoinSupportGroupModal: FC<{ data: any; }> = ({ data }) => {
               justifyContent="center"
               pb={6}
           >
-            <JoinSupportGroupForm />
+            <JoinSupportGroupForm supportGroup={data}/>
           </ModalBody>
       </ModalLayout>
   )

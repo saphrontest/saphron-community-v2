@@ -1,7 +1,7 @@
 export type ISupportGroupStatus = "waiting" | "confirmed" | "rejected"
 
 export interface ISupportGroup {
-    id: string;
+    id?: string;
     cover_img: string;
     category: string;
     createdAt: string;
@@ -13,13 +13,13 @@ export interface ISupportGroup {
     support_group_manager_avatar: string;
     support_group_manager_mail: string;
     status: ISupportGroupStatus
-    participants: ISupportGroupParticipant[] | []
+    participants?: ISupportGroupParticipant[] | []
 }
 
 
 
 export interface ISupportGroupParticipant {
-    id: string;
+    id?: string;
     createdAt: string;
     updatedAt: string;
     name: string;
@@ -31,7 +31,7 @@ export interface ISupportGroupParticipant {
 }
 
 export interface ISupportGroupStatusSelectOptionInterface {
-    id: number;
+    id?: number;
     select: boolean;
     label: ISupportGroupStatus;
 }

@@ -8,7 +8,7 @@ import { getWorkshopJoinRequests } from "../../Helpers";
 import { firestore } from "../../firebaseClient";
 import ParticipantItem from "./ParticipantItem";
 import { EditWorkshopModal } from "../Modals";
-import DeleteWorkshopAlert from "./DeleteWorkshopAlert";
+import { DeleteAlert } from "../Platform";
 
 interface MyWorkshopItemProps {
     idx: number;
@@ -129,7 +129,7 @@ const MyWorkshopItem: FC<MyWorkshopItemProps> = ({ workshop, idx, toggleReloadWo
                 ) : null}
             </Flex>
             <EditWorkshopModal isOpen={isEditOpen} toggleModal={() => setEditOpen.toggle()} workshop={workshop} />
-            <DeleteWorkshopAlert isOpen={isDeleteOpen} toggleDialog={() => setDeleteOpen.toggle()} handleDelete={handleDelete} workshopName={workshop.workshop_name} />
+            <DeleteAlert isOpen={isDeleteOpen} toggleDialog={() => setDeleteOpen.toggle()} handleDelete={handleDelete} label={`${workshop.workshop_name} Workshop`} />
         </>
     )
 }

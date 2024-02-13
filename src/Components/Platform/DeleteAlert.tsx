@@ -1,7 +1,14 @@
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Text } from '@chakra-ui/react'
-import { FC, useRef } from 'react'
+import React, { FC, useRef } from 'react'
 
-const DeleteWorkshopAlert: FC<{ isOpen: boolean; toggleDialog: () => void; handleDelete: () => void, workshopName: string; }> = ({isOpen, toggleDialog, handleDelete, workshopName}) => {
+const DeleteAlert: FC<{
+    isOpen: boolean;
+    toggleDialog: () => void;
+    handleDelete: () => void;
+    label: string;
+}> = ({
+    isOpen, toggleDialog, handleDelete, label
+}) => {
     const cancelButtonRef = useRef(null)
     return (
         <AlertDialog
@@ -12,7 +19,7 @@ const DeleteWorkshopAlert: FC<{ isOpen: boolean; toggleDialog: () => void; handl
             <AlertDialogOverlay>
                 <AlertDialogContent>
                     <AlertDialogHeader fontSize='lg' fontWeight='regular'>
-                        Delete <strong>{workshopName}</strong> Workshop
+                        Delete <strong>{label}</strong>
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
@@ -34,4 +41,4 @@ const DeleteWorkshopAlert: FC<{ isOpen: boolean; toggleDialog: () => void; handl
     )
 }
 
-export default DeleteWorkshopAlert
+export default DeleteAlert

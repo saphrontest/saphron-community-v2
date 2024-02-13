@@ -51,13 +51,10 @@ const CreateSupportGroupForm: FC<{
       }
 
       toggleLoading()
-      try {
-        onCreate(formItems)
-      } catch (error) {
-
-      } finally {
-        toggleLoading()
-      }
+      onCreate(formItems)
+        .then(() => {})
+        .catch((err) => console.error(err))
+        .finally(() => toggleLoading())
 
     }
 

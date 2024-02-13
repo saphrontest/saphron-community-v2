@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { UserInterface } from '../Interface/UserInterface'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import { Flex, Heading, Text } from '@chakra-ui/react'
-import { PageLayout } from '../Layouts'
+import { Text } from '@chakra-ui/react'
+import { PlatformAdminPageLayout } from '../Layouts'
 import { getWorkshops } from '../Helpers'
 import { Workshop, WorkshopStatusSelectOptionInterface } from '../Interface/WorkshopInterface'
 import { doc, updateDoc } from 'firebase/firestore'
@@ -28,9 +28,9 @@ const AdminWorkshops = () => {
     ]
 
     const onSelect = async (workshopId: string, optionId: number) => {
-        
+
         // TODO: if optionId is 1 => open the create meet link modal first
-        
+
         const workshopRef = doc(firestore, `workshops/${workshopId}`)
         await updateDoc(workshopRef, {
             status: selectOptions[optionId].label
@@ -41,23 +41,15 @@ const AdminWorkshops = () => {
 
 
     return (
-        <PageLayout showSidebar={false} leftWidth='100%'>
-            <>
-                <Flex w="100%" bg="white" p="1rem" direction="column" align="flex-start">
-                    <Heading fontSize="18px" pb="1rem">Workshop Requests</Heading>
-                    <Flex w="100%" direction="column" gap="1rem">
-                        {
-                            workshops?.map((workshop: Workshop, idx: number) => (
-                                <React.Fragment key={workshop.id}>
-                                    <AdminWorkshopItem idx={idx} workshop={workshop} onSelect={onSelect} selectOptions={selectOptions}/>
-                                </React.Fragment>
-                            ))
-                        }
-                    </Flex>
-                </Flex>
-            </>
-            <></>
-        </PageLayout>
+        <PlatformAdminPageLayout title='Workshop Requests'>
+            {
+                workshops?.map((workshop: Workshop, idx: number) => (
+                    <React.Fragment key={workshop.id}>
+                        <AdminWorkshopItem idx={idx} workshop={workshop} onSelect={onSelect} selectOptions={selectOptions} />
+                    </React.Fragment>
+                ))
+            }
+        </PlatformAdminPageLayout>
     )
 }
 

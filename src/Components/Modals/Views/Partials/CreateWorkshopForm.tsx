@@ -1,5 +1,5 @@
-import { ChangeEvent, FC, ReactNode, useEffect, useRef, useState } from 'react'
-import { Button, Checkbox, Flex, FormControl, Spinner, Text, Textarea, useToast } from '@chakra-ui/react'
+import { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
+import { Button, Checkbox, Flex, Spinner, Text, Textarea, useToast } from '@chakra-ui/react'
 import { InputItem } from '../../../../Layouts'
 import TextEditor from '../../../TextEditor'
 import { SCIcon } from '../../../SCElements'
@@ -14,36 +14,9 @@ import { UserInterface } from '../../../../Interface/UserInterface'
 import { setModal } from '../../../../redux/slices/modalSlice'
 import { Workshop } from '../../../../Interface/WorkshopInterface'
 import moment from 'moment'
+import { PlatformFormItem } from '../../../Platform'
 
-const FormItem: FC<{
-    children: ReactNode;
-    label: string;
-    isOptional?: boolean;
-    description?: string;
-    isFormElement?: boolean;
-    error?: boolean;
-    errorMessage?: string;
-}> = ({ children, label, isOptional = false, description, isFormElement = true, error, errorMessage }) => {
-    return (
-        <Flex gap="0.3rem" direction="column" w="100%" pb={"0.4rem"}>
-            <Flex gap="0.4rem" align="center">
-                <Text fontWeight="600">{label}</Text>
-                {isOptional && <Text fontSize="12px" color="gray" fontStyle="italic">Optional</Text>}
-                {error && <Text fontSize="12px" color="red" fontStyle="italic">{errorMessage}</Text>}
-            </Flex>
-            <Text fontSize="14px" color="gray">
-                {description}
-            </Text>
-            {isFormElement ? (
-                <FormControl>
-                    {children}
-                </FormControl>
-            ) : children}
-        </Flex>
-    )
-}
-
-interface FormInterface {
+interface IForm {
     workshop_manager_name: string;
     workshop_name: string;
     short_description: string;
@@ -61,7 +34,7 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
     const [termsCheckbox, setTermsCheckbox] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
     const [coverImg, setCoverImg] = useState<string>('')
-    const [form, setForm] = useState<FormInterface>({
+    const [form, setForm] = useState<IForm>({
         workshop_manager_name: "",
         workshop_name: "",
         short_description: "",
@@ -209,17 +182,17 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
 
     return (
         <Flex align="flex-start" w="100%" mt={!isEdit ? "2rem" : ""} direction="column" gap="1rem">
-            <FormItem
+            <PlatformFormItem
             label='Your Name'
             isOptional={true}
             description='Giving your name provides a more trustworthy environment for participants, otherwise your username will be used.'
             >
                 <InputItem type='text' name='workshop_manager_name' onChange={onChange} placeholder={workshopData?.workshop_manager_name}/>
-            </FormItem>
-            <FormItem error={!formErrors.workshop_name.success} errorMessage={formErrors.workshop_name.message}  label='Workshop Name' description='Choosing an interesting workshop name will help you attract more participants.'>
+            </PlatformFormItem>
+            <PlatformFormItem error={!formErrors.workshop_name.success} errorMessage={formErrors.workshop_name.message}  label='Workshop Name' description='Choosing an interesting workshop name will help you attract more participants.'>
                 <InputItem type='text' name='workshop_name' onChange={onChange} placeholder={workshopData?.workshop_name}/>
-            </FormItem>
-            <FormItem error={!formErrors.short_description.success} errorMessage={formErrors.short_description.message} label='Short Description' description='The short description is where users first interact with you.'>
+            </PlatformFormItem>
+            <PlatformFormItem error={!formErrors.short_description.success} errorMessage={formErrors.short_description.message} label='Short Description' description='The short description is where users first interact with you.'>
                 <Textarea
                     width="100%"
                     name='short_description'
@@ -241,14 +214,14 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
                     fontSize="10pt"
                     onChange={(ev) => onChange({ target: { name: ev.target.name, value: ev.target.value } } as React.ChangeEvent<HTMLInputElement>)}
                 />
-            </FormItem>
-            <FormItem error={!formErrors.detailed_description.success} errorMessage={formErrors.detailed_description.message} label='Detailed Description' description='A detailed description can be really helpful in directing the right users to attend the workshop, while also preventing irrelevant people from attending. This can make the workshop more productive and efficient.' isFormElement={false}>
+            </PlatformFormItem>
+            <PlatformFormItem error={!formErrors.detailed_description.success} errorMessage={formErrors.detailed_description.message} label='Detailed Description' description='A detailed description can be really helpful in directing the right users to attend the workshop, while also preventing irrelevant people from attending. This can make the workshop more productive and efficient.' isFormElement={false}>
                 <TextEditor onChange={(_, data) => onChange({ target: { name: 'detailed_description', value: data } } as React.ChangeEvent<HTMLInputElement>)} value={form.detailed_description} />
-            </FormItem>
-            <FormItem  error={!formErrors.createdAt.success} errorMessage={formErrors.createdAt.message} label='Date and Time' description='Workshops prepared on weekends and outside working hours reach more users'>
+            </PlatformFormItem>
+            <PlatformFormItem  error={!formErrors.createdAt.success} errorMessage={formErrors.createdAt.message} label='Date and Time' description='Workshops prepared on weekends and outside working hours reach more users'>
                 <InputItem type='datetime-local' name='createdAt' onChange={onChange} placeholder={workshopData?.createdAt}/>
-            </FormItem>
-            <FormItem error={!formErrors.coverImg.success} errorMessage={formErrors.coverImg.message} label='Cover Photo' isFormElement={false}>
+            </PlatformFormItem>
+            <PlatformFormItem error={!formErrors.coverImg.success} errorMessage={formErrors.coverImg.message} label='Cover Photo' isFormElement={false}>
                 <input type="file" style={{ display: "none" }} accept="image/x-png,image/gif,image/jpeg" ref={workshopPicRef} onChange={onImgChange} />
                 <Flex
                     w="100%"
@@ -265,7 +238,7 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
                 >
                     {!!coverImg === false && <SCIcon size={24} name='add' />}
                 </Flex>
-            </FormItem>
+            </PlatformFormItem>
             <Flex gap="0.4rem" align="center" direction="column">
                 {!formErrors.checkbox.success && <Text fontSize="12px" color="red" fontStyle="italic">{formErrors.checkbox.message}</Text>}
                 <Checkbox

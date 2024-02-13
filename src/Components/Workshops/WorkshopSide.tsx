@@ -1,4 +1,4 @@
-import { Flex, Text, Divider } from '@chakra-ui/react'
+import { Flex, Text, Divider, Skeleton } from '@chakra-ui/react'
 import communitiesBackground from '../../assets/images/communities.jpg'
 import { Link } from 'react-router-dom'
 import { FC, Fragment, useEffect, useState } from 'react'
@@ -48,7 +48,15 @@ const WorkshopSide: FC<{
         </Flex>
       </Flex>
       <Flex direction="column">
-        {workshops?.map((w, idx) => w.status === "confirmed" && (
+      {!workshops?.length ? (
+          <Flex gap="0.4rem" direction="column" paddingTop="0.5rem">
+            <Skeleton height="20px"/>
+            <Skeleton height="20px"/>
+            <Skeleton height="20px"/>
+            <Skeleton height="20px"/>
+            <Skeleton height="20px"/>
+          </Flex>
+        ) : workshops?.map((w, idx) => w.status === "confirmed" && (
           <Fragment key={w.id}>
             <Link to={`/workshops/${createSlug(w.workshop_name)}`}>
               <Text  textAlign="left" fontSize={14} fontWeight={500} padding="6px 4px">

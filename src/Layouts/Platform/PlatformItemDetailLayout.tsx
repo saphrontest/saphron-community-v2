@@ -3,7 +3,7 @@ import { FC, ReactNode } from 'react'
 
 interface IPlatformItemDetailLayoutProps {
     coverImg: string;
-    children: ReactNode[]
+    children: ReactNode[];
 }
 
 const PlatformItemDetailLayout:FC<IPlatformItemDetailLayoutProps> = ({
@@ -38,6 +38,7 @@ const PlatformItemDetailLayout:FC<IPlatformItemDetailLayoutProps> = ({
                     align="flex-end"
                     color="white"
                     p="6px 10px"
+                    borderRadius="16px 16px 0 0"
                     bgGradient="linear-gradient(to bottom, rgba(0, 0, 0, 0.20), rgba(0, 0, 0, 0.75))"
                 >
 

@@ -1,4 +1,13 @@
-import { Transaction, collection, doc, runTransaction } from "firebase/firestore"
+import {
+    doc,
+    query,
+    getDoc, 
+    getDocs,
+    collection,
+    Transaction,
+    runTransaction,
+    QueryDocumentSnapshot
+} from "firebase/firestore"
 import { ISupportGroup, ISupportGroupParticipant } from "../Interface/SupportGroupInterface"
 import { firestore } from "../firebaseClient"
 
@@ -49,11 +58,12 @@ const useSupportGroup = () => {
      */
 
     const onCreate = async (newGroup: ISupportGroup) => {
+        console.log(newGroup)
         runTransaction(firestore, async (transaction: Transaction) => {
             if(!newGroup.id) {
                 return;
             }
-            transaction.set(doc(firestore, 'supportGroup', newGroup.id), newGroup)
+            transaction.set(doc(firestore, 'supportGroups', newGroup.id), newGroup)
             transaction.set(doc(firestore, `users/${newGroup.support_group_manager_id}/supportGroups`, newGroup.id), {
                 supportGroupId: newGroup.id,
                 isModerator: true
@@ -101,11 +111,39 @@ const useSupportGroup = () => {
         })
     }
 
+    /**
+     * The function `getSupportGroups` retrieves support groups from a Firestore database and returns
+     * them as an array of `ISupportGroup` objects.
+     * @returns The function `getSupportGroups` returns an array of `ISupportGroup` objects.
+     */
+    const getSupportGroups = async () => {
+        const result: ISupportGroup[] = []
+        const data = await getDocs(query(collection(firestore, 'supportGroups')));
+        data.forEach((data: QueryDocumentSnapshot) => {
+            result.push(data.data() as ISupportGroup)
+        })
+        return result;
+    }
+
+    /**
+     * The function `getSupportGroupById` retrieves a support group from Firestore based on its ID.
+     * @param {string} supportGroupId - The `supportGroupId` parameter is a string that represents the
+     * unique identifier of a support group.
+     * @returns The function `getSupportGroupById` returns a Promise that resolves to an object of type
+     * `ISupportGroup`.
+     */
+    const getSupportGroupById = async (supportGroupId: string) => {
+        const supportGroup = await getDoc(doc(firestore, 'supportGroups', supportGroupId));
+        return supportGroup.data() as ISupportGroup
+    }
+
     return {
         onJoin,
         onCreate,
         onDelete,
-        onEdit
+        onEdit,
+        getSupportGroups,
+        getSupportGroupById
     }
   }
   

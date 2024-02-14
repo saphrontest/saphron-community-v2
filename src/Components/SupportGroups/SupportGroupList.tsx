@@ -1,15 +1,21 @@
 import { Flex } from '@chakra-ui/react'
-import { Fragment, useState } from 'react'
+import { FC, Fragment } from 'react'
 import SupportGroupItem from './SupportGroupItem'
+import { ISupportGroup } from '../../Interface/SupportGroupInterface'
 
-const SupportGroupList = () => {
-    const [selected, setSelected] = useState(-1);
+const SupportGroupList: FC<{
+    list: ISupportGroup[];
+    selected: ISupportGroup;
+    setSelected: (item: ISupportGroup) => void;
+}> = ({
+    list, selected, setSelected
+}) => {
     return (
         <Flex gap="1rem" w="50%" flexWrap="wrap">
             {
-                [0, 1, 2, 3, 4, 5].map(r => (
-                    <Fragment key={r}>
-                        <SupportGroupItem item={r} selected={selected} onClick={() => setSelected(r)} />
+                list.map((item: ISupportGroup) => (
+                    <Fragment key={item.id}>
+                        <SupportGroupItem item={item} selected={selected} onClick={() => setSelected(item)} />
                     </Fragment>
                 ))
             }

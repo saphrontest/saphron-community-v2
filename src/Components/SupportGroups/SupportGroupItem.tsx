@@ -1,18 +1,21 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react'
 import comm from '../../assets/images/menthal.jpg'
 import { FC } from 'react';
+import { ISupportGroup } from '../../Interface/SupportGroupInterface';
 
 interface ISupportGroupItem {
     onClick?: () => void;
-    item: number;
-    selected: number;
+    item: ISupportGroup;
+    selected: ISupportGroup;
 }
 
 const SupportGroupItem:FC<ISupportGroupItem> = ({ onClick, item, selected }) => {
+    
     return (
         <Flex
             w="180px"
             minH="150px"
+            h="fit-content"
             bg="gray.100"
             cursor="pointer"
             onClick={onClick}
@@ -24,11 +27,11 @@ const SupportGroupItem:FC<ISupportGroupItem> = ({ onClick, item, selected }) => 
             <Image src={comm} borderTopLeftRadius="12px" borderTopRightRadius="12px" />
             <Flex flex="1" p="0.5rem" direction="column" justify="space-between">
                 <Box>
-                    <Text align="left" noOfLines={2} fontWeight="600">
-                        Group 1
+                    <Text align="left" noOfLines={2} fontWeight="600" textTransform="capitalize">
+                        {item.support_group_name}
                     </Text>
                     <Text align="left" fontWeight="700">
-                        Morgan Freeman
+                        {item.support_group_manager_name}
                     </Text>
                 </Box>
             </Flex>

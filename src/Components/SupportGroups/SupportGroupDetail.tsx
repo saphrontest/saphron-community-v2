@@ -1,64 +1,48 @@
-import comm from '../../assets/images/menthal.jpg'
-import { Box, Button, Flex, Image, Text } from '@chakra-ui/react'
-import { setModal } from '../../redux/slices/modalSlice'
+import { FC } from 'react'
 import { useDispatch } from 'react-redux'
+import { setModal } from '../../redux/slices/modalSlice'
 import { PlatformItemDetailLayout } from '../../Layouts'
+import { Button, Flex, Image, Text } from '@chakra-ui/react'
+import { ISupportGroup } from '../../Interface/SupportGroupInterface'
 
-const SupportGroupDetail = () => {
+const SupportGroupDetail: FC<{ selected?: ISupportGroup }> = ({ selected }) => {
     const dispatch = useDispatch()
-    return (
-        <PlatformItemDetailLayout coverImg={comm}>
+    return selected ? (
+        <PlatformItemDetailLayout coverImg={selected.cover_img}>
             <>
-                <Box>
-                    <Text fontSize={22} fontWeight={700} marginBottom="0.3rem" align="left">
-                        name
-                    </Text>
-                    <Box
-                        bg="white"
-                        w="fit-content"
-                        h="fit-content"
-                        p="0.2rem 0.6rem"
-                        borderRadius="99px"
-                    >
-                        <Text fontWeight="600" color="black">
-                            category
-                        </Text>
-                    </Box>
-                </Box>
+                <Text fontSize={22} fontWeight={700} marginBottom="0.3rem" align="left">
+                    {selected?.support_group_name}
+                </Text>
                 <Flex direction="column" align="flex-end" justify="flex-end" h="100%">
                     <Flex align="center" gap={"0.7rem"}>
-                        <Image src={comm} w="30px" borderRadius="30px" />
+                        <Image src={selected?.support_group_manager_avatar} w="30px" borderRadius="30px" />
                         <Text align="left" noOfLines={1}>
-                            manager name
+                            {selected?.support_group_manager_name}
                         </Text>
                     </Flex>
                 </Flex>
             </>
             <>
                 <Text fontWeight={700} align="left" mb="0.7rem">
-                    date
-                </Text>
-                <Text fontStyle="italic" align="left" mb="0.7rem">
-                    desc
+                    {selected.createdAt}
                 </Text>
                 <Text
-                    align="left"
-                    fontWeight="600"
-                    dangerouslySetInnerHTML={{ __html: "<p>description 2</p>" }}
+                align="left"
+                fontWeight="600"
+                dangerouslySetInnerHTML={{ __html: selected.description }}
                 />
-                <Flex w="100%" justify="flex-end">
-                    <Button
-                        w="fit-content"
-                        h="fit-content"
-                        p="0.4rem 1.5rem"
-                        onClick={() => dispatch(setModal({ isOpen: true, view: 'joinSupportGroup', data: "" }))}
-                    >
-                        I wan't to join!
-                    </Button>
-                </Flex>
+                <Button
+                w="fit-content"
+                h="fit-content"
+                p="0.4rem 1.5rem"
+                marginTop="0.7rem"
+                onClick={() => dispatch(setModal({ isOpen: true, view: 'joinSupportGroup', data: "" }))}
+                >
+                    I wan't to join!
+                </Button>
             </>
         </PlatformItemDetailLayout>
-    )
+    ) : null
 
 }
 

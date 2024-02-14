@@ -41,7 +41,7 @@ const JoinSupportGroupForm: FC<{ supportGroup: ISupportGroup }> = ({ supportGrou
         return true
     }
     return false
-}
+  }
 
   const handleJoin = () => {
     
@@ -63,10 +63,13 @@ const JoinSupportGroupForm: FC<{ supportGroup: ISupportGroup }> = ({ supportGrou
 
   return (
     <>
-      <Box marginBottom="3rem">
-        <Text align="left" fontSize={22} fontWeight={400} pb="0.4rem">
-          Join <strong>{supportGroup.support_group_manager_name}</strong>'s Support Group
-        </Text>
+      <Box marginBottom="1rem">
+        {
+          supportGroup.support_group_manager_name &&
+            <Text align="left" fontSize={22} fontWeight={400} pb="0.4rem">
+              Join <strong>{supportGroup.support_group_manager_name}</strong>'s Support Group
+            </Text>
+        }
         <Text fontStyle="italic">
           Let's help him run a more efficient session by filling in the form below.
         </Text>

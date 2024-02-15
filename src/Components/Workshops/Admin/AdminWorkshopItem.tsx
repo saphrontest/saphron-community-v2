@@ -1,14 +1,12 @@
-import AdminStatusSelect from './AdminStatusSelect'
 import { FC } from 'react'
-import { Workshop, WorkshopStatusSelectOptionInterface } from '../../../Interface/WorkshopInterface'
-import { AdminItem } from '../../Platform'
+import { Workshop } from '../../../Interface/WorkshopInterface'
+import { AdminItem, AdminStatusSelect } from '../../Platform'
 
 const AdminWorkshopItem: FC<{
   idx: number;
   workshop: Workshop;
-  selectOptions: WorkshopStatusSelectOptionInterface[];
   onSelect: (worksopId: string, optionId: number) => Promise<Boolean>
-}> = ({workshop, idx, onSelect, selectOptions}) => {
+}> = ({workshop, idx, onSelect}) => {
   return (
       <AdminItem
       idx={idx}
@@ -20,7 +18,7 @@ const AdminWorkshopItem: FC<{
       userName={workshop.workshop_manager_name}
       userEmail={workshop.workshop_manager_mail}
       >
-        <AdminStatusSelect onSelect={onSelect} workshop={workshop} selectOptions={selectOptions} />
+        <AdminStatusSelect onSelect={onSelect} item={workshop} />
       </AdminItem>
   )
 }

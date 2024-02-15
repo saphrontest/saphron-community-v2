@@ -116,7 +116,7 @@ const UserMenu: FC<UserMenuProps> = ({ user }) => {
                         {
                             user.role === "admin" &&
                                 <CustomMenuItem>
-                                    <MenuItemInner to='/workshops/admin' icon={RiAdminLine} label="Workshops Dashboard" />
+                                    <MenuItemInner to='/admin' icon={RiAdminLine} label="Dashboard" />
                                 </CustomMenuItem>
                         }
                         <MenuDivider />

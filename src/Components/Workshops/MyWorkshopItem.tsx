@@ -1,5 +1,5 @@
  import { FC, Fragment, useEffect, useState } from "react";
-import { Workshop, WorkshopRequest, WorkshopStatusTypes } from "../../Interface/WorkshopInterface";
+import { Workshop, WorkshopRequest } from "../../Interface/WorkshopInterface";
 import { useBoolean, Flex, Divider, Spinner, Text, Image, Box, Button, useToast } from "@chakra-ui/react";
 import { doc, runTransaction, updateDoc } from "firebase/firestore";
 import moment from "moment";
@@ -9,6 +9,7 @@ import { firestore } from "../../firebaseClient";
 import ParticipantItem from "./ParticipantItem";
 import { EditWorkshopModal } from "../Modals";
 import { DeleteAlert } from "../Platform";
+import { IStatus } from "../../Interface/StatusInterface";
 
 interface MyWorkshopItemProps {
     idx: number;
@@ -39,7 +40,7 @@ const MyWorkshopItem: FC<MyWorkshopItemProps> = ({ workshop, idx, toggleReloadWo
     const handleButton = async (
         event: any,
         requestId: string,
-        status: WorkshopStatusTypes
+        status: IStatus
     ) => {
         event.stopPropagation()
         setIsLoading.toggle()

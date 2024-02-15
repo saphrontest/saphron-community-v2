@@ -1,13 +1,14 @@
 import { Flex, Divider, Spinner, Button, Text, useBoolean, Box } from '@chakra-ui/react'
 import React, { FC } from 'react'
-import { WorkshopRequest, WorkshopStatusTypes } from '../../Interface/WorkshopInterface'
+import { WorkshopRequest } from '../../Interface/WorkshopInterface'
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import moment from 'moment';
+import { IStatus } from '../../Interface/StatusInterface';
 
 interface ParticipantItemProps {
     isLoading: boolean;
     participant: WorkshopRequest;
-    handleButton: (event: any, requestId: string, status: WorkshopStatusTypes) => Promise<void>;
+    handleButton: (event: any, requestId: string, status: IStatus) => Promise<void>;
 }
 const ParticipantItem: FC<ParticipantItemProps> = ({ participant, isLoading, handleButton }) => {
     const [isClicked, setIsClicked] = useBoolean(false)

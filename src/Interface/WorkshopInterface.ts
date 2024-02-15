@@ -1,4 +1,5 @@
-export type WorkshopStatusTypes = "waiting" | "confirmed" | "rejected"
+import { IStatus } from "./StatusInterface";
+
 
 export interface Workshop {
     id: string;
@@ -13,7 +14,7 @@ export interface Workshop {
     workshop_manager_name: string;
     workshop_manager_avatar: string;
     workshop_manager_mail: string;
-    status: WorkshopStatusTypes
+    status: IStatus;
     participants: WorkshopRequest[] | []
 }
 
@@ -28,7 +29,7 @@ export interface WorkshopRequest {
     userId: string;
     workshopId: string;
     motivation: string;
-    status: WorkshopStatusTypes;
+    status: IStatus;
 }
 
 export interface UserWorkshops {
@@ -37,8 +38,3 @@ export interface UserWorkshops {
     isModerator: boolean;
 }
 
-export interface WorkshopStatusSelectOptionInterface {
-    id: number;
-    select: boolean;
-    label: WorkshopStatusTypes;
-}

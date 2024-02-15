@@ -6,17 +6,18 @@ import { useEffect, useState } from 'react'
 import { Workshop, WorkshopRequest } from '../Interface/WorkshopInterface'
 import { useDispatch, useSelector } from 'react-redux'
 import { setModal } from '../redux/slices/modalSlice'
-import { createSlug, getUserWorkshopRequestList, getWorkshops } from '../Helpers'
+import { createSlug } from '../Helpers'
 import { UserInterface } from '../Interface/UserInterface'
 import { RootState } from '../redux/store'
 import { useParams } from 'react-router-dom'
+import { useWorkshop } from '../Hooks'
 
 const WorkshopsPage = () => {
 
   const params = useParams()
   const dispatch = useDispatch()
   const toast = useToast()
-
+  const {getWorkshops, getWorkshopRequestsByUserID} = useWorkshop()
 
   const [selected, setSelected] = useState<Workshop | undefined>()
   const [workshops, setWorkshops] = useState<Workshop[]>([])
@@ -43,8 +44,8 @@ const WorkshopsPage = () => {
 
   useEffect(() => {
     if (user.id) {
-      getUserWorkshopRequestList(user.id)
-        .then((res: WorkshopRequest[] | false) => res && setWorkshopRequests(res))
+      getWorkshopRequestsByUserID(user.id)
+        .then((res: WorkshopRequest[]) => res.length && setWorkshopRequests(res))
     } else {
       toast({
         title: "Please login, first!",

@@ -1,17 +1,18 @@
 import React, { FC, useEffect, useState } from 'react'
 import AdminWorkshopItem from './AdminWorkshopItem'
 import { Workshop } from '../../../Interface/WorkshopInterface'
-import { getWorkshops } from '../../../Helpers';
 import { Flex } from '@chakra-ui/react';
-import { useStatus } from '../../../Hooks';
+import { useStatus, useWorkshop } from '../../../Hooks';
 
 const WorkshopAdmin: FC = () => {
     const { updateStatus } = useStatus()
+    const {getWorkshops} = useWorkshop()
     const [workshops, setWorkshops] = useState<Workshop[]>()
 
     useEffect(() => {
         getWorkshops()
             .then((result: Workshop[] | false) => !!result && setWorkshops(result))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const updateItemStatus = (itemId: string, optionId: number) => {

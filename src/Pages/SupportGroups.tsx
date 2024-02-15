@@ -15,7 +15,7 @@ const SupportGroups = () => {
     
     useEffect(() => {
         getSupportGroups()
-            .then((result: ISupportGroup[]) => result && setSupportGroups(result))
+            .then((result: ISupportGroup[]) => result.length && setSupportGroups(result))
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

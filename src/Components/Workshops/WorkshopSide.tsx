@@ -2,13 +2,14 @@ import { Flex, Text, Divider, Skeleton } from '@chakra-ui/react'
 import communitiesBackground from '../../assets/images/communities.jpg'
 import { Link } from 'react-router-dom'
 import { FC, Fragment, useEffect, useState } from 'react'
-import { createSlug, getWorkshops } from '../../Helpers'
+import { createSlug } from '../../Helpers'
 import { Workshop } from '../../Interface/WorkshopInterface'
+import { useWorkshop } from '../../Hooks'
 
 const WorkshopSide: FC<{
   showButton?: boolean
 }> = ({showButton = true}) => {
-
+  const {getWorkshops} = useWorkshop()
   const [workshops, setWorkshops] = useState<Workshop[]>()
 
   useEffect(() => {

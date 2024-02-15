@@ -4,12 +4,12 @@ import { useBoolean, Flex, Divider, Spinner, Text, Image, Box, Button, useToast 
 import { doc, runTransaction, updateDoc } from "firebase/firestore";
 import moment from "moment";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-import { getWorkshopJoinRequests } from "../../Helpers";
 import { firestore } from "../../firebaseClient";
 import ParticipantItem from "./ParticipantItem";
 import { EditWorkshopModal } from "../Modals";
 import { DeleteAlert } from "../Platform";
 import { IStatus } from "../../Interface/StatusInterface";
+import { useWorkshop } from "../../Hooks";
 
 interface MyWorkshopItemProps {
     idx: number;
@@ -20,6 +20,7 @@ interface MyWorkshopItemProps {
 const MyWorkshopItem: FC<MyWorkshopItemProps> = ({ workshop, idx, toggleReloadWorkshops }) => {
 
     const toast = useToast()
+    const {getParticipantsByWorkshopID} = useWorkshop()
     const [isClicked, setIsClicked] = useBoolean(false)
     const [isLoading, setIsLoading] = useBoolean(false)
     const [isEditOpen, setEditOpen] = useBoolean(false)
@@ -30,8 +31,8 @@ const MyWorkshopItem: FC<MyWorkshopItemProps> = ({ workshop, idx, toggleReloadWo
     useEffect(() => {
         if (isClicked) {
             setParticipantsLoading(true)
-            getWorkshopJoinRequests(workshop.id)
-                .then(result => result && setParticipants(result))
+            getParticipantsByWorkshopID(workshop.id)
+                .then(result => result.length && setParticipants(result))
                 .finally(() => setParticipantsLoading(false))
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -47,8 +48,8 @@ const MyWorkshopItem: FC<MyWorkshopItemProps> = ({ workshop, idx, toggleReloadWo
         const joinDocRef = doc(firestore, `workshops/${workshop.id}/participants/${requestId}`)
         updateDoc(joinDocRef, { status, updatedAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss") })
             .finally(() => {
-                getWorkshopJoinRequests(workshop.id)
-                    .then(result => result && setParticipants(result))
+                getParticipantsByWorkshopID(workshop.id)
+                    .then(result => result.length && setParticipants(result))
                     .finally(() => setIsLoading.toggle())
             })
     }

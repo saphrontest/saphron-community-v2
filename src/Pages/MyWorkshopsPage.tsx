@@ -2,17 +2,17 @@ import { Flex, Text, useBoolean } from "@chakra-ui/react"
 import { PageLayout } from "../Layouts"
 import { JoinedWorkshops, MyWorkshopItem, RequestedWorkshops } from "../Components"
 import React, { useEffect, useState } from "react"
-import { getUserWorkshopRequestList, getUserWorkshops, getWorkshops } from "../Helpers"
 import { UserWorkshops, Workshop, WorkshopRequest } from "../Interface/WorkshopInterface"
 import { UserInterface } from "../Interface/UserInterface"
 import { useSelector } from "react-redux"
 import { RootState } from "../redux/store"
 import { useMediaQuery } from '@chakra-ui/react'
+import { useWorkshop } from "../Hooks"
 
 const MyWorkshopsPage = () => {
 
+  const {getWorkshops, getWorkshopRequestsByUserID, getWorkshopByUserID} = useWorkshop()
   const user: UserInterface = useSelector((state: RootState) => state.user)
-
   const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
 
   const [workshops, setWorkshops] = useState<Workshop[]>()
@@ -27,13 +27,13 @@ const MyWorkshopsPage = () => {
     getWorkshops()
     .then(result => result && setWorkshops(result))
 
-    getUserWorkshopRequestList(user.id)
-      .then(result => {
-        result && setRequestedWorkshops(result)
+    getWorkshopRequestsByUserID(user.id)
+      .then((result: WorkshopRequest[]) => {
+        result.length && setRequestedWorkshops(result)
       })
 
-    getUserWorkshops(user.id)
-      .then(result => result && setUserWorkshops(result))
+      getWorkshopByUserID(user.id)
+      .then(result => result.length && setUserWorkshops(result))
 
   }
 

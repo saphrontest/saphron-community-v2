@@ -60,7 +60,6 @@ const useSupportGroup = () => {
      */
 
     const onCreate = async (newGroup: ISupportGroup) => {
-        console.log(newGroup)
         runTransaction(firestore, async (transaction: Transaction) => {
             if(!newGroup.id) {
                 return;
@@ -121,8 +120,12 @@ const useSupportGroup = () => {
     const getSupportGroups = async () => {
         const result: ISupportGroup[] = []
         const data = await getDocs(query(collection(firestore, 'supportGroups')));
-        data.forEach((data: QueryDocumentSnapshot) => {
-            result.push(data.data() as ISupportGroup)
+        data.forEach(async (data: QueryDocumentSnapshot) => {
+            const participants = await getParticipantsBySupportGroupId(data.id)
+            result.push({
+                ...data.data(),
+                participants: participants.length ? participants : []
+            } as ISupportGroup);
         })
         return result;
     }
@@ -137,6 +140,15 @@ const useSupportGroup = () => {
     const getSupportGroupById = async (supportGroupId: string) => {
         const supportGroup = await getDoc(doc(firestore, 'supportGroups', supportGroupId));
         return supportGroup.data() as ISupportGroup
+    }
+
+    const getParticipantsBySupportGroupId = async (supportGroupId: string) => {
+        const result: ISupportGroupParticipant[] = []
+        const data = await getDocs(query(collection(firestore, `supportGroups/${supportGroupId}/participants`)));
+        data.forEach(async (data: QueryDocumentSnapshot) => {
+            result.push(data.data() as ISupportGroupParticipant)
+        })
+        return result;
     }
 
     return {

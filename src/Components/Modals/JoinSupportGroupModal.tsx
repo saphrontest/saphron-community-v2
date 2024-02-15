@@ -2,8 +2,9 @@ import React, { FC } from 'react'
 import { ModalLayout } from '../../Layouts'
 import { ModalBody, ModalCloseButton, ModalHeader } from '@chakra-ui/react';
 import { JoinSupportGroupForm } from '../SupportGroups';
+import { ISupportGroup } from '../../Interface/SupportGroupInterface';
 
-const JoinSupportGroupModal: FC<{ data: any; }> = ({ data }) => {
+const JoinSupportGroupModal: FC<{ data: ISupportGroup; }> = ({ data }) => {
   return (
       <ModalLayout>
           <ModalHeader display="flex" flexDirection="column" alignItems="center">

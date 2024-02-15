@@ -1,5 +1,5 @@
 import { PlatformPageLayout } from '../Layouts'
-import { useMediaQuery, useToast } from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/react'
 import communitiesBackground from '../assets/images/communities.jpg'
 import { WorkshopDetail, WorkshopList } from '../Components'
 import { useEffect, useState } from 'react'
@@ -17,7 +17,6 @@ const WorkshopsPage = () => {
   const dispatch = useDispatch()
   const toast = useToast()
 
-  const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
 
   const [selected, setSelected] = useState<Workshop | undefined>()
   const [workshops, setWorkshops] = useState<Workshop[]>([])
@@ -71,6 +70,7 @@ const WorkshopsPage = () => {
     }
   }
 
+
   return (
     <PlatformPageLayout
       title="Workshops"
@@ -78,14 +78,8 @@ const WorkshopsPage = () => {
       actionButtonText="I wan’t to be a workshop manager!"
       actionButtonOnClick={actionButtonOnClick}
     >
-      {isSmallerThan766 ? (
-        <WorkshopList.Mobile workshops={workshops} />
-      ) : (
-        <>
-          <WorkshopList.Desktop selected={selected} setSelected={setSelected} workshops={workshops} />
-          <WorkshopDetail selected={selected} isRequested={!!workshopRequests?.some((workshop: WorkshopRequest) => workshop?.workshopId === selected?.id)} />
-        </>
-      )}
+      <WorkshopList selected={selected} setSelected={setSelected} workshops={workshops}  />
+      <WorkshopDetail selected={selected} isRequested={!!workshopRequests?.some((workshop: WorkshopRequest) => workshop?.workshopId === selected?.id)} />
     </PlatformPageLayout>
 
   )

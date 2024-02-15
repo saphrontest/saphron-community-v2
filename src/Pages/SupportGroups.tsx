@@ -6,7 +6,6 @@ import { setModal } from '../redux/slices/modalSlice'
 import { useEffect, useState } from 'react'
 import { useSupportGroup } from '../Hooks'
 import { ISupportGroup } from '../Interface/SupportGroupInterface'
-
 const SupportGroups = () => {
 
     const dispatch = useDispatch()
@@ -34,7 +33,7 @@ const SupportGroups = () => {
         actionButtonText="Create group chat"
         actionButtonOnClick={() => dispatch(setModal({isOpen: true, view: 'createSupportGroup', data: ""}))}
         >
-            {(supportGroups && selected) && <SupportGroupList list={supportGroups} setSelected={setSelected} selected={selected}/>}
+            <SupportGroupList list={supportGroups} setSelected={setSelected} selected={selected}/>
             <SupportGroupDetail selected={selected}/>
         </PlatformPageLayout>
     )

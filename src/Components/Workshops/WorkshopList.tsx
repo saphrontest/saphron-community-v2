@@ -1,16 +1,15 @@
 import { FC, Fragment } from 'react'
-import { Flex } from '@chakra-ui/react'
+import { Flex, useMediaQuery } from '@chakra-ui/react'
 import { WorkshopCard } from '..'
 import { Workshop } from '../../Interface/WorkshopInterface'
 
 interface WorkshopListProps {
     workshops: Workshop[];
-    selected: Workshop | undefined;
-    setSelected: (workshop: Workshop) => void
+    selected?: Workshop | undefined;
+    setSelected?: (workshop: Workshop) => void
 }
 
-const Mobile: FC<{ workshops: Workshop[] }> = ({ workshops }) => {
-
+const Mobile: FC<WorkshopListProps> = ({ workshops }) => {
     return (
         <Flex direction="column" gap="1rem">
             {workshops.map((workshop, idx) => (
@@ -18,7 +17,8 @@ const Mobile: FC<{ workshops: Workshop[] }> = ({ workshops }) => {
                     <WorkshopCard.Mobile workshop={workshop} idx={idx}/>
                 </Fragment>
             ))}
-        </Flex>)
+        </Flex>
+    )
 }
 
 const Desktop: FC<WorkshopListProps> = ({ workshops, selected, setSelected }) => {
@@ -34,7 +34,9 @@ const Desktop: FC<WorkshopListProps> = ({ workshops, selected, setSelected }) =>
     )
 }
 
+const WorkshopList:FC<WorkshopListProps> = ({ workshops, selected, setSelected }) => {
+    const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
+    return isSmallerThan766 ? <Mobile workshops={workshops} /> : <Desktop selected={selected} setSelected={setSelected} workshops={workshops} />
+}
 
-
-// eslint-disable-next-line import/no-anonymous-default-export
-export default { Desktop, Mobile }
+export default WorkshopList

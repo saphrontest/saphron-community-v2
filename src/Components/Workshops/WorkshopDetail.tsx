@@ -1,4 +1,4 @@
-import { Flex, Button, Box, Text, Image, useToast } from '@chakra-ui/react'
+import { Flex, Button, Box, Text, Image, useToast, useMediaQuery } from '@chakra-ui/react'
 import moment from 'moment'
 import { setModal } from '../../redux/slices/modalSlice'
 import { FC } from 'react'
@@ -44,9 +44,10 @@ const WorkshopDetail: FC<{
 
     const toast = useToast()
     const dispatch = useDispatch()
+  const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
     const user: UserInterface = useSelector((state: RootState) => state.user)
 
-    return selected ? (
+    return selected && !isSmallerThan766 ? (
         <PlatformItemDetailLayout coverImg={selected?.cover_img}>
             <>
                 <Box>

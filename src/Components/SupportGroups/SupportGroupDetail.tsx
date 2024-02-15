@@ -2,12 +2,15 @@ import { FC } from 'react'
 import { useDispatch } from 'react-redux'
 import { setModal } from '../../redux/slices/modalSlice'
 import { PlatformItemDetailLayout } from '../../Layouts'
-import { Button, Flex, Image, Text } from '@chakra-ui/react'
+import { Button, Flex, Image, Text, useMediaQuery } from '@chakra-ui/react'
 import { ISupportGroup } from '../../Interface/SupportGroupInterface'
 
 const SupportGroupDetail: FC<{ selected?: ISupportGroup }> = ({ selected }) => {
+
     const dispatch = useDispatch()
-    return selected ? (
+    const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
+    
+    return selected && !isSmallerThan766 ? (
         <PlatformItemDetailLayout coverImg={selected.cover_img}>
             <>
                 <Text fontSize={22} fontWeight={700} marginBottom="0.3rem" align="left">
@@ -36,7 +39,7 @@ const SupportGroupDetail: FC<{ selected?: ISupportGroup }> = ({ selected }) => {
                 h="fit-content"
                 p="0.4rem 1.5rem"
                 marginTop="0.7rem"
-                onClick={() => dispatch(setModal({ isOpen: true, view: 'joinSupportGroup', data: "" }))}
+                onClick={() => dispatch(setModal({ isOpen: true, view: 'joinSupportGroup', data: selected }))}
                 >
                     I wan't to join!
                 </Button>

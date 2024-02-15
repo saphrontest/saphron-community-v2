@@ -23,29 +23,31 @@ import { firestore } from "../firebaseClient"
 const useSupportGroup = () => {
 
     /**
-     * The function `onJoin` is used to add a participant to a support group and update the
-     * corresponding documents in Firestore.
-     * @param {ISupportGroup} supportGroup - The supportGroup parameter is an object of type
-     * ISupportGroup, which represents a support group. It contains information about the support
-     * group, such as its ID and the support group manager.
+     * The `onJoin` function is used to add a user to a support group by creating a support group
+     * request and adding the user as a participant.
+     * @param {ISupportGroup} supportGroup - The `supportGroup` parameter is of type `ISupportGroup`,
+     * which represents a support group object. It likely contains information such as the support
+     * group's ID, name, description, and other relevant details.
+     * @param {string} userId - The `userId` parameter is a string that represents the unique
+     * identifier of the user who wants to join the support group.
      * @param {ISupportGroupParticipant} request - The `request` parameter is an object that represents
-     * a support group participant. It contains properties such as `id`, which is the unique identifier
-     * for the participant, and other relevant information about the participant.
+     * the participant's request to join the support group. It contains information such as the
+     * participant's ID, name, and any additional details required for joining the support group.
+     * @returns a Promise that resolves to a boolean value of `true` if the transaction is successful.
      */
-
-    const onJoin = (supportGroup: ISupportGroup, request: ISupportGroupParticipant) => {
-        runTransaction(firestore, async (transaction: Transaction) => {
+    const onJoin = async (supportGroup: ISupportGroup, userId: string, request: ISupportGroupParticipant) => {
+        return runTransaction(firestore, async (transaction: Transaction) => {
             transaction.set(
-                doc(collection(firestore, `users/${supportGroup.support_group_manager_id}/supportGroupRequests`), request.id),
+                doc(collection(firestore, `users/${userId}/supportGroupRequests`), request.id),
                 { supportGroupId: supportGroup?.id }
-            );
+            )
             transaction.set(
                 doc(collection(firestore, `supportGroups/${supportGroup.id}/participants`), request.id),
                 request
-            );
+            )
         }).then(() => {
             return true
-        }).catch(() => {
+        }).catch((err) => {
             throw new Error('Could not join the support group, please try again later!')
         })
     }

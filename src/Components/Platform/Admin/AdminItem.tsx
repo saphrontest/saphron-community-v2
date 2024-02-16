@@ -29,11 +29,11 @@ const AdminItem: FC<IAdminItemProps> = ({
                     </Box>
                 </Flex>
                 <Divider orientation='vertical' borderColor="gray" h="100%" />
-                <Flex direction="row" gap="0.5rem">
+                <Flex direction="row" gap="0.8rem" align="center">
                     <Image src={userAvatar} width="32px" height="32px" borderRadius={999} />
-                    <Flex gap="0.3rem" align="flex-start" justify="center" direction="column">
+                    <Flex gap="0.1rem" align="flex-start" justify="center" direction="column">
                         <Text textAlign="left" color="gray" fontSize={12} fontStyle="italic">#{userId}</Text>
-                        <Text textAlign="left">{userName}</Text>
+                        <Text textAlign="left" fontWeight={600}>{userName}</Text>
                         <Text textAlign="left">{userEmail}</Text>
                     </Flex>
                 </Flex>

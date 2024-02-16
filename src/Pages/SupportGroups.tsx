@@ -15,11 +15,14 @@ const SupportGroups = () => {
     
     useEffect(() => {
         getSupportGroups()
-            .then((result: ISupportGroup[]) => result.length && setSupportGroups(result))
+            .then((result: ISupportGroup[]) => {
+                result.length && setSupportGroups(result)
+            })
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
+        console.log(supportGroups)
         if(!!supportGroups?.length && !selected) {
             setSelected(supportGroups[0])
         }

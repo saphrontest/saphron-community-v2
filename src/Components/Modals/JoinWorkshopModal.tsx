@@ -100,7 +100,7 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
                 >
                     {!isSmallerThan766 &&
                         <Flex minW="40%" h="100%" align="center" justify="center" pt="1rem">
-                            <WorkshopCard.Desktop workshop={workshop as Workshop} />
+                            <WorkshopCard.Desktop workshop={workshop as Workshop} isActive={true}/>
                         </Flex>
                     }
                     <Flex direction="column" >

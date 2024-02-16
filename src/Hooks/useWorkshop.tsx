@@ -5,21 +5,28 @@ import { firestore } from "../firebaseClient";
 const useWorkshop = () => {
 
     /**
-     * The function `getWorkshops` retrieves workshops from a Firestore database and includes the
-     * participants for each workshop.
-     * @returns The function `getWorkshops` is returning a Promise that resolves to an array of
-     * Workshop objects.
+     * The function `getWorkshops` retrieves workshops from a Firestore database, retrieves
+     * participants for each workshop, and returns an array of workshops with their respective
+     * participants.
+     * @returns The function `getWorkshops` is returning an array of Workshop objects.
      */
     const getWorkshops = async () => {
         const result: Workshop[] = []
         const data = await getDocs(query(collection(firestore, 'workshops')));
-        data.forEach(async (data: QueryDocumentSnapshot) => {
+    
+        const promises = data.docs.map(async (data: QueryDocumentSnapshot) => {
             const participants = await getParticipantsByWorkshopID(data.id)
-            result.push({
+            return {
                 ...data.data(),
+                id: data.id,
                 participants: participants.length ? participants : []
-            } as Workshop);
-        })
+            } as Workshop;
+        });
+    
+        // Wait for all promises to resolve using Promise.all
+        const workshops = await Promise.all(promises);
+        result.push(...workshops);
+    
         return result;
     };
 

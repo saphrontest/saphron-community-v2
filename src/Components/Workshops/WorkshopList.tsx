@@ -27,7 +27,12 @@ const Desktop: FC<WorkshopListProps> = ({ workshops, selected, setSelected }) =>
             {
                 workshops
                     .map((workshop: Workshop, idx: number) => (
-                        <WorkshopCard.Desktop key={idx} workshop={workshop} selected={selected} setSelected={setSelected} />
+                        <WorkshopCard.Desktop
+                        key={idx}
+                        workshop={workshop}
+                        isActive={selected?.id === workshop.id}
+                        setSelected={setSelected}
+                        />
                     ))
             }
         </Flex>

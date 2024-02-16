@@ -52,17 +52,16 @@ const Mobile: FC<IMobileCard> = ({
 
 interface IDesktopCard {
   workshop: Workshop;
-  selected?: Workshop | undefined;
+  isActive: boolean;
   setSelected?: (workshop: Workshop) => void;
 }
 
 const Desktop: FC<IDesktopCard> = ({
   workshop,
   setSelected,
-  selected
+  isActive
 }) => {
   return (
-    (
       <Flex
         w="180px"
         minH="250px"
@@ -71,8 +70,8 @@ const Desktop: FC<IDesktopCard> = ({
         direction="column"
         borderRadius="12px"
         onClick={() => setSelected && setSelected(workshop)}
-        border={(!!selected && selected.id === workshop.id) ? "2.5px solid" : "none"}
-        borderColor="blue.500"
+        outline={isActive ? "2.5px solid" : "none"}
+        outlineColor={isActive ? "blue.500" : "none"}
       >
         <Image src={workshop.cover_img} borderTopLeftRadius="12px" borderTopRightRadius="12px" />
         <Flex direction="column" justify="space-between" flex="1" p={"0.5rem"}>
@@ -91,7 +90,6 @@ const Desktop: FC<IDesktopCard> = ({
           </Box>
         </Flex>
       </Flex>
-    )
   )
 }
 

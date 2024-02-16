@@ -13,16 +13,16 @@ interface IAdminTabs {
 
 const AdminTabs: FC<IAdminTabs> = ({ tabs }) => {
     return (
-        <Tabs>
+        <Tabs isLazy={true}>
             <TabList>
-                {tabs.map(tab => (
-                    <Tab key={tab.name}>
-                        <Text fontWeight={500}>{tab.name}</Text>
+                {tabs.map(({name, id}) => (
+                    <Tab key={id}>
+                        <Text fontWeight={500}>{name}</Text>
                     </Tab>
                 ))}
             </TabList>
             <TabPanels>
-                {tabs.map(tab => <TabPanel>{tab.component}</TabPanel>)}
+                {tabs.map(({component, id}) => <TabPanel key={id}>{component}</TabPanel>)}
             </TabPanels>
         </Tabs>
     )

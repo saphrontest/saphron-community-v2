@@ -112,21 +112,29 @@ const useSupportGroup = () => {
         })
     }
 
+    
     /**
-     * The function `getSupportGroups` retrieves support groups from a Firestore database and returns
-     * them as an array of `ISupportGroup` objects.
+     * The function `getSupportGroups` retrieves support groups from a Firestore database, including
+     * their participants, and returns them as an array.
      * @returns The function `getSupportGroups` returns an array of `ISupportGroup` objects.
      */
     const getSupportGroups = async () => {
         const result: ISupportGroup[] = []
         const data = await getDocs(query(collection(firestore, 'supportGroups')));
-        data.forEach(async (data: QueryDocumentSnapshot) => {
+    
+        const promises = data.docs.map(async (data: QueryDocumentSnapshot) => {
             const participants = await getParticipantsBySupportGroupId(data.id)
-            result.push({
+            return {
                 ...data.data(),
+                id: data.id,
                 participants: participants.length ? participants : []
-            } as ISupportGroup);
-        })
+            } as ISupportGroup;
+        });
+    
+        // Wait for all promises to resolve using Promise.all
+        const workshops = await Promise.all(promises);
+        result.push(...workshops);
+    
         return result;
     }
 

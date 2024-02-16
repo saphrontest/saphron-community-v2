@@ -57,16 +57,18 @@ const WorkshopSide: FC<{
             <Skeleton height="20px"/>
             <Skeleton height="20px"/>
           </Flex>
-        ) : workshops?.map((w, idx) => w.status === "confirmed" && (
-          <Fragment key={w.id}>
-            <Link to={`/workshops/${createSlug(w.workshop_name)}`}>
-              <Text  textAlign="left" fontSize={14} fontWeight={500} padding="6px 4px">
-                {w.workshop_name}
-              </Text>
-            </Link>
-            {idx !== workshops?.length-1 && <Divider/>}
-          </Fragment>
-        ))}
+        ) : workshops?.map((w, idx) => {
+            return w.status === "confirmed" && (
+              <Fragment key={w.id}>
+                <Link to={`/workshops/${createSlug(w.workshop_name)}`}>
+                  <Text  textAlign="left" fontSize={14} fontWeight={500} padding="6px 4px">
+                    {w.workshop_name}
+                  </Text>
+                </Link>
+                {idx !== workshops?.length-1 && <Divider/>}
+              </Fragment>
+            )
+          })}
         {showButton && (
           <>
             <Divider />

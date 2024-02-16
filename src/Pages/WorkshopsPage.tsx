@@ -27,7 +27,7 @@ const WorkshopsPage = () => {
 
   useEffect(() => {
     getWorkshops()
-      .then(result => result && setWorkshops(result))
+      .then(result => result.length && setWorkshops(result))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -79,7 +79,7 @@ const WorkshopsPage = () => {
       actionButtonText="I wan’t to be a workshop manager!"
       actionButtonOnClick={actionButtonOnClick}
     >
-      <WorkshopList selected={selected} setSelected={setSelected} workshops={workshops}  />
+      <WorkshopList setSelected={setSelected} workshops={workshops}  selected={selected}/>
       <WorkshopDetail selected={selected} isRequested={!!workshopRequests?.some((workshop: WorkshopRequest) => workshop?.workshopId === selected?.id)} />
     </PlatformPageLayout>
 

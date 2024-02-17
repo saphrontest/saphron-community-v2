@@ -1,29 +1,40 @@
-import { Flex, Divider, Spinner, Button, Text, useBoolean, Box } from '@chakra-ui/react'
+import { Flex, Divider, Spinner, Button, Text, Box, useBoolean } from '@chakra-ui/react'
+import moment from 'moment'
 import React, { FC } from 'react'
-import { WorkshopRequest } from '../../Interface/WorkshopInterface'
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-import moment from 'moment';
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
 import { IStatus } from '../../Interface/StatusInterface';
 
-interface ParticipantItemProps {
+interface IParticipantAsProp {
+    id: string;
+    userId: string;
+    updatedAt: string;
+    motivation: string;
+    name: string;
+    status: IStatus;
+}
+
+interface IPlatformParticipantItemProps {
     isLoading: boolean;
-    participant: WorkshopRequest;
+    participant: IParticipantAsProp;
     handleButton: (event: any, requestId: string, status: IStatus) => Promise<void>;
 }
-const ParticipantItem: FC<ParticipantItemProps> = ({ participant, isLoading, handleButton }) => {
+
+const PlatformParticipantItem:FC<IPlatformParticipantItemProps> = ({
+    participant, isLoading, handleButton
+}) => {
     const [isClicked, setIsClicked] = useBoolean(false)
     return (
         <Flex direction="column" align="flex-start" bg="gray.100" p="1rem" w="100%" borderRadius="0.4rem" onClick={ev => ev.stopPropagation()}>
             <Flex
-            w="100%"
-            align="center"
-            direction="row"
-            justify="space-between"
-            cursor="pointer"
-            onClick={ev => {
-                ev.stopPropagation()
-                setIsClicked.toggle()
-            }}
+                w="100%"
+                align="center"
+                direction="row"
+                justify="space-between"
+                cursor="pointer"
+                onClick={ev => {
+                    ev.stopPropagation()
+                    setIsClicked.toggle()
+                }}
             >
                 <Text fontSize={12} color="gray" textAlign="left"><strong>USER ID</strong> {participant.userId}</Text>
                 <Box bg="gray.300" borderRadius={9999}>
@@ -56,4 +67,4 @@ const ParticipantItem: FC<ParticipantItemProps> = ({ participant, isLoading, han
     )
 }
 
-export default ParticipantItem
+export default PlatformParticipantItem

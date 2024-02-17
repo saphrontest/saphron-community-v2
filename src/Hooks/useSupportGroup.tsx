@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore"
 import { ISupportGroup, ISupportGroupParticipant } from "../Interface/SupportGroupInterface"
 import { firestore } from "../firebaseClient"
+import { createSlug } from "../Helpers"
 
 /**
  * The `useSupportGroup` function provides helper functions for managing support groups in a TypeScript
@@ -132,8 +133,8 @@ const useSupportGroup = () => {
         });
     
         // Wait for all promises to resolve using Promise.all
-        const workshops = await Promise.all(promises);
-        result.push(...workshops);
+        const supportGroups = await Promise.all(promises);
+        result.push(...supportGroups);
     
         return result;
     }
@@ -150,6 +151,14 @@ const useSupportGroup = () => {
         return supportGroup.data() as ISupportGroup
     }
 
+    /**
+     * This function retrieves participants belonging to a support group specified by its ID.
+     * @param {string} supportGroupId - The `supportGroupId` parameter is a string that represents the
+     * unique identifier of a support group.
+     * @returns The `getParticipantsBySupportGroupId` function is returning a Promise that resolves to
+     * an array of `ISupportGroupParticipant` objects. The function fetches participant data from a
+     * Firestore collection based on the `supportGroupId` provided as a parameter.
+     */
     const getParticipantsBySupportGroupId = async (supportGroupId: string) => {
         const result: ISupportGroupParticipant[] = []
         const data = await getDocs(query(collection(firestore, `supportGroups/${supportGroupId}/participants`)));
@@ -159,13 +168,36 @@ const useSupportGroup = () => {
         return result;
     }
 
+    /**
+     * The function `getSupportGroupBySlug` retrieves a support group by its slug from a list of
+     * support groups.
+     * @param {string} slug - The `slug` parameter is a string that represents a unique identifier for
+     * a support group. It is used to search for a specific support group by its slug in the
+     * `getSupportGroupBySlug` function.
+     * @returns The function `getSupportGroupBySlug` is returning a promise that resolves to an
+     * `ISupportGroup` object or `undefined`.
+     */
+    const getSupportGroupBySlug = async (slug: string) => {
+        const supportGroups = await getSupportGroups()
+        const result: ISupportGroup | undefined = supportGroups.find(({support_group_name}) => createSlug(support_group_name) === slug)
+        return result
+    }
+
+    const getSupportGroupsByUserId = async (userId: string) => {
+        const groups = await getSupportGroups()
+        const result: ISupportGroup[] = groups.filter(({support_group_manager_id}) => support_group_manager_id === userId)
+        return result
+    }
+
     return {
+        onEdit,
         onJoin,
         onCreate,
         onDelete,
-        onEdit,
         getSupportGroups,
-        getSupportGroupById
+        getSupportGroupById,
+        getSupportGroupBySlug,
+        getSupportGroupsByUserId
     }
   }
   

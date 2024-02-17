@@ -47,7 +47,7 @@ const PlatformItemDetailLayout:FC<IPlatformItemDetailLayoutProps> = ({
                     </Flex>
                 </Flex>
             </Flex>
-            <Flex p="1rem" direction="column">
+            <Flex p="1rem" direction="column" w="100%">
                 {children[1]}
             </Flex>
         </Flex>

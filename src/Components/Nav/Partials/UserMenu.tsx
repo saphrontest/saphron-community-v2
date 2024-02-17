@@ -115,7 +115,7 @@ const UserMenu: FC<UserMenuProps> = ({ user }) => {
                             <MenuItemInner to='/my-workshops' icon={GrWorkshop} label="My Workshops" />
                         </CustomMenuItem>
                         <CustomMenuItem>
-                            <MenuItemInner to='/my-support-groups' icon={GrGroup} label="My SupportGroups" />
+                            <MenuItemInner to='/my-support-groups' icon={GrGroup} label="My Support Groups" />
                         </CustomMenuItem>
                         {
                             user.role === "admin" &&

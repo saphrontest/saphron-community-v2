@@ -1,8 +1,11 @@
-import { QueryDocumentSnapshot, collection, getDocs, query } from "firebase/firestore";
+import { QueryDocumentSnapshot, collection, doc, getDocs, query, runTransaction } from "firebase/firestore";
 import { UserWorkshops, Workshop, WorkshopRequest } from "../Interface/WorkshopInterface";
 import { firestore } from "../firebaseClient";
+import { useToast } from "@chakra-ui/react";
 
 const useWorkshop = () => {
+
+    const toast = useToast()
 
     /**
      * The function `getWorkshops` retrieves workshops from a Firestore database, retrieves
@@ -78,9 +81,43 @@ const useWorkshop = () => {
         return result;
     }
 
+    /**
+     * The `onDelete` function deletes a workshop and associated user data from Firestore and displays
+     * a success or error toast message.
+     * @param {string} workshopId - The `workshopId` parameter is a string that represents the unique
+     * identifier of the workshop that is being deleted.
+     * @param {string} workshop_manager_id - The `workshop_manager_id` parameter in the `onDelete`
+     * function represents the unique identifier of the workshop manager associated with the workshop
+     * that is being deleted. This ID is used to locate and delete the workshop from the specific
+     * user's list of workshops in the Firestore database.
+     * @param {Function} onEnd - The `onEnd` parameter in the `onDelete` function is a callback
+     * function that is called after the deletion operation is completed, whether it succeeds or fails.
+     * It is used to perform any additional actions or cleanup tasks after the deletion process is
+     * done.
+     */
+    const onDelete = async (workshopId: string, workshop_manager_id: string, onEnd: Function) => {
+        runTransaction(firestore, async (transaction) => {
+            transaction.delete(doc(firestore, `workshops/${workshopId}`))
+            transaction.delete(doc(firestore, `users/${workshop_manager_id}/workshops/${workshopId}`))
+        }).then(() => toast({
+            title: 'Workshop deleted!',
+            status: "success",
+            isClosable: true,
+            position: "top-right"
+        })).catch(() => toast({
+            title: 'Please try again later!',
+            status: "error",
+            isClosable: true,
+            position: "top-right"
+        })).finally(() => {
+            onEnd()
+        })
+    }
+
     // TODO: onCreate && onEdit && onDelete && onJoin
 
     return {
+        onDelete,
         getWorkshops,
         getWorkshopRequestsByUserID,
         getWorkshopByUserID,

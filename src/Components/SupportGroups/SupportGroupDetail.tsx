@@ -4,6 +4,8 @@ import { setModal } from '../../redux/slices/modalSlice'
 import { PlatformItemDetailLayout } from '../../Layouts'
 import { Button, Flex, Image, Text, useMediaQuery } from '@chakra-ui/react'
 import { ISupportGroup } from '../../Interface/SupportGroupInterface'
+import { Link } from 'react-router-dom'
+import { createSlug } from '../../Helpers'
 
 const SupportGroupDetail: FC<{ selected?: ISupportGroup }> = ({ selected }) => {
 
@@ -34,15 +36,22 @@ const SupportGroupDetail: FC<{ selected?: ISupportGroup }> = ({ selected }) => {
                 fontWeight="600"
                 dangerouslySetInnerHTML={{ __html: selected.description }}
                 />
-                <Button
-                w="fit-content"
-                h="fit-content"
-                p="0.4rem 1.5rem"
-                marginTop="0.7rem"
-                onClick={() => dispatch(setModal({ isOpen: true, view: 'joinSupportGroup', data: selected }))}
-                >
-                    I wan't to join!
-                </Button>
+                <Link to={`${createSlug(selected.support_group_name)}`}>
+                    <Text fontWeight="600" align="left" mt="1rem">
+                        Show More...
+                    </Text>
+                </Link>
+                <Flex justify="flex-end">
+                    <Button
+                    w="fit-content"
+                    h="fit-content"
+                    p="0.4rem 1.5rem"
+                    marginTop="0.7rem"
+                    onClick={() => dispatch(setModal({ isOpen: true, view: 'joinSupportGroup', data: selected }))}
+                    >
+                        I wan't to join!
+                    </Button>
+                </Flex>
             </>
         </PlatformItemDetailLayout>
     ) : null

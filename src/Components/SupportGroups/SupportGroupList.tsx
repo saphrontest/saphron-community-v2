@@ -9,8 +9,6 @@ interface ISupportGroupListProps {
     setSelected?: (item: ISupportGroup) => void;
 }
 
-
-
 const Mobile: FC<ISupportGroupListProps> = ({ list }) => {
     return (
         <Flex direction="column" gap="1rem" w="100%">

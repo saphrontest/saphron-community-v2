@@ -10,8 +10,8 @@ import { ISupportGroup } from '../Interface/SupportGroupInterface'
 const SupportGroups = () => {
     const dispatch = useDispatch()
     const {getSupportGroups} = useSupportGroup()
-    const [supportGroups, setSupportGroups] = useState<ISupportGroup[]>()
     const [selected, setSelected] = useState<ISupportGroup>()
+    const [supportGroups, setSupportGroups] = useState<ISupportGroup[]>()
     
     useEffect(() => {
         getSupportGroups()
@@ -22,9 +22,11 @@ const SupportGroups = () => {
     }, [])
 
     useEffect(() => {
-        console.log(supportGroups)
-        if(!!supportGroups?.length && !selected) {
-            setSelected(supportGroups[0])
+        if(!!supportGroups?.length) {
+            const confirmedGroups = supportGroups?.filter(g => g.status === "confirmed")
+            if(!!confirmedGroups?.length && !selected) {
+                setSelected(confirmedGroups?.filter(g => g.status === "confirmed")[0])
+            }
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [supportGroups])

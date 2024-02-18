@@ -32,7 +32,7 @@ const RoutesArray = [
   { path: "workshops", component: WorkshopsPage },
   { path: "workshops/:slug", component: WorkshopsPage },
   { path: "my-workshops", component: MyWorkshopsPage },
-  { path: "admin", component: AdminPage },
+  { path: "manager-dashboard", component: AdminPage },
   { path: "support-groups", component: SupportGroups },
   { path: "support-groups/:slug", component: SupportGroupDetailPage },
   { path: "my-support-groups", component: MySupportGroups },

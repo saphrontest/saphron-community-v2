@@ -1,3 +1,4 @@
+export type UserRoleTypes =  'admin' | 'user' | ''
 export interface UserInterface {
     id: string;
     displayName: string;
@@ -9,7 +10,7 @@ export interface UserInterface {
     coverPhotoURL: string;
     profilePhotoURL: string;
     phoneNumber: string;
-    role: 'admin' | 'user' | '';
+    role: UserRoleTypes;
 }
 
 export const defaultUserState: UserInterface = {

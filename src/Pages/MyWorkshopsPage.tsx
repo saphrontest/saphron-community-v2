@@ -37,6 +37,10 @@ const MyWorkshopsPage = () => {
 
   }
 
+  const checkParticipantStatus = (workshop: Workshop) => {
+    return workshop.participants.some(participant => participant.userId === user.id && participant.status === "confirmed")
+  }
+
   useEffect(() => {
     getAllWorkshops()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,11 +62,11 @@ const MyWorkshopsPage = () => {
 
       if (!!requestedWorkshops?.length) {
         requestedWorkshops.forEach(requested => {
-          const isParticipatingConfirmed = workshop.participants.some(participant => participant.userId === user.id && participant.status === "confirmed")
-          if (requested.workshopId === workshop.id && isParticipatingConfirmed) {
+          if (requested.workshopId === workshop.id && checkParticipantStatus(workshop)) {
             setJoinWorkshops(prev => ([workshop, ...prev]));
           }
         })
+
       }
 
       if (!!userWorkshops?.length) {

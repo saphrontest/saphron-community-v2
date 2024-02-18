@@ -20,7 +20,6 @@ import { store } from "../redux/store";
 import { setPosts, setSavedPosts } from "../redux/slices/postSlice";
 import { User } from "firebase/auth";
 import { setUserInfo } from "../redux/slices/userSlice";
-import { UserWorkshops, Workshop, WorkshopRequest } from "../Interface/WorkshopInterface";
 
 const fetch = {
   getDetail: async (query: string, id: string) => {

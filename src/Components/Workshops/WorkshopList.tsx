@@ -5,7 +5,7 @@ import { Workshop } from '../../Interface/WorkshopInterface'
 
 interface WorkshopListProps {
     workshops: Workshop[];
-    selected?: Workshop | undefined;
+    selected?: Workshop;
     setSelected?: (workshop: Workshop) => void
 }
 

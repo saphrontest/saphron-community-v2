@@ -19,7 +19,27 @@ interface IPlatformParticipantItemProps {
     handleRequestButton: (event: any, requestId: string, status: IStatus) => Promise<void>;
 }
 
-const PlatformParticipantItem:FC<IPlatformParticipantItemProps> = ({
+interface IParticipantActionButtonsProps extends IPlatformParticipantItemProps { }
+
+const ParticipantActionButtons: FC<IParticipantActionButtonsProps> = ({
+    isLoading, participant, handleRequestButton
+}) => {
+    return (
+        <>
+            <Text fontWeight={600} textAlign="center" w="100%" mb="0.8rem" fontSize={["12", "16"]}>Do you want to accept the request?</Text>
+            <Flex w="100%" justify="center" gap="1rem">
+                {isLoading ? <Spinner /> : (
+                    <>
+                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} onClick={ev => handleRequestButton(ev, participant.id, "confirmed")}>Accept</Button>
+                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} variant="outline" onClick={ev => handleRequestButton(ev, participant.id, "rejected")}>Reject</Button>
+                    </>
+                )}
+            </Flex>
+        </>
+    )
+}
+
+const PlatformParticipantItem: FC<IPlatformParticipantItemProps> = ({
     participant, isLoading, handleRequestButton
 }) => {
     const [isClicked, setIsClicked] = useBoolean(false)
@@ -48,19 +68,17 @@ const PlatformParticipantItem:FC<IPlatformParticipantItemProps> = ({
                     <Text align="left" mb="0.5rem" fontSize={["12", "16"]}>{participant.motivation}</Text>
                     <Text fontWeight={600} fontSize={["12", "16"]}>{participant.name}</Text>
                     <Divider w="20%" borderColor="gray" my="1rem" />
-                    {participant.status === "confirmed" ? <Text fontWeight={600} fontSize={["12", "16"]}>Join Request Confirmed</Text> : participant.status === "waiting" ? (
-                        <>
-                            <Text fontWeight={600} textAlign="center" w="100%" mb="0.8rem" fontSize={["12", "16"]}>Do you want to accept the request?</Text>
-                            <Flex w="100%" justify="center" gap="1rem">
-                                {isLoading ? <Spinner /> : (
-                                    <>
-                                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} onClick={ev => handleRequestButton(ev, participant.id, "confirmed")}>Accept</Button>
-                                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} variant="outline" onClick={ev => handleRequestButton(ev, participant.id, "rejected")}>Reject</Button>
-                                    </>
-                                )}
-                            </Flex>
-                        </>
-                    ) : <Text fontWeight={600}>Join Request Rejected</Text>}
+                    {
+                        participant.status === "confirmed" ? (
+                            <Text fontWeight={600} fontSize={["12", "16"]}>Join Request Confirmed</Text>
+                        ) : participant.status === "waiting" ? (
+                            <ParticipantActionButtons
+                            isLoading={isLoading}
+                            participant={participant}
+                            handleRequestButton={handleRequestButton}
+                            />
+                        ) : <Text fontWeight={600}>Join Request Rejected</Text>
+                    }
                 </>
             )}
         </Flex>

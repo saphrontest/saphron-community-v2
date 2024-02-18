@@ -1,14 +1,15 @@
-import { Flex, Text, Divider } from '@chakra-ui/react'
+import { Flex, Text, Divider, Skeleton } from '@chakra-ui/react'
 import communitiesBackground from '../../assets/images/communities.jpg'
 import { Link } from 'react-router-dom'
 import { FC, Fragment, useEffect, useState } from 'react'
-import { createSlug, getWorkshops } from '../../Helpers'
+import { createSlug } from '../../Helpers'
 import { Workshop } from '../../Interface/WorkshopInterface'
+import { useWorkshop } from '../../Hooks'
 
 const WorkshopSide: FC<{
   showButton?: boolean
 }> = ({showButton = true}) => {
-
+  const {getWorkshops} = useWorkshop()
   const [workshops, setWorkshops] = useState<Workshop[]>()
 
   useEffect(() => {
@@ -48,16 +49,26 @@ const WorkshopSide: FC<{
         </Flex>
       </Flex>
       <Flex direction="column">
-        {workshops?.map((w, idx) => w.status === "confirmed" && (
-          <Fragment key={w.id}>
-            <Link to={`/workshops/${createSlug(w.workshop_name)}`}>
-              <Text  textAlign="left" fontSize={14} fontWeight={500} padding="6px 4px">
-                {w.workshop_name}
-              </Text>
-            </Link>
-            {idx !== workshops?.length-1 && <Divider/>}
-          </Fragment>
-        ))}
+      {!workshops?.length ? (
+          <Flex gap="0.4rem" direction="column" paddingTop="0.5rem">
+            <Skeleton height="20px"/>
+            <Skeleton height="20px"/>
+            <Skeleton height="20px"/>
+            <Skeleton height="20px"/>
+            <Skeleton height="20px"/>
+          </Flex>
+        ) : workshops?.map((w, idx) => {
+            return w.status === "confirmed" && (
+              <Fragment key={w.id}>
+                <Link to={`/workshops/${createSlug(w.workshop_name)}`}>
+                  <Text  textAlign="left" fontSize={14} fontWeight={500} padding="6px 4px">
+                    {w.workshop_name}
+                  </Text>
+                </Link>
+                {idx !== workshops?.length-1 && <Divider/>}
+              </Fragment>
+            )
+          })}
         {showButton && (
           <>
             <Divider />

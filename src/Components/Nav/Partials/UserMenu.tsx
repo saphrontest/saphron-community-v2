@@ -18,6 +18,7 @@ import { FaRegBookmark } from "react-icons/fa";
 import { MdOutlineLogin } from 'react-icons/md'
 import { VscAccount } from 'react-icons/vsc'
 import { IconType } from 'react-icons';
+import { GrGroup } from "react-icons/gr";
 
 interface UserMenuProps {
     user: UserInterface
@@ -113,10 +114,13 @@ const UserMenu: FC<UserMenuProps> = ({ user }) => {
                         <CustomMenuItem>
                             <MenuItemInner to='/my-workshops' icon={GrWorkshop} label="My Workshops" />
                         </CustomMenuItem>
+                        <CustomMenuItem>
+                            <MenuItemInner to='/my-support-groups' icon={GrGroup} label="My Support Groups" />
+                        </CustomMenuItem>
                         {
                             user.role === "admin" &&
                                 <CustomMenuItem>
-                                    <MenuItemInner to='/workshops/admin' icon={RiAdminLine} label="Workshops Dashboard" />
+                                    <MenuItemInner to='/admin' icon={RiAdminLine} label="Dashboard" />
                                 </CustomMenuItem>
                         }
                         <MenuDivider />

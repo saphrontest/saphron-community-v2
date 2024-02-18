@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Flex} from "@chakra-ui/react";
-import { Modal, Nav, Sidebar, WorkshopSide } from "../Components";
+import { SupportGroupsSide, Modal, Nav, Sidebar, WorkshopSide } from "../Components";
 
 interface PageLayoutProps {
   children: React.ReactElement[] | React.ReactElement
@@ -9,6 +9,7 @@ interface PageLayoutProps {
   showSidebar?: boolean;
   showWorkshops?: boolean;
   leftWidth?: string;
+  showGroupChats?: boolean;
 }
 
 
@@ -20,6 +21,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   isNav = true,
   showSidebar = true,
   showWorkshops = false,
+  showGroupChats = false,
   leftWidth = "65%"
 }) => {
   
@@ -28,9 +30,10 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       {isNav ? <Nav /> : null}
       <Flex justify="center" pt="16px" px={{base: "8px"}}>
         <Flex width="100%" justify="center" maxWidth={maxWidth || "1320px"}>
-          {(showSidebar || showWorkshops) && <Flex direction={"column"} display={{base: 'none', md: 'flex'}} width="20%" gap={"0.5rem"}>
+          {(showSidebar || showWorkshops || showGroupChats) && <Flex direction={"column"} display={{base: 'none', md: 'flex'}} width="20%" gap={"0.5rem"}>
             {showSidebar && <Sidebar />}
             {showWorkshops && <WorkshopSide />}
+            {showGroupChats && <SupportGroupsSide />}
           </Flex>}
           <Flex
             direction="column"

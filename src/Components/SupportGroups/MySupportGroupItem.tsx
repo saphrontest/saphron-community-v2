@@ -20,6 +20,7 @@ interface IMySupportGroupItemProps {
     };
     handleRequest: (event: any, requestId: string, status: IStatus, groupId: string) => void;
     participantsLoading: boolean;
+    toggleReloadSupportGroups: () => void;
 }
 
 const MySupportGroupItem: FC<IMySupportGroupItemProps> = ({
@@ -32,7 +33,8 @@ const MySupportGroupItem: FC<IMySupportGroupItemProps> = ({
     toggleDeleteLoading,
     setEditOpen,
     handleRequest,
-    participantsLoading
+    participantsLoading,
+    toggleReloadSupportGroups
 }) => {
     const {onDelete} = useSupportGroup()
     return (
@@ -44,6 +46,7 @@ const MySupportGroupItem: FC<IMySupportGroupItemProps> = ({
             handleDelete={async () => {
                 toggleDeleteLoading()
                 onDelete(group)
+                    .then(() => toggleReloadSupportGroups())
                     .finally(() => toggleDeleteLoading())
             }}
             openEditModal={() => setEditOpen.toggle()}

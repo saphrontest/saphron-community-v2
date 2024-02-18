@@ -23,7 +23,7 @@ const UserMenuItems: IUserMenuItem[] = [
     { id: 0, route: "/community/profile", icon: CgProfile, label: "Profile", role: ["user", "admin"] },
     { id: 1, route: "/community/saved-posts", icon: FaRegBookmark, label: "Saved Posts", role: ["user", "admin"] },
     { id: 2, route: "/my-workshops", icon: GrWorkshop, label: "My Workshops", role: ["user", "admin"] },
-    { id: 3, route: "/my-support-group", icon: GrGroup, label: "My Support Groups", role: ["user", "admin"] },
+    { id: 3, route: "/my-support-groups", icon: GrGroup, label: "My Support Groups", role: ["user", "admin"] },
     { id: 4, route: "/manager-dashboard", icon: RiAdminLine, label: "Dashboard", role: ["admin"] },
 ]
 

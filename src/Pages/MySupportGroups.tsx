@@ -20,6 +20,7 @@ const MySupportGroups = () => {
   const [isClicked, setIsClicked] = useBoolean(false)
   const [editOpen, setEditOpen] = useBoolean(false)
   const [deleteLoading, {toggle: toggleDeleteLoading}] = useBoolean(false)
+  const [reloadSupportGroups, {toggle: toggleReloadSupportGroups}] = useBoolean(false)
 
   useEffect(() => {
     toggleGroupsLoading()
@@ -28,7 +29,19 @@ const MySupportGroups = () => {
       .finally(() => toggleGroupsLoading())
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  
+  useEffect(() => {
+    if(reloadSupportGroups) {
+      toggleGroupsLoading()
+      getSupportGroupsByUserId(user.id)
+        .then(groups => !!groups.length && setSupportGroups(groups))
+        .finally(() => toggleGroupsLoading())
 
+      return () => toggleReloadSupportGroups()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reloadSupportGroups])
+  
   const handleRequest = async (event: any, requestId: string, status: IStatus, supportGroupId: string): Promise<void> => {
     event.stopPropagation()
     toggleParticipantsLoading()
@@ -66,6 +79,7 @@ const MySupportGroups = () => {
                     setEditOpen={setEditOpen}
                     handleRequest={handleRequest}
                     participantsLoading={participantsLoading}
+                    toggleReloadSupportGroups={toggleReloadSupportGroups}
                     />
                   </Fragment>
                 ))

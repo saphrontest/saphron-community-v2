@@ -1,4 +1,4 @@
-import { Menu, MenuButton, MenuList } from '@chakra-ui/react'
+import { Menu, MenuButton, MenuList, useConst } from '@chakra-ui/react'
 import { setModal } from '../../../redux/slices/modalSlice'
 import { useDispatch } from 'react-redux'
 import { signOut } from "firebase/auth";
@@ -10,7 +10,6 @@ import { logoutUser } from '../../../redux/slices/userSlice'
 import { resetCommunities } from '../../../redux/slices/communitySlice'
 import { resetPosts } from '../../../redux/slices/postSlice'
 import { LoginButton, MenuButtonInner, UserMenuInner } from './Menu';
-import { useConst } from '@chakra-ui/react'
 
 
 const UserMenu: FC<{ user: UserInterface }> = ({ user }) => {

@@ -155,7 +155,7 @@ const CreateSupportGroupForm: FC<{
             align="center"
             justify="center"
             cursor="pointer"
-          onClick={() => supportGroupPicRef.current && supportGroupPicRef.current.click()}
+          onClick={() => supportGroupPicRef?.current?.click()}
           >
             {!!coverImg === false && <SCIcon size={24} name='add' />}
           </Flex>

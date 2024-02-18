@@ -6,7 +6,7 @@ import { ISupportGroup } from '../../../Interface/SupportGroupInterface';
 
 const AdminStatusSelect: FC<{
     item: Workshop | ISupportGroup;
-    onSelect: (itemId: string, optionId: number) => Promise<Boolean>
+    onSelect: (itemId: string, optionId: number) => Promise<boolean>
 }> = ({
     item,
     onSelect

@@ -58,7 +58,7 @@ const MySupportGroupItem: FC<IMySupportGroupItemProps> = ({
             {
                 !participantsLoading ? (
                     <>
-                        {!!group.participants?.length ? <Text fontSize={["12", "16"]} fontWeight={600} pb="1rem" textAlign="left">Join Requests</Text> : <Text fontSize={["12", "16"]}>No join request, yet!</Text>}
+                        {group.participants?.length ? <Text fontSize={["12", "16"]} fontWeight={600} pb="1rem" textAlign="left">Join Requests</Text> : <Text fontSize={["12", "16"]}>No join request, yet!</Text>}
                         <Flex w="100%" direction="column" gap="1rem">
                             {group.participants?.map(participant => (
                                 <Fragment key={participant.updatedAt}>

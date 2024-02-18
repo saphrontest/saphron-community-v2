@@ -5,8 +5,12 @@ import { AdminItem, AdminStatusSelect } from '../../Platform'
 const AdminWorkshopItem: FC<{
   idx: number;
   workshop: Workshop;
-  onSelect: (worksopId: string, optionId: number) => Promise<Boolean>
-}> = ({workshop, idx, onSelect}) => {
+  onSelect: (worksopId: string, optionId: number) => Promise<boolean>
+}> = ({
+  idx,
+  onSelect,
+  workshop
+}) => {
   return (
       <AdminItem
       idx={idx}

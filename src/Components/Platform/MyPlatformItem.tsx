@@ -25,6 +25,8 @@ interface IMyPlatformItemProps {
     handleDelete: () => Promise<void>;
 }
 
+const RightIcon: FC<{isClicked: boolean}> = ({isClicked}) => !isClicked ? <MdKeyboardArrowDown size={24} /> : <MdKeyboardArrowUp size={24} />
+
 const MyPlatformItem: FC<IMyPlatformItemProps> = ({
     idx,
     item,
@@ -49,8 +51,8 @@ const MyPlatformItem: FC<IMyPlatformItemProps> = ({
                         </Box>
                     </Flex>
                     {item.status === "rejected" ? (
-                    <Box bg="red.500" color="white" p="0.5rem 1rem" borderRadius="1rem" fontWeight={600}>Rejected</Box>
-                    ) : !isClicked ? <MdKeyboardArrowDown size={24} /> : <MdKeyboardArrowUp size={24} />}
+                        <Box bg="red.500" color="white" p="0.5rem 1rem" borderRadius="1rem" fontWeight={600}>Rejected</Box>
+                    ) : <RightIcon isClicked={isClicked}/>}
                 </Flex>
                 {isClicked && !isLoading ? (
                     <>

@@ -5,10 +5,9 @@ import { doc, updateDoc } from "firebase/firestore";
 import moment from "moment";
 import { firestore } from "../../firebaseClient";
 import { EditWorkshopModal } from "../Modals";
-import { MyPlatformItem } from "../Platform";
+import { MyPlatformItem, PlatformParticipantItem } from "../Platform";
 import { IStatus } from "../../Interface/StatusInterface";
 import { useWorkshop } from "../../Hooks";
-import {PlatformParticipantItem} from "../Platform";
 
 interface MyWorkshopItemProps {
     idx: number;

@@ -3,7 +3,7 @@ import { SelectOptions } from "../Interface/StatusInterface"
 import { firestore } from "../firebaseClient"
 
 const useStatus = () => {
-    const updateStatus: (query: string, optionId: number, onSuccess: Function, onError?: Function, onEnd?: Function) => Promise<Boolean> = async (
+    const updateStatus: (query: string, optionId: number, onSuccess: Function, onError?: Function, onEnd?: Function) => Promise<boolean> = async (
         query: string,
         optionId: number,
         onSuccess: Function,

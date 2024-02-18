@@ -94,7 +94,7 @@ const MyWorkshopsPage = () => {
                 My Workshops
               </Text>
               <Flex gap="1rem" direction="column" w="100%">
-                {userWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)).map((workshop, idx) => (workshop && workshop.status === "confirmed") && (
+                {userWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)).map((workshop, idx) => workshop && (
                   <React.Fragment key={idx}>
                     <MyWorkshopItem idx={idx} workshop={workshop} toggleReloadWorkshops={() => setReloadWorkshops.toggle()}/>
                   </React.Fragment>

@@ -76,7 +76,7 @@ const useWorkshop = () => {
         const result: WorkshopRequest[] = []
         const data = await getDocs(query(collection(firestore, `workshops/${workshopId}/participants`)));
         data.forEach(async (data: QueryDocumentSnapshot) => {
-            result.push(data.data() as WorkshopRequest)
+            result.push({ id: data.id, ...data.data() } as WorkshopRequest)
         })
         return result;
     }

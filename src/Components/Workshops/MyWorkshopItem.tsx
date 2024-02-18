@@ -35,7 +35,7 @@ const MyWorkshopItem: FC<MyWorkshopItemProps> = ({ workshop, idx, toggleReloadWo
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isClicked])
 
-    const handleButton = async (
+    const handleRequestButton = async (
         event: any,
         requestId: string,
         status: IStatus
@@ -75,6 +75,7 @@ const MyWorkshopItem: FC<MyWorkshopItemProps> = ({ workshop, idx, toggleReloadWo
                     cover_img: workshop.cover_img,
                     short_description: workshop.short_description,
                     detailed_description: workshop.detailed_description,
+                    status: workshop.status
                 }}
             >
                 {
@@ -84,7 +85,7 @@ const MyWorkshopItem: FC<MyWorkshopItemProps> = ({ workshop, idx, toggleReloadWo
                             <Flex w="100%" direction="column" gap="1rem">
                                 {participants?.map(participant => (
                                     <Fragment key={participant.id} >
-                                        <PlatformParticipantItem participant={participant} isLoading={isLoading} handleButton={handleButton} />
+                                        <PlatformParticipantItem participant={participant} isLoading={isLoading} handleRequestButton={handleRequestButton} />
                                     </Fragment>
                                 ))}
                             </Flex>

@@ -11,6 +11,7 @@ interface IMyPlatformItem {
     short_description?: string;
     detailed_description?: string;
     description?: string;
+    status: string;
 }
 
 interface IMyPlatformItemProps {
@@ -37,7 +38,7 @@ const MyPlatformItem: FC<IMyPlatformItemProps> = ({
     const [isDeleteOpen, setDeleteOpen] = useBoolean(false)
     return (
         <>
-            <Flex direction="column" align="flex-start" p="1rem" bg="gray.50" borderRadius="1rem" w="100%" onClick={setClicked}>
+            <Flex direction="column" align="flex-start" p="1rem" bg="gray.50" borderRadius="1rem" w="100%" onClick={item.status !== "rejected" ? setClicked : undefined}>
                 <Flex w="100%" justify="space-between" align="center" cursor="pointer">
                     <Flex direction="row" align="center">
                         <Text fontWeight={600} mr="1rem">#{idx + 1}</Text>
@@ -47,7 +48,9 @@ const MyPlatformItem: FC<IMyPlatformItemProps> = ({
                             <Text textAlign="left" fontSize={["12", "16"]}>{moment(new Date(item.createdAt)).format("DD.MM.YYYY hh:mm")}</Text>
                         </Box>
                     </Flex>
-                    {!isClicked ? <MdKeyboardArrowDown size={24} /> : <MdKeyboardArrowUp size={24} />}
+                    {item.status === "rejected" ? (
+                    <Box bg="red.500" color="white" p="0.5rem 1rem" borderRadius="1rem" fontWeight={600}>Rejected</Box>
+                    ) : !isClicked ? <MdKeyboardArrowDown size={24} /> : <MdKeyboardArrowUp size={24} />}
                 </Flex>
                 {isClicked && !isLoading ? (
                     <>

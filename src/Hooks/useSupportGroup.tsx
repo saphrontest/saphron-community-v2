@@ -183,6 +183,13 @@ const useSupportGroup = () => {
         return result
     }
 
+    /**
+     * The function `getSupportGroupsByUserId` retrieves support groups based on a specified user ID.
+     * @param {string} userId - The `userId` parameter is a string representing the unique identifier
+     * of a user.
+     * @returns The function `getSupportGroupsByUserId` returns an array of support groups where the
+     * `support_group_manager_id` matches the provided `userId`.
+     */
     const getSupportGroupsByUserId = async (userId: string) => {
         const groups = await getSupportGroups()
         const result: ISupportGroup[] = groups.filter(({support_group_manager_id}) => support_group_manager_id === userId)

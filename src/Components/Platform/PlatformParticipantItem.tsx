@@ -16,11 +16,11 @@ interface IParticipantAsProp {
 interface IPlatformParticipantItemProps {
     isLoading: boolean;
     participant: IParticipantAsProp;
-    handleButton: (event: any, requestId: string, status: IStatus) => Promise<void>;
+    handleRequestButton: (event: any, requestId: string, status: IStatus) => Promise<void>;
 }
 
 const PlatformParticipantItem:FC<IPlatformParticipantItemProps> = ({
-    participant, isLoading, handleButton
+    participant, isLoading, handleRequestButton
 }) => {
     const [isClicked, setIsClicked] = useBoolean(false)
     return (
@@ -54,8 +54,8 @@ const PlatformParticipantItem:FC<IPlatformParticipantItemProps> = ({
                             <Flex w="100%" justify="center" gap="1rem">
                                 {isLoading ? <Spinner /> : (
                                     <>
-                                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} onClick={ev => handleButton(ev, participant.id, "confirmed")}>Accept</Button>
-                                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} variant="outline" onClick={ev => handleButton(ev, participant.id, "rejected")}>Reject</Button>
+                                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} onClick={ev => handleRequestButton(ev, participant.id, "confirmed")}>Accept</Button>
+                                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} variant="outline" onClick={ev => handleRequestButton(ev, participant.id, "rejected")}>Reject</Button>
                                     </>
                                 )}
                             </Flex>

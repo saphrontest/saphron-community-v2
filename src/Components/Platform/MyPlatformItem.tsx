@@ -25,7 +25,7 @@ interface IMyPlatformItemProps {
     handleDelete: () => Promise<void>;
 }
 
-const RightIcon: FC<{isClicked: Boolean}> = ({isClicked}) => !isClicked ? <MdKeyboardArrowDown size={24} /> : <MdKeyboardArrowUp size={24} />
+const RightIcon: FC<{isClicked: boolean}> = ({isClicked}) => !isClicked ? <MdKeyboardArrowDown size={24} /> : <MdKeyboardArrowUp size={24} />
 
 const MyPlatformItem: FC<IMyPlatformItemProps> = ({
     idx,

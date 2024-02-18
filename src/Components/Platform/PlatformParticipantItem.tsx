@@ -68,17 +68,15 @@ const PlatformParticipantItem: FC<IPlatformParticipantItemProps> = ({
                     <Text align="left" mb="0.5rem" fontSize={["12", "16"]}>{participant.motivation}</Text>
                     <Text fontWeight={600} fontSize={["12", "16"]}>{participant.name}</Text>
                     <Divider w="20%" borderColor="gray" my="1rem" />
-                    {
-                        participant.status === "confirmed" ? (
-                            <Text fontWeight={600} fontSize={["12", "16"]}>Join Request Confirmed</Text>
-                        ) : participant.status === "waiting" ? (
-                            <ParticipantActionButtons
-                            isLoading={isLoading}
-                            participant={participant}
-                            handleRequestButton={handleRequestButton}
-                            />
-                        ) : <Text fontWeight={600}>Join Request Rejected</Text>
+                    {participant.status === "confirmed" && <Text fontWeight={600} fontSize={["12", "16"]}>Join Request Confirmed</Text>}
+                    {participant.status === "waiting" && 
+                        <ParticipantActionButtons
+                        isLoading={isLoading}
+                        participant={participant}
+                        handleRequestButton={handleRequestButton}
+                        />
                     }
+                    {participant.status === "rejected" && <Text fontWeight={600}>Join Request Rejected</Text>}
                 </>
             )}
         </Flex>

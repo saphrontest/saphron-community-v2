@@ -21,13 +21,9 @@ const SupportGroups = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+
     useEffect(() => {
-        if(!!supportGroups?.length) {
-            const confirmedGroups = supportGroups?.filter(g => g.status === "confirmed")
-            if(!!confirmedGroups?.length && !selected) {
-                setSelected(confirmedGroups?.filter(g => g.status === "confirmed")[0])
-            }
-        }
+        (!!supportGroups?.length && !selected) && setSelected(supportGroups[0])
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [supportGroups])
     
@@ -38,7 +34,7 @@ const SupportGroups = () => {
         actionButtonText="Create group chat"
         actionButtonOnClick={() => dispatch(setModal({isOpen: true, view: 'createSupportGroup', data: ""}))}
         >
-            <SupportGroupList list={supportGroups?.filter(g => g.status === "confirmed")} setSelected={setSelected} selected={selected}/>
+            <SupportGroupList list={supportGroups} setSelected={setSelected} selected={selected}/>
             <SupportGroupDetail selected={selected}/>
         </PlatformPageLayout>
     )

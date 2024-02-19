@@ -1,6 +1,6 @@
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react'
 import { ModalLayout } from '../../Layouts'
-import { CreateSupportGroupForm } from '../SupportGroups'
+import { SupportGroupForm } from '../SupportGroups'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { setModal } from '../../redux/slices/modalSlice'
@@ -21,7 +21,7 @@ const EditSupportGroupModal = () => {
         justifyContent="center"
         pb={6}
       >
-        <CreateSupportGroupForm isEdit={true} supportGroupData={data} />
+        <SupportGroupForm isEdit={true} supportGroupData={data} />
       </ModalBody>
     </ModalLayout>
   ) : null

@@ -20,7 +20,7 @@ interface CommentItemProps {
 const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading, getComments }) => {
     const dispatch = useDispatch()
     const [voteLoading, setVoteLoading] = useState<boolean>(false)
-    const [userVote, setUserVote] = useState<CommentVoteInterface>(null)
+    const [userVote, setUserVote] = useState<CommentVoteInterface>()
     const user = useSelector((state: RootState) => state.user)
 
     useEffect(() => {
@@ -31,7 +31,7 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading, getCo
         setVoteLoading(true)
         try {
             const votes = await getCommentVotesByUserId(userId)
-            setUserVote(votes.find(vote => vote?.creatorId === userId) || null)
+            setUserVote(votes.find(vote => vote?.creatorId === userId))
         } finally {
             setVoteLoading(false)
         }
@@ -128,7 +128,7 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading, getCo
                         voteLoading ? <Spinner size="sm" /> : 
                             <CommentVote
                             userId={user?.id as string}
-                            userVote={userVote}
+                            userVote={userVote!}
                             onVote={onVote}
                             voteValue={comment?.voteValue as number} />
                     }

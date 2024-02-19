@@ -22,7 +22,7 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
     const [deleteLoading, setDeleteLoading] = useState("");
     const [comment, setComment] = useState<string>("");
     const [commentCreateLoading, setCommentCreateLoading] = useState<boolean>(false);
-    const commentArray = comments as (Comment | null)[];
+    const commentArray = comments as Comment[];
     
     const onCommentDelete = async (commentId: string, postId: string) => {
         setDeleteLoading(commentId)
@@ -127,7 +127,7 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
                     </>
                 ) : (
                     <>
-                        {commentArray !== null && commentArray.length > 0 ? (
+                        {commentArray.length > 0 ? (
                             <>
                                 {commentArray.map((item: Comment) => (
                                     <CommentItem

@@ -12,7 +12,9 @@ export const postSlice = createSlice({
       state.savedPosts = action.payload
     },
     resetPosts: (state) => {
-      state = defaultPostState
+      state.posts = []
+      state.postVotes = []
+      state.savedPosts = []
     }
   },
 })

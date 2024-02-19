@@ -14,8 +14,10 @@ export const communitiySlice = createSlice({
     setJoinedCommunities: (state, action: PayloadAction<JoinedCommunity[]>) => {
      state.joinedCommunities = action.payload
     },
-    resetCommunities: (state, action: PayloadAction) => {
-      state = communitySliceInitial
+    resetCommunities: (state) => {
+      state.communities = []
+      state.selectedCommunity = null
+      state.joinedCommunities = []
     }
   },
 })

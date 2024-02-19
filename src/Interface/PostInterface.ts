@@ -31,7 +31,7 @@ export type IPostVote = {
 interface PostState {
   posts: IPost[];
   postVotes: IPostVote[];
-  savedPosts: String[];
+  savedPosts: string[];
 }
 
 export const defaultPostState: PostState = {

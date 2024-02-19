@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Flex, Text, useToast } from '@chakra-ui/react';
-import { Community, JoinedCommunity } from '../Interface/CommunityInterface';
+import { Community, JoinedCommunity } from '../Interface';
 import communitiesBackground from '../assets/images/communities.jpg'
 import { RootState } from '../redux/store';
 import { useDispatch, useSelector } from 'react-redux';

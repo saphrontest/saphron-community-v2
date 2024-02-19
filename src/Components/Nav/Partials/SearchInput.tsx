@@ -6,7 +6,7 @@ import {
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
-import { IPost } from "../../../Interface/PostInterface";
+import { IPost } from "../../../Interface";
 import { searchPost } from "../../../Helpers/apiFunctions";
 import SearchResults from "./SearchResults";
 

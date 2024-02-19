@@ -2,7 +2,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Flex, Avatar, Icon, Text, Box } from '@chakra-ui/react'
 import { FC } from 'react'
 import { VscAccount } from 'react-icons/vsc'
-import { UserInterface } from '../../../../Interface/UserInterface'
+import { UserInterface } from '../../../../Interface'
 import NotFoundUserPic from '../../../../assets/images/user.png'
 
 const MenuButtonInner: FC<{user: UserInterface}> = ({user}) => {

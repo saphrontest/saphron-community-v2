@@ -1,13 +1,12 @@
 import { Box, Flex, SkeletonCircle, SkeletonText, Stack, Text } from '@chakra-ui/react'
 import { FC, useState } from 'react'
 import CommentItem from './CommentItem';
-import { Comment } from '../../Interface/CommentsInterface';
+import { Comment, IPost } from '../../Interface';
 import { firestore } from '../../firebaseClient';
 import { CommentInput } from './Partials';
 import { collection, collectionGroup, deleteDoc, doc, getDocs, increment, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
-import { IPost } from '../../Interface/PostInterface';
 import { RootState } from '../../redux/store';
 
 interface CommentsProps {
@@ -23,7 +22,7 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
     const [deleteLoading, setDeleteLoading] = useState("");
     const [comment, setComment] = useState<string>("");
     const [commentCreateLoading, setCommentCreateLoading] = useState<boolean>(false);
-    const commentArray = comments as (Comment | null)[];
+    const commentArray = comments as Comment[];
     
     const onCommentDelete = async (commentId: string, postId: string) => {
         setDeleteLoading(commentId)
@@ -128,7 +127,7 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
                     </>
                 ) : (
                     <>
-                        {commentArray !== null && commentArray.length > 0 ? (
+                        {commentArray.length > 0 ? (
                             <>
                                 {commentArray.map((item: Comment) => (
                                     <CommentItem

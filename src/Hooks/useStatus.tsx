@@ -1,5 +1,5 @@
 import { doc, updateDoc } from "firebase/firestore"
-import { SelectOptions } from "../Interface/StatusInterface"
+import { SelectOptions } from "../Interface"
 import { firestore } from "../firebaseClient"
 
 const useStatus = () => {

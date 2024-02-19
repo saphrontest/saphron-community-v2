@@ -22,21 +22,20 @@ export type IPost = {
 };
 
 export type IPostVote = {
-id?: string;
-postId: string;
-communityId: string;
-voteValue: number;
+  id?: string;
+  postId: string;
+  communityId: string;
+  voteValue: number;
 };
-
 
 interface PostState {
   posts: IPost[];
   postVotes: IPostVote[];
-  savedPosts: String[]
+  savedPosts: string[];
 }
 
 export const defaultPostState: PostState = {
   posts: [],
   postVotes: [],
-  savedPosts: []
+  savedPosts: [],
 };

@@ -8,7 +8,7 @@ import { getCommunities, getJoinedCommunitiesList } from '../../../Helpers/apiFu
 import { useNavigate } from 'react-router-dom';
 import { setCommunities, setJoinedCommunities, setSelectedCommunity } from '../../../redux/slices/communitySlice';
 import { RootState } from '../../../redux/store';
-import { Community, JoinedCommunity } from '../../../Interface/CommunityInterface';
+import { Community, JoinedCommunity } from '../../../Interface';
 import NoEntry from '../../NoEntry';
 
 interface CommunityProps {

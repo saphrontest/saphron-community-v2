@@ -1,8 +1,6 @@
 import { FC, useState } from 'react'
-import { Workshop } from '../../../Interface/WorkshopInterface';
 import { Select, Spinner } from '@chakra-ui/react';
-import { IStatusOption, SelectOptions } from '../../../Interface/StatusInterface';
-import { ISupportGroup } from '../../../Interface/SupportGroupInterface';
+import { IStatusOption, SelectOptions, Workshop, ISupportGroup } from '../../../Interface';
 
 const AdminStatusSelect: FC<{
     item: Workshop | ISupportGroup;

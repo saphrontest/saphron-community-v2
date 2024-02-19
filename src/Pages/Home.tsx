@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
 import { CreatePostLink, NoEntry, PersonalHome, PostItem, Recommendations } from '../Components'
 import {Stack, useToast} from '@chakra-ui/react'
-import { IPost } from '../Interface/PostInterface'
+import { IPost, Community } from '../Interface'
 import { getPosts, getUserSavedPosts } from '../Helpers/apiFunctions'
 import { deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 import { firestore, storage } from '../firebaseClient'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import { Community } from '../Interface/CommunityInterface'
 import { setModal } from '../redux/slices/modalSlice'
 
 const Home = () => {

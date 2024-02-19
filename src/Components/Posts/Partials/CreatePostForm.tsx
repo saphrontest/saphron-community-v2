@@ -3,14 +3,13 @@ import TextInputs from './TextInputs';
 import ImageUpload from './ImageUpload';
 import { addDoc, collection, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { firestore, storage } from '../../../firebaseClient';
-import { Community } from '../../../Interface/CommunityInterface';
+import { Community, UserInterface } from '../../../Interface';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react';
 import { RootState } from '../../../redux/store';
 import { useSelector } from 'react-redux';
 import { createSlug } from '../../../Helpers';
-import { UserInterface } from '../../../Interface/UserInterface';
 
 interface CreatePostFormInterface {
     selectedTab: string;

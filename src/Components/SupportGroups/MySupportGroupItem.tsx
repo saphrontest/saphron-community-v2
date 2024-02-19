@@ -1,8 +1,7 @@
 import { Flex, Spinner, Text } from '@chakra-ui/react'
 import { FC, Fragment } from 'react'
-import { IStatus } from '../../Interface/StatusInterface'
+import { IStatus, ISupportGroup } from '../../Interface'
 import { MyPlatformItem, PlatformParticipantItem } from '../Platform'
-import { ISupportGroup } from '../../Interface/SupportGroupInterface'
 import { useSupportGroup } from '../../Hooks'
 
 interface IMySupportGroupItemProps {

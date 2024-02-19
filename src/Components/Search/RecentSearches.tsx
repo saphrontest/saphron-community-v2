@@ -3,7 +3,7 @@ import React from 'react'
 import SearchResultsItem from '../Nav/Partials/SearchResultsItem'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
-import { SearchItemInterface } from '../../Interface/SearchInterface'
+import { SearchItemInterface } from '../../Interface'
 import NoEntry from '../NoEntry'
 
 const RecentSearches = () => {

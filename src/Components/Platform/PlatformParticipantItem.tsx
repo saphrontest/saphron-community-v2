@@ -2,7 +2,7 @@ import { Flex, Divider, Spinner, Button, Text, Box, useBoolean } from '@chakra-u
 import moment from 'moment'
 import React, { FC } from 'react'
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
-import { IStatus } from '../../Interface/StatusInterface';
+import { IStatus } from '../../Interface';
 
 interface IParticipantAsProp {
     id: string;

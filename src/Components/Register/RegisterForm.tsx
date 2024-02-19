@@ -1,7 +1,7 @@
 import React from 'react'
 import { InputItem } from '../../Layouts'
 import { Button, Flex, Text } from '@chakra-ui/react'
-import { ModalViewTypes } from '../../Interface/ModalInterface'
+import { ModalViewTypes } from '../../Interface'
 
 interface RegisterFormProps {
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void

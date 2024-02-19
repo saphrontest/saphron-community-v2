@@ -4,16 +4,13 @@ import { useAuthState, useCreateUserWithEmailAndPassword } from "react-firebase-
 import { auth } from "../../../../firebaseClient";
 import { useDispatch } from "react-redux";
 import { setModal } from "../../../../redux/slices/modalSlice";
-import { ModalViewTypes } from "../../../../Interface/ModalInterface";
+import { ModalViewTypes } from "../../../../Interface";
 import RegisterForm from "../../../Register/RegisterForm";
 import { getUser, saveUserToFirestore } from "../../../../Helpers/apiFunctions";
 import { sendEmailVerification } from "firebase/auth";
 
-type SignUpProps = {
 
-};
-
-const SignUp: React.FC<SignUpProps> = () => {
+const SignUp = () => {
   const dispatch = useDispatch()
   const toast = useToast()
   const [user] = useAuthState(auth)

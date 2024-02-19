@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { defaultPostState } from "../../Interface/PostInterface";
+import { defaultPostState } from "../../Interface";
 
 export const postSlice = createSlice({
   name: "postSlice",

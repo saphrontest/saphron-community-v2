@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Flex, Image, Text, useBoolean } from '@chakra-ui/react'
 import { FC } from 'react';
-import { ISupportGroup } from '../../Interface/SupportGroupInterface';
+import { ISupportGroup } from '../../Interface';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';

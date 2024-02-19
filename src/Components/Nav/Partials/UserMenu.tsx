@@ -5,7 +5,7 @@ import { signOut } from "firebase/auth";
 import { FC } from 'react'
 import { auth } from '../../../firebaseClient'
 import { useNavigate } from 'react-router-dom'
-import { UserInterface } from '../../../Interface/UserInterface'
+import { UserInterface } from '../../../Interface'
 import { logoutUser } from '../../../redux/slices/userSlice'
 import { resetCommunities } from '../../../redux/slices/communitySlice'
 import { resetPosts } from '../../../redux/slices/postSlice'

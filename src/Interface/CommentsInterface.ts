@@ -11,7 +11,7 @@ export type Comment = {
     text: string;
     createdAt?: Timestamp;
     voteValue?: number;
-  } | null;
+  }
 
 export type CommentVote = {
     id?: string;
@@ -19,4 +19,4 @@ export type CommentVote = {
     postId?: string;
     commentId?: string;
     value: number;
-  } | null;
+  }

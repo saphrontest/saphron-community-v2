@@ -5,7 +5,7 @@ import { auth } from "../../../../firebaseClient";
 import { InputItem } from "../../../../Layouts";
 import { useDispatch } from "react-redux";
 import { setModal } from "../../../../redux/slices/modalSlice";
-import { ModalViewTypes } from "../../../../Interface/ModalInterface";
+import { ModalViewTypes } from "../../../../Interface";
 import { getUser } from "../../../../Helpers/apiFunctions";
 
 type LoginProps = {

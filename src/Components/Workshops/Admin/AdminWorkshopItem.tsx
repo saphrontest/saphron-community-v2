@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Workshop } from '../../../Interface/WorkshopInterface'
+import { Workshop } from '../../../Interface'
 import { AdminItem, AdminStatusSelect } from '../../Platform'
 
 const AdminWorkshopItem: FC<{

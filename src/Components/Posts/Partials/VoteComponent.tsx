@@ -1,7 +1,7 @@
 import { Flex, Icon, Spinner, Text } from '@chakra-ui/react'
 import React, { FC } from 'react'
 import { IoArrowDownCircleOutline, IoArrowDownCircleSharp, IoArrowUpCircleOutline, IoArrowUpCircleSharp } from 'react-icons/io5'
-import { IPost, IPostVote } from '../../../Interface/PostInterface';
+import { IPost, IPostVote } from '../../../Interface';
 
 interface VoteProps {
     onVote: (ev: React.MouseEvent<SVGElement, MouseEvent>, vote: number) => void;

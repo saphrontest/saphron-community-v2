@@ -1,5 +1,5 @@
 import { QueryDocumentSnapshot, collection, doc, getDocs, query, runTransaction } from "firebase/firestore";
-import { UserWorkshops, Workshop, WorkshopRequest } from "../Interface/WorkshopInterface";
+import { UserWorkshops, Workshop, WorkshopRequest } from "../Interface";
 import { firestore } from "../firebaseClient";
 import { useToast } from "@chakra-ui/react";
 

@@ -1,6 +1,6 @@
 import { FC, Fragment } from 'react'
 import { Box, Divider, Flex, Text } from '@chakra-ui/react'
-import { Workshop } from '../../Interface/WorkshopInterface'
+import { Workshop } from '../../Interface'
 import communitiesBackground from '../../assets/images/communities.jpg'
 import moment from 'moment'
 import { Link } from 'react-router-dom'

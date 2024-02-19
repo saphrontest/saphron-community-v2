@@ -5,7 +5,7 @@ import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources'
 import moment from 'moment'
 import { AIMessages, AskAIForm, SearchHeader } from './Partials'
 import { Flex, useToast } from '@chakra-ui/react'
-import { AIMessageInterface } from '../../Interface/AIMessageInterface'
+import { AIMessageInterface } from '../../Interface'
 
 const AskAI = () => {
   const toast = useToast()

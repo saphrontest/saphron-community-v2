@@ -3,7 +3,7 @@ import { PageLayout } from '../Layouts'
 import { Flex, Text } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useSupportGroup } from '../Hooks'
-import { ISupportGroup } from '../Interface/SupportGroupInterface'
+import { ISupportGroup } from '../Interface'
 
 const SupportGroupDetailPage = () => {
   const params = useParams()

@@ -4,7 +4,7 @@ import { IoDocumentText, IoImageOutline } from "react-icons/io5";
 import { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { Community } from '../../Interface/CommunityInterface';
+import { Community } from '../../Interface';
 
 const formTabs = [
   {

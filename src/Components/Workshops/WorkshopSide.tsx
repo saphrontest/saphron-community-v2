@@ -3,7 +3,7 @@ import communitiesBackground from '../../assets/images/communities.jpg'
 import { Link } from 'react-router-dom'
 import { FC, Fragment, useEffect, useState } from 'react'
 import { createSlug } from '../../Helpers'
-import { Workshop } from '../../Interface/WorkshopInterface'
+import { Workshop } from '../../Interface'
 import { useWorkshop } from '../../Hooks'
 
 const WorkshopSide: FC<{

@@ -1,6 +1,6 @@
 import { ModalLayout } from '../../Layouts'
 import { ModalBody, ModalCloseButton, ModalHeader } from '@chakra-ui/react'
-import { CreateSupportGroupForm } from '../SupportGroups'
+import { SupportGroupForm } from '../SupportGroups'
 
 const CreateSupportGroupModal = () => {
   return (
@@ -16,7 +16,7 @@ const CreateSupportGroupModal = () => {
               justifyContent="center"
               pb={6}
           >
-            <CreateSupportGroupForm />
+            <SupportGroupForm />
           </ModalBody>
       </ModalLayout>
   )

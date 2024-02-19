@@ -3,7 +3,7 @@ import moment from 'moment'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FC } from 'react'
-import { IPost } from '../../../Interface/PostInterface'
+import { IPost } from '../../../Interface'
 import { BsDot } from 'react-icons/bs'
 
 interface PostContentProps {

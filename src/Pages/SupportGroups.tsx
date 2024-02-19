@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import { setModal } from '../redux/slices/modalSlice'
 import { useEffect, useState } from 'react'
 import { useSupportGroup } from '../Hooks'
-import { ISupportGroup } from '../Interface/SupportGroupInterface'
+import { ISupportGroup } from '../Interface'
 
 const SupportGroups = () => {
     const dispatch = useDispatch()

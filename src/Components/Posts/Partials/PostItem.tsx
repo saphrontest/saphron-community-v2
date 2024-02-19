@@ -1,7 +1,7 @@
 import { Flex, useToast } from '@chakra-ui/react'
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { IPost, IPostVote } from '../../../Interface/PostInterface';
+import { IPost, IPostVote, Community } from '../../../Interface';
 import { firestore } from '../../../firebaseClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../../redux/slices/modalSlice';
@@ -11,7 +11,6 @@ import { RootState } from '../../../redux/store';
 import VoteComponent from './VoteComponent';
 import ActionButtons from './ActionButtons';
 import PostContent from './PostContent';
-import { Community } from '../../../Interface/CommunityInterface';
 
 export type PostItemContentProps = {
   post: IPost;

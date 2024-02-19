@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { Comment, CommentVote as CommentVoteInterface } from '../../Interface/CommentsInterface'
+import { Comment, CommentVote as CommentVoteInterface } from '../../Interface'
 import { firestore } from '../../firebaseClient';
 import { Avatar, Box, Flex, Spinner, Stack, Text } from '@chakra-ui/react';
 import moment from 'moment';

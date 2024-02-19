@@ -1,4 +1,4 @@
-import { IMessage } from '../Interface/ChatInterface'
+import { IMessage } from '../Interface'
 
 const useChat = () => {
   

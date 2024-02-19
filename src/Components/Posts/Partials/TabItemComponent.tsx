@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex, Icon, Text } from "@chakra-ui/react";
-import { TabItemInterface } from '../../../Interface/SubmitInterfaces';
+import { TabItemInterface } from '../../../Interface';
 
 
   

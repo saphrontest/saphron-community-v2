@@ -1,13 +1,12 @@
 import { Box, Flex, SkeletonCircle, SkeletonText, Stack, Text } from '@chakra-ui/react'
 import { FC, useState } from 'react'
 import CommentItem from './CommentItem';
-import { Comment } from '../../Interface/CommentsInterface';
+import { Comment, IPost } from '../../Interface';
 import { firestore } from '../../firebaseClient';
 import { CommentInput } from './Partials';
 import { collection, collectionGroup, deleteDoc, doc, getDocs, increment, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
-import { IPost } from '../../Interface/PostInterface';
 import { RootState } from '../../redux/store';
 
 interface CommentsProps {

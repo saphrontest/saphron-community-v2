@@ -8,7 +8,7 @@ import {
     runTransaction,
     QueryDocumentSnapshot
 } from "firebase/firestore"
-import { ISupportGroup, ISupportGroupParticipant } from "../Interface/SupportGroupInterface"
+import { ISupportGroup, ISupportGroupParticipant } from "../Interface"
 import { firestore } from "../firebaseClient"
 import { createSlug } from "../Helpers"
 

@@ -1,7 +1,7 @@
 import { MenuDivider, MenuItem, Flex, Icon } from "@chakra-ui/react";
 import { FC } from "react";
 import { MdOutlineLogin } from "react-icons/md";
-import { UserRoleTypes } from "../../../../Interface/UserInterface";
+import { UserRoleTypes } from "../../../../Interface";
 import MenuItemInner from "./MenuItemInner";
 import MenuItemLayout from "./MenuItemLayout";
 import { IconType } from "react-icons";

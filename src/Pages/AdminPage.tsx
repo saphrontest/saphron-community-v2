@@ -1,4 +1,4 @@
-import { UserInterface } from '../Interface/UserInterface'
+import { UserInterface } from '../Interface'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { Text } from '@chakra-ui/react'

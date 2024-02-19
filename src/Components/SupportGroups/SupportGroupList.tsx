@@ -1,7 +1,7 @@
 import { Flex, useMediaQuery } from '@chakra-ui/react'
 import { FC, Fragment } from 'react'
 import SupportGroupItem from './SupportGroupItem'
-import { ISupportGroup } from '../../Interface/SupportGroupInterface'
+import { ISupportGroup } from '../../Interface'
 
 interface ISupportGroupListProps {
     list?: ISupportGroup[];

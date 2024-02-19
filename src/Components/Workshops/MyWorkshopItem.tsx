@@ -1,13 +1,12 @@
 import { FC, Fragment, useEffect, useState } from "react";
-import { Workshop, WorkshopRequest } from "../../Interface/WorkshopInterface";
+import { Workshop, WorkshopRequest, IStatus } from "../../Interface";
 import { useBoolean, Flex, Text, Spinner } from "@chakra-ui/react";
 import { doc, updateDoc } from "firebase/firestore";
-import moment from "moment";
 import { firestore } from "../../firebaseClient";
 import { EditWorkshopModal } from "../Modals";
 import { MyPlatformItem, PlatformParticipantItem } from "../Platform";
-import { IStatus } from "../../Interface/StatusInterface";
 import { useWorkshop } from "../../Hooks";
+import moment from "moment";
 
 interface MyWorkshopItemProps {
     idx: number;

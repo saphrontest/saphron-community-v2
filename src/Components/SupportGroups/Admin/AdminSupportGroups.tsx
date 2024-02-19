@@ -1,7 +1,7 @@
 import { Flex, Spinner, useBoolean } from '@chakra-ui/react'
 import { Fragment, useEffect, useState } from 'react'
 import { AdminItem, AdminStatusSelect } from '../../Platform'
-import { ISupportGroup } from '../../../Interface/SupportGroupInterface'
+import { ISupportGroup } from '../../../Interface'
 import { useStatus, useSupportGroup } from '../../../Hooks'
 
 const AdminSupportGroups = () => {

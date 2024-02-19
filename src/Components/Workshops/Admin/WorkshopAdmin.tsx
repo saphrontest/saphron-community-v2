@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import AdminWorkshopItem from './AdminWorkshopItem'
-import { Workshop } from '../../../Interface/WorkshopInterface'
+import { Workshop } from '../../../Interface'
 import { Flex, Spinner, useBoolean } from '@chakra-ui/react';
 import { useStatus, useWorkshop } from '../../../Hooks';
 

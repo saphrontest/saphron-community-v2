@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { setModal } from '../../redux/slices/modalSlice'
 import { PlatformItemDetailLayout } from '../../Layouts'
 import { Button, Flex, Image, Text, useMediaQuery } from '@chakra-ui/react'
-import { ISupportGroup } from '../../Interface/SupportGroupInterface'
+import { ISupportGroup } from '../../Interface'
 import { Link } from 'react-router-dom'
 import { createSlug } from '../../Helpers'
 

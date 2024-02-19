@@ -1,6 +1,6 @@
 import { Flex, Button, Text } from "@chakra-ui/react";
 import { AuthButtons } from "../../Nav/Partials";
-import { UserInterface } from "../../../Interface/UserInterface";
+import { UserInterface } from "../../../Interface";
 import TextEditor from "../../TextEditor";
 
 type CommentInputProps = {

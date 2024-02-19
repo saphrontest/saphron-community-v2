@@ -2,12 +2,10 @@ import { Flex, Text, useBoolean } from '@chakra-ui/react'
 import { PageLayout } from '../Layouts'
 import { Fragment, useEffect, useState } from 'react'
 import { useSupportGroup } from '../Hooks'
-import { ISupportGroup } from '../Interface/SupportGroupInterface'
-import { UserInterface } from '../Interface/UserInterface'
-import { useSelector } from 'react-redux'
+import { ISupportGroup, UserInterface, IStatus } from '../Interface'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { MySupportGroupItem } from '../Components'
-import { IStatus } from '../Interface/StatusInterface'
 import { doc, updateDoc } from 'firebase/firestore'
 import { firestore } from '../firebaseClient'
 
@@ -22,22 +20,24 @@ const MySupportGroups = () => {
   const [deleteLoading, {toggle: toggleDeleteLoading}] = useBoolean(false)
   const [reloadSupportGroups, {toggle: toggleReloadSupportGroups}] = useBoolean(false)
 
-  useEffect(() => {
+  const getGroups = (isReload: boolean = false) => {
     toggleGroupsLoading()
     getSupportGroupsByUserId(user.id)
       .then(groups => !!groups.length && setSupportGroups(groups))
-      .finally(() => toggleGroupsLoading())
+      .finally(() => {
+        toggleReloadSupportGroups()
+        isReload && toggleGroupsLoading()
+      })
+  }
+
+  useEffect(() => {
+    getGroups()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  
+
   useEffect(() => {
     if(reloadSupportGroups) {
-      toggleGroupsLoading()
-      getSupportGroupsByUserId(user.id)
-        .then(groups => !!groups.length && setSupportGroups(groups))
-        .finally(() => toggleGroupsLoading())
-
-      return () => toggleReloadSupportGroups()
+      getGroups(reloadSupportGroups)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadSupportGroups])
@@ -48,12 +48,7 @@ const MySupportGroups = () => {
     updateDoc(doc(firestore, `supportGroups/${supportGroupId}/participants/${requestId}`), {
       status: status
     })
-    .then(() => {
-      toggleGroupsLoading()
-      getSupportGroupsByUserId(user.id)
-        .then(groups => !!groups.length && setSupportGroups(groups))
-        .finally(() => toggleGroupsLoading())
-    })
+    .then(() => getGroups())
     .finally(() => toggleParticipantsLoading())
   }
 

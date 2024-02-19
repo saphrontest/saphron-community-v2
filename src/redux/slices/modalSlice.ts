@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { ModalInterface, defaultModalState } from "../../Interface/ModalInterface";
+import { ModalInterface, defaultModalState } from "../../Interface";
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 export const modalSlice = createSlice({

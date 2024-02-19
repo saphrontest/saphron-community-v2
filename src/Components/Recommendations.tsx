@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
 import { getCommunities, getJoinedCommunitiesList, getUserCommunities, joinCommunity, leaveCommunity } from '../Helpers/apiFunctions';
 import { setCommunities, setJoinedCommunities } from '../redux/slices/communitySlice';
-import { Community, JoinedCommunity } from '../Interface/CommunityInterface';
+import { Community, JoinedCommunity } from '../Interface';
 import communitiesBackground from '../assets/images/communities.jpg'
 
 interface RecommendationsProps {

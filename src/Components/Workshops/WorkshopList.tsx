@@ -1,7 +1,7 @@
 import { FC, Fragment } from 'react'
 import { Flex, useMediaQuery } from '@chakra-ui/react'
 import { WorkshopCard } from '..'
-import { Workshop } from '../../Interface/WorkshopInterface'
+import { Workshop } from '../../Interface'
 
 interface WorkshopListProps {
     workshops: Workshop[];

@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { Community, JoinedCommunity, communitySliceInitial } from "../../Interface/CommunityInterface"
+import { Community, JoinedCommunity, communitySliceInitial } from "../../Interface"
 
 export const communitiySlice = createSlice({
   name: "communitySlice",

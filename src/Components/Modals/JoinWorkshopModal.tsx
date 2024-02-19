@@ -2,11 +2,10 @@ import { FC, useState } from 'react'
 import { InputItem, ModalLayout } from '../../Layouts'
 import { ModalBody, Flex, Text, Box, ModalCloseButton, Textarea, Button, useToast, Spinner, useMediaQuery } from '@chakra-ui/react'
 import { WorkshopCard } from '../Workshops'
-import { Workshop, WorkshopRequest } from '../../Interface/WorkshopInterface'
+import { Workshop, WorkshopRequest, UserInterface, ErrorInterface } from '../../Interface'
 import md5 from 'md5'
 import { collection, doc, runTransaction } from 'firebase/firestore'
 import { firestore } from '../../firebaseClient'
-import { UserInterface } from '../../Interface/UserInterface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { setModal } from '../../redux/slices/modalSlice'
@@ -24,7 +23,6 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
     const [formErrors, setFormErrors] = useState<{ motivation: ErrorInterface; email: ErrorInterface; }>({ motivation: { success: true, message: "" }, email: { success: true, message: "" }  })
     const [loading, setLoading] = useState<boolean>(false)
 
-    interface ErrorInterface { success: boolean; message: string; }
     interface FormItemInterface { name: string; email: string; motivation: string; }
 
     const user: UserInterface = useSelector((state: RootState) => state.user)

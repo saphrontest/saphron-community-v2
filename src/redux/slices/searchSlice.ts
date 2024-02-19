@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { defaultSearchState } from "../../Interface/SearchInterface"
+import { defaultSearchState } from "../../Interface"
 
 export const searchSlice = createSlice({
   name: "searchSlice",

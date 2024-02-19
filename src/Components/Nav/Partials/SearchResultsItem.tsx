@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { IPost } from '../../../Interface/PostInterface';
+import { IPost } from '../../../Interface';
 import { Flex, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { LinkIcon } from '@chakra-ui/icons';

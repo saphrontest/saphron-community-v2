@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
-import { Community } from "../Interface/CommunityInterface";
+import { Community } from "../Interface";
 import { firestore, storage } from "../firebaseClient";
 import { getCommunityDetail } from "../Helpers/apiFunctions";
 import Content from "./About/Content";

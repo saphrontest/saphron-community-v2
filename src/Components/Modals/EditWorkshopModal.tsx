@@ -2,7 +2,7 @@ import { Flex, ModalBody, ModalCloseButton, ModalHeader, Text } from '@chakra-ui
 import React, { FC } from 'react'
 import { ModalLayout } from '../../Layouts'
 import { CreateWorkshopForm } from './Views'
-import { Workshop } from '../../Interface/WorkshopInterface'
+import { Workshop } from '../../Interface'
 
 const EditWorkshopModal: FC<{ isOpen: boolean; toggleModal: () => void; workshop: Workshop }> = ({isOpen, toggleModal, workshop}) => {
 

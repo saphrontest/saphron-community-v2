@@ -1,20 +1,14 @@
 import { FC, useState } from 'react'
 import { useSupportGroup } from '../../Hooks'
-import { ISupportGroup } from '../../Interface/SupportGroupInterface'
+import { ISupportGroup, UserInterface, ErrorInterface } from '../../Interface'
 import { Box, Button, Flex, Spinner, Text, Textarea, useBoolean, useToast } from '@chakra-ui/react'
 import { InputItem } from '../../Layouts'
 import { PlatformFormItem } from '../Platform'
 import { useDispatch, useSelector } from 'react-redux'
-import { UserInterface } from '../../Interface/UserInterface'
 import { RootState } from '../../redux/store'
 import moment from 'moment'
 import { setModal } from '../../redux/slices/modalSlice'
 import md5 from 'md5'
-
-interface ErrorInterface {
-  success: boolean;
-  message: string;
-}
 
 const JoinSupportGroupForm: FC<{ supportGroup: ISupportGroup }> = ({ supportGroup }) => {
   const { onJoin } = useSupportGroup()

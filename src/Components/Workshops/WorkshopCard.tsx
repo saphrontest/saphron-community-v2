@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Flex, Image, Text, useBoolean } from '@chakra-ui/react'
 import { FC } from 'react'
-import { Workshop } from '../../Interface/WorkshopInterface'
+import { Workshop } from '../../Interface'
 import moment from 'moment';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { setModal } from '../../redux/slices/modalSlice';

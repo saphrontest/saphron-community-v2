@@ -1,7 +1,7 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
 import { FC } from 'react'
 import SearchResultsItem from './SearchResultsItem';
-import { IPost } from '../../../Interface/PostInterface';
+import { IPost } from '../../../Interface';
 import NoEntry from '../../NoEntry';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react';
 import AIDialog from '../AIDialog';
 import { FC } from 'react';
-import { AIMessageInterface } from '../../../Interface/AIMessageInterface';
+import { AIMessageInterface } from '../../../Interface';
 
 
 interface AIMessagesProps {

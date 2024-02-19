@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import TabItemComponent from './TabItemComponent';
-import { TabItemInterface } from '../../../Interface/SubmitInterfaces';
+import { TabItemInterface } from '../../../Interface';
 
 interface TabsProps {
   tabs: any;

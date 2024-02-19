@@ -8,6 +8,7 @@ export type ModalViewTypes =
   | "joinWorkshop"
   | "createSupportGroup"
   | "joinSupportGroup"
+  | "editSupportGroup"
   | null;
 
 export interface ModalInterface {

@@ -1,5 +1,5 @@
-import React, { FC, useRef, useState } from 'react'
-import { ISupportGroup } from '../../Interface/SupportGroupInterface'
+import React, { FC, useEffect, useRef, useState } from 'react'
+import { ISupportGroup, UserInterface, ErrorInterface } from '../../Interface'
 import { useSupportGroup } from '../../Hooks'
 import { Button, Checkbox, Flex, Spinner, Text, useBoolean, useToast } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
@@ -8,7 +8,6 @@ import { InputItem } from '../../Layouts'
 import TextEditor from '../TextEditor'
 import { PlatformFormItem } from '../Platform'
 import moment from 'moment'
-import { UserInterface } from '../../Interface/UserInterface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { setModal } from '../../redux/slices/modalSlice'
@@ -17,18 +16,22 @@ import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 import md5 from 'md5'
 
 
-const CreateSupportGroupForm: FC<{
-  supportGroup?: ISupportGroup;
+const SupportGroupForm: FC<{
+  isEdit?: boolean
+  supportGroupData?: ISupportGroup;
+  reloadSupportGroups?: () => void
 }> = ({
-  supportGroup
+  isEdit,
+  supportGroupData,
+  reloadSupportGroups
 }) => {
     const toast = useToast()
     const dispatch = useDispatch()
-    const { onCreate } = useSupportGroup()
-    const [loading, { toggle: toggleLoading }] = useBoolean(false)
+    const { onCreate, onEdit } = useSupportGroup()
     const supportGroupPicRef = useRef<HTMLInputElement | null>(null)
-    const user: UserInterface = useSelector((state: RootState) => state.user)
 
+    const [loading, { toggle: toggleLoading }] = useBoolean(false)
+    
     const [coverImg, setCoverImg] = useState("")
     const [checkbox, setCheckbox] = useState(false)
     const [formItems, setFormItems] = useState({
@@ -38,12 +41,19 @@ const CreateSupportGroupForm: FC<{
       support_group_name: '',
       status: 'waiting'
     })
-    const [formErrors, setFormErrors] = useState({
+    const [formErrors, setFormErrors] = useState<{
+      support_group_name: ErrorInterface;
+      cover_img: ErrorInterface;
+      description: ErrorInterface;
+      checkbox: ErrorInterface;
+    }>({
       support_group_name: { success: true, message: "" },
       cover_img: { success: true, message: "" },
       description: { success: true, message: "" },
       checkbox: { success: true, message: "" },
     })
+    
+    const user: UserInterface = useSelector((state: RootState) => state.user)
 
     const validate = () => {
       setFormErrors({
@@ -75,14 +85,43 @@ const CreateSupportGroupForm: FC<{
       }
     };
 
+    const handleEdit = async () => {
+      if(!!supportGroupData?.id) {
+        const img = coverImg !== supportGroupData.cover_img && await updateImage(coverImg, supportGroupData.id) 
+        onEdit({
+          ...formItems,
+          cover_img: img || supportGroupData?.cover_img ,
+          updatedAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+          id: supportGroupData?.id
+        })
+        .then(() => {
+          toast({
+            status: "success",
+            isClosable: true,
+            position: "top-right",
+            title: "Edit Support Group success."
+          })
+          reloadSupportGroups && reloadSupportGroups()
+          dispatch(setModal({isOpen: false, view: "editSupportGroup", data: null}))
+        })
+        .finally(() => toggleLoading())
+      }
+    }
+
     const handleCreate = async () => {
-      toggleLoading()
-      const newSupportGroupId = md5(`${formItems.support_group_name}.${new Date().getTime().toString()}`)
-      const img = await updateImage(coverImg, newSupportGroupId)
       if (!validate()) {
-        console.log('object')
         return;
       }
+      
+      toggleLoading()
+
+      if(isEdit){
+        handleEdit()
+        return;
+      }
+      
+      const newSupportGroupId = md5(`${formItems.support_group_name}.${new Date().getTime().toString()}`)
+      const img = await updateImage(coverImg, newSupportGroupId)
       onCreate({
         ...formItems,
         id: newSupportGroupId,
@@ -127,6 +166,20 @@ const CreateSupportGroupForm: FC<{
       };
     }
 
+    useEffect(() => {
+      if(isEdit && supportGroupData) {
+          setFormItems({
+            cover_img: supportGroupData.cover_img,
+            support_group_manager_name: supportGroupData.support_group_manager_name,
+            description: supportGroupData.description,
+            support_group_name: supportGroupData.support_group_name,
+            status: supportGroupData.status
+          })
+          setCoverImg(supportGroupData.cover_img)
+      }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEdit])
+
     return (
       <Flex align="flex-start" w="100%" direction="column" gap="1rem">
         <PlatformFormItem
@@ -134,10 +187,10 @@ const CreateSupportGroupForm: FC<{
           isOptional={true}
           description='Giving your name provides a more trustworthy environment for participants, otherwise your username will be used.'
         >
-          <InputItem type='text' name='support_group_manager_name' onChange={onChange} placeholder={supportGroup?.support_group_manager_name} />
+          <InputItem type='text' name='support_group_manager_name' onChange={onChange} placeholder={supportGroupData?.support_group_manager_name} />
         </PlatformFormItem>
         <PlatformFormItem error={!formErrors.support_group_name.success} errorMessage={formErrors.support_group_name.message} label='Support Group Name' description='Choosing an interesting group name will help you attract more participants.'>
-          <InputItem type='text' name='support_group_name' onChange={onChange} placeholder={supportGroup?.support_group_name} />
+          <InputItem type='text' name='support_group_name' onChange={onChange} placeholder={supportGroupData?.support_group_name} />
         </PlatformFormItem>
         <PlatformFormItem error={!formErrors.description.success} errorMessage={formErrors.description.message} label='Description' description='A detailed description can be really helpful in directing the right users to attend the workshop, while also preventing irrelevant people from attending. This can make the workshop more productive and efficient.' isFormElement={false}>
           <TextEditor onChange={(_, data) => onChange({ target: { name: 'description', value: data } } as React.ChangeEvent<HTMLInputElement>)} value={formItems.description} />
@@ -177,4 +230,4 @@ const CreateSupportGroupForm: FC<{
     )
   }
 
-export default CreateSupportGroupForm
+export default SupportGroupForm

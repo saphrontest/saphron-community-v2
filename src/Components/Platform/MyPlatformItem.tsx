@@ -75,11 +75,11 @@ const MyPlatformItem: FC<IMyPlatformItemProps> = ({
                                         openEditModal()
                                     }}
                                         fontSize={["12", "16"]}
-                                    >Edit Workshop</Button>
+                                    >Edit</Button>
                                     <Button variant="outline" fontSize={["12", "16"]} onClick={(ev) => {
                                         ev.stopPropagation()
                                         setDeleteOpen.toggle()
-                                    }}>Delete Workshop</Button>
+                                    }}>Delete</Button>
                                 </Flex>
                             </Flex>
                         }

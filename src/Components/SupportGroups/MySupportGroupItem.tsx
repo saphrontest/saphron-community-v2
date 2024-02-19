@@ -15,9 +15,7 @@ interface IMySupportGroupItemProps {
         toggle: () => void;
     };
     toggleDeleteLoading: () => void;
-    setEditOpen: {
-        toggle: () => void;
-    };
+    setEditOpen: () => void;
     handleRequest: (event: any, requestId: string, status: IStatus, groupId: string) => void;
     participantsLoading: boolean;
     toggleReloadSupportGroups: () => void;
@@ -49,7 +47,7 @@ const MySupportGroupItem: FC<IMySupportGroupItemProps> = ({
                     .then(() => toggleReloadSupportGroups())
                     .finally(() => toggleDeleteLoading())
             }}
-            openEditModal={() => setEditOpen.toggle()}
+            openEditModal={setEditOpen}
             item={{
                 name: group.support_group_name,
                 createdAt: group.createdAt,

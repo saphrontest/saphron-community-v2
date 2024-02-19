@@ -4,23 +4,27 @@ import { Fragment, useEffect, useState } from 'react'
 import { useSupportGroup } from '../Hooks'
 import { ISupportGroup } from '../Interface/SupportGroupInterface'
 import { UserInterface } from '../Interface/UserInterface'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { MySupportGroupItem } from '../Components'
 import { IStatus } from '../Interface/StatusInterface'
 import { doc, updateDoc } from 'firebase/firestore'
 import { firestore } from '../firebaseClient'
+import { setModal } from '../redux/slices/modalSlice'
+import { EditSupportGroupModal } from '../Components/Modals'
 
 const MySupportGroups = () => {
+  const dispatch = useDispatch()
   const {getSupportGroupsByUserId} = useSupportGroup()
-  const user: UserInterface = useSelector((state: RootState) => state.user)
+  
   const [supportGroups, setSupportGroups] = useState<ISupportGroup[]>([])
   const [groupsLoading, {toggle: toggleGroupsLoading}] = useBoolean(false)
   const [participantsLoading, {toggle: toggleParticipantsLoading}] = useBoolean(false)
   const [isClicked, setIsClicked] = useBoolean(false)
-  const [editOpen, setEditOpen] = useBoolean(false)
   const [deleteLoading, {toggle: toggleDeleteLoading}] = useBoolean(false)
   const [reloadSupportGroups, {toggle: toggleReloadSupportGroups}] = useBoolean(false)
+  
+  const user: UserInterface = useSelector((state: RootState) => state.user)
 
   useEffect(() => {
     toggleGroupsLoading()
@@ -58,7 +62,7 @@ const MySupportGroups = () => {
   }
 
   return (
-    <div>
+    <>
       <PageLayout showSidebar={false} leftWidth="70%">
         <Flex w="100%" bg="white" p="1rem" direction="column">
             <Text fontWeight="700" fontSize="24px" align="left" mb="1rem">
@@ -76,7 +80,7 @@ const MySupportGroups = () => {
                     isClicked={isClicked}
                     setIsClicked={setIsClicked}
                     toggleDeleteLoading={toggleDeleteLoading}
-                    setEditOpen={setEditOpen}
+                    setEditOpen={() => dispatch(setModal({isOpen: true, view: "editSupportGroup", data: group}))}
                     handleRequest={handleRequest}
                     participantsLoading={participantsLoading}
                     toggleReloadSupportGroups={toggleReloadSupportGroups}
@@ -88,7 +92,8 @@ const MySupportGroups = () => {
         </Flex>
         <></>
       </PageLayout>
-    </div>
+      <EditSupportGroupModal />
+    </>
   )
 }
 

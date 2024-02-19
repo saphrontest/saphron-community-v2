@@ -13,9 +13,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 // INTERFACES
-import { Community, JoinedCommunity } from "../Interface";
-import { IPost, IPostVote } from "../Interface";
-import { Comment, CommentVote } from "../Interface";
+import { Community, JoinedCommunity, IPost, IPostVote, Comment, CommentVote } from "../Interface";
 import { store } from "../redux/store";
 import { setPosts, setSavedPosts } from "../redux/slices/postSlice";
 import { User } from "firebase/auth";

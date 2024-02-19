@@ -103,7 +103,14 @@ const useSupportGroup = () => {
      * `name`, `description`, etc.
      */
 
-    const onEdit = async (supportGroup: ISupportGroup) => {
+    const onEdit = async (supportGroup: {
+        id: string;
+        cover_img: string;
+        updatedAt: string;
+        support_group_manager_name: string;
+        description: string;
+        support_group_name: string;
+    }) => {
         await runTransaction(firestore, async (transaction: Transaction) => {
             transaction.update(doc(firestore, `supportGroups/${supportGroup.id}`), {...supportGroup})
         }).then(() => {

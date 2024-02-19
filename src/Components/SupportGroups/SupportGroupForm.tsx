@@ -86,7 +86,7 @@ const SupportGroupForm: FC<{
     };
 
     const handleEdit = async () => {
-      if(!!supportGroupData?.id) {
+      if(supportGroupData?.id) {
         const img = coverImg !== supportGroupData.cover_img && await updateImage(coverImg, supportGroupData.id) 
         onEdit({
           ...formItems,

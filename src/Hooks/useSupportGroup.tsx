@@ -199,7 +199,6 @@ const useSupportGroup = () => {
      */
     const getSupportGroupsByUserId = async (userId: string) => {
         const groups = await getSupportGroups()
-        console.log(groups)
         const result: ISupportGroup[] = groups.filter(({support_group_manager_id}) => support_group_manager_id === userId)
         return result
     }

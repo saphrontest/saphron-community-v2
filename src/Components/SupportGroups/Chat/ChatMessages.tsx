@@ -9,7 +9,6 @@ const ChatMessages: FC<{ messages: IMessage[] }> = ({ messages }) => {
     const user: UserInterface = useSelector((state: RootState) => state.user)
     useEffect(() => {
         if(messagesWrapperRef.current) {
-
             messagesWrapperRef.current.scrollTop = messagesWrapperRef.current.scrollHeight;
         }
     }, [messages])

@@ -1,34 +1,8 @@
-import { Flex, Stack, Icon, Avatar, Image, Text, ModalBody, ModalCloseButton, ModalHeader, useBoolean } from '@chakra-ui/react'
+import { Flex, Stack, Icon, Avatar, Image, Text, useBoolean } from '@chakra-ui/react'
 import { FC } from 'react'
 import { IoIosInformationCircle } from 'react-icons/io'
 import { ISupportGroup } from '../../../Interface'
-import { ModalLayout } from '../../../Layouts'
-
-const DescriptionModal: FC<{ isOpen: boolean; onClose: () => void, description: string; name: string }> = ({ isOpen, onClose, description, name }) => {
-    return (
-        <ModalLayout isOpen={isOpen} onClose={onClose}>
-            <ModalHeader display="flex" flexDirection="column" alignItems="center">
-                <Text textTransform="capitalize">{name}</Text>
-            </ModalHeader>
-            <ModalCloseButton />
-            <ModalBody
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="center"
-                pb={6}
-            >
-                <Flex
-                    direction="column"
-                    alignItems="center"
-                    justifyContent="center"
-                >
-                    <Text dangerouslySetInnerHTML={{ __html: description }} />
-                </Flex>
-            </ModalBody>
-        </ModalLayout>
-    )
-}
+import DescriptionModal from './DescriptionModal'
 
 const ChatSupportGroupDetail: FC<{ supportGroup: ISupportGroup }> = ({ supportGroup }) => {
     const [showDescriptionModal, { toggle: toggleDescriptionModal }] = useBoolean()
@@ -61,7 +35,12 @@ const ChatSupportGroupDetail: FC<{ supportGroup: ISupportGroup }> = ({ supportGr
                     </Flex>
                 </Stack>
             </Flex>
-            <DescriptionModal isOpen={showDescriptionModal} onClose={toggleDescriptionModal} name={supportGroup.support_group_name} description={supportGroup.description} />
+            <DescriptionModal
+            isOpen={showDescriptionModal}
+            onClose={toggleDescriptionModal}
+            name={supportGroup.support_group_name}
+            description={supportGroup.description}
+            />
         </>
     )
 }

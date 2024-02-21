@@ -3,5 +3,8 @@ export interface IMessage {
     date: string;
     supportGroupId: string;
     userId: string;
+    userMail: string;
+    userAvatar: string;
+    userName: string;
     content: string;
 }

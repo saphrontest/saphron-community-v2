@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
 import { ISupportGroup, UserInterface, ErrorInterface } from '../../Interface'
-import { useSupportGroup } from '../../Hooks'
+import { useSupportGroup, useChat } from '../../Hooks'
 import { Button, Checkbox, Flex, Spinner, Text, useBoolean, useToast } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { SCIcon } from '../SCElements'
@@ -28,6 +28,7 @@ const SupportGroupForm: FC<{
     const toast = useToast()
     const dispatch = useDispatch()
     const { onCreate, onEdit } = useSupportGroup()
+    const { onCreate: createChat } = useChat()
     const supportGroupPicRef = useRef<HTMLInputElement | null>(null)
 
     const [loading, { toggle: toggleLoading }] = useBoolean(false)
@@ -136,13 +137,16 @@ const SupportGroupForm: FC<{
         status: "waiting"
       })
       .then(() => {
-            toast({
-                status: "success",
-                isClosable: true,
-                position: "top-right",
-                title: "Create Support Group request submitted. Currently under review. You will be notified of the outcome shortly."
+          createChat(newSupportGroupId)
+            .then(() => {
+              toast({
+                  status: "success",
+                  isClosable: true,
+                  position: "top-right",
+                  title: "Create Support Group request submitted. Currently under review. You will be notified of the outcome shortly."
+              })
+              dispatch(setModal({isOpen: false, view: "createSupportGroup", data: null}))
             })
-            dispatch(setModal({isOpen: false, view: "createSupportGroup", data: null}))
       })
       .catch((err) => console.error(err))
       .finally(() => toggleLoading())

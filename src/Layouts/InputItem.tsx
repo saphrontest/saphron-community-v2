@@ -9,6 +9,7 @@ type InputItemProps = {
   mb?: number;
   bg?: string;
   size?: string;
+  value?: string;
 };
 
 const InputItem: React.FC<InputItemProps> = ({
@@ -19,6 +20,7 @@ const InputItem: React.FC<InputItemProps> = ({
   mb,
   bg,
   size,
+  value
 }) => {
   return (
     <Input
@@ -26,6 +28,7 @@ const InputItem: React.FC<InputItemProps> = ({
       placeholder={placeholder}
       onInput={onChange}
       mb={mb}
+      value={value}
       maxLength={9999}
       fontSize="10pt"
       _placeholder={{ color: "gray.500" }}

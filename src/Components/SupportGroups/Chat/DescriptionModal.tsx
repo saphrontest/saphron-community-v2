@@ -5,7 +5,7 @@ import { ModalLayout } from "../../../Layouts";
 const DescriptionModal: FC<{ isOpen: boolean; onClose: () => void, description: string; name: string }> = ({ isOpen, onClose, description, name }) => {
     return (
         <ModalLayout isOpen={isOpen} onClose={onClose}>
-            <ModalHeader display="flex" flexDirection="column" alignItems="center">
+            <ModalHeader display="flex" flexDirection="column" alignItems="flex-start" w="100%">
                 <Text textTransform="capitalize">{name}</Text>
             </ModalHeader>
             <ModalCloseButton />

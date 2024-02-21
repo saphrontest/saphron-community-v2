@@ -35,7 +35,7 @@ const EditProfileModal: FC<{data: any}> = ({data}) => {
     const [isSaving, setIsSaving] = useState(false)
     const [formValues, setFormValues] = useState({
         email: user?.email,
-        username: data.isEdit ? userFromDB.username : generateUsername(),
+        username: data?.isEdit ? userFromDB.username : generateUsername(),
         displayName: user?.displayName,
         phoneNumber: user?.phoneNumber
     })
@@ -169,7 +169,7 @@ const EditProfileModal: FC<{data: any}> = ({data}) => {
                     />}
                     <Divider mb={6} w="50%" />
                     <SCFormItem placeholder={userFromDB.email ?? user?.email as string} label='E-mail' name="email" onChange={handleChange} />
-                    <SCFormItem placeholder={data.isEdit ? userFromDB.username : formValues.username} label='Username' name="username" onChange={handleChange} />
+                    <SCFormItem placeholder={data?.isEdit ? userFromDB.username : formValues.username} label='Username' name="username" onChange={handleChange} />
                     <Divider mt={1} mb={3} />
                     <SCFormItem placeholder={userFromDB.displayName ?? user?.displayName as string} label='Display Name' name="displayName" onChange={handleChange} />
                     <SCFormItem placeholder={userFromDB.phoneNumber ?? user?.phoneNumber as string} label='Phone Number' name="phoneNumber" onChange={handleChange} />

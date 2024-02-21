@@ -53,8 +53,8 @@ const SupportGroupDetailPage = () => {
 
       return () => unsubscribe()
     }
-
   }, [supportGroup, chatId])
+
 
   return supportGroup ? (
     <PageLayout leftWidth='100%'>
@@ -69,8 +69,14 @@ const SupportGroupDetailPage = () => {
         direction="column"
         justify="space-between"
         >
-          <ChatMessages messages={messages}/>
-          <ChatActionButtons chatId={chatId!} supportGroupId={supportGroup.id!} user={user} />
+          <ChatMessages messages={messages} adminId={supportGroup.support_group_manager_id}/>
+          <ChatActionButtons
+          chatId={chatId!} 
+          supportGroupId={supportGroup.id!}
+          user={user}
+          isAdmin={supportGroup.support_group_manager_id === user.id}
+          isConfirmedParticipant={!!supportGroup?.participants?.find(participant => participant.userId === user.id && participant.status === "confirmed")}
+          />
         </Flex>
       </Flex>
       <></>

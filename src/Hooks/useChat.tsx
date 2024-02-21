@@ -7,7 +7,7 @@ const useChat = () => {
   
     const onCreate = async (supportGroupId: string) => {
         const chatRoomId = md5(`${supportGroupId}.${new Date()}`)
-        const supportGroupRef = doc(collection(firestore, `supportGroups/${supportGroupId}/chatRoom/${chatRoomId}`))
+        const supportGroupRef = doc(firestore, `supportGroups/${supportGroupId}/chatRoom/${chatRoomId}`)
         runTransaction(firestore, async (transaction: Transaction) => {
             transaction.set(supportGroupRef, {
                 id: chatRoomId,
@@ -16,8 +16,6 @@ const useChat = () => {
             })
         })
     }
-    
-    const getMessagesBySupportGroupId = (supportGroupId: string) => {}
 
     const getChatRoomIdBySupportGroupId = async (supportGroupId: string) => {
         const supportGroupRef = query(collection(firestore, `supportGroups/${supportGroupId}/chatRoom`))
@@ -33,12 +31,18 @@ const useChat = () => {
         .then(() => true)
         .catch(() => false)
     }
-    const deleteChat = (supportGroupId: string) => {}
+    const onDelete = async (supportGroupId: string) => {
+        const chatRoomRef = doc(collection(firestore, `supportGroups/${supportGroupId}/chatRoom`))
+        return runTransaction(firestore, async (transaction: Transaction) => {
+            transaction.delete(chatRoomRef)
+        })
+        .then(() => true)
+        .catch(() => false)
+    }
 
     return {
         sendMessage,
-        deleteChat,
-        getMessagesBySupportGroupId,
+        onDelete,
         getChatRoomIdBySupportGroupId,
         onCreate
     }

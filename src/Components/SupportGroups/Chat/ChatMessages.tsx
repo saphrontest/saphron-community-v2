@@ -30,7 +30,7 @@ const ChatMessages: FC<{
         >
             {
                 messages.map((message: IMessage) => (
-                    <Fragment>
+                    <Fragment key={message.id}>
                         <ChatMessageItem
                             message={message}
                             isUserMessage={user.id === message.userId}

@@ -12,53 +12,61 @@ import { useNavigate } from 'react-router-dom'
 import { RootState } from '../../../redux/store'
 import { FaUsers } from "react-icons/fa6";
 
+const JoinButton: FC<{
+    isAdmin: boolean;
+    isUserParticipant: boolean;
+    isUserConfirmedParticipant: boolean;
+    handleJoinButton: () => void
+}> = ({
+    isAdmin, isUserConfirmedParticipant, isUserParticipant, handleJoinButton
+}) => {
+
+    if (isAdmin) {
+        return null
+    }
+    if (isUserParticipant) {
+        if (isUserConfirmedParticipant) {
+            return <Flex align="center" bg="gray" color="white" height="30px" padding="0 1rem" borderRadius="1rem" fontWeight="600">Applied</Flex>
+        }
+        return null
+    }
+    return <Button height="30px" onClick={handleJoinButton}>Join</Button>
+}
+
 const ChatSupportGroupDetail: FC<{ supportGroup: ISupportGroup; }> = ({ supportGroup }) => {
-    const dispatch = useDispatch()
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const showErrorToast = useToast({
         title: "Please, try again later.",
         status: "error",
         isClosable: true,
         position: "top-right"
-      })
+    })
     const user: UserInterface = useSelector((state: RootState) => state.user)
-    const {onDelete: deleteSupportGroup} = useSupportGroup()
-    const {onDelete: deleteChat} = useChat()
+    const { onDelete: deleteSupportGroup } = useSupportGroup()
+    const { onDelete: deleteChat } = useChat()
 
     const [isDeleteModal, { toggle: toggleDeleteModal }] = useBoolean()
     const [showDescriptionModal, { toggle: toggleDescriptionModal }] = useBoolean()
 
     const handleDelete = async () => {
         supportGroup.id && deleteChat(supportGroup.id).then(result => {
-            if(result) {
+            if (result) {
                 deleteSupportGroup(supportGroup)
-                .then(result => {
-                    if(result) {
-                        navigate("/support-groups")
+                    .then(result => {
+                        if (result) {
+                            navigate("/support-groups")
+                            return;
+                        }
+                        showErrorToast()
                         return;
-                    }
-                    showErrorToast()
-                    return;
-                })
+                    })
                 return;
             }
             showErrorToast()
         })
     }
 
-    const JoinButton = () => {
-        if(supportGroup.support_group_manager_id === user.id) {
-            return null
-        }
-        if(!!supportGroup?.participants?.find(participant => participant.userId === user.id)) {
-            if(supportGroup?.participants?.find(participant => participant.userId === user.id && participant.status === "waiting")) {
-                return <Flex align="center" bg="gray" color="white" height="30px" padding="0 1rem" borderRadius="1rem" fontWeight="600">Applied</Flex>
-            }
-            return null
-        }
-        return <Button height="30px" onClick={() => dispatch(setModal({isOpen: true, view: "joinSupportGroup", data: supportGroup}))}>Join</Button>
-    }
-    
     return (
         <>
             <Flex direction="row" gap="1rem" w="100%">
@@ -69,7 +77,12 @@ const ChatSupportGroupDetail: FC<{ supportGroup: ISupportGroup; }> = ({ supportG
                             {supportGroup.support_group_name}
                         </Text>
                         <Flex align="center" gap="0.4rem">
-                            <JoinButton />
+                            <JoinButton
+                                isAdmin={supportGroup.support_group_manager_id === user.id}
+                                isUserParticipant={supportGroup?.participants?.some(participant => participant.userId === user.id) || false}
+                                isUserConfirmedParticipant={supportGroup?.participants?.some(participant => participant.userId === user.id && participant.status === "waiting") || false}
+                                handleJoinButton={() => dispatch(setModal({ isOpen: true, view: "joinSupportGroup", data: supportGroup }))}
+                            />
                             <Icon as={IoIosInformationCircle} cursor="pointer" color="blue.500" _hover={{ color: "blue.400" }} width="38px" height="38px" onClick={toggleDescriptionModal} />
                             {supportGroup.support_group_manager_id === user.id && <Menu>
                                 <MenuButton
@@ -111,10 +124,10 @@ const ChatSupportGroupDetail: FC<{ supportGroup: ISupportGroup; }> = ({ supportG
                 </Stack>
             </Flex>
             <DescriptionModal
-            isOpen={showDescriptionModal}
-            onClose={toggleDescriptionModal}
-            name={supportGroup.support_group_name}
-            description={supportGroup.description}
+                isOpen={showDescriptionModal}
+                onClose={toggleDescriptionModal}
+                name={supportGroup.support_group_name}
+                description={supportGroup.description}
             />
             {isDeleteModal && <DeleteAlert isOpen={isDeleteModal} toggleDialog={toggleDeleteModal} handleDelete={handleDelete} label={`${supportGroup.support_group_name} Support Group`} />}
         </>

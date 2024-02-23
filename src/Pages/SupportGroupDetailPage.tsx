@@ -7,7 +7,7 @@ import { IMessage, ISupportGroup, UserInterface } from '../Interface'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { ChatActionButtons, ChatSupportGroupDetail, ChatMessages } from '../Components'
-import { collection, onSnapshot, query } from 'firebase/firestore'
+import { DocumentChange, QuerySnapshot, collection, onSnapshot, query } from 'firebase/firestore'
 import { firestore } from '../firebaseClient'
 
 
@@ -43,17 +43,17 @@ const SupportGroupDetailPage = () => {
   useEffect(() => {
     if (supportGroup && chatId) {
       const chatRef = query(collection(firestore, `supportGroups/${supportGroup.id}/chatRoom/${chatId}/messages`));
-      const unsubscribe = onSnapshot(chatRef, snapshot => {
-        snapshot.docChanges().forEach(function(change) {
-          if (change.type === "added") {
-            setMessages((prev: IMessage[]) => ([...prev, change.doc.data() as IMessage]))
-          }
-        });
-      })
-
+      const unsubscribe = onSnapshot(chatRef, onSuccess)
       return () => unsubscribe()
     }
   }, [supportGroup, chatId])
+
+  const onSuccess = (snapshot: QuerySnapshot) => {
+    snapshot.docChanges()
+      .forEach((change: DocumentChange) => {
+      change.type === "added" && setMessages((prev: IMessage[]) => ([...prev, change.doc.data() as IMessage]))
+    });
+  }
 
 
   return supportGroup ? (
@@ -61,22 +61,22 @@ const SupportGroupDetailPage = () => {
       <Flex w="100%" bg="white" direction="column" align="flex-start" p="1rem" gap="1rem">
         <ChatSupportGroupDetail supportGroup={supportGroup} />
         <Flex
-        border="5px solid"
-        borderColor="gray.100"
-        w="100%"
-        borderRadius="1rem"
-        p="1rem"
-        direction="column"
-        justify="space-between"
+          border="5px solid"
+          borderColor="gray.100"
+          w="100%"
+          borderRadius="1rem"
+          p="1rem"
+          direction="column"
+          justify="space-between"
         >
-          <ChatMessages messages={messages} adminId={supportGroup.support_group_manager_id}/>
-          <ChatActionButtons
-          chatId={chatId!} 
-          supportGroupId={supportGroup.id!}
-          user={user}
-          isAdmin={supportGroup.support_group_manager_id === user.id}
-          isConfirmedParticipant={!!supportGroup?.participants?.find(participant => participant.userId === user.id && participant.status === "confirmed")}
-          />
+          <ChatMessages messages={messages} adminId={supportGroup.support_group_manager_id} />
+          {chatId && <ChatActionButtons
+            chatId={chatId}
+            supportGroupId={supportGroup.id!}
+            user={user}
+            isAdmin={supportGroup.support_group_manager_id === user.id}
+            isConfirmedParticipant={!!supportGroup?.participants?.find(participant => participant.userId === user.id && participant.status === "confirmed")}
+          />}
         </Flex>
       </Flex>
       <></>

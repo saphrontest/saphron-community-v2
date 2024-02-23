@@ -27,26 +27,22 @@ const ChatMessageItem: FC<{
                     color={isUserMessage ? "white" : "gray.800"}
                     align={isUserMessage ? "flex-end" : "flex-start"}
                 >
-                    {!isUserMessage && (
-                        <>
-                            <Flex
-                                gap="0.5rem"
-                                align="center"
-                                w="fit-content"
-                                direction="row"
-                                borderRadius="1rem"
-                            >
-                                <Avatar src={message.userAvatar} w="24px" h="24px" />
-                                <Text fontWeight="bold">{message.userName}</Text>
-                                {isAdminMessage && <LuCrown width="30px" />}
-                            </Flex>
-                            <Divider marginY="0.5rem" borderColor="blue.500" />
-                        </>
-                    )}
+                    <Flex
+                        gap="0.5rem"
+                        align="center"
+                        w="fit-content"
+                        direction="row"
+                        borderRadius="1rem"
+                    >
+                        <Avatar src={message.userAvatar} w="24px" h="24px" />
+                        <Text fontWeight="bold">{message.userName}</Text>
+                        {isAdminMessage && <LuCrown width="30px" />}
+                    </Flex>
+                    <Divider marginY="0.5rem" borderColor={isUserMessage ? "white" : "blue.500"} />
                     <Text fontWeight={600}>
                         {message.content}
                     </Text>
-                    {isUserMessage && <Divider borderColor="white" marginY="0.4rem" />}
+                    <Divider borderColor={isUserMessage ? "white" : "blue.500"} marginY="0.4rem" />
                     <Text fontWeight={500} marginTop={!isUserMessage ? "0.5rem" : 0}>
                         {moment(new Date(message.date)).fromNow()}
                     </Text>

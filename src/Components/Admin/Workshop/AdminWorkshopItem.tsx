@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Workshop } from '../../../Interface'
-import { AdminItem, AdminStatusSelect } from '../../Platform'
+import { AdminPlatformItem, AdminStatusSelect } from '../../Platform'
 
 const AdminWorkshopItem: FC<{
   idx: number;
@@ -12,7 +12,7 @@ const AdminWorkshopItem: FC<{
   workshop
 }) => {
   return (
-      <AdminItem
+      <AdminPlatformItem
       idx={idx}
       coverImg={workshop.cover_img}
       name={workshop.workshop_name}
@@ -23,7 +23,7 @@ const AdminWorkshopItem: FC<{
       userEmail={workshop.workshop_manager_mail}
       >
         <AdminStatusSelect onSelect={onSelect} item={workshop} />
-      </AdminItem>
+      </AdminPlatformItem>
   )
 }
 

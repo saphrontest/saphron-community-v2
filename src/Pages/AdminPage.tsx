@@ -1,13 +1,13 @@
-import { UserInterface } from '../Interface'
+import { IUser } from '../Interface'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { Text } from '@chakra-ui/react'
 import { PlatformAdminPageLayout } from '../Layouts'
-import { AdminSupportGroups, AdminTabs, WorkshopAdmin } from '../Components'
+import { AdminSupportGroups, AdminTabs, AdminUsers, WorkshopAdmin } from '../Components'
 
 const AdminPage = () => {
 
-    const user: UserInterface = useSelector((state: RootState) => state.user)
+    const user: IUser = useSelector((state: RootState) => state.user)
 
     if (user.role !== 'admin') {
         return <Text>You are not allowed to see here</Text>
@@ -18,7 +18,8 @@ const AdminPage = () => {
             <AdminTabs
                 tabs={[
                     { id: 0, name: 'Workshop Requests', component: <WorkshopAdmin />},
-                    { id: 1, name: 'Support Group Requests', component: <AdminSupportGroups />}
+                    { id: 1, name: 'Support Group Requests', component: <AdminSupportGroups />},
+                    { id: 2, name: 'Users', component: <AdminUsers />}
                 ]}
             />
         </PlatformAdminPageLayout>

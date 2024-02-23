@@ -1,6 +1,6 @@
 import { Flex, Stack, Icon, Avatar, Image, Text, useBoolean, useToast } from '@chakra-ui/react'
 import { IoIosInformationCircle } from 'react-icons/io'
-import { ISupportGroup, UserInterface } from '../../../Interface'
+import { ISupportGroup, IUser } from '../../../Interface'
 import DescriptionModal from './DescriptionModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { setModal } from '../../../redux/slices/modalSlice'
@@ -20,7 +20,7 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
         isClosable: true,
         position: "top-right"
     })
-    const user: UserInterface = useSelector((state: RootState) => state.user)
+    const user: IUser = useSelector((state: RootState) => state.user)
     const { onDelete: deleteSupportGroup } = useSupportGroup()
     const { onDelete: deleteChat } = useChat()
 

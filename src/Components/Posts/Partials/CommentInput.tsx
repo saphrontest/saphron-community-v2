@@ -1,12 +1,12 @@
 import { Flex, Button, Text } from "@chakra-ui/react";
 import { AuthButtons } from "../../Nav/Partials";
-import { UserInterface } from "../../../Interface";
+import { IUser } from "../../../Interface";
 import TextEditor from "../../TextEditor";
 
 type CommentInputProps = {
   comment: string;
   loading: boolean;
-  user?: UserInterface | null;
+  user?: IUser | null;
   setComment: (value: string) => void;
   onCreateComment: (comment: string) => void;
 };

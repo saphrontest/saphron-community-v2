@@ -3,7 +3,7 @@ import moment from 'moment'
 import React, { FC } from 'react'
 import { RiCakeLine } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
-import { Community, UserInterface } from '../../Interface'
+import { Community, IUser } from '../../Interface'
 import { setSelectedCommunity } from '../../redux/slices/communitySlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
@@ -39,7 +39,7 @@ const Content: FC<IContentProps> = ({
   setAddDescriptionView
 }) => {
   const dispatch = useDispatch()
-  const user: UserInterface = useSelector((state: RootState) => state.user)
+  const user: IUser = useSelector((state: RootState) => state.user)
   return (
     <Flex direction="column" p={3} bg="white" borderRadius="0px 0px 4px 4px">
       {loading ? (

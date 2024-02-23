@@ -3,7 +3,7 @@ import TextInputs from './TextInputs';
 import ImageUpload from './ImageUpload';
 import { addDoc, collection, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { firestore, storage } from '../../../firebaseClient';
-import { Community, UserInterface } from '../../../Interface';
+import { Community, IUser } from '../../../Interface';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react';
@@ -18,7 +18,7 @@ interface CreatePostFormInterface {
 }
 
 const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTab, community}) => {
-  const user: UserInterface = useSelector((state: RootState) => state.user)
+  const user: IUser = useSelector((state: RootState) => state.user)
   const toast = useToast()
   const navigate = useNavigate()
   const [textInputs, setTextInputs] = useState<{ title: string; body: string; }>({

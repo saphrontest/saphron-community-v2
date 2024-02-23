@@ -2,7 +2,7 @@ import { FC, useState } from 'react'
 import { InputItem, ModalLayout } from '../../Layouts'
 import { ModalBody, Flex, Text, Box, ModalCloseButton, Textarea, Button, useToast, Spinner, useMediaQuery } from '@chakra-ui/react'
 import { WorkshopCard } from '../Workshops'
-import { Workshop, WorkshopRequest, UserInterface, ErrorInterface } from '../../Interface'
+import { Workshop, WorkshopRequest, IUser, ErrorInterface } from '../../Interface'
 import md5 from 'md5'
 import { collection, doc, runTransaction } from 'firebase/firestore'
 import { firestore } from '../../firebaseClient'
@@ -25,7 +25,7 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
 
     interface FormItemInterface { name: string; email: string; motivation: string; }
 
-    const user: UserInterface = useSelector((state: RootState) => state.user)
+    const user: IUser = useSelector((state: RootState) => state.user)
 
 
 

@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 import { useSupportGroup } from '../../Hooks'
-import { ISupportGroup, UserInterface, ErrorInterface } from '../../Interface'
+import { ISupportGroup, IUser, ErrorInterface } from '../../Interface'
 import { Box, Button, Flex, Spinner, Text, Textarea, useBoolean, useToast } from '@chakra-ui/react'
 import { InputItem } from '../../Layouts'
 import { PlatformFormItem } from '../Platform'
@@ -15,7 +15,7 @@ const JoinSupportGroupForm: FC<{ supportGroup: ISupportGroup }> = ({ supportGrou
   const toast = useToast()
   const dispatch = useDispatch()
   const [loading, { toggle: toggleLoading }] = useBoolean(false)
-  const user: UserInterface = useSelector((state: RootState) => state.user)
+  const user: IUser = useSelector((state: RootState) => state.user)
   const [formItems, setFormItems] = useState<{
     name: string;
     email: string;

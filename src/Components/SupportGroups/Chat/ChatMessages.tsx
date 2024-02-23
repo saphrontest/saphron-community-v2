@@ -1,5 +1,5 @@
 import React, { FC, Fragment, useEffect, useRef } from 'react'
-import { IMessage, UserInterface } from '../../../Interface'
+import { IMessage, IUser } from '../../../Interface'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../redux/store'
 import { Flex } from '@chakra-ui/react'
@@ -11,7 +11,7 @@ const ChatMessages: FC<{
 }> = ({ messages, adminId }) => {
 
     const messagesWrapperRef = useRef<HTMLDivElement | null>(null)
-    const user: UserInterface = useSelector((state: RootState) => state.user)
+    const user: IUser = useSelector((state: RootState) => state.user)
 
     useEffect(() => {
         if (messagesWrapperRef.current) {

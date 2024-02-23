@@ -2,7 +2,7 @@ import { Flex, Button, Box, Text, Image, useToast, useMediaQuery } from '@chakra
 import moment from 'moment'
 import { setModal } from '../../redux/slices/modalSlice'
 import { FC } from 'react'
-import { Workshop, UserInterface } from '../../Interface'
+import { Workshop, IUser } from '../../Interface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { PlatformItemDetailLayout } from '../../Layouts'
@@ -44,7 +44,7 @@ const WorkshopDetail: FC<{
     const toast = useToast()
     const dispatch = useDispatch()
   const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
-    const user: UserInterface = useSelector((state: RootState) => state.user)
+    const user: IUser = useSelector((state: RootState) => state.user)
 
     return selected && !isSmallerThan766 ? (
         <PlatformItemDetailLayout coverImg={selected?.cover_img}>

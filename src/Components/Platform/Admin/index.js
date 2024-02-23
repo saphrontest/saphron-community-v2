@@ -1,3 +1,3 @@
-export {default as AdminItem} from './AdminItem'
+export {default as AdminPlatformItem} from './AdminPlatformItem'
 export {default as AdminStatusSelect} from './AdminStatusSelect'
 export {default as AdminTabs} from './AdminTabs'

@@ -2,7 +2,7 @@ import { Flex, Divider, Text, Image, Box } from '@chakra-ui/react'
 import moment from 'moment'
 import React, { FC, ReactNode } from 'react'
 
-interface IAdminItemProps {
+interface IAdminPlatformItemProps {
     idx: number;
     coverImg: string;
     name: string;
@@ -14,8 +14,16 @@ interface IAdminItemProps {
     children: ReactNode
 }
 
-const AdminItem: FC<IAdminItemProps> = ({
-    idx, coverImg, name, userAvatar, createdAt, userId, userName, userEmail, children
+const AdminPlatformItem: FC<IAdminPlatformItemProps> = ({
+    idx,
+    coverImg,
+    name,
+    userAvatar,
+    createdAt,
+    userId,
+    userName,
+    userEmail,
+    children
 }) => {
     return (
         <Flex direction="row" justify="space-between" align="center" p="1rem" bg="gray.50" borderRadius="1rem">
@@ -45,4 +53,4 @@ const AdminItem: FC<IAdminItemProps> = ({
     )
 }
 
-export default AdminItem
+export default AdminPlatformItem

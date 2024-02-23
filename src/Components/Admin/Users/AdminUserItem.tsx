@@ -3,7 +3,7 @@ import { FC } from 'react'
 import { IUser, UserRoleTypes } from '../../../Interface'
 import { useAdmin } from '../../../Hooks'
 
-const AdminUserItem: FC<{ user: IUser }> = ({ user }) => {
+const AdminUserItem: FC<{ user: IUser, getUserList: (isLoading: boolean) => void }> = ({ user, getUserList }) => {
 
     const { updateUserRole } = useAdmin()
 
@@ -12,6 +12,7 @@ const AdminUserItem: FC<{ user: IUser }> = ({ user }) => {
     const handleRoleSelect = (role: UserRoleTypes, userId: string) => {
         toggleRoleLoading()
         updateUserRole(userId, role)
+        .then(() => getUserList(false))
             .finally(() => toggleRoleLoading())
     }
 

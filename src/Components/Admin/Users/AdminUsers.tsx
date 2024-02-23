@@ -10,15 +10,17 @@ const AdminUsers = () => {
   
 
   useEffect(() => {
-    
-    toggleUsersLoading() 
-    getUsers()
-      .then(users => setUsers(users))
-      .finally(() => toggleUsersLoading())
-
+    getUserList()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+
+  const getUserList = (isLoading: boolean = true) => {
+    isLoading && toggleUsersLoading() 
+    getUsers()
+      .then(users => setUsers(users))
+      .finally(() => isLoading && toggleUsersLoading())
+  }
 
 
   return !usersLoading ? (
@@ -26,7 +28,7 @@ const AdminUsers = () => {
       {
         users.map((user: IUser) => (
           <Fragment key={user.id}>
-            <AdminUserItem user={user}/>
+            <AdminUserItem user={user} getUserList={getUserList}/>
           </Fragment>
         ))
       }

@@ -1,39 +1,17 @@
-import { Flex, Stack, Icon, Avatar, Image, Text, useBoolean, Button, IconButton, Menu, MenuButton, MenuItem, MenuList, useToast } from '@chakra-ui/react'
-import { FC } from 'react'
+import { Flex, Stack, Icon, Avatar, Image, Text, useBoolean, useToast } from '@chakra-ui/react'
 import { IoIosInformationCircle } from 'react-icons/io'
 import { ISupportGroup, UserInterface } from '../../../Interface'
 import DescriptionModal from './DescriptionModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { setModal } from '../../../redux/slices/modalSlice'
-import { HamburgerIcon, DeleteIcon } from '@chakra-ui/icons'
 import { DeleteAlert } from '../../Platform'
 import { useChat, useSupportGroup } from '../../../Hooks'
 import { useNavigate } from 'react-router-dom'
 import { RootState } from '../../../redux/store'
-import { FaUsers } from "react-icons/fa6";
+import ChatJoinButton from './ChatJoinButton'
+import ChatMenu from './ChatMenu'
 
-const JoinButton: FC<{
-    isAdmin: boolean;
-    isUserParticipant: boolean;
-    isUserConfirmedParticipant: boolean;
-    handleJoinButton: () => void
-}> = ({
-    isAdmin, isUserConfirmedParticipant, isUserParticipant, handleJoinButton
-}) => {
-
-    if (isAdmin) {
-        return null
-    }
-    if (isUserParticipant) {
-        if (isUserConfirmedParticipant) {
-            return <Flex align="center" bg="gray" color="white" height="30px" padding="0 1rem" borderRadius="1rem" fontWeight="600">Applied</Flex>
-        }
-        return null
-    }
-    return <Button height="30px" onClick={handleJoinButton}>Join</Button>
-}
-
-const ChatSupportGroupDetail: FC<{ supportGroup: ISupportGroup; }> = ({ supportGroup }) => {
+const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ supportGroup }) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const showErrorToast = useToast({
@@ -77,32 +55,14 @@ const ChatSupportGroupDetail: FC<{ supportGroup: ISupportGroup; }> = ({ supportG
                             {supportGroup.support_group_name}
                         </Text>
                         <Flex align="center" gap="0.4rem">
-                            <JoinButton
+                            <ChatJoinButton
                                 isAdmin={supportGroup.support_group_manager_id === user.id}
                                 isUserParticipant={supportGroup?.participants?.some(participant => participant.userId === user.id) || false}
                                 isUserConfirmedParticipant={supportGroup?.participants?.some(participant => participant.userId === user.id && participant.status === "waiting") || false}
                                 handleJoinButton={() => dispatch(setModal({ isOpen: true, view: "joinSupportGroup", data: supportGroup }))}
                             />
                             <Icon as={IoIosInformationCircle} cursor="pointer" color="blue.500" _hover={{ color: "blue.400" }} width="38px" height="38px" onClick={toggleDescriptionModal} />
-                            {supportGroup.support_group_manager_id === user.id && <Menu>
-                                <MenuButton
-                                    as={IconButton}
-                                    aria-label='Options'
-                                    icon={<HamburgerIcon />}
-                                    variant='solid'
-                                    width="30px"
-                                    height="30px"
-                                    minWidth="30px"
-                                />
-                                <MenuList>
-                                    <MenuItem icon={<DeleteIcon />} onClick={() => toggleDeleteModal()}>
-                                        Remove Support Group
-                                    </MenuItem>
-                                    <MenuItem icon={<FaUsers />} onClick={() => navigate("/my-support-groups")}>
-                                        Show Participants
-                                    </MenuItem>
-                                </MenuList>
-                            </Menu>}
+                            {supportGroup.support_group_manager_id === user.id && <ChatMenu toggleDeleteModal={toggleDeleteModal}/>}
                         </Flex>
                     </Flex>
                     <Flex direction="row" justify="space-between" align="center" bg="gray.100" p="1rem" w="100%" h="100%" borderRadius="1rem">

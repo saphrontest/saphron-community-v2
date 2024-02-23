@@ -7,7 +7,6 @@ import { SCIcon } from '../SCElements'
 import { InputItem } from '../../Layouts'
 import TextEditor from '../TextEditor'
 import { PlatformFormItem } from '../Platform'
-import moment from 'moment'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { setModal } from '../../redux/slices/modalSlice'
@@ -91,7 +90,7 @@ const SupportGroupForm: FC<{
         onEdit({
           ...formItems,
           cover_img: img || supportGroupData?.cover_img ,
-          updatedAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+          updatedAt: new Date().toString(),
           id: supportGroupData?.id
         })
         .then(() => {
@@ -127,8 +126,8 @@ const SupportGroupForm: FC<{
         id: newSupportGroupId,
         category: "",
         cover_img: img ?? "",
-        createdAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
-        updatedAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+        createdAt: new Date().toString(),
+        updatedAt: new Date().toString(),
         support_group_manager_avatar: user.profilePhotoURL,
         support_group_manager_id: user.id,
         support_group_manager_mail: user.email,

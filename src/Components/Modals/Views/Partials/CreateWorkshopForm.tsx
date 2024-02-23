@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../redux/store'
 import { IUser, Workshop} from '../../../../Interface'
 import { setModal } from '../../../../redux/slices/modalSlice'
-import moment from 'moment'
 import { PlatformFormItem } from '../../../Platform'
 
 interface IForm {
@@ -117,8 +116,8 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
                     const photoURL = await updateImage(coverImg, newWorkshopId)
                     transaction.set(newWorkshopDocRef, {
                         ...form,
-                        createdAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
-                        updatedAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+                        createdAt: new Date().toString(),
+                        updatedAt: new Date().toString(),
                         workshop_manager_name: form.workshop_manager_name || user.displayName,
                         cover_img: photoURL,
                         workshop_manager_id: user?.id,

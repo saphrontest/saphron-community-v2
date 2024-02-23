@@ -1,12 +1,13 @@
 import { Flex, Spinner, useBoolean } from '@chakra-ui/react'
 import { Fragment, useEffect, useState } from 'react'
 import { AdminItem, AdminStatusSelect } from '../../Platform'
-import { ISupportGroup } from '../../../Interface'
-import { useStatus, useSupportGroup } from '../../../Hooks'
+import { ISupportGroup, SelectOptions } from '../../../Interface'
+import { useChat, useStatus, useSupportGroup } from '../../../Hooks'
 
 const AdminSupportGroups = () => {
     const { updateStatus } = useStatus()
     const { getSupportGroups } = useSupportGroup()
+    const { onCreate: createChat } = useChat()
     const [supportGroupsLoading, { toggle: toggleSupportGroupsLoading }] = useBoolean(false)
     const [supportGroups, setSupportGroups] = useState<ISupportGroup[]>()
 
@@ -18,7 +19,10 @@ const AdminSupportGroups = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const updateItemStatus = (itemId: string, optionId: number) => {
+    const updateItemStatus = async (itemId: string, optionId: number) => {
+        if(SelectOptions[optionId].label === "confirmed") {
+            await createChat(itemId)
+        }
         return updateStatus(
             `supportGroups/${itemId}`,
             optionId,

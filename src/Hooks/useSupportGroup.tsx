@@ -86,7 +86,7 @@ const useSupportGroup = () => {
      */
 
     const onDelete = async (supportGroup: ISupportGroup) => {
-        await runTransaction(firestore, async (transaction: Transaction) => {
+        return await runTransaction(firestore, async (transaction: Transaction) => {
             transaction.delete(doc(firestore, `supportGroups/${supportGroup.id}`))
             transaction.delete(doc(firestore, `users/${supportGroup.support_group_manager_id}/supportGroups/${supportGroup.id}`))
         }).then(() => {

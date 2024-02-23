@@ -1,15 +1,17 @@
 import { FC } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setModal } from '../../redux/slices/modalSlice'
 import { PlatformItemDetailLayout } from '../../Layouts'
 import { Button, Flex, Image, Text, useMediaQuery } from '@chakra-ui/react'
 import { ISupportGroup } from '../../Interface'
 import { Link } from 'react-router-dom'
 import { createSlug } from '../../Helpers'
+import { RootState } from '../../redux/store'
 
 const SupportGroupDetail: FC<{ selected?: ISupportGroup }> = ({ selected }) => {
 
     const dispatch = useDispatch()
+    const user = useSelector((state: RootState) => state.user)
     const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
     
     return selected && !isSmallerThan766 ? (
@@ -41,7 +43,7 @@ const SupportGroupDetail: FC<{ selected?: ISupportGroup }> = ({ selected }) => {
                         Show More...
                     </Text>
                 </Link>
-                <Flex justify="flex-end">
+                {selected.support_group_manager_id !== user.id &&<Flex justify="flex-end">
                     <Button
                     w="fit-content"
                     h="fit-content"
@@ -51,7 +53,7 @@ const SupportGroupDetail: FC<{ selected?: ISupportGroup }> = ({ selected }) => {
                     >
                         I wan't to join!
                     </Button>
-                </Flex>
+                </Flex>}
             </>
         </PlatformItemDetailLayout>
     ) : null

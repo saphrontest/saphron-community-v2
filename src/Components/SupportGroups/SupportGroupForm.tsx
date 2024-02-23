@@ -136,13 +136,13 @@ const SupportGroupForm: FC<{
         status: "waiting"
       })
       .then(() => {
-            toast({
-                status: "success",
-                isClosable: true,
-                position: "top-right",
-                title: "Create Support Group request submitted. Currently under review. You will be notified of the outcome shortly."
-            })
-            dispatch(setModal({isOpen: false, view: "createSupportGroup", data: null}))
+          toast({
+              status: "success",
+              isClosable: true,
+              position: "top-right",
+              title: "Create Support Group request submitted. Currently under review. You will be notified of the outcome shortly."
+          })
+          dispatch(setModal({isOpen: false, view: "createSupportGroup", data: null}))
       })
       .catch((err) => console.error(err))
       .finally(() => toggleLoading())

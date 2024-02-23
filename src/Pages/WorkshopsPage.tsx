@@ -3,7 +3,7 @@ import { useToast } from '@chakra-ui/react'
 import communitiesBackground from '../assets/images/communities.jpg'
 import { WorkshopDetail, WorkshopList } from '../Components'
 import { useEffect, useState } from 'react'
-import { Workshop, WorkshopRequest, UserInterface } from '../Interface'
+import { Workshop, WorkshopRequest, IUser } from '../Interface'
 import { useDispatch, useSelector } from 'react-redux'
 import { setModal } from '../redux/slices/modalSlice'
 import { createSlug } from '../Helpers'
@@ -22,7 +22,7 @@ const WorkshopsPage = () => {
   const [workshops, setWorkshops] = useState<Workshop[]>([])
   const [workshopRequests, setWorkshopRequests] = useState<WorkshopRequest[]>()
 
-  const user: UserInterface = useSelector((state: RootState) => state.user)
+  const user: IUser = useSelector((state: RootState) => state.user)
 
   useEffect(() => {
     getWorkshops()

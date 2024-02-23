@@ -10,7 +10,7 @@ import { firestore, storage } from '../../../../firebaseClient'
 import md5 from 'md5'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../../redux/store'
-import { UserInterface, Workshop} from '../../../../Interface'
+import { IUser, Workshop} from '../../../../Interface'
 import { setModal } from '../../../../redux/slices/modalSlice'
 import moment from 'moment'
 import { PlatformFormItem } from '../../../Platform'
@@ -28,7 +28,7 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
 }) => {
     const dispatch = useDispatch()
     const toast = useToast()
-    const user: UserInterface = useSelector((state: RootState) => state.user)
+    const user: IUser = useSelector((state: RootState) => state.user)
     const workshopPicRef = useRef<HTMLInputElement | null>(null)
     const [termsCheckbox, setTermsCheckbox] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)

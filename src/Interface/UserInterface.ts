@@ -1,5 +1,5 @@
 export type UserRoleTypes =  'admin' | 'user' | ''
-export interface UserInterface {
+export interface IUser {
     id: string;
     displayName: string;
     email: string;
@@ -13,7 +13,7 @@ export interface UserInterface {
     role: UserRoleTypes;
 }
 
-export const defaultUserState: UserInterface = {
+export const defaultUserState: IUser = {
     id: "",
     displayName: "",
     email: "",

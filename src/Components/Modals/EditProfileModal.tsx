@@ -10,7 +10,7 @@ import NotFoundUserPic from '../../assets/images/user.png'
 import { getUser, updateUser } from '../../Helpers/apiFunctions'
 import { RootState } from '../../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { UserInterface } from '../../Interface'
+import { IUser } from '../../Interface'
 import defaultCover from '../../assets/images/default-cover.jpg'
 import { setModal } from '../../redux/slices/modalSlice'
 import {usernames} from '../../assets/usernames'
@@ -27,7 +27,7 @@ const EditProfileModal: FC<{data: any}> = ({data}) => {
     const toast = useToast()
     const [user] = useAuthState(auth)
     const dispatch = useDispatch()
-    const userFromDB = useSelector((state: RootState) => state.user) as UserInterface
+    const userFromDB = useSelector((state: RootState) => state.user) as IUser
     const [updateProfile, error] = useUpdateProfile(auth);
     const profileImgInputRef = useRef<HTMLInputElement | null>(null)
     const coverImgInputRef = useRef<HTMLInputElement | null>(null)

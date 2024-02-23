@@ -3,12 +3,12 @@ import { InputItem } from '../../../Layouts'
 import { useChat } from '../../../Hooks'
 import { FC, FormEvent, useState } from 'react'
 import md5 from 'md5'
-import { UserInterface } from '../../../Interface'
+import { IUser } from '../../../Interface'
 
 const ChatActionButtons: FC<{
     chatId: string;
     supportGroupId: string;
-    user: UserInterface;
+    user: IUser;
     isConfirmedParticipant: boolean;
     isAdmin: boolean;
 }> = ({

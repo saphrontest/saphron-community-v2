@@ -2,7 +2,7 @@ import { Flex, Text, useBoolean } from '@chakra-ui/react'
 import { PageLayout } from '../Layouts'
 import { Fragment, useEffect, useState } from 'react'
 import { useSupportGroup } from '../Hooks'
-import { ISupportGroup, UserInterface, IStatus } from '../Interface'
+import { ISupportGroup, IUser, IStatus } from '../Interface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { MySupportGroupItem } from '../Components'
@@ -22,7 +22,7 @@ const MySupportGroups = () => {
   const [deleteLoading, {toggle: toggleDeleteLoading}] = useBoolean(false)
   const [reloadSupportGroups, {toggle: toggleReloadSupportGroups}] = useBoolean(false)
   
-  const user: UserInterface = useSelector((state: RootState) => state.user)
+  const user: IUser = useSelector((state: RootState) => state.user)
 
   const getGroups = (isReload: boolean = false) => {
     toggleGroupsLoading()

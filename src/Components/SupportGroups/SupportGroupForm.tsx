@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
-import { ISupportGroup, UserInterface, ErrorInterface } from '../../Interface'
+import { ISupportGroup, IUser, ErrorInterface } from '../../Interface'
 import { useSupportGroup } from '../../Hooks'
 import { Button, Checkbox, Flex, Spinner, Text, useBoolean, useToast } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
@@ -53,7 +53,7 @@ const SupportGroupForm: FC<{
       checkbox: { success: true, message: "" },
     })
     
-    const user: UserInterface = useSelector((state: RootState) => state.user)
+    const user: IUser = useSelector((state: RootState) => state.user)
 
     const validate = () => {
       setFormErrors({

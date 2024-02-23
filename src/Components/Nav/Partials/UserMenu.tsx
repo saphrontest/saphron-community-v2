@@ -5,14 +5,14 @@ import { signOut } from "firebase/auth";
 import { FC } from 'react'
 import { auth } from '../../../firebaseClient'
 import { useNavigate } from 'react-router-dom'
-import { UserInterface } from '../../../Interface'
+import { IUser } from '../../../Interface'
 import { logoutUser } from '../../../redux/slices/userSlice'
 import { resetCommunities } from '../../../redux/slices/communitySlice'
 import { resetPosts } from '../../../redux/slices/postSlice'
 import { LoginButton, MenuButtonInner, UserMenuInner } from './Menu';
 
 
-const UserMenu: FC<{ user: UserInterface }> = ({ user }) => {
+const UserMenu: FC<{ user: IUser }> = ({ user }) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const userRole = useConst(() => user.role ? user.role : "user")

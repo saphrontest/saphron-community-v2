@@ -1,6 +1,6 @@
 import { Flex, Spinner, useBoolean } from '@chakra-ui/react'
 import { Fragment, useEffect, useState } from 'react'
-import { AdminItem, AdminStatusSelect } from '../../Platform'
+import { AdminPlatformItem, AdminStatusSelect } from '../../Platform'
 import { ISupportGroup, SelectOptions } from '../../../Interface'
 import { useChat, useStatus, useSupportGroup } from '../../../Hooks'
 
@@ -34,7 +34,7 @@ const AdminSupportGroups = () => {
         <Flex direction="column" gap="1rem">
             {supportGroups?.map((group, idx) => (
                 <Fragment key={group.id}>
-                    <AdminItem
+                    <AdminPlatformItem
                         idx={idx}
                         coverImg={group.cover_img}
                         name={group.support_group_name}
@@ -48,7 +48,7 @@ const AdminSupportGroups = () => {
                             item={group}
                             onSelect={updateItemStatus}
                         />
-                    </AdminItem>
+                    </AdminPlatformItem>
                 </Fragment>
             ))}
         </Flex>

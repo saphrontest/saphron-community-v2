@@ -3,7 +3,7 @@ import { PageLayout } from '../Layouts'
 import { Flex } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useChat, useSupportGroup } from '../Hooks'
-import { IMessage, ISupportGroup, UserInterface } from '../Interface'
+import { IMessage, ISupportGroup, IUser } from '../Interface'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { ChatActionButtons, ChatSupportGroupDetail, ChatMessages } from '../Components'
@@ -22,7 +22,7 @@ const SupportGroupDetailPage = () => {
   const [messages, setMessages] = useState<IMessage[]>([])
   const [supportGroup, setSupportGroup] = useState<ISupportGroup>()
 
-  const user: UserInterface = useSelector((state: RootState) => state.user)
+  const user: IUser = useSelector((state: RootState) => state.user)
 
   useEffect(() => {
     if (params.slug) {

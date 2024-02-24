@@ -1,6 +1,6 @@
 import { Flex, Text, useBoolean } from "@chakra-ui/react"
 import { PageLayout } from "../Layouts"
-import { JoinedWorkshops, MyWorkshopItem, RequestedWorkshops } from "../Components"
+import { JoinedWorkshops, Meta, MyWorkshopItem, RequestedWorkshops } from "../Components"
 import React, { useEffect, useState } from "react"
 import { UserWorkshops, Workshop, WorkshopRequest, IUser } from "../Interface"
 import { useSelector } from "react-redux"
@@ -10,7 +10,7 @@ import { useWorkshop } from "../Hooks"
 
 const MyWorkshopsPage = () => {
 
-  const {getWorkshops, getWorkshopRequestsByUserID, getWorkshopByUserID} = useWorkshop()
+  const { getWorkshops, getWorkshopRequestsByUserID, getWorkshopByUserID } = useWorkshop()
   const user: IUser = useSelector((state: RootState) => state.user)
   const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
 
@@ -24,14 +24,14 @@ const MyWorkshopsPage = () => {
   const getAllWorkshops = () => {
 
     getWorkshops()
-    .then(result => result && setWorkshops(result))
+      .then(result => result && setWorkshops(result))
 
     getWorkshopRequestsByUserID(user.id)
       .then((result: WorkshopRequest[]) => {
         result.length && setRequestedWorkshops(result)
       })
 
-      getWorkshopByUserID(user.id)
+    getWorkshopByUserID(user.id)
       .then(result => result.length && setUserWorkshops(result))
 
   }
@@ -46,13 +46,13 @@ const MyWorkshopsPage = () => {
   }, [])
 
   useEffect(() => {
-    if(!reloadWorkshops) return;
+    if (!reloadWorkshops) return;
     getAllWorkshops()
     return () => setReloadWorkshops.toggle()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadWorkshops])
-  
+
 
 
   useEffect(() => {
@@ -85,25 +85,29 @@ const MyWorkshopsPage = () => {
     <>
       <PageLayout showSidebar={false} leftWidth="70%">
         <>
+          <Meta
+            title={'Saphron Health | My Workhops'}
+            description="My Workhops"
+          />
           <Flex gap="1rem">
             <RequestedWorkshops
               newWorkshopRequests={userWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)) as Workshop[] ?? []}
               joinRequests={requestedWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)) as Workshop[] ?? []}
             />
             <Flex direction="column" gap="1rem">
-            {isSmallerThan766 && <JoinedWorkshops joinWorkshops={joinWorkshops} />}
-            <Flex bg="white" flex={1} p="1rem" direction="column" align="flex-start" h="fit-content">
-              <Text fontSize="22" fontWeight={600} pb="1rem">
-                My Workshops
-              </Text>
-              <Flex gap="1rem" direction="column" w="100%">
-                {userWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)).map((workshop, idx) => workshop && (
-                  <React.Fragment key={idx}>
-                    <MyWorkshopItem idx={idx} workshop={workshop} toggleReloadWorkshops={() => setReloadWorkshops.toggle()}/>
-                  </React.Fragment>
-                ))}
+              {isSmallerThan766 && <JoinedWorkshops joinWorkshops={joinWorkshops} />}
+              <Flex bg="white" flex={1} p="1rem" direction="column" align="flex-start" h="fit-content">
+                <Text fontSize="22" fontWeight={600} pb="1rem">
+                  My Workshops
+                </Text>
+                <Flex gap="1rem" direction="column" w="100%">
+                  {userWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)).map((workshop, idx) => workshop && (
+                    <React.Fragment key={idx}>
+                      <MyWorkshopItem idx={idx} workshop={workshop} toggleReloadWorkshops={() => setReloadWorkshops.toggle()} />
+                    </React.Fragment>
+                  ))}
+                </Flex>
               </Flex>
-            </Flex>
             </Flex>
           </Flex>
         </>

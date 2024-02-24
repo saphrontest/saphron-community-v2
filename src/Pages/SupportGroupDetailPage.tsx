@@ -6,7 +6,7 @@ import { useChat, useSupportGroup } from '../Hooks'
 import { IMessage, ISupportGroup, IUser } from '../Interface'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import { ChatActionButtons, ChatSupportGroupDetail, ChatMessages } from '../Components'
+import { ChatActionButtons, ChatSupportGroupDetail, ChatMessages, Meta } from '../Components'
 import { DocumentChange, QuerySnapshot, collection, onSnapshot, query } from 'firebase/firestore'
 import { firestore } from '../firebaseClient'
 
@@ -51,13 +51,17 @@ const SupportGroupDetailPage = () => {
   const onSuccess = (snapshot: QuerySnapshot) => {
     snapshot.docChanges()
       .forEach((change: DocumentChange) => {
-      change.type === "added" && setMessages((prev: IMessage[]) => ([...prev, change.doc.data() as IMessage]))
-    });
+        change.type === "added" && setMessages((prev: IMessage[]) => ([...prev, change.doc.data() as IMessage]))
+      });
   }
 
 
   return supportGroup ? (
     <PageLayout leftWidth='100%'>
+      <Meta
+        title={`Saphron Health | ${supportGroup?.support_group_manager_name}`}
+        description={supportGroup.description as string}
+      />
       <Flex w="100%" bg="white" direction="column" align="flex-start" p="1rem" gap="1rem">
         <ChatSupportGroupDetail supportGroup={supportGroup} />
         <Flex

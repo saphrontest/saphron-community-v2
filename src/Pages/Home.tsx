@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
-import { CreatePostLink, NoEntry, PersonalHome, PostItem, Recommendations } from '../Components'
+import { CreatePostLink, Meta, NoEntry, PersonalHome, PostItem, Recommendations } from '../Components'
 import {Stack, useToast} from '@chakra-ui/react'
 import { IPost, Community } from '../Interface'
 import { getPosts, getUserSavedPosts } from '../Helpers/apiFunctions'
@@ -80,6 +80,10 @@ const Home = () => {
   return (
     <PageLayout showWorkshops={true} showGroupChats={true}>
       <>
+        <Meta
+        title='Saphron Health | Homepage'
+        description='A self-help platform for neurodivergent adults to manage their health & wellness.'
+        />
         <CreatePostLink />
         <Stack>
           {posts.length ? posts.map((post: IPost) => <PostItem

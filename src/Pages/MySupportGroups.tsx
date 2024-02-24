@@ -18,14 +18,13 @@ const MySupportGroups = () => {
   const [supportGroups, setSupportGroups] = useState<ISupportGroup[]>([])
   const [groupsLoading, { toggle: toggleGroupsLoading }] = useBoolean(false)
   const [participantsLoading, { toggle: toggleParticipantsLoading }] = useBoolean(false)
-  const [isClicked, setIsClicked] = useBoolean(false)
   const [deleteLoading, { toggle: toggleDeleteLoading }] = useBoolean(false)
   const [reloadSupportGroups, { toggle: toggleReloadSupportGroups }] = useBoolean(false)
 
   const user: IUser = useSelector((state: RootState) => state.user)
 
   const getGroups = (isReload: boolean = false) => {
-    toggleGroupsLoading()
+    isReload && toggleGroupsLoading()
     getSupportGroupsByUserId(user.id)
       .then(groups => !!groups.length && setSupportGroups(groups))
       .finally(() => {
@@ -58,40 +57,40 @@ const MySupportGroups = () => {
 
   return (
     <>
-      <PageLayout showSidebar={false} leftWidth="70%">
-        <Meta
-          title={'Saphron Health | My Support Groups'}
-          description='My Support Groups'
-        />
-        <Flex w="100%" bg="white" p="1rem" direction="column">
-          <Text fontWeight="700" fontSize="24px" align="left" mb="1rem">
-            My Support Groups
-          </Text>
-          <Flex direction='column' gap="1rem">
-            {
-              supportGroups.map((group, idx) => (
-                <Fragment key={group.id}>
-                  <MySupportGroupItem
-                    idx={idx}
-                    group={group}
-                    groupsLoading={groupsLoading}
-                    deleteLoading={deleteLoading}
-                    isClicked={isClicked}
-                    setIsClicked={setIsClicked}
-                    toggleDeleteLoading={toggleDeleteLoading}
-                    setEditOpen={() => dispatch(setModal({ isOpen: true, view: "editSupportGroup", data: group }))}
-                    handleRequest={handleRequest}
-                    participantsLoading={participantsLoading}
-                    toggleReloadSupportGroups={toggleReloadSupportGroups}
-                  />
-                </Fragment>
-              ))
-            }
+      <PageLayout showSidebar={false} leftWidth="100%">
+        <>
+          <Meta
+            title='Saphron Health | My Support Groups'
+            description='My Support Groups'
+          />
+          <Flex w="100%" bg="white" p="1rem" direction="column">
+            <Text fontWeight="700" fontSize="24px" align="left" mb="1rem">
+              My Support Groups
+            </Text>
+            <Flex direction='column' gap="1rem">
+              {
+                supportGroups.map((group, idx) => (
+                  <Fragment key={group.id}>
+                    <MySupportGroupItem
+                      idx={idx}
+                      group={group}
+                      groupsLoading={groupsLoading}
+                      deleteLoading={deleteLoading}
+                      toggleDeleteLoading={toggleDeleteLoading}
+                      setEditOpen={() => dispatch(setModal({ isOpen: true, view: "editSupportGroup", data: group }))}
+                      handleRequest={handleRequest}
+                      participantsLoading={participantsLoading}
+                      toggleReloadSupportGroups={toggleReloadSupportGroups}
+                    />
+                  </Fragment>
+                ))
+              }
+            </Flex>
           </Flex>
-        </Flex>
+        </>
         <></>
       </PageLayout>
-      <EditSupportGroupModal />
+      <EditSupportGroupModal toggleReloadSupportGroups={toggleReloadSupportGroups}/>
     </>
   )
 }

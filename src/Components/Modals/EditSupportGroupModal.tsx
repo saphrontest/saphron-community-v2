@@ -4,8 +4,9 @@ import { SupportGroupForm } from '../SupportGroups'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { setModal } from '../../redux/slices/modalSlice'
+import { FC } from 'react'
 
-const EditSupportGroupModal = () => {
+const EditSupportGroupModal: FC<{toggleReloadSupportGroups: () => void}> = ({toggleReloadSupportGroups}) => {
   const dispatch = useDispatch()
   const { isOpen, view, data } = useSelector((state: RootState) => state.modal)
   return view === "editSupportGroup" ? (
@@ -21,7 +22,7 @@ const EditSupportGroupModal = () => {
         justifyContent="center"
         pb={6}
       >
-        <SupportGroupForm isEdit={true} supportGroupData={data} />
+        <SupportGroupForm isEdit={true} supportGroupData={data} reloadSupportGroups={toggleReloadSupportGroups}/>
       </ModalBody>
     </ModalLayout>
   ) : null

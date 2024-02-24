@@ -7,7 +7,7 @@ import { IMessage, ISupportGroup, IUser } from '../Interface'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { ChatActionButtons, ChatSupportGroupDetail, ChatMessages } from '../Components'
-import { DocumentChange, QuerySnapshot, collection, onSnapshot, query } from 'firebase/firestore'
+import { DocumentChange, QuerySnapshot, collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { firestore } from '../firebaseClient'
 
 
@@ -42,16 +42,18 @@ const SupportGroupDetailPage = () => {
 
   useEffect(() => {
     if (supportGroup && chatId) {
-      const chatRef = query(collection(firestore, `supportGroups/${supportGroup.id}/chatRoom/${chatId}/messages`));
-      const unsubscribe = onSnapshot(chatRef, onSuccess)
+      const chatRef = query(collection(firestore, `supportGroups/${supportGroup.id}/chatRoom/${chatId}/messages`), orderBy('date', 'desc'));
+      const unsubscribe = onSnapshot(chatRef, onSuccess, error => console.error(error), () => console.log('onCompletion'));
       return () => unsubscribe()
     }
   }, [supportGroup, chatId])
 
   const onSuccess = (snapshot: QuerySnapshot) => {
     snapshot.docChanges()
-      .forEach((change: DocumentChange) => {
-      change.type === "added" && setMessages((prev: IMessage[]) => ([...prev, change.doc.data() as IMessage]))
+    .forEach((change: DocumentChange) => {
+        if(change.type === "added") {
+          setMessages((prev: IMessage[]) => ([...prev, change.doc.data() as IMessage]))
+        }
     });
   }
 

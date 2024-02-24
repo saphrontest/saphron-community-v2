@@ -69,7 +69,10 @@ const SupportGroupDetailPage = () => {
           direction="column"
           justify="space-between"
         >
-          <ChatMessages messages={messages} adminId={supportGroup.support_group_manager_id} />
+          <ChatMessages
+          messages={messages}
+          adminId={supportGroup.support_group_manager_id}
+          />
           {chatId && <ChatActionButtons
             chatId={chatId}
             supportGroupId={supportGroup.id!}

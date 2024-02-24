@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Community, IPost } from '../Interface'
 import { PageLayout } from '../Layouts'
 import { getCommunityDetail, getPostsByCommunities } from '../Helpers/apiFunctions'
-import { About, CreatePostLink, NoEntry, PostItem } from '../Components'
+import { About, CreatePostLink, Meta, NoEntry, PostItem } from '../Components'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { deleteDoc, doc } from 'firebase/firestore';
@@ -23,7 +23,7 @@ const CommunityDetail = () => {
   const [isVoteChange, setVoteChange] = useState<boolean>(false)
   const [community, setCommunity] = useState<Community>()
   const [posts, setPosts] = useState<IPost[]>([])
-  const {communities} = useSelector((state: RootState) => state.community)
+  const { communities } = useSelector((state: RootState) => state.community)
 
   const getDetail = async (id: string) => {
     const com = await getCommunityDetail(id)
@@ -36,21 +36,21 @@ const CommunityDetail = () => {
   }
 
   useEffect(() => {
-    if(communityId){
+    if (communityId) {
       getDetail(communityId)
       getPosts(communityId)
     }
   }, [communityId])
-  
+
   useEffect(() => {
-    if(isVoteChange && communityId){
+    if (isVoteChange && communityId) {
       getDetail(communityId)
       getPosts(communityId)
       return () => setVoteChange(false)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVoteChange])
-  
+
   const handleDelete = async (post: IPost): Promise<boolean> => {
     if (!user?.id) {
       toast({
@@ -59,7 +59,7 @@ const CommunityDetail = () => {
         isClosable: true,
         position: "top-right"
       })
-      dispatch(setModal({isOpen: true, view: 'login'}))
+      dispatch(setModal({ isOpen: true, view: 'login' }))
       return false;
     }
     setDeleteLoading(true)
@@ -89,11 +89,15 @@ const CommunityDetail = () => {
       communityId && getPosts(communityId)
       navigate("/community")
     }
-}
+  }
   return (
     <PageLayout>
       <>
-        <CreatePostLink communityId={communityId}/>
+        <Meta
+          title={`Saphron Health | ${community?.name}`}
+          description={community?.description as string}
+        />
+        <CreatePostLink communityId={communityId} />
         {posts.length ? posts.map(post => <PostItem
           key={post?.id}
           post={post}
@@ -101,10 +105,10 @@ const CommunityDetail = () => {
           isDeleteLoading={isDeleteLoading}
           communityName={communities?.filter((c: Community) => post?.communityId === c.id)[0]?.name}
           setVoteChange={setVoteChange}
-        />) : <NoEntry type="community post"/>}
+        />) : <NoEntry type="community post" />}
       </>
       <>
-          {community && <About communityId={community.id} community={community}/>}
+        {community && <About communityId={community.id} community={community} />}
       </>
     </PageLayout>
   )

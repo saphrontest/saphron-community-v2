@@ -3,7 +3,7 @@ import { PageLayout } from '../Layouts'
 import { getPostComments, getPostDetails } from '../Helpers/apiFunctions'
 import { useNavigate, useParams } from 'react-router-dom'
 import { IPost, Comment, Community } from '../Interface'
-import { About, PostItem } from '../Components'
+import { About, Meta, PostItem } from '../Components'
 import { firestore, storage } from '../firebaseClient'
 import { deleteObject, ref } from 'firebase/storage'
 import { deleteDoc, doc } from 'firebase/firestore'
@@ -107,6 +107,10 @@ const PostDetail = () => {
   return (
     <PageLayout>
       <>
+      <Meta
+          title={`Saphron Health | ${post?.title}`}
+          description={post?.body as string}
+        />
         {!isPageLoading && <PostItem setVoteChange={setVoteChange} post={post} isDeleteLoading={isDeleteLoading} handleDelete={handleDelete} communityName={communities.filter((c: Community) => post.communityId === c.id)[0]?.name}/>}
         {!isPageLoading && <Comments comments={comments} post={post} getComments={getComments}/>}
       </>

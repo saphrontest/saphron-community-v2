@@ -1,7 +1,7 @@
 import { PlatformPageLayout } from '../Layouts'
 import { useToast } from '@chakra-ui/react'
 import communitiesBackground from '../assets/images/communities.jpg'
-import { WorkshopDetail, WorkshopList } from '../Components'
+import { Meta, WorkshopDetail, WorkshopList } from '../Components'
 import { useEffect, useState } from 'react'
 import { Workshop, WorkshopRequest, IUser } from '../Interface'
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,7 +16,7 @@ const WorkshopsPage = () => {
   const params = useParams()
   const dispatch = useDispatch()
   const toast = useToast()
-  const {getWorkshops, getWorkshopRequestsByUserID} = useWorkshop()
+  const { getWorkshops, getWorkshopRequestsByUserID } = useWorkshop()
 
   const [selected, setSelected] = useState<Workshop | undefined>()
   const [workshops, setWorkshops] = useState<Workshop[]>([])
@@ -78,7 +78,11 @@ const WorkshopsPage = () => {
       actionButtonText="I wan’t to be a workshop manager!"
       actionButtonOnClick={actionButtonOnClick}
     >
-      <WorkshopList setSelected={setSelected} workshops={workshops}  selected={selected}/>
+      <Meta
+        title={`Saphron Health | Workshops`}
+        description='Workshops'
+      />
+      <WorkshopList setSelected={setSelected} workshops={workshops} selected={selected} />
       <WorkshopDetail selected={selected} isRequested={!!workshopRequests?.some((workshop: WorkshopRequest) => workshop?.workshopId === selected?.id)} />
     </PlatformPageLayout>
 

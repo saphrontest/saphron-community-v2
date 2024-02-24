@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import { NoEntry, PersonalHome, PostItem } from '../Components'
+import { Meta, NoEntry, PersonalHome, PostItem } from '../Components'
 import { IPost, Community } from '../Interface'
 import { firestore, storage } from '../firebaseClient'
 import { Box, Text, useToast } from '@chakra-ui/react'
@@ -86,6 +86,10 @@ const SavedPosts = () => {
   return (
     <PageLayout>
       <>
+      <Meta
+          title={'Saphron Health | Saved Post'}
+          description='Saved Post'
+        />
         {
           savedPosts.length ? (
             <>

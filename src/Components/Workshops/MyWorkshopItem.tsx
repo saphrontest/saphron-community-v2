@@ -6,7 +6,6 @@ import { firestore } from "../../firebaseClient";
 import { EditWorkshopModal } from "../Modals";
 import { MyPlatformItem, PlatformParticipantItem } from "../Platform";
 import { useWorkshop } from "../../Hooks";
-import moment from "moment";
 
 interface MyWorkshopItemProps {
     idx: number;
@@ -41,7 +40,7 @@ const MyWorkshopItem: FC<MyWorkshopItemProps> = ({ workshop, idx, toggleReloadWo
         event.stopPropagation()
         setIsLoading.toggle()
         const joinDocRef = doc(firestore, `workshops/${workshop.id}/participants/${requestId}`)
-        updateDoc(joinDocRef, { status, updatedAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss") })
+        updateDoc(joinDocRef, { status, updatedAt: new Date().toString() })
             .finally(() => {
                 getParticipantsByWorkshopID(workshop.id)
                     .then(result => result.length && setParticipants(result))

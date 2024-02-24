@@ -48,7 +48,7 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
     return (
         <>
             <Flex direction="row" gap="1rem" w="100%">
-                <Image src={supportGroup.cover_img} h="125px" borderRadius="1rem" />
+                <Image src={supportGroup.cover_img} h="125px" borderRadius="1rem" display={{base: "none", sm: "none", md: "block"}}/>
                 <Stack w="100%" h="100%">
                     <Flex direction="row" w="100%" justify="space-between" align="center">
                         <Text fontSize="24px" fontWeight={600} textTransform="capitalize" align="left">
@@ -65,7 +65,7 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
                             {supportGroup.support_group_manager_id === user.id && <ChatMenu toggleDeleteModal={toggleDeleteModal}/>}
                         </Flex>
                     </Flex>
-                    <Flex direction="row" justify="space-between" align="center" bg="gray.100" p="1rem" w="100%" h="100%" borderRadius="1rem">
+                    <Flex display={{base: "none", sm: "flex"}} direction="row" justify="space-between" align="center" bg="gray.100" p="1rem" w="100%" h="100%" borderRadius="1rem">
                         <Flex direction="row" gap="1rem" align="center">
                             <Avatar src={supportGroup.support_group_manager_avatar} />
                             <Flex direction="column">

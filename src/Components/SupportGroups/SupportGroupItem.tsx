@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import moment from 'moment';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import { setModal } from '../../redux/slices/modalSlice';
+import { Link } from 'react-router-dom';
+import { createSlug } from '../../Helpers';
 
 interface ISupportGroupItem {
     onClick?: () => void;
@@ -34,6 +36,11 @@ const Mobile: FC<ISupportGroupItem> = ({item, idx}) => {
                     <Divider borderColor="gray" />
                     <Box>
                         <Text textAlign="left" fontSize={["12", "16"]} dangerouslySetInnerHTML={{__html: item.description}}/>
+                        <Link to={`${createSlug(item.support_group_name)}`}>
+                            <Text fontWeight="600" align="left" mt="1rem">
+                                Show More...
+                            </Text>
+                        </Link>
                     </Box>
                     <Flex gap="1rem" w="100%" justify="flex-end">
                         <Button

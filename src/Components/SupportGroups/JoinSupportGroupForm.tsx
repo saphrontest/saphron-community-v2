@@ -6,7 +6,6 @@ import { InputItem } from '../../Layouts'
 import { PlatformFormItem } from '../Platform'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
-import moment from 'moment'
 import { setModal } from '../../redux/slices/modalSlice'
 import md5 from 'md5'
 
@@ -53,8 +52,8 @@ const JoinSupportGroupForm: FC<{ supportGroup: ISupportGroup }> = ({ supportGrou
     supportGroup.id && onJoin(supportGroup, user.id, {
       ...formItems,
       id: newRequestId,
-      createdAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
-      updatedAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+      createdAt: new Date().toString(),
+      updatedAt: new Date().toString(),
       name: formItems.name === '' ? user.username : formItems.name,
       userId: user.id,
       supportGroupId: supportGroup.id,

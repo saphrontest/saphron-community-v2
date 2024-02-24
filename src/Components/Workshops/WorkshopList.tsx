@@ -11,7 +11,7 @@ interface WorkshopListProps {
 
 const Mobile: FC<WorkshopListProps> = ({ workshops }) => {
     return (
-        <Flex direction="column" gap="1rem">
+        <Flex direction="column" gap="1rem" w="100%">
             {workshops.map((workshop, idx) => (
                 <Fragment key={idx}>
                     <WorkshopCard.Mobile workshop={workshop} idx={idx}/>

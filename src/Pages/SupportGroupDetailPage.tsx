@@ -58,7 +58,7 @@ const SupportGroupDetailPage = () => {
   return supportGroup ? (
     <PageLayout leftWidth='100%'>
       <Meta
-        title={`Saphron Health | ${supportGroup?.support_group_manager_name}`}
+        title={`Saphron Health | ${supportGroup?.support_group_name}`}
         description={supportGroup.description as string}
       />
       <Flex w="100%" bg="white" direction="column" align="flex-start" p="1rem" gap="1rem">

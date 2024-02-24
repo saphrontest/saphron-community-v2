@@ -20,13 +20,15 @@ const Mobile: FC<IMobileCard> = ({
   const [isClicked, { toggle: toggleClick }] = useBoolean(false)
   return (
     <Flex direction="column" w="100%" justify="space-between" align="flex-start" cursor="pointer" bg="gray.100" borderRadius="1rem" p="1rem" onClick={toggleClick}>
-      <Flex direction="row" align="center">
-        <Text fontWeight={600} mr="1rem">#{idx + 1}</Text>
-        <Image src={workshop.cover_img} w="5rem" h="3rem" mr="1rem" borderRadius="0.2rem" />
-        <Box>
-          <Text textAlign="left" fontWeight="600" fontSize={["12", "18"]} noOfLines={2}>{workshop.workshop_name}</Text>
-          <Text textAlign="left" fontSize={["12", "16"]}>{moment(new Date(workshop.createdAt)).format("DD.MM.YYYY hh:mm")}</Text>
-        </Box>
+      <Flex direction="row" align="center" w="100%" justify="space-between">
+        <Flex direction="row">
+          <Text fontWeight={600} mr="1rem">#{idx + 1}</Text>
+          <Image src={workshop.cover_img} w="5rem" h="3rem" mr="1rem" borderRadius="0.2rem" />
+          <Box>
+            <Text textAlign="left" fontWeight="600" fontSize={["12", "18"]} noOfLines={2}>{workshop.workshop_name}</Text>
+            <Text textAlign="left" fontSize={["12", "16"]}>{moment(new Date(workshop.createdAt)).format("DD.MM.YYYY hh:mm")}</Text>
+          </Box>
+        </Flex>
         {!isClicked ? <MdKeyboardArrowDown size={24} /> : <MdKeyboardArrowUp size={24} />}
       </Flex>
       {isClicked ? (

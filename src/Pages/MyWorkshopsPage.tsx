@@ -89,12 +89,12 @@ const MyWorkshopsPage = () => {
             title={'Saphron Health | My Workhops'}
             description="My Workhops"
           />
-          <Flex gap="1rem">
+          <Flex gap="1rem" flex={1}>
             <RequestedWorkshops
               newWorkshopRequests={userWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)) as Workshop[] ?? []}
               joinRequests={requestedWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)) as Workshop[] ?? []}
             />
-            <Flex direction="column" gap="1rem">
+            <Flex direction="column" gap="1rem" flex={1}>
               {isSmallerThan766 && <JoinedWorkshops joinWorkshops={joinWorkshops} />}
               <Flex bg="white" flex={1} p="1rem" direction="column" align="flex-start" h="fit-content">
                 <Text fontSize="22" fontWeight={600} pb="1rem">

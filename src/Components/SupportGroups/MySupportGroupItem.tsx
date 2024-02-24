@@ -1,4 +1,4 @@
-import { Flex, Spinner, Text } from '@chakra-ui/react'
+import { Flex, Spinner, Text, useBoolean } from '@chakra-ui/react'
 import { FC, Fragment } from 'react'
 import { IStatus, ISupportGroup } from '../../Interface'
 import { MyPlatformItem, PlatformParticipantItem } from '../Platform'
@@ -9,10 +9,6 @@ interface IMySupportGroupItemProps {
     group: ISupportGroup;
     groupsLoading: boolean;
     deleteLoading: boolean;
-    isClicked: boolean;
-    setIsClicked: {
-        toggle: () => void;
-    };
     toggleDeleteLoading: () => void;
     setEditOpen: () => void;
     handleRequest: (event: any, requestId: string, status: IStatus, groupId: string) => void;
@@ -25,15 +21,16 @@ const MySupportGroupItem: FC<IMySupportGroupItemProps> = ({
     group,
     groupsLoading,
     deleteLoading,
-    isClicked,
-    setIsClicked, 
     toggleDeleteLoading,
     setEditOpen,
     handleRequest,
     participantsLoading,
     toggleReloadSupportGroups
 }) => {
+    
     const {onDelete} = useSupportGroup()
+    const [isClicked, setIsClicked] = useBoolean(false)
+
     return (
         <MyPlatformItem
             idx={idx}
@@ -61,7 +58,7 @@ const MySupportGroupItem: FC<IMySupportGroupItemProps> = ({
                         {group.participants?.length ? <Text fontSize={["12", "16"]} fontWeight={600} pb="1rem" textAlign="left">Join Requests</Text> : <Text fontSize={["12", "16"]}>No join request, yet!</Text>}
                         <Flex w="100%" direction="column" gap="1rem">
                             {group.participants?.map(participant => (
-                                <Fragment key={participant.updatedAt}>
+                                <Fragment key={participant.id}>
                                     <PlatformParticipantItem participant={{
                                         id: participant.id!,
                                         userId: participant.userId,

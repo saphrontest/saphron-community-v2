@@ -1,6 +1,5 @@
 import { MenuDivider, MenuItem, Flex, Icon, useMediaQuery } from "@chakra-ui/react";
 import { FC } from "react";
-import { MdOutlineLogin } from "react-icons/md";
 import { UserRoleTypes } from "../../../../Interface";
 import MenuItemInner from "./MenuItemInner";
 import MenuItemLayout from "./MenuItemLayout";
@@ -9,8 +8,7 @@ import { CgProfile } from "react-icons/cg";
 import { FaRegBookmark } from "react-icons/fa";
 import { GrGroup, GrWorkshop } from "react-icons/gr";
 import { RiAdminLine } from "react-icons/ri";
-import { MdOutlineGroups3 } from "react-icons/md";
-import { MdOutlineEvent } from "react-icons/md";
+import { MdOutlineGroups3, MdOutlineEvent, MdOutlineLogin } from "react-icons/md";
 import { PiInfoFill } from "react-icons/pi";
 
 interface IUserMenuItem {

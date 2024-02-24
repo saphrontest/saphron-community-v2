@@ -9,7 +9,6 @@ import { firestore } from '../../firebaseClient'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { setModal } from '../../redux/slices/modalSlice'
-import moment from 'moment'
 import { PlatformFormItem } from '../Platform'
 
 
@@ -54,8 +53,8 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
             userId: user.id,
             status: "waiting",
             name: formItems.name ?? user.displayName,
-            createdAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
-            updatedAt: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+            createdAt: new Date().toString(),
+            updatedAt: new Date().toString(),
         } as WorkshopRequest
         runTransaction(firestore, async (transaction) => {
             transaction.set(

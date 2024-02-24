@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import SuggestedQuestions from './SuggestedQuestions'
 import { openai } from '../../openAIClient'
 import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources'
-import moment from 'moment'
 import { AIMessages, AskAIForm, SearchHeader } from './Partials'
 import { Flex, useToast } from '@chakra-ui/react'
 import { AIMessageInterface } from '../../Interface'
@@ -25,7 +24,7 @@ const AskAI = () => {
       setMessages((prev: any) => ([
         ...prev,
         {
-          date: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+          date: new Date().toString(),
           from: response.choices[0].message.role,
           content: response.choices[0].message.content
         }
@@ -59,7 +58,7 @@ const AskAI = () => {
     setMessages((prev: any) => ([
       ...prev,
       {
-        date: moment(new Date()).format("DD.MM.YYYY hh:mm:ss"),
+        date: new Date().toString(),
         from: 'user',
         content: question ?? text
       }

@@ -11,7 +11,7 @@ import { GrGroup, GrWorkshop } from "react-icons/gr";
 import { RiAdminLine } from "react-icons/ri";
 import { MdOutlineGroups3 } from "react-icons/md";
 import { MdOutlineEvent } from "react-icons/md";
-
+import { PiInfoFill } from "react-icons/pi";
 
 interface IUserMenuItem {
     id: number;
@@ -30,8 +30,9 @@ const UserMenuItems: IUserMenuItem[] = [
 ]
 
 const UserMenuMobileItems: IUserMenuItem[] = [
-    { id: 5, route: "/support-groups", icon: MdOutlineGroups3, label: "Support Groups", role: ["user", "admin"] },
-    { id: 6, route: "/workshops", icon: MdOutlineEvent, label: "Workshops", role: ["user", "admin"] },
+    { id: 5, route: "/about", icon: PiInfoFill, label: "About Us", role: ["user", "admin"] },
+    { id: 6, route: "/support-groups", icon: MdOutlineGroups3, label: "Support Groups", role: ["user", "admin"] },
+    { id: 7, route: "/workshops", icon: MdOutlineEvent, label: "Workshops", role: ["user", "admin"] },
 ]
 
 interface IUserMenuInnerProps {

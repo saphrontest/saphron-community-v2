@@ -2,20 +2,11 @@ import { Flex, Divider, Spinner, Button, Text, Box, useBoolean } from '@chakra-u
 import moment from 'moment'
 import React, { FC } from 'react'
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
-import { IStatus } from '../../Interface';
-
-interface IParticipantAsProp {
-    id: string;
-    userId: string;
-    updatedAt: string;
-    motivation: string;
-    name: string;
-    status: IStatus;
-}
+import { IStatus, ISupportGroupParticipant, WorkshopRequest } from '../../Interface';
 
 interface IPlatformParticipantItemProps {
     isLoading: boolean;
-    participant: IParticipantAsProp;
+    participant: ISupportGroupParticipant | WorkshopRequest;
     handleRequestButton: (event: any, requestId: string, status: IStatus) => Promise<void>;
 }
 
@@ -30,8 +21,8 @@ const ParticipantActionButtons: FC<IParticipantActionButtonsProps> = ({
             <Flex w="100%" justify="center" gap="1rem">
                 {isLoading ? <Spinner /> : (
                     <>
-                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} onClick={ev => handleRequestButton(ev, participant.id, "confirmed")}>Accept</Button>
-                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} variant="outline" onClick={ev => handleRequestButton(ev, participant.id, "rejected")}>Reject</Button>
+                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} onClick={ev => participant.id && handleRequestButton(ev, participant.id, "confirmed")}>Accept</Button>
+                        <Button w="fit-content" h="fit-content" p="0.5rem 2rem" fontSize={["10", "16"]} variant="outline" onClick={ev => participant.id && handleRequestButton(ev, participant.id, "rejected")}>Reject</Button>
                     </>
                 )}
             </Flex>

@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setModal } from '../../redux/slices/modalSlice'
 import { PlatformItemDetailLayout } from '../../Layouts'
-import { Button, Flex, Image, Text, useMediaQuery } from '@chakra-ui/react'
+import { Button, Flex, Image, Text, useMediaQuery, useToast } from '@chakra-ui/react'
 import { ISupportGroup } from '../../Interface'
 import { Link } from 'react-router-dom'
 import { createSlug } from '../../Helpers'
@@ -10,6 +10,7 @@ import { RootState } from '../../redux/store'
 
 const SupportGroupDetail: FC<{ selected?: ISupportGroup }> = ({ selected }) => {
 
+    const toast  = useToast()
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.user)
     const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
@@ -49,7 +50,18 @@ const SupportGroupDetail: FC<{ selected?: ISupportGroup }> = ({ selected }) => {
                     h="fit-content"
                     p="0.4rem 1.5rem"
                     marginTop="0.7rem"
-                    onClick={() => dispatch(setModal({ isOpen: true, view: 'joinSupportGroup', data: selected }))}
+                    onClick={() => {
+                        if (!user.id) {
+                            toast({
+                                title: "Please login, first!",
+                                status: "error",
+                                isClosable: true,
+                                position: "top-right"
+                            })
+                            return;
+                        }
+                        dispatch(setModal({ isOpen: true, view: 'joinSupportGroup', data: selected }))
+                    }}
                     >
                         I wan't to join!
                     </Button>

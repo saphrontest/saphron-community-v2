@@ -10,22 +10,21 @@ import { useNavigate } from 'react-router-dom'
 import { RootState } from '../../../redux/store'
 import ChatJoinButton from './ChatJoinButton'
 import ChatMenu from './ChatMenu'
+import SupportGroupsParticipantModal from '../SupportGroupsParticipantModal'
+
+
 
 const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ supportGroup }) => {
+    const toast = useToast()
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const showErrorToast = useToast({
-        title: "Please, try again later.",
-        status: "error",
-        isClosable: true,
-        position: "top-right"
-    })
     const user: IUser = useSelector((state: RootState) => state.user)
     const { onDelete: deleteSupportGroup } = useSupportGroup()
     const { onDelete: deleteChat } = useChat()
 
     const [isDeleteModal, { toggle: toggleDeleteModal }] = useBoolean()
     const [showDescriptionModal, { toggle: toggleDescriptionModal }] = useBoolean()
+    const [showParticipantModal, { toggle: toggleParticipantModal }] = useBoolean()
 
     const handleDelete = async () => {
         supportGroup.id && deleteChat(supportGroup.id).then(result => {
@@ -36,12 +35,22 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
                             navigate("/support-groups")
                             return;
                         }
-                        showErrorToast()
+                        toast({
+                            title: "Please, try again later.",
+                            status: "error",
+                            isClosable: true,
+                            position: "top-right"
+                        })
                         return;
                     })
                 return;
             }
-            showErrorToast()
+            toast({
+                title: "Please, try again later.",
+                status: "error",
+                isClosable: true,
+                position: "top-right"
+            })
         })
     }
 
@@ -59,10 +68,23 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
                                 isAdmin={supportGroup.support_group_manager_id === user.id}
                                 isUserParticipant={supportGroup?.participants?.some(participant => participant.userId === user.id) || false}
                                 isUserConfirmedParticipant={supportGroup?.participants?.some(participant => participant.userId === user.id && participant.status === "waiting") || false}
-                                handleJoinButton={() => dispatch(setModal({ isOpen: true, view: "joinSupportGroup", data: supportGroup }))}
+                                handleJoinButton={() => {
+                                    if (!user.id) {
+                                        toast({
+                                            title: "Please login, first!",
+                                            status: "error",
+                                            isClosable: true,
+                                            position: "top-right"
+                                        })
+                                        return;
+                                    }
+                                    dispatch(setModal({ isOpen: true, view: "joinSupportGroup", data: supportGroup }))
+                                }}
                             />
                             <Icon as={IoIosInformationCircle} cursor="pointer" color="blue.500" _hover={{ color: "blue.400" }} width="38px" height="38px" onClick={toggleDescriptionModal} />
-                            {supportGroup.support_group_manager_id === user.id && <ChatMenu toggleDeleteModal={toggleDeleteModal}/>}
+                            {supportGroup.support_group_manager_id === user.id &&
+                                <ChatMenu toggleDeleteModal={toggleDeleteModal} toggleParticipantModal={toggleParticipantModal}/>
+                            }
                         </Flex>
                     </Flex>
                     <Flex display={{base: "none", sm: "flex"}} direction="row" justify="space-between" align="center" bg="gray.100" p="1rem" w="100%" h="100%" borderRadius="1rem">
@@ -90,6 +112,7 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
                 description={supportGroup.description}
             />
             {isDeleteModal && <DeleteAlert isOpen={isDeleteModal} toggleDialog={toggleDeleteModal} handleDelete={handleDelete} label={`${supportGroup.support_group_name} Support Group`} />}
+            {showParticipantModal && <SupportGroupsParticipantModal isOpen={showParticipantModal} participants={supportGroup.participants ?? []} onClose={toggleParticipantModal} supportGroupId={supportGroup.id!} supportGroupName={supportGroup.support_group_name}/>}
         </>
     )
 }

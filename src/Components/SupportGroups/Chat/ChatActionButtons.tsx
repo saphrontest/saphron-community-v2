@@ -18,12 +18,21 @@ const ChatActionButtons: FC<{
     isConfirmedParticipant,
     isAdmin
 }) => {
-    const { sendMessage } = useChat()
     const toast = useToast()
+    const { sendMessage } = useChat()
     const [loadingSendMessage, { toggle: toggleLoadingSendMessage }] = useBoolean(false)
     const [messageText, setMessageText] = useState<string>("")
     const send = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
+        if (!user.id) {
+            toast({
+                title: "Please login, first!",
+                status: "error",
+                isClosable: true,
+                position: "top-right"
+            })
+            return;
+        }
         if(!isConfirmedParticipant && !isAdmin) {
             toast({
                 title: "You should be confirmed participant to send a message!",
@@ -40,15 +49,15 @@ const ChatActionButtons: FC<{
         toggleLoadingSendMessage()
         const messageId = md5(`${messageText}.${new Date()}`)
         sendMessage(chatId, {
-            userId: user.id,
-            userAvatar: user.profilePhotoURL,
-            userMail: user.email,
-            userName: user.username,
-            supportGroupId,
-            id: messageId,
-            date: new Date().toString(),
-            content: messageText
-        })
+                userId: user.id,
+                userAvatar: user.profilePhotoURL,
+                userMail: user.email,
+                userName: user.username,
+                supportGroupId,
+                id: messageId,
+                date: new Date().toString(),
+                content: messageText
+            })
             .then(res => res && setMessageText(""))
             .finally(() => toggleLoadingSendMessage())
     }

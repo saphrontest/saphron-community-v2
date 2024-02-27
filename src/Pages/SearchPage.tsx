@@ -34,13 +34,11 @@ const SearchPage = () => {
           title={'Saphron Health | Search'}
           description='Search'
         />
-        <Flex bg="white">
           <Tabs
             tabs={searchTabs}
             setSelectedTab={toggleView}
             selectedTab={view}
           />
-        </Flex>
         <Flex bg="white" p="2">
           {
             view === "Post Search" ?

@@ -59,14 +59,7 @@ const MySupportGroupItem: FC<IMySupportGroupItemProps> = ({
                         <Flex w="100%" direction="column" gap="1rem">
                             {group.participants?.map(participant => (
                                 <Fragment key={participant.id}>
-                                    <PlatformParticipantItem participant={{
-                                        id: participant.id!,
-                                        userId: participant.userId,
-                                        updatedAt: participant.updatedAt,
-                                        motivation: participant.motivation,
-                                        name: participant.name,
-                                        status: participant.status
-                                    }}
+                                    <PlatformParticipantItem participant={participant}
                                         isLoading={false}
                                         handleRequestButton={async (event: any, requestId: string, status: IStatus) => {
                                             handleRequest(event, requestId, status, group.id!)

@@ -16,9 +16,10 @@ interface CommunityProps {
     setOpen: (value: boolean) => void;
     isNav?: boolean;
     selectedCommunityId?: string;
+    showTitleOnMobile?: boolean;
 }
 
-const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCommunityId}) => {
+const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCommunityId, showTitleOnMobile = true}) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.user)
@@ -106,7 +107,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                 >
                     <Text
                     fontWeight={600}
-                    display={{ base: "none", lg: "flex" }}
+                    display={{ base: !showTitleOnMobile ? "none" : "flex", lg: "flex" }}
                     flexDirection="column"
                     fontSize="10pt"
                     >{selectedCommunity?.name ?? "Select Community"}</Text>

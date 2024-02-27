@@ -26,8 +26,7 @@ const SavedPosts = () => {
         toast({
           title: "Please login, first!",
           status: "error",
-          isClosable: true,
-          position: "top-right"
+          isClosable: true
         })
         dispatch(setModal({isOpen: true, view: 'login'}))
       }
@@ -41,8 +40,7 @@ const SavedPosts = () => {
             toast({
               title: "Please login, first!",
               status: "error",
-              isClosable: true,
-              position: "top-right"
+              isClosable: true
             })
             dispatch(setModal({isOpen: true, view: 'login'}))
             return false;

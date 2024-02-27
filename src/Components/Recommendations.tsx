@@ -184,8 +184,7 @@ const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
                             toast({
                               title: "Please login, first!",
                               status: "error",
-                              isClosable: true,
-                              position: "top-right"
+                              isClosable: true
                             })
                             return;
                           }

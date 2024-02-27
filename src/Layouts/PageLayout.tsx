@@ -13,8 +13,6 @@ interface PageLayoutProps {
   showGroupChats?: boolean;
 }
 
-
-
 // Assumes array of two children are passed
 const PageLayout: React.FC<PageLayoutProps> = ({
   children,

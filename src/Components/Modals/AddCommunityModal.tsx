@@ -55,8 +55,7 @@ const AddCommunityModal = () => {
                     toast({
                         title: `Sorry, comm/${name} is taken. Try another.`,
                         status: "error",
-                        isClosable: true,
-                        position: "top-right"
+                        isClosable: true
                     })
                     throw new Error(`Sorry, comm/${name} is taken. Try another.`);
                 }

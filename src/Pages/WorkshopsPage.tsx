@@ -49,8 +49,7 @@ const WorkshopsPage = () => {
       toast({
         title: "Please login, first!",
         status: "error",
-        isClosable: true,
-        position: "top-right"
+        isClosable: true
       })
       return;
     }
@@ -64,8 +63,7 @@ const WorkshopsPage = () => {
       toast({
         title: "Please login, first!",
         status: "error",
-        isClosable: true,
-        position: "top-right"
+        isClosable: true
       })
     }
   }

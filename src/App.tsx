@@ -1,16 +1,25 @@
-import Router from './Router';
 import './App.css';
+import Router from './Router';
 import { Capacitor } from '@capacitor/core';
-import { Box } from '@chakra-ui/react';
+
+const IosMeta = () => {
+  return (
+    <>
+      {
+        Capacitor.getPlatform() === 'ios' ?
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+          : null
+      }
+    </>
+  )
+}
 
 function App() {
   return (
     <>
-      {Capacitor.getPlatform() === 'ios' && <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />  }
+      <IosMeta />
       <div className={`App ${Capacitor.getPlatform() === 'ios' ? 'ios' : ''}`}>
-        <Box bg="gray.100">
-          <Router />
-        </Box>
+        <Router />
       </div>
     </>
   );

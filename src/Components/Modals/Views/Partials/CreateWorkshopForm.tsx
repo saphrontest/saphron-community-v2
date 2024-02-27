@@ -139,7 +139,6 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
                 toast({
                     status: "success",
                     isClosable: true,
-                    position: "top-right",
                     title: "Workshop request submitted. Currently under review. You will be notified of the outcome shortly."
                 })
                 dispatch(setModal({isOpen: false, view: 'createWorkshop'}))
@@ -158,7 +157,6 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
                 toast({
                     status: "success",
                     isClosable: true,
-                    position: "top-right",
                     title: "Workshop request submitted. Currently under review. You will be notified of the outcome shortly."
                 })
                 toggleModal && toggleModal()

@@ -39,8 +39,7 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
       toast({
         title: "Please login, first!",
         status: "error",
-        isClosable: true,
-        position: "top-right"
+        isClosable: true
       })
       return;
     }
@@ -49,8 +48,7 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
       toast({
         title: "Please select a community, first!",
         status: "error",
-        isClosable: true,
-        position: "top-right"
+        isClosable: true
       })
       return;
     }

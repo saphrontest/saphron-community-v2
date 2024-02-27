@@ -38,8 +38,7 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
                         toast({
                             title: "Please, try again later.",
                             status: "error",
-                            isClosable: true,
-                            position: "top-right"
+                            isClosable: true
                         })
                         return;
                     })
@@ -48,8 +47,7 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
             toast({
                 title: "Please, try again later.",
                 status: "error",
-                isClosable: true,
-                position: "top-right"
+                isClosable: true
             })
         })
     }
@@ -73,8 +71,7 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
                                         toast({
                                             title: "Please login, first!",
                                             status: "error",
-                                            isClosable: true,
-                                            position: "top-right"
+                                            isClosable: true
                                         })
                                         return;
                                     }

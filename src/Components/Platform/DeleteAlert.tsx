@@ -15,6 +15,7 @@ const DeleteAlert: FC<{
             isOpen={isOpen}
             leastDestructiveRef={cancelButtonRef}
             onClose={toggleDialog}
+            isCentered={true}
         >
             <AlertDialogOverlay>
                 <AlertDialogContent>

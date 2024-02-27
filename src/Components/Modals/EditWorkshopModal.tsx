@@ -25,6 +25,7 @@ const EditWorkshopModal: FC<{ isOpen: boolean; toggleModal: () => void; workshop
                     direction="column"
                     alignItems="center"
                     justifyContent="center"
+                    w="100%"
                 >
                     <CreateWorkshopForm isEdit={true} workshopData={workshop}/>
                 </Flex>

@@ -12,14 +12,9 @@ import ChatJoinButton from './ChatJoinButton'
 import ChatMenu from './ChatMenu'
 
 const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ supportGroup }) => {
+    const toast = useToast()
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const showErrorToast = useToast({
-        title: "Please, try again later.",
-        status: "error",
-        isClosable: true,
-        position: "top-right"
-    })
     const user: IUser = useSelector((state: RootState) => state.user)
     const { onDelete: deleteSupportGroup } = useSupportGroup()
     const { onDelete: deleteChat } = useChat()
@@ -36,12 +31,22 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
                             navigate("/support-groups")
                             return;
                         }
-                        showErrorToast()
+                        toast({
+                            title: "Please, try again later.",
+                            status: "error",
+                            isClosable: true,
+                            position: "top-right"
+                        })
                         return;
                     })
                 return;
             }
-            showErrorToast()
+            toast({
+                title: "Please, try again later.",
+                status: "error",
+                isClosable: true,
+                position: "top-right"
+            })
         })
     }
 
@@ -59,7 +64,18 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
                                 isAdmin={supportGroup.support_group_manager_id === user.id}
                                 isUserParticipant={supportGroup?.participants?.some(participant => participant.userId === user.id) || false}
                                 isUserConfirmedParticipant={supportGroup?.participants?.some(participant => participant.userId === user.id && participant.status === "waiting") || false}
-                                handleJoinButton={() => dispatch(setModal({ isOpen: true, view: "joinSupportGroup", data: supportGroup }))}
+                                handleJoinButton={() => {
+                                    if (!user.id) {
+                                        toast({
+                                            title: "Please login, first!",
+                                            status: "error",
+                                            isClosable: true,
+                                            position: "top-right"
+                                        })
+                                        return;
+                                    }
+                                    dispatch(setModal({ isOpen: true, view: "joinSupportGroup", data: supportGroup }))
+                                }}
                             />
                             <Icon as={IoIosInformationCircle} cursor="pointer" color="blue.500" _hover={{ color: "blue.400" }} width="38px" height="38px" onClick={toggleDescriptionModal} />
                             {supportGroup.support_group_manager_id === user.id && <ChatMenu toggleDeleteModal={toggleDeleteModal}/>}

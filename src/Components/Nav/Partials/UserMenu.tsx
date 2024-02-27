@@ -1,4 +1,4 @@
-import { Menu, MenuButton, MenuList, useConst } from '@chakra-ui/react'
+import { Menu, MenuButton, MenuDivider, MenuList, useConst, useMediaQuery } from '@chakra-ui/react'
 import { setModal } from '../../../redux/slices/modalSlice'
 import { useDispatch } from 'react-redux'
 import { signOut } from "firebase/auth";
@@ -10,12 +10,14 @@ import { logoutUser } from '../../../redux/slices/userSlice'
 import { resetCommunities } from '../../../redux/slices/communitySlice'
 import { resetPosts } from '../../../redux/slices/postSlice'
 import { LoginButton, MenuButtonInner, UserMenuInner } from './Menu';
+import NavigationMenu from './Menu/NavigationMenu';
 
 
 const UserMenu: FC<{ user: IUser }> = ({ user }) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const userRole = useConst(() => user.role ? user.role : "user")
+    const [isSmallerThan770] = useMediaQuery('(max-width: 770px)')
 
     const logout = async () => {
         await signOut(auth);
@@ -42,7 +44,13 @@ const UserMenu: FC<{ user: IUser }> = ({ user }) => {
                 {
                     user.id ?
                         <UserMenuInner logout={logout} userRole={userRole} /> :
-                        <LoginButton onClick={() => dispatch(setModal({ isOpen: true, view: 'login' }))} />
+                        (
+                            <>
+                                {isSmallerThan770 && <NavigationMenu userRole={userRole}/>}
+                                {isSmallerThan770 && <MenuDivider />}
+                                <LoginButton onClick={() => dispatch(setModal({ isOpen: true, view: 'login' }))} />
+                            </>
+                        )
                 }
             </MenuList>
         </Menu>

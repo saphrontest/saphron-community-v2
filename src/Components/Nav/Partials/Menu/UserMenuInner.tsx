@@ -8,8 +8,8 @@ import { CgProfile } from "react-icons/cg";
 import { FaRegBookmark } from "react-icons/fa";
 import { GrGroup, GrWorkshop } from "react-icons/gr";
 import { RiAdminLine } from "react-icons/ri";
-import { MdOutlineGroups3, MdOutlineEvent, MdOutlineLogin } from "react-icons/md";
-import { PiInfoFill } from "react-icons/pi";
+import { MdOutlineLogin } from "react-icons/md";
+import NavigationMenu from "./NavigationMenu";
 
 interface IUserMenuItem {
     id: number;
@@ -25,12 +25,6 @@ const UserMenuItems: IUserMenuItem[] = [
     { id: 2, route: "/my-workshops", icon: GrWorkshop, label: "My Workshops", role: ["user", "admin"] },
     { id: 3, route: "/my-support-groups", icon: GrGroup, label: "My Support Groups", role: ["user", "admin"] },
     { id: 4, route: "/manager-dashboard", icon: RiAdminLine, label: "Dashboard", role: ["admin"] }
-]
-
-const UserMenuMobileItems: IUserMenuItem[] = [
-    { id: 5, route: "/about", icon: PiInfoFill, label: "About Us", role: ["user", "admin"] },
-    { id: 6, route: "/support-groups", icon: MdOutlineGroups3, label: "Support Groups", role: ["user", "admin"] },
-    { id: 7, route: "/workshops", icon: MdOutlineEvent, label: "Workshops", role: ["user", "admin"] },
 ]
 
 interface IUserMenuInnerProps {
@@ -49,14 +43,8 @@ const UserMenuInner: FC<IUserMenuInnerProps> = ({ logout, userRole }) => {
                     </MenuItemLayout>
                 ))
             }
-            {isSmallerThan770 && <MenuDivider />}
-            {
-                isSmallerThan770 && UserMenuMobileItems.map((item: IUserMenuItem) => item.role.includes(userRole) && (
-                    <MenuItemLayout key={item.id}>
-                        <MenuItemInner to={item.route} icon={item.icon} label={item.label} />
-                    </MenuItemLayout>
-                ))
-            }
+            { isSmallerThan770 && <MenuDivider /> }
+            { isSmallerThan770 && <NavigationMenu userRole={userRole}/> }
             <MenuDivider />
             <MenuItem
                 fontSize="10pt"

@@ -10,6 +10,9 @@ import { useNavigate } from 'react-router-dom'
 import { RootState } from '../../../redux/store'
 import ChatJoinButton from './ChatJoinButton'
 import ChatMenu from './ChatMenu'
+import SupportGroupsParticipantModal from '../SupportGroupsParticipantModal'
+
+
 
 const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ supportGroup }) => {
     const navigate = useNavigate()
@@ -26,6 +29,7 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
 
     const [isDeleteModal, { toggle: toggleDeleteModal }] = useBoolean()
     const [showDescriptionModal, { toggle: toggleDescriptionModal }] = useBoolean()
+    const [showParticipantModal, { toggle: toggleParticipantModal }] = useBoolean()
 
     const handleDelete = async () => {
         supportGroup.id && deleteChat(supportGroup.id).then(result => {
@@ -62,7 +66,9 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
                                 handleJoinButton={() => dispatch(setModal({ isOpen: true, view: "joinSupportGroup", data: supportGroup }))}
                             />
                             <Icon as={IoIosInformationCircle} cursor="pointer" color="blue.500" _hover={{ color: "blue.400" }} width="38px" height="38px" onClick={toggleDescriptionModal} />
-                            {supportGroup.support_group_manager_id === user.id && <ChatMenu toggleDeleteModal={toggleDeleteModal}/>}
+                            {supportGroup.support_group_manager_id === user.id &&
+                                <ChatMenu toggleDeleteModal={toggleDeleteModal} toggleParticipantModal={toggleParticipantModal}/>
+                            }
                         </Flex>
                     </Flex>
                     <Flex display={{base: "none", sm: "flex"}} direction="row" justify="space-between" align="center" bg="gray.100" p="1rem" w="100%" h="100%" borderRadius="1rem">
@@ -90,6 +96,7 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
                 description={supportGroup.description}
             />
             {isDeleteModal && <DeleteAlert isOpen={isDeleteModal} toggleDialog={toggleDeleteModal} handleDelete={handleDelete} label={`${supportGroup.support_group_name} Support Group`} />}
+            {showParticipantModal && <SupportGroupsParticipantModal isOpen={showParticipantModal} participants={supportGroup.participants ?? []} onClose={toggleParticipantModal} supportGroupId={supportGroup.id!} supportGroupName={supportGroup.support_group_name}/>}
         </>
     )
 }

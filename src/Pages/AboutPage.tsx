@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import "../Theme/AboutPageStyles.scss";
 import aboutPic from "../assets/images/about-page.png";
 import { Meta } from "../Components";
+import { Capacitor } from '@capacitor/core';
 
 const AboutPage = () => {
     return (
@@ -11,7 +12,7 @@ const AboutPage = () => {
                 description='A self-help platform for neurodivergent adults to manage their health & wellness.'
             />
 
-            <div className=" AboutPage d-flex flex-column h-100">
+            <div className=" AboutPage d-flex flex-column h-100" style={{marginTop: Capacitor.getPlatform() === "ios" ? "50px" : "0px"}}>
                 <main className="flex-shrink-0">
                     <nav className="navbar navbar-expand-lg navbar-light bg-white py-3">
                         <div className="container px-5">

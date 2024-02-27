@@ -4,6 +4,12 @@
   text-align: center;
 }
 
+.App.ios {
+  text-align: center;
+  padding-top: env(safe-area-inset-top);
+  background-color: white;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

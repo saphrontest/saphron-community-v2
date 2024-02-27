@@ -7,7 +7,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setModal } from "../redux/slices/modalSlice";
 import { RootState } from "../redux/store";
-
+import { Capacitor } from '@capacitor/core'
 type ModalLayoutProps = {
   children: React.ReactElement[] | React.ReactElement
   isOpen?: boolean;
@@ -36,7 +36,7 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
       onClose={() => onClose ? onClose() : dispatch(setModal({isOpen: false, view: null}))}
       >
         <ModalOverlay />
-        <ModalContent width={{ base: "sm", md: "xl" }}>{children}</ModalContent>
+        <ModalContent width={{ base: "sm", md: "xl" }} marginTop={Capacitor.getPlatform() === 'ios' ? "150px" : ''}>{children}</ModalContent>
       </Modal>
     </>
   );

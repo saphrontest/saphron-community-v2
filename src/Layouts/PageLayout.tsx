@@ -40,7 +40,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
             direction="column"
             width={{ base: "100%", md: leftWidth }}
             mx={{ base: 0, md: 6 }}
-            mt={Capacitor.getPlatform() === "ios" ? "100px" : "0px"}
+            mt={Capacitor.getPlatform() === "ios" ? "110px" : "0px"}
           >
             {children && children[0 as keyof typeof children]}
           </Flex>

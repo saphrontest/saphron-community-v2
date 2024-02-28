@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.saphron.app',
-  appName: 'saphron-mobile',
+  appName: 'Saphron Mobile',
   webDir: 'build',
   server: {
     androidScheme: 'https',

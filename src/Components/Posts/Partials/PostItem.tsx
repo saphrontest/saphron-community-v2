@@ -140,12 +140,12 @@ const PostItem: FC<PostItemContentProps> = ({
         post={post}
         communityName={communityName}
         />
-        {user?.id && <ActionButtons
+        <ActionButtons
         post={post}
         isSaved={isSaved}
         handleDelete={handleDelete}
         isDeleteLoading={isDeleteLoading}
-        />}
+        />
       </Flex>
     </Flex>
   )

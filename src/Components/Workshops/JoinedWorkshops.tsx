@@ -5,6 +5,7 @@ import communitiesBackground from '../../assets/images/communities.jpg'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
 import { createSlug } from '../../Helpers'
+import NoEntry from '../NoEntry'
 
 const WorkshopItem: FC<{workshop: Workshop}> = ({workshop}) => {
     return (
@@ -89,7 +90,7 @@ const JoinedWorkshops: FC<{
                         </Fragment>
                     ))}
                 </Flex>
-
+                {!joinWorkshops.length && <NoEntry type="joined workshop"/>}
             </Flex>
         </Flex>
     )

@@ -1,6 +1,6 @@
 import { FC, Fragment } from 'react'
 import { Flex, useMediaQuery } from '@chakra-ui/react'
-import { WorkshopCard } from '..'
+import { NoEntry, WorkshopCard } from '..'
 import { Workshop } from '../../Interface'
 
 interface WorkshopListProps {
@@ -9,14 +9,16 @@ interface WorkshopListProps {
     setSelected?: (workshop: Workshop) => void
 }
 
-const Mobile: FC<WorkshopListProps> = ({ workshops }) => {
+const Mobile: FC<WorkshopListProps> = ({ workshops}) => {
     return (
         <Flex direction="column" gap="1rem" w="100%">
-            {workshops.map((workshop, idx) => (
-                <Fragment key={idx}>
-                    <WorkshopCard.Mobile workshop={workshop} idx={idx}/>
-                </Fragment>
-            ))}
+            {
+                workshops.length ? workshops.map((workshop, idx) => (
+                    <Fragment key={idx}>
+                        <WorkshopCard.Mobile workshop={workshop} idx={idx} />
+                    </Fragment>
+                )) : <NoEntry type="workshop"/>
+            }
         </Flex>
     )
 }

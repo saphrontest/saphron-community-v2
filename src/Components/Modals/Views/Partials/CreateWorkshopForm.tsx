@@ -179,7 +179,7 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
     }
 
     return (
-        <Flex align="flex-start" w="100%" mt={!isEdit ? "2rem" : ""} direction="column" gap="1rem">
+        <Flex w="100%" mt={!isEdit ? "2rem" : ""} direction="column" gap="1rem" align="flex-start">
             <PlatformFormItem
             label='Your Name'
             isOptional={true}

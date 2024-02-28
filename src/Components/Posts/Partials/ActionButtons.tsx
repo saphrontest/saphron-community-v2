@@ -58,21 +58,23 @@ const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete,
                 <Icon as={BsChat} mr={2} />
                 <Text fontSize="9pt" textAlign={"left"}>{post.numberOfComments}</Text>
             </Flex>
-            <Flex
+            {user.id && (
+                <Flex
                 align="center"
                 p="8px 10px"
                 borderRadius={4}
                 _hover={{ bg: "gray.200" }}
                 cursor="pointer"
                 onClick={handleSave}
-            >
-                {isSaveLoading ? <Spinner size="sm" /> : (
-                    <>
-                        <Icon as={isSaved ? IoBookmarkSharp : IoBookmarkOutline} mr={2} />
-                        <Text fontSize="9pt">Save</Text>
-                    </>
-                )}
-            </Flex>
+                >
+                    {isSaveLoading ? <Spinner size="sm" /> : (
+                        <>
+                            <Icon as={isSaved ? IoBookmarkSharp : IoBookmarkOutline} mr={2} />
+                            <Text fontSize="9pt">Save</Text>
+                        </>
+                    )}
+                </Flex>
+            )}
             {user?.id === post.creatorId && <Flex
                 align="center"
                 p="8px 10px"

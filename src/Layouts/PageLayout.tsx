@@ -27,7 +27,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   return (
     <>
       {isNav ? <Nav /> : null}
-      <Flex justify="center" pt="16px" px={{base: "8px"}}> 
+      <Flex justify="center" pt="16px" pb={Capacitor.getPlatform() === "ios" ? "32px" : 0} px={{base: "8px"}}> 
         <Flex width="100%" justify="center" maxWidth={maxWidth || "1320px"}>
           {(showSidebar || showWorkshops || showGroupChats) && <Flex direction={"column"} display={{base: 'none', md: 'flex'}} width="20%" gap={"0.5rem"}>
             {showSidebar && <Sidebar />}

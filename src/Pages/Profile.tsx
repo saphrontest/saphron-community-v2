@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
-import { Stack, useToast } from '@chakra-ui/react'
+import { Box, Stack, useMediaQuery, useToast } from '@chakra-ui/react'
 import { Meta, MyCommunities, Nav, NoEntry, PostItem } from '../Components'
 import { ProfileHeader } from '../Components/Profile'
 import { getPostsByUser } from '../Helpers/apiFunctions'
@@ -16,6 +16,8 @@ import NotFoundUserPic from '../assets/images/user.png'
 const Profile = () => {
   const dispatch = useDispatch()
   const toast = useToast()
+
+  const [isSmallerThan485] = useMediaQuery('(max-width: 485px)')
 
   const user = useSelector((state: RootState) => state.user)
   const { communities } = useSelector((state: RootState) => state.community)
@@ -85,16 +87,24 @@ const Profile = () => {
         description="Profile Page"
       />
       <Nav />
-      <ProfileHeader
+      {!isSmallerThan485 && <ProfileHeader
         isEmailVerified={user?.emailVerified}
         name={user?.displayName}
         username={user.username}
         profilePhoto={user?.profilePhotoURL ?? NotFoundUserPic}
         email={user?.email} coverPhoto={user.coverPhotoURL}
-      />
+      />}
       <PageLayout isNav={false} leftWidth='100%'>
         <>
           <Stack>
+          {isSmallerThan485 && <ProfileHeader
+            isEmailVerified={user?.emailVerified}
+            name={user?.displayName}
+            username={user.username}
+            profilePhoto={user?.profilePhotoURL ?? NotFoundUserPic}
+            email={user?.email} coverPhoto={user.coverPhotoURL}
+          />}
+            <Box>
             {userPosts?.length ? userPosts.map((post: IPost) =>
               <PostItem
                 key={post.id}
@@ -105,6 +115,7 @@ const Profile = () => {
                 setVoteChange={setVoteChange}
               />
             ) : <NoEntry type="post" />}
+            </Box>
           </Stack>
         </>
         <>

@@ -8,13 +8,13 @@ const NavLogo = () => {
     return (
         <Link to="/">
             <Flex
+                h="100%"
                 align="center"
                 justify="center"
-                h="100%"
-                mr={{ base: 0, md: 2 }}
                 cursor="pointer"
+                mr={{ base: 0, md: 2 }}
             >
-                {isBase ? <Image src={LogoIcon} w="56px"/> : <Image src={LogoHorizontal} width={150} />}
+                {isBase ? <Image src={LogoIcon} w="30px"/> : <Image src={LogoHorizontal} width={150} />}
             </Flex>
         </Link>
     )

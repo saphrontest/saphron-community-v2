@@ -44,7 +44,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
     return (
         <>
             <Box bg="white" height="228px" bgImage={!!coverPhoto ? coverPhoto : menthalHealth} bgPos="center" backgroundSize="cover"/>
-            <Flex minHeight="140px" bg={"white"}>
+            <Flex bg={"white"}>
                 {
                     !!profilePhoto ?
                         <Image
@@ -74,11 +74,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
                         />
                 }
 
-                <Box
-                    pos="absolute"
-                    left={{ base: "6rem", sm: "15%" }}
-                    transform={{ base: "translateY(40%)", sm: "none" }}
-                    p="16px" display="flex" alignItems="flex-start" flexDirection="column">
+                <Box p="16px" display="flex" alignItems="flex-start" flexDirection="column" transform={{sm: "translateX(20%)", md: "translateX(35%)"}}>
                     <Text fontSize={["16px", "28px"]} fontWeight={700}>{name}</Text>
                     <Text fontSize={["12px", "16px"]} fontWeight={500} color="gray.600">u/{username}</Text>
                     <Text fontSize={["12px", "16px"]} fontWeight={500} fontStyle={"italic"}>{email}</Text>

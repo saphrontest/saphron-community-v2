@@ -1,4 +1,4 @@
-import { Box, Flex, SkeletonCircle, SkeletonText, Stack, Text } from '@chakra-ui/react'
+import { Box, Divider, Flex, SkeletonCircle, SkeletonText, Stack, Text } from '@chakra-ui/react'
 import { FC, useState } from 'react'
 import CommentItem from './CommentItem';
 import { Comment, IPost } from '../../Interface';
@@ -101,9 +101,6 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
         <Box bg="white" p={2} borderRadius="0px 0px 4px 4px">
             <Flex
                 direction="column"
-                pl={10}
-                pr={4}
-                mb={6}
                 fontSize="10pt"
                 width="100%"
             >
@@ -129,6 +126,7 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
                     <>
                         {commentArray.length > 0 ? (
                             <>
+                                <Divider borderColor="gray.200"/>
                                 {commentArray.map((item: Comment) => (
                                     <CommentItem
                                         key={item?.id}

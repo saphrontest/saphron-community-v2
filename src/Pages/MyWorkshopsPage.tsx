@@ -1,6 +1,6 @@
 import { Flex, Text, useBoolean } from "@chakra-ui/react"
 import { PageLayout } from "../Layouts"
-import { JoinedWorkshops, Meta, MyWorkshopItem, RequestedWorkshops } from "../Components"
+import { JoinedWorkshops, Meta, MyWorkshopItem, NoEntry, RequestedWorkshops } from "../Components"
 import React, { useEffect, useState } from "react"
 import { UserWorkshops, Workshop, WorkshopRequest, IUser } from "../Interface"
 import { useSelector } from "react-redux"
@@ -101,11 +101,13 @@ const MyWorkshopsPage = () => {
                   My Workshops
                 </Text>
                 <Flex gap="1rem" direction="column" w="100%">
-                  {userWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)).map((workshop, idx) => workshop && (
-                    <React.Fragment key={idx}>
-                      <MyWorkshopItem idx={idx} workshop={workshop} toggleReloadWorkshops={() => setReloadWorkshops.toggle()} />
-                    </React.Fragment>
-                  ))}
+                  {
+                    userWorkshops?.length ? userWorkshops?.map(workshop => workshops?.find(w => w.id === workshop.workshopId)).map((workshop, idx) => workshop && (
+                      <React.Fragment key={idx}>
+                        <MyWorkshopItem idx={idx} workshop={workshop} toggleReloadWorkshops={() => setReloadWorkshops.toggle()} />
+                      </React.Fragment>
+                    )) : <NoEntry type="workshop"/>
+                  }
                 </Flex>
               </Flex>
             </Flex>

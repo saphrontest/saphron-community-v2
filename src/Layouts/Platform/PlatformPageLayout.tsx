@@ -52,7 +52,7 @@ const PlatformPageLayout:FC<IPlatformPageLayoutProps> = ({
                   {title}
                 </Text>
                 <Button onClick={actionButtonOnClick}>
-                  {actionButtonText}
+                    {actionButtonText}
                 </Button>
               </Flex>
             </Flex>

@@ -22,6 +22,7 @@ const EditWorkshopModal: FC<{ isOpen: boolean; toggleModal: () => void; workshop
                 pb={6}
             >
                 <Flex
+                    w="100%"
                     direction="column"
                     alignItems="center"
                     justifyContent="center"

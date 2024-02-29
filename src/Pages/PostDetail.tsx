@@ -10,12 +10,12 @@ import { deleteDoc, doc } from 'firebase/firestore'
 import { Comments } from '../Components/Posts'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import { useToast } from '@chakra-ui/react'
+import { Flex, useToast } from '@chakra-ui/react'
 import { setModal } from '../redux/slices/modalSlice'
 import { setSelectedCommunity } from '../redux/slices/communitySlice'
 
 const PostDetail = () => {
-  const {slug} = useParams()
+  const { slug } = useParams()
   const toast = useToast()
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -24,7 +24,7 @@ const PostDetail = () => {
   const [comments, setComments] = useState<(Comment | null)[]>()
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
   const [isVoteChange, setVoteChange] = useState<boolean>(false)
-  const {communities} = useSelector((state: RootState) => state.community)
+  const { communities } = useSelector((state: RootState) => state.community)
   const isPageLoading = !(!!post && !!comments)
 
   const getPost = async (slug: string) => {
@@ -39,7 +39,7 @@ const PostDetail = () => {
 
   useEffect(() => {
     slug && getPost(slug as string)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])
 
   useEffect(() => {
@@ -47,20 +47,20 @@ const PostDetail = () => {
   }, [post])
 
   useEffect(() => {
-    if(isVoteChange){
+    if (isVoteChange) {
       getComments(post?.id as string)
       getPost(slug as string)
       return () => setVoteChange(false)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVoteChange])
 
   useEffect(() => {
-    if(post?.communityId){
+    if (post?.communityId) {
       const postCommunity = communities.find((community: Community) => community.id === post.communityId)
       dispatch(setSelectedCommunity(postCommunity as Community))
-    } 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [post])
 
   const handleDelete = async (post: IPost): Promise<boolean> => {
@@ -71,7 +71,7 @@ const PostDetail = () => {
         status: "error",
         isClosable: true
       })
-      dispatch(setModal({isOpen: true, view: 'login'}))
+      dispatch(setModal({ isOpen: true, view: 'login' }))
       return false;
     }
 
@@ -101,20 +101,20 @@ const PostDetail = () => {
       setDeleteLoading(false)
       navigate("/community")
     }
-}
+  }
 
   return (
     <PageLayout>
-      <>
-      <Meta
+      <Flex direction="column" pb="1rem">
+        <Meta
           title={`Saphron Health | ${post?.title}`}
           description={post?.body as string}
         />
-        {!isPageLoading && <PostItem setVoteChange={setVoteChange} post={post} isDeleteLoading={isDeleteLoading} handleDelete={handleDelete} communityName={communities.filter((c: Community) => post.communityId === c.id)[0]?.name}/>}
-        {!isPageLoading && <Comments comments={comments} post={post} getComments={getComments}/>}
-      </>
+        {!isPageLoading && <PostItem setVoteChange={setVoteChange} post={post} isDeleteLoading={isDeleteLoading} handleDelete={handleDelete} communityName={communities.filter((c: Community) => post.communityId === c.id)[0]?.name} />}
+        {!isPageLoading && <Comments comments={comments} post={post} getComments={getComments} />}
+      </Flex>
       <>
-        {!isPageLoading && <About communityId={communities.filter((community: Community) => community.id === post?.communityId)[0]?.id as string ?? ""}/>}
+        {!isPageLoading && <About communityId={communities.filter((community: Community) => community.id === post?.communityId)[0]?.id as string ?? ""} />}
       </>
     </PageLayout>
   )

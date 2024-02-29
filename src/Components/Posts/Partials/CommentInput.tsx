@@ -1,7 +1,8 @@
 import { Flex, Button, Text } from "@chakra-ui/react";
-import { AuthButtons } from "../../Nav/Partials";
 import { IUser } from "../../../Interface";
 import TextEditor from "../../TextEditor";
+import { useDispatch } from "react-redux";
+import { setModal } from "../../../redux/slices/modalSlice";
 
 type CommentInputProps = {
   comment: string;
@@ -19,17 +20,19 @@ const CommentInput: React.FC<CommentInputProps> = ({
   onCreateComment,
 }) => {
 
+  const dispatch = useDispatch()
+
   return (
-    <Flex direction="column" position="relative">
-      {user ? (
-        <>
+    <Flex direction="column" align="center">
+      {user?.id ? (
+        <Flex w="100%" direction="column" px="1rem" pb="1rem">
           <Text mb={1} textAlign="left">
             Comment as{" "}
             <span style={{ color: "#3182CE" }}>
               {user?.username}
             </span>
           </Text>
-          <TextEditor onChange={(_, data: string) => setComment(data)} value={comment}/>
+            <TextEditor onChange={(_, data: string) => setComment(data)} value={comment}/>
           <Flex
             position="absolute"
             width={"calc(100% - 1px)"}
@@ -50,18 +53,16 @@ const CommentInput: React.FC<CommentInputProps> = ({
               Comment
             </Button>
           </Flex>
-        </>
+        </Flex>
       ) : (
         <Flex
           align="center"
           justify="space-between"
-          borderRadius={2}
-          border="1px solid"
-          borderColor="gray.100"
-          p={4}
+          py="1rem"
+          direction="column"
+          onClick={() => dispatch(setModal({isOpen: true, view: 'login'}))}
         >
-          <Text fontWeight={600}>Log in or sign up to leave a comment</Text>
-          <AuthButtons />
+          <Text textDecoration="underline" fontWeight={600}>Log in or sign up to leave a comment</Text>
         </Flex>
       )}
     </Flex>

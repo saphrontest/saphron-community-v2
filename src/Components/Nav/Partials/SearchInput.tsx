@@ -24,8 +24,8 @@ const SearchInput = () => {
   }, [searchKey])
 
   return (
-    <Flex flexDirection="column" align={"center"} maxWidth={"600px"} flexGrow={1} mr={2}>
-      <Flex width={"calc(100% - 16px)"}>
+    <Flex flexDirection="column" align="center" flexGrow={1} mr={2} maxWidth="600px">
+      <Flex width="calc(100% - 16px)">
         <InputGroup>
           <InputLeftElement
             pointerEvents="none"
@@ -49,7 +49,6 @@ const SearchInput = () => {
             }}
             height="34px"
             bg="gray.50"
-            width="100%"
             onChange={e => setSearchKey(e.target.value)}
             onFocus={e => setInputFocus(true)}
             onBlur={e => {

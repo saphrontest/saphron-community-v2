@@ -32,10 +32,10 @@ const SearchResultsItem: FC<SearchResultsItemProps> = ({item}) => {
     >
       <LinkIcon />
       <Flex flexDirection={"column"} align={"flex-start"}>
-        <Text fontWeight={"bold"}>
+        <Text fontWeight={"bold"} fontSize={{base: "14px", md: "16px"}} textAlign="left">
           {item?.title}
         </Text>
-        <Flex flexDirection={"row"} gap={1}>
+        <Flex flexDirection={"row"} gap={1} fontSize={{base: "12px", md: "16px"}}>
           <Text>
             by 
           </Text>

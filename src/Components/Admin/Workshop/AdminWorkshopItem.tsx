@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { Workshop } from '../../../Interface'
 import { AdminPlatformItem, AdminStatusSelect } from '../../Platform'
+import { Flex, Text } from '@chakra-ui/react';
 
 const AdminWorkshopItem: FC<{
   idx: number;
@@ -22,7 +23,10 @@ const AdminWorkshopItem: FC<{
       userName={workshop.workshop_manager_name}
       userEmail={workshop.workshop_manager_mail}
       >
-        <AdminStatusSelect onSelect={onSelect} item={workshop} />
+        <Flex align="center" gap="1rem" pl={{base: "2em", md: 0}}>
+          <Text fontWeight={700} display={{base: "block", md: "none"}}>Status</Text>
+          <AdminStatusSelect onSelect={onSelect} item={workshop} />
+        </Flex>
       </AdminPlatformItem>
   )
 }

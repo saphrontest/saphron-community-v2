@@ -17,8 +17,8 @@ const AdminPage = () => {
         <PlatformAdminPageLayout title='Dashboard'>
             <AdminTabs
                 tabs={[
-                    { id: 0, name: 'Workshop Requests', component: <WorkshopAdmin />},
-                    { id: 1, name: 'Support Group Requests', component: <AdminSupportGroups />},
+                    { id: 0, name: 'Workshops', component: <WorkshopAdmin />},
+                    { id: 1, name: 'Support Groups', component: <AdminSupportGroups />},
                     { id: 2, name: 'Users', component: <AdminUsers />}
                 ]}
             />

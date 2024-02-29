@@ -1,4 +1,4 @@
-import { Flex, Spinner, useBoolean } from '@chakra-ui/react'
+import { Flex, Spinner, Text, useBoolean } from '@chakra-ui/react'
 import { Fragment, useEffect, useState } from 'react'
 import { AdminPlatformItem, AdminStatusSelect } from '../../Platform'
 import { ISupportGroup, SelectOptions } from '../../../Interface'
@@ -44,10 +44,10 @@ const AdminSupportGroups = () => {
                         userName={group.support_group_manager_name}
                         userEmail={group.support_group_manager_mail}
                     >
-                        <AdminStatusSelect
-                            item={group}
-                            onSelect={updateItemStatus}
-                        />
+                        <Flex align="center" gap="1rem" pl={{base: "2em", md: 0}}>
+                            <Text fontWeight={700} display={{base: "block", md: "none"}}>Status</Text>
+                            <AdminStatusSelect item={group} onSelect={updateItemStatus} />
+                        </Flex>
                     </AdminPlatformItem>
                 </Fragment>
             ))}

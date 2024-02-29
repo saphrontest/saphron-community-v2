@@ -9,10 +9,12 @@ const NavLogo = () => {
         <Link to="/">
             <Flex
                 align="center"
+                justify="center"
+                h="100%"
                 mr={{ base: 0, md: 2 }}
                 cursor="pointer"
             >
-                {isBase ? <Image src={LogoIcon} h="32px"/> : <Image src={LogoHorizontal} width={150} />}
+                {isBase ? <Image src={LogoIcon} w="56px"/> : <Image src={LogoHorizontal} width={150} />}
             </Flex>
         </Link>
     )

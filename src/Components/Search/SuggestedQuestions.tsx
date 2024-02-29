@@ -45,7 +45,7 @@ const SuggestedQuestions: FC<SuggestedQuestionsProps> = ({question, sendMessage}
         alignItems="center"
         onClick={() => sendMessage(text)}
         >
-          <Text fontWeight={500} fontSize={16} textAlign={"right"} w={"fit-content"}>
+          <Text fontWeight={500} fontSize={{base: 12, md: 16}} textAlign={"right"} w={"fit-content"}>
             {text}
           </Text>
           <Icon as={RiQuestionnaireFill} ml="0.4rem" fontSize={18}/>
@@ -57,7 +57,7 @@ const SuggestedQuestions: FC<SuggestedQuestionsProps> = ({question, sendMessage}
     <Flex direction="column" align={"flex-end"}>
         {!!suggestions && (
           <>
-            <Heading fontSize={18} textAlign="right" mt={"1.5rem"} mb={"0.4rem"}>
+            <Heading fontSize={{base: 16, md: 18}} textAlign="right" mt={"1.5rem"} mb={"0.4rem"}>
                 Suggested Questions
             </Heading>
             <Flex direction="column" align="end" gap={1}>

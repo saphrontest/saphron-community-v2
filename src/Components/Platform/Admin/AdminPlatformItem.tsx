@@ -40,7 +40,7 @@ const AdminPlatformItem: FC<IAdminPlatformItemProps> = ({
                 <Flex direction="row" gap="0.8rem" align="center" pl={{base: "2em", md: 0}}>
                     <Image src={userAvatar} width="32px" height="32px" borderRadius={999} />
                     <Flex gap="0.1rem" align="flex-start" justify="center" direction="column">
-                        <Text textAlign="left" color="gray" fontSize={12} fontStyle="italic">#{userId}</Text>
+                        <Text textAlign="left" color="gray" fontSize={12} fontStyle="italic" w={{base: "150px", md: "100%"}} noOfLines={1}>#{userId}</Text>
                         <Text textAlign="left" fontWeight={600}>{userName}</Text>
                         <Text textAlign="left">{userEmail}</Text>
                     </Flex>

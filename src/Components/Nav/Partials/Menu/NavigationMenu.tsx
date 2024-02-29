@@ -5,6 +5,7 @@ import { PiInfoFill } from 'react-icons/pi';
 import { UserRoleTypes } from '../../../../Interface';
 import MenuItemInner from './MenuItemInner';
 import MenuItemLayout from './MenuItemLayout';
+import { GoHome } from "react-icons/go";
 
 
 interface IUserMenuItem {
@@ -17,18 +18,19 @@ interface IUserMenuItem {
 
 
 const NavMenuItems: IUserMenuItem[] = [
-  { id: 5, route: "/about", icon: PiInfoFill, label: "About Us", role: ["user", "admin"] },
-  { id: 6, route: "/support-groups", icon: MdOutlineGroups3, label: "Support Groups", role: ["user", "admin"] },
-  { id: 7, route: "/workshops", icon: MdOutlineEvent, label: "Workshops", role: ["user", "admin"] },
+  { id: 5, route: "/", icon: GoHome, label: "Home", role: ["user", "admin"] },
+  { id: 6, route: "/about", icon: PiInfoFill, label: "About Us", role: ["user", "admin"] },
+  { id: 7, route: "/support-groups", icon: MdOutlineGroups3, label: "Support Groups", role: ["user", "admin"] },
+  { id: 8, route: "/workshops", icon: MdOutlineEvent, label: "Workshops", role: ["user", "admin"] },
 ]
 
-const NavigationMenu: FC<{ userRole: UserRoleTypes; }> = ({ userRole }) => {
+const NavigationMenu: FC<{ userRole: UserRoleTypes; activePath: string; }> = ({ userRole, activePath }) => {
   return (
     <>
       {
         NavMenuItems.map((item: IUserMenuItem) => item.role.includes(userRole) && (
-          <MenuItemLayout key={item.id}>
-            <MenuItemInner to={item.route} icon={item.icon} label={item.label} />
+          <MenuItemLayout to={item.route} key={item.id} isActive={item.route === activePath}>
+            <MenuItemInner icon={item.icon} label={item.label} />
           </MenuItemLayout>
         ))
       }

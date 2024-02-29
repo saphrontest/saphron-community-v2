@@ -25,23 +25,19 @@ const CommentInput: React.FC<CommentInputProps> = ({
   return (
     <Flex direction="column" align="center">
       {user?.id ? (
-        <Flex w="100%" direction="column" px="1rem" pb="1rem">
+        <Flex w="100%" direction="column" px="1rem" pb="0.5rem">
           <Text mb={1} textAlign="left">
             Comment as{" "}
             <span style={{ color: "#3182CE" }}>
               {user?.username}
             </span>
           </Text>
-            <TextEditor onChange={(_, data: string) => setComment(data)} value={comment}/>
+          <TextEditor onChange={(_, data: string) => setComment(data)} value={comment} />
           <Flex
-            position="absolute"
-            width={"calc(100% - 1px)"}
-            left={"0.5px"}
-            bottom="0px"
+            width="100%"
             zIndex={1}
             justify="flex-end"
-            bg="gray.100"
-            p="6px 8px"
+            mt="0.5em"
             borderRadius="0px 0px 4px 4px"
           >
             <Button
@@ -60,7 +56,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
           justify="space-between"
           py="1rem"
           direction="column"
-          onClick={() => dispatch(setModal({isOpen: true, view: 'login'}))}
+          onClick={() => dispatch(setModal({ isOpen: true, view: 'login' }))}
         >
           <Text textDecoration="underline" fontWeight={600}>Log in or sign up to leave a comment</Text>
         </Flex>

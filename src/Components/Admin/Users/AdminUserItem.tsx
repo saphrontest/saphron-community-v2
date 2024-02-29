@@ -17,7 +17,7 @@ const AdminUserItem: FC<{ user: IUser, getUserList: (isLoading: boolean) => void
     }
 
     return (
-        <Flex p="1rem" bg="gray.50" borderRadius="1rem" gap="1rem" align="center" w="100%" justify="space-between">
+        <Flex direction={{base: "column", md: "row"}} p="1rem" bg="gray.50" borderRadius="1rem" gap="1rem" align={{base: "flex-start", md: "center"}} w="100%" justify="space-between">
             <Flex gap="1rem" align="center">
                 <Avatar src={user.profilePhotoURL} />
                 <Flex direction="column" align="flex-start">
@@ -34,13 +34,18 @@ const AdminUserItem: FC<{ user: IUser, getUserList: (isLoading: boolean) => void
             </Flex>
             <Flex>
                 {
-                    roleLoading ? <Spinner /> : <Select variant='filled' value={user.role} onChange={ev => handleRoleSelect(ev.target.value as UserRoleTypes, user.id)}>
-                        {["user", "admin"].map(option => (
-                            <option key={option} value={option}>
-                                {option}
-                            </option>
-                        ))}
-                    </Select>
+                    roleLoading ? <Spinner /> : (
+                        <Flex align="center" gap="1rem">
+                            <Text fontWeight={700} display={{base: "block", md: "none"}}>Status</Text>
+                            <Select variant='filled' value={user.role} onChange={ev => handleRoleSelect(ev.target.value as UserRoleTypes, user.id)}>
+                                {["user", "admin"].map(option => (
+                                    <option key={option} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
+                            </Select>
+                        </Flex>
+                    )
                 }
             </Flex>
         </Flex>

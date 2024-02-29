@@ -30,21 +30,22 @@ const UserMenuItems: IUserMenuItem[] = [
 interface IUserMenuInnerProps {
     logout: () => Promise<void>;
     userRole: UserRoleTypes;
+    activePath: string;
 }
 
-const UserMenuInner: FC<IUserMenuInnerProps> = ({ logout, userRole }) => {
+const UserMenuInner: FC<IUserMenuInnerProps> = ({ logout, userRole, activePath }) => {
     const [isSmallerThan770] = useMediaQuery('(max-width: 770px)')
     return (
         <>
             {
                 UserMenuItems.map((item: IUserMenuItem) => item.role.includes(userRole) && (
-                    <MenuItemLayout key={item.id}>
-                        <MenuItemInner to={item.route} icon={item.icon} label={item.label} />
+                    <MenuItemLayout key={item.id} to={item.route} isActive={activePath === item.route}>
+                        <MenuItemInner icon={item.icon} label={item.label}/>
                     </MenuItemLayout>
                 ))
             }
             { isSmallerThan770 && <MenuDivider /> }
-            { isSmallerThan770 && <NavigationMenu userRole={userRole}/> }
+            { isSmallerThan770 && <NavigationMenu userRole={userRole} activePath={activePath}/> }
             <MenuDivider />
             <MenuItem
                 fontSize="10pt"

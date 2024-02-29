@@ -5,6 +5,7 @@ import communitiesBackground from '../../assets/images/communities.jpg'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
 import { createSlug } from '../../Helpers'
+import NoEntry from '../NoEntry'
 
 const WorkshopItem: FC<{ workshop: Workshop }> = ({ workshop }) => {
     return (
@@ -53,19 +54,22 @@ const RequestedWorkshops: FC<{
             </Flex>
             <Flex p="6px 10px" direction="column" gap="0.5rem">
                 {!!newWorkshopRequests?.length && <Text fontWeight={700} align="left" pb="0.4rem">New Workshop Requests</Text>}
-                {newWorkshopRequests?.map((workshop, idx) => workshop && (
+                {newWorkshopRequests?.length && newWorkshopRequests?.map((workshop, idx) => workshop && (
                     <Fragment key={workshop.id}>
                         <WorkshopItem workshop={workshop}/>
                         {newWorkshopRequests?.length - 1 !== idx && <Divider />}
                     </Fragment>
                 ))}
                 {!!joinRequests.length && <Text fontWeight={700} align="left" paddingTop="1rem" paddingBottom="0.4rem">Join Requests</Text>}
-                {joinRequests.map((workshop, idx) => workshop && (
+                {joinRequests.length && joinRequests.map((workshop, idx) => workshop && (
                     <Fragment key={workshop.id}>
                         <WorkshopItem workshop={workshop}/>
                         {joinRequests.length - 1 !== idx && <Divider />}
                     </Fragment>
                 ))}
+                {
+                    ![...joinRequests, ...newWorkshopRequests].length  && <NoEntry type="requested workshop"/>
+                }
             </Flex>
         </Flex>
     )

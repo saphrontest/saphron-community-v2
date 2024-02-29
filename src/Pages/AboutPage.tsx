@@ -29,11 +29,15 @@ const AboutPage = () => {
                         </div>
                     </nav>
                     <header className="py-5">
-                        <div className="container px-5 pb-5">
+                        <div className="container pb-5">
                             <div className="row gx-5 align-items-center">
                                 <div className="col-xxl-5">
                                     <div className="text-center text-xxl-start">
-                                        <div className="badge bg-gradient-primary-to-secondary mb-4"><div className="text-uppercase" style={{ color: 'white' }}>Mental &middot; Physical  &middot; Social Health &middot; Financial Wellness</div></div>
+                                        <div className="badge bg-gradient-primary-to-secondary mb-4">
+                                            <div className="text-uppercase" style={{ color: 'white' }}>
+                                                Mental &middot; Physical  &middot; Social Health &middot; Financial Wellness
+                                            </div>
+                                        </div>
                                         <div className="fs-3 fw-light text-muted">The future of healthcare is here!</div>
                                         <h1 className="display-3 fw-bolder mb-5"><span className="text-gradient d-inline">AI driven self-help platform for neurodivergent adults</span></h1>
                                         <div className="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xxl-start mb-3">

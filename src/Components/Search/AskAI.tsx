@@ -73,12 +73,12 @@ const AskAI = () => {
   return (
     <Flex p="1" width="100%" direction="column">
       <SearchHeader title='Ask to Saphron AI' description='You can ask the Saphron AI, which is developed using ChatGPT for our community members.'/>
+      {messages.length ? <AIMessages messages={messages}/> : null}
       <AskAIForm 
       handleButton={handleButton}
       loading={loading}
       setText={setText}
       />
-      <AIMessages messages={messages}/>
       <SuggestedQuestions question={lastQuestion} sendMessage={handleButton}/>
     </Flex>
   )

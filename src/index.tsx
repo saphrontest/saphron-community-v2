@@ -11,6 +11,7 @@ import {Capacitor} from '@capacitor/core'
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
@@ -19,7 +20,7 @@ root.render(
         theme={theme}
         toastOptions={{
             defaultOptions: {
-              position: Capacitor.getPlatform() === 'ios' ? 'top' : 'top-right',
+              position: Capacitor.isNativePlatform() ? 'top' : 'top-right',
               containerStyle: {
                 width: "calc(100% - 32px)"
               }

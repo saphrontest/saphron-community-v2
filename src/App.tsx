@@ -18,7 +18,7 @@ function App() {
   return (
     <>
       <IosMeta />
-      <div className={`App ${Capacitor.getPlatform() === 'ios' ? 'ios' : ''}`}>
+      <div className={`App ${Capacitor.getPlatform()}`}>
         <Router />
       </div>
     </>

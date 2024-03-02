@@ -23,7 +23,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   showGroupChats = false,
   leftWidth = "65%"
 }) => {
-  
+
   return (
     <>
       {isNav ? <Nav /> : null}
@@ -38,7 +38,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
             direction="column"
             width={{ base: "100%", md: leftWidth }}
             mx={{ base: 0, md: 6 }}
-            mt={Capacitor.isNativePlatform() ? "110px" : "0px"}
+            mt={Capacitor.getPlatform() === 'ios' ? '115px' : Capacitor.getPlatform() === 'android' ? '50px' : "0px"}
           >
             {children && children[0 as keyof typeof children]}
           </Flex>

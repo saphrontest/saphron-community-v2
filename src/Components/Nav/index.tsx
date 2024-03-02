@@ -10,7 +10,6 @@ const Nav = () => {
   const [dropdown, toggleDropdown] = useState(false)
   const user = useSelector((state: RootState) => state.user)
   return (
-    <>
       <header>
         <Flex
           bg="white"
@@ -29,7 +28,6 @@ const Nav = () => {
           </Flex>
         </Flex>
       </header>
-    </>
   );
 };
 

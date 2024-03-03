@@ -41,16 +41,7 @@ export const getCommunities = async () => {
   const communities: Community[] = [];
   const communitiesData = await fetch.getList("communities");
   communitiesData.forEach((doc) => {
-    const { creatorId, createdAt, numberOfMembers, privacyType, name } =
-      doc.data();
-    communities.push({
-      id: doc.id,
-      creatorId,
-      createdAt,
-      numberOfMembers,
-      privacyType,
-      name,
-    });
+    communities.push( { id: doc.id, ...doc.data() } as Community );
   });
   return communities;
 };
@@ -58,25 +49,18 @@ export const getCommunities = async () => {
 export const getPosts = async () => {
   const postDocs = await fetch.getList("posts");
   const posts = postDocs.docs.map((doc) => {
+    const {createdAt, editedAt, ...postData } = doc.data()
     return {
       id: doc.id,
       createdAt: {
-        nanoseconds: doc.data().createdAt.nanoseconds,
-        seconds: doc.data().createdAt.seconds,
+        nanoseconds: createdAt.nanoseconds,
+        seconds: createdAt.seconds,
       },
       editedAt: {
-        nanoseconds: doc.data().editedAt.nanoseconds,
-        seconds: doc.data().editedAt.seconds,
+        nanoseconds: editedAt.nanoseconds,
+        seconds: editedAt.seconds,
       },
-      body: doc.data().body,
-      communityId: doc.data().communityId,
-      communityImageURL: doc.data().communityImageURL,
-      creatorId: doc.data().creatorId,
-      numberOfComments: doc.data().numberOfComments,
-      title: doc.data().title,
-      userDisplayText: doc.data().userDisplayText,
-      voteStatus: doc.data().voteStatus,
-      slug: doc.data().slug
+      ...postData
     };
   });
   store.dispatch(setPosts(posts))

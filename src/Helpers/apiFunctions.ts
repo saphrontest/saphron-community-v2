@@ -260,7 +260,8 @@ export const getUserSavedPosts = async (userId: string) => {
       querySnapshot.forEach((docSnapshot: any) => {
         // Access each document's data using docSnapshot.data()
         const data = docSnapshot.data();
-        savedPosts.push(data);
+        const { createdAt: {nanoseconds, seconds}, ...postData} = data
+        savedPosts.push({ ...postData, createdAt: { nanoseconds, seconds } });
       });
       store.dispatch(setSavedPosts(savedPosts))
     })

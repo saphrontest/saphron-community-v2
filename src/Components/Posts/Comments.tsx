@@ -2,12 +2,11 @@ import { Box, Divider, Flex, SkeletonCircle, SkeletonText, Stack, Text } from '@
 import { FC, useState } from 'react'
 import CommentItem from './CommentItem';
 import { Comment, IPost } from '../../Interface';
-import { firestore } from '../../firebaseClient';
 import { CommentInput } from './Partials';
-import { collection, collectionGroup, deleteDoc, doc, getDocs, increment, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
 import { RootState } from '../../redux/store';
+import { usePost } from '../../Hooks';
 
 interface CommentsProps {
     comments: (Comment | null)[];
@@ -15,86 +14,47 @@ interface CommentsProps {
     getComments: (id: string) => void
 }
 
-const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
+const Comments: FC<CommentsProps> = ({ comments, post, getComments }) => {
 
     const dispatch = useDispatch()
+    const { createComment, deleteComment } = usePost()
     const user = useSelector((state: RootState) => state.user)
     const [deleteLoading, setDeleteLoading] = useState("");
     const [comment, setComment] = useState<string>("");
     const [commentCreateLoading, setCommentCreateLoading] = useState<boolean>(false);
     const commentArray = comments as Comment[];
-    
+
     const onCommentDelete = async (commentId: string, postId: string) => {
         setDeleteLoading(commentId)
         try {
-            // delete the comment
-            const commentRef = doc(firestore, "comments", commentId)
-            await deleteDoc(commentRef);
-
-            // delete the comment votes for all users which is voted for the comment
-            const commentVotesRef = collectionGroup(firestore, "commentVotes")
-            const commentDocs = await getDocs(commentVotesRef)
-            commentDocs.forEach(async doc => {
-                if(doc.data().commentId === commentId){
-                    await deleteDoc(doc.ref);
-                }
-            })
-
-            // update the numberOfComments for the post
-            const batch = writeBatch(firestore)
-            const postRef = doc(firestore, "posts", postId)
-            batch.update(postRef, {
-                numberOfComments: increment(-1)
-            })
-            batch.commit()
-            
-
+            await deleteComment(commentId, postId)
         } catch (error: any) {
             console.log("ERROR deleting comment: " + error.message)
         } finally {
             getComments(post.id)
             setDeleteLoading(commentId)
         }
-
-        
-        
     }
 
-    const onCreateComment = async (comment: string) => {
+    const checkUser = () => {
         if (!user) {
             dispatch(setModal({ isOpen: true, view: "login" }));
             return;
-          }
-      
-          setCommentCreateLoading(true);
-          try {
-            const batch = writeBatch(firestore);
+        }
+    }
 
-            // Create comment document
-            const commentDocRef = doc(collection(firestore, "comments"));
-            batch.set(commentDocRef, {
-              postId: post.id,
-              creatorId: user.id,
-              creatorDisplayText: user.email!.split("@")[0],
-              creatorPhotoURL: user.profilePhotoURL,
-              text: comment,
-              postTitle: post.title,
-              createdAt: serverTimestamp(),
-              voteValue: 0
-            } as Comment);
-      
-            // Update post numberOfComments
-            batch.update(doc(firestore, "posts", post.id), {
-              numberOfComments: increment(1),
-            });
-            await batch.commit();
+    const onCreateComment = async (comment: string) => {
+        checkUser()
+        setCommentCreateLoading(true);
+        try {
+            await createComment(post, user, comment)
             getComments(post.id)
             setComment("")
-          } catch (error: any) {
+        } catch (error: any) {
             console.log("onCreateComment error", error.message);
-          } finally {
-              setCommentCreateLoading(false);
-          }
+        } finally {
+            setCommentCreateLoading(false);
+        }
     }
 
     return (
@@ -126,7 +86,7 @@ const Comments: FC <CommentsProps> = ({comments, post, getComments}) => {
                     <>
                         {commentArray.length > 0 ? (
                             <>
-                                <Divider borderColor="gray.200"/>
+                                <Divider borderColor="gray.200" />
                                 {commentArray.map((item: Comment) => (
                                     <CommentItem
                                         key={item?.id}

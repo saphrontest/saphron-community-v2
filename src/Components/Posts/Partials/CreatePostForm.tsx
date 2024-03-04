@@ -1,15 +1,11 @@
 import React, { FC, useRef, useState } from 'react'
 import TextInputs from './TextInputs';
 import ImageUpload from './ImageUpload';
-import { addDoc, collection, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { firestore, storage } from '../../../firebaseClient';
 import { Community, IUser } from '../../../Interface';
-import { getDownloadURL, ref, uploadString } from 'firebase/storage';
-import { useNavigate } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react';
 import { RootState } from '../../../redux/store';
 import { useSelector } from 'react-redux';
-import { createSlug } from '../../../Helpers';
+import { usePost } from '../../../Hooks';
 
 interface CreatePostFormInterface {
     selectedTab: string;
@@ -19,8 +15,8 @@ interface CreatePostFormInterface {
 
 const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTab, community}) => {
   const user: IUser = useSelector((state: RootState) => state.user)
+  const {onCreate: createPost} = usePost()
   const toast = useToast()
-  const navigate = useNavigate()
   const [textInputs, setTextInputs] = useState<{ title: string; body: string; }>({
     title: "",
     body: "",
@@ -59,33 +55,11 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
     const { title, body } = textInputs
 
     try {
-      const postDocRef = await addDoc(collection(firestore, "posts"), {
-        body,
-        title: title,
-        communityId: community.id,
-        communityImageUrl: community.imageURL || "",
-        creatorId: user?.id,
-        userDisplayText: user.username,
-        numberOfComments: 0,
-        voteStatus: 0,
-        createdAt: serverTimestamp(),
-        editedAt: serverTimestamp(),
-        slug: createSlug(title)
-      })
-
-      if (selectedFile) {
-        const imageRef = ref(storage, `posts/${postDocRef.id}/image`);
-        await uploadString(imageRef, selectedFile, "data_url")
-        const downloadURL = await getDownloadURL(imageRef)
-        await updateDoc(postDocRef, {
-          imageURL: downloadURL
-        })
-      }
+      await createPost(user, body, title, community, selectedFile)
     } catch (error) {
-      console.log("on create post", error)
+      console.error(error)
     } finally {
       setLoading(false)
-      navigate(`/community/post/${createSlug(title)}`)
     }
 
   }

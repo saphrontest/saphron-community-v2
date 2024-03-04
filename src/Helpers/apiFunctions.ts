@@ -10,6 +10,7 @@ import {
   deleteDoc,
   writeBatch,
   increment,
+  orderBy
 } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 // INTERFACES
@@ -63,7 +64,8 @@ export const getCommunities = async () => {
 };
 
 export const getPosts = async () => {
-  const postDocs = await fetch.getList("posts");
+  const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
+  const postDocs = await getDocs(q);
   const posts = postDocs.docs.map((doc) => {
     return {
       id: doc.id,
@@ -210,53 +212,6 @@ export const getCommentVotesByUserId = async (id: string) => {
   return [];
 };
 
-export const savePost = async (post: IPost, userId: string) => {
-  const savePostRef = doc(firestore, "users", userId, "savedPosts", post.id);
-  await getDoc(savePostRef)
-    .then(async (docSnapshot) => {
-      if (docSnapshot.exists()) {
-        // Document exists, you can access its data using docSnapshot.data()
-        const data = docSnapshot.data();
-        console.log("Document data:", data);
-        await deleteDoc(savePostRef)
-          .then(() => {
-            console.log("Document deleted. Post removed.");
-            return true;
-          })
-          .catch((error) => {
-            console.error("Error deleting document:", error);
-            return false;
-          });
-      } else {
-        // Document does not exist
-        await setDoc(savePostRef, {
-          id: post.id,
-          communityId: post.communityId,
-          creatorId: post.creatorId,
-          title: post.title,
-          body: post.body,
-          numberOfComments: post.numberOfComments,
-          voteStatus: post.voteStatus,
-          createdAt: post.createdAt,
-          userDisplayText: post.userDisplayText,
-          slug: post.slug,
-        })
-          .then(() => {
-            console.log("Post saved.");
-            return true;
-          })
-          .catch((error) => {
-            console.error("Error creating document:", error);
-            return false;
-          });
-      }
-    })
-    .catch((error) => {
-      console.error("Error getting document:", error);
-      return false;
-    });
-};
-
 export const getUserSavedPosts = async (userId: string) => {
   // Construct a reference to the subcollection
   const savedUsersCollectionRef = collection(
@@ -276,22 +231,8 @@ export const getUserSavedPosts = async (userId: string) => {
       querySnapshot.forEach((docSnapshot: any) => {
         // Access each document's data using docSnapshot.data()
         const data = docSnapshot.data();
-        const {body, communityId, creatorId, id, numberOfComments, slug, title, userDisplayText, voteStatus, createdAt} = data
-        savedPosts.push({
-          id,
-          communityId,
-          creatorId,
-          body,
-          numberOfComments,
-          slug,
-          title,
-          userDisplayText,
-          voteStatus,
-          createdAt: {
-            nanoseconds: createdAt.nanoseconds,
-            seconds: createdAt.seconds
-          }
-        });
+        const { createdAt: {nanoseconds, seconds}, ...postData} = data
+        savedPosts.push({ ...postData, createdAt: { nanoseconds, seconds } });
       });
       store.dispatch(setSavedPosts(savedPosts));
     })

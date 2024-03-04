@@ -19,7 +19,7 @@ interface CommunityProps {
     showTitleOnMobile?: boolean;
 }
 
-const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCommunityId, showTitleOnMobile = true}) => {
+const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCommunityId, showTitleOnMobile=true}) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.user)

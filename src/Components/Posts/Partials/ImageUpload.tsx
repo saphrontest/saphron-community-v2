@@ -1,7 +1,5 @@
-import React, { Ref } from "react";
+import React from "react";
 import { Flex, Stack, Button, Image, useToast } from "@chakra-ui/react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebaseClient";
 import { RootState } from "../../../redux/store";
 import { useSelector } from "react-redux";
 
@@ -30,6 +28,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             src={selectedFile as string}
             maxWidth="400px"
             maxHeight="400px"
+            width="100%"
           />
           <Stack direction="row" mt={4}>
             <Button height="28px" onClick={() => setSelectedTab("Post")}>

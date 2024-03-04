@@ -11,33 +11,34 @@ import { RootState } from '../../../redux/store';
 import VoteComponent from './VoteComponent';
 import ActionButtons from './ActionButtons';
 import PostContent from './PostContent';
+import { usePost } from '../../../Hooks';
 
 export type PostItemContentProps = {
   post: IPost;
   homePage?: boolean;
-  isDeleteLoading: boolean;
-  handleDelete: (post: IPost) => Promise<boolean>;
   communityName: string;
-  setVoteChange: (isChanged: boolean) => void;
+  setReloadPost: ( isReload:boolean ) => void;
 };
 
 const PostItem: FC<PostItemContentProps> = ({
   post,
   homePage,
-  isDeleteLoading,
-  handleDelete,
   communityName,
-  setVoteChange
+  setReloadPost
 }) => {
   const toast = useToast()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const {onDelete: deletePost} = usePost()
+
   const user = useSelector((state: RootState) => state.user)
-  const [userVote, setUserVote] = useState<IPostVote | null>(null)
-  const [isVoteLoading, setVoteLoading] = useState<boolean>(false)
-  const [isSaved, setSaved] = useState(false)
   const {communities} = useSelector((state:RootState) => state.community)
   const {savedPosts} = useSelector((state:RootState) => state.post)
+  
+  const [userVote, setUserVote] = useState<IPostVote | null>(null)
+  const [isVoteLoading, setVoteLoading] = useState<boolean>(false)
+  const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
+  const [isSaved, setSaved] = useState(false)
 
   useEffect(() => {
     getUserVotesData()
@@ -108,7 +109,7 @@ const PostItem: FC<PostItemContentProps> = ({
       const postRef = doc(firestore, "posts", post.id);
       batch.update(postRef, { voteStatus: post.voteStatus + sentVote });
       await batch.commit();
-      setVoteChange(true)
+      setReloadPost(true)
     } catch (error) {
       console.log("onVote error", error);
     } finally {
@@ -116,6 +117,38 @@ const PostItem: FC<PostItemContentProps> = ({
       setVoteLoading(false);
     }
   };
+
+  const handleDelete = async (post: IPost): Promise<boolean> => {
+    if (!user?.id) {
+      toast({
+        title: "Please login, first!",
+        status: "error",
+        isClosable: true,
+        position: "top-right"
+      })
+      dispatch(setModal({isOpen: true, view: 'login'}))
+      return false;
+    }
+      setDeleteLoading(true)
+      console.log("DELETING POST: ", post.id);
+
+
+      const onSuccess = () => {
+        setReloadPost(true)
+        setDeleteLoading(false)
+      }
+  
+      const onError = () => {
+        toast({
+          title: "Please, try again later!",
+          status: "error",
+          isClosable: true,
+        })
+      }
+  
+      const isDelete = await deletePost( post, onSuccess, onError )
+      return isDelete
+  }
 
   return (
     <Flex

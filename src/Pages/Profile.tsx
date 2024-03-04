@@ -76,7 +76,7 @@ const Profile = () => {
   }, [user])
 
   useEffect(() => {
-    voteChange && getPosts(user.id)
+    voteChange && getPosts(user.id).finally(() => setVoteChange(false))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [voteChange])
 

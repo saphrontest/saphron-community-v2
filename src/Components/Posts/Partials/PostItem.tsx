@@ -6,7 +6,7 @@ import { firestore } from '../../../firebaseClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../../redux/slices/modalSlice';
 import { collection, doc, writeBatch } from 'firebase/firestore';
-import { getPosts, getUserVotes} from '../../../Helpers/apiFunctions';
+import { getUserVotes} from '../../../Helpers/apiFunctions';
 import { RootState } from '../../../redux/store';
 import VoteComponent from './VoteComponent';
 import ActionButtons from './ActionButtons';
@@ -114,7 +114,6 @@ const PostItem: FC<PostItemContentProps> = ({
       console.log("onVote error", error);
     } finally {
       getUserVotesData()
-      getPosts()
       setVoteLoading(false);
     }
   };

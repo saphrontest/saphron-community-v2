@@ -47,11 +47,17 @@ const PostDetail = () => {
   }, [post])
 
   useEffect(() => {
-    if (isVoteChange) {
-      getComments(post?.id as string)
+
+    const getCommentsAndPost = async (postId: string, slug: string) => {
+      getComments(postId as string)
       getPost(slug as string)
-      return () => setVoteChange(false)
     }
+    
+    if (isVoteChange) {
+      getCommentsAndPost(post?.id as string, slug as string)
+        .finally(() => setVoteChange(false))
+    }
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVoteChange])
 

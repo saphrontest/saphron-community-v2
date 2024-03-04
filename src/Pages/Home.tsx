@@ -28,14 +28,14 @@ const Home = () => {
   useEffect(() => {
     if(isVoteChange){
       getPostsData()
-      return () => setVoteChange(false)
+        .finally(() => setVoteChange(false))
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVoteChange])
 
-  const getPostsData = () => {
-    getPosts()
-    user?.id && getUserSavedPosts(user?.id as string)
+  const getPostsData = async () => {
+    await getPosts()
+    await user?.id && getUserSavedPosts(user?.id as string)
   }
   
   const handleDelete = async (post: IPost): Promise<boolean> => {

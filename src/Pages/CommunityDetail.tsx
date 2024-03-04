@@ -35,18 +35,21 @@ const CommunityDetail = () => {
     setPosts(p)
   }
 
+  const getAll = async (communityId: string) => {
+    await getDetail(communityId)
+    await getPosts(communityId)
+  }
+
   useEffect(() => {
     if (communityId) {
-      getDetail(communityId)
-      getPosts(communityId)
+      getAll(communityId)
     }
   }, [communityId])
 
   useEffect(() => {
     if (isVoteChange && communityId) {
-      getDetail(communityId)
-      getPosts(communityId)
-      return () => setVoteChange(false)
+      getAll(communityId)
+        .finally(() => setVoteChange(false))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVoteChange])

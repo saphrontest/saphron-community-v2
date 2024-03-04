@@ -78,7 +78,7 @@ const SavedPosts = () => {
     useEffect(() => {
         if(isVoteChange) {
             getUserSavedPosts(user?.id as string)
-            return () => setVoteChange(false)
+              .finally(() => setVoteChange(false))
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isVoteChange])

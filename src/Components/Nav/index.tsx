@@ -20,7 +20,7 @@ const Nav = () => {
         >
           <Flex gap={{base: "0.5rem", sm: "2rem"}}>
             <NavLogo />
-            {user.id && <CommunitySelect isOpen={dropdown} setOpen={toggleDropdown} isNav/>}
+            {user.id && <CommunitySelect isOpen={dropdown} setOpen={toggleDropdown} isNav showTitleOnMobile={false}/>}
           </Flex>
           <SearchInput />
           <Flex justifyContent="space-between" alignItems="center">

@@ -5,10 +5,11 @@ import { IoBookmarkOutline, IoBookmarkSharp } from 'react-icons/io5'
 import { IPost } from '../../../Interface'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserSavedPosts, savePost } from '../../../Helpers/apiFunctions'
+import { getUserSavedPosts, } from '../../../Helpers/apiFunctions'
 import { setModal } from '../../../redux/slices/modalSlice'
 import { BsChat } from 'react-icons/bs'
 import { RootState } from '../../../redux/store'
+import { usePost } from '../../../Hooks'
 
 interface ActionButtonsInterface {
     post: IPost;
@@ -22,6 +23,7 @@ const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete,
     const toast = useToast()
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const {onSave: savePost} = usePost()
     const user = useSelector((state: RootState) => state.user)
     const [isSaveLoading, setSaveLoading] = useState(false)
 
@@ -39,11 +41,11 @@ const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete,
         }
     
         setSaveLoading(true)
-        savePost(post, user?.id as string)
-        .finally(() => {
-          getUserSavedPosts(user?.id as string)
-          setSaveLoading(false)
-        })
+        savePost(post, user.id)
+            .finally(() => {
+                getUserSavedPosts(user?.id as string)
+                setSaveLoading(false)
+            })
       }
     return (
         <Flex ml={1} mb={0.5} color="gray.500" fontWeight={600}>

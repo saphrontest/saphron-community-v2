@@ -101,8 +101,8 @@ const usePost = () => {
           userDisplayText: user.username,
           numberOfComments: 0,
           voteStatus: 0,
-          createdAt: new Date().toString(),
-          editedAt: new Date().toString(),
+          createdAt: moment().toString(),
+          editedAt: moment().toString(),
           slug,
           slugId 
         })

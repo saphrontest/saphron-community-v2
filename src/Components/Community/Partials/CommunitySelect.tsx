@@ -40,7 +40,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                  name,
                  creatorId,
                  privacyType,
-                 createdAt: { seconds: createdAt?.seconds, nanoseconds: createdAt?.nanoseconds }
+                 createdAt
                 }))
             ]
         dispatch(setCommunities(communityList as Community[]))

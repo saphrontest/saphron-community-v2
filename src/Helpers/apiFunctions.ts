@@ -62,14 +62,8 @@ export const getPosts = async () => {
   const posts = postDocs.docs.map((doc) => {
     return {
       id: doc.id,
-      createdAt: {
-        nanoseconds: doc.data().createdAt.nanoseconds,
-        seconds: doc.data().createdAt.seconds,
-      },
-      editedAt: {
-        nanoseconds: doc.data().editedAt.nanoseconds,
-        seconds: doc.data().editedAt.seconds,
-      },
+      createdAt: doc.data().createdAt,
+      editedAt: doc.data().editedAt,
       body: doc.data().body,
       communityId: doc.data().communityId,
       communityImageURL: doc.data().communityImageURL,

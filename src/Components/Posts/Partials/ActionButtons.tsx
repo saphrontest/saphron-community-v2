@@ -55,7 +55,7 @@ const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete,
                 borderRadius={4}
                 _hover={{ bg: "gray.200" }}
                 cursor="pointer"
-                onClick={() => navigate(`/community/post/${post.slug}`)}
+                onClick={() => navigate(`/community/post/${post.slugId}/${post.slug}`)}
             >
                 <Icon as={BsChat} mr={2} />
                 <Text fontSize="9pt" textAlign={"left"}>{post.numberOfComments}</Text>

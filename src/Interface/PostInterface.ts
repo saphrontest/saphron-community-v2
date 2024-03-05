@@ -17,6 +17,7 @@ export type IPost = {
   createdAt?: string;
   editedAt?: string;
   slug?: string;
+  slugId: string;
 };
 
 export type IPostVote = {

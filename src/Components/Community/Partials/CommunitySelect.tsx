@@ -19,7 +19,13 @@ interface CommunityProps {
     showTitleOnMobile?: boolean;
 }
 
-const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCommunityId, showTitleOnMobile=true}) => {
+const CommunitySelect: FC<CommunityProps> = ({
+    isNav,
+    isOpen,
+    setOpen,
+    selectedCommunityId,
+    showTitleOnMobile=true
+}) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.user)
@@ -31,6 +37,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
         ref: communityMenuRef,
         handler: () => isOpen && setOpen(!isOpen)
       });
+
 
     const getCommunityList = async () => {
         const res = await getCommunities()

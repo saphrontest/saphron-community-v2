@@ -26,7 +26,7 @@ const RoutesArray = [
   { path: `${base}/submit`, component: Submit },
   { path: `${base}/submit/:communityId`, component: Submit },
   { path: `${base}/community-detail/:id`, component: CommunityDetail },
-  { path: `${base}/post/:slug`, component: PostDetail },
+  { path: `${base}/post/:slugId/:slug`, component: PostDetail },
   { path: `${base}/saved-posts`, component: SavedPosts },
   { path: `${base}/profile`, component: Profile },
   { path: `${base}/search`, component: SearchPage },

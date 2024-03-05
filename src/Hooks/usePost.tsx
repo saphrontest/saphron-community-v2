@@ -86,7 +86,7 @@ const usePost = () => {
   ) => {
     
     const newPostId = md5(`${title}.${moment().toString()}`)
-    const slugId = md5(newPostId).slice(0,3)
+    const slugId = md5(newPostId).slice(0,4)
     const slug = createSlug(title)
     
     try {

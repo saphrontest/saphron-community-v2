@@ -11,7 +11,7 @@ import { Flex } from '@chakra-ui/react'
 import { setSelectedCommunity } from '../redux/slices/communitySlice'
 
 const PostDetail = () => {
-  const { slug } = useParams()
+  const { slugId, slug } = useParams()
   const dispatch = useDispatch()
   const [post, setPost] = useState<IPost | null>(null)
   const [comments, setComments] = useState<(Comment | null)[]>()

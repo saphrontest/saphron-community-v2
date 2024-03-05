@@ -1,9 +1,11 @@
 import { deleteObject, getDownloadURL, ref, uploadString } from "firebase/storage";
 import { Community, IPost, IUser } from "../Interface";
 import { firestore, storage } from "../firebaseClient";
-import { addDoc, collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, increment, setDoc, updateDoc, writeBatch } from "firebase/firestore";
+import { Transaction, collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, increment, runTransaction, setDoc, updateDoc, writeBatch } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
 import { createSlug } from "../Helpers";
+import md5 from "md5";
+import moment from "moment";
 
 const usePost = () => {
   const params = useParams()
@@ -82,33 +84,43 @@ const usePost = () => {
     community: Community,
     imageFile?: string,
   ) => {
+    
+    const newPostId = md5(`${title}.${moment().toString()}`)
+    const slugId = md5(newPostId).slice(0,3)
+    const slug = createSlug(title)
+    
     try {
-      const postDocRef = await addDoc(collection(firestore, "posts"), {
-        body,
-        title: title,
-        communityId: community.id,
-        communityImageUrl: community.imageURL || "",
-        creatorId: user?.id,
-        userDisplayText: user.username,
-        numberOfComments: 0,
-        voteStatus: 0,
-        createdAt: new Date().toString(),
-        editedAt: new Date().toString(),
-        slug: createSlug(title)
+      const newPostDocRef = doc(firestore, "posts", newPostId)
+      await runTransaction(firestore, async (transaction: Transaction) => {
+        transaction.set(newPostDocRef, {
+          body,
+          title: title,
+          communityId: community.id,
+          communityImageUrl: community.imageURL || "",
+          creatorId: user?.id,
+          userDisplayText: user.username,
+          numberOfComments: 0,
+          voteStatus: 0,
+          createdAt: new Date().toString(),
+          editedAt: new Date().toString(),
+          slug,
+          slugId 
+        })
       })
 
       if (imageFile) {
-        const imageRef = ref(storage, `posts/${postDocRef.id}/image`);
+        const imageRef = ref(storage, `posts/${newPostId}/image`);
         await uploadString(imageRef, imageFile, "data_url")
         const downloadURL = await getDownloadURL(imageRef)
-        await updateDoc(postDocRef, {
+        await updateDoc(newPostDocRef, {
           imageURL: downloadURL
         })
       }
+
     } catch (error) {
       console.log("on create post", error)
     } finally {
-      navigate(`/community/post/${createSlug(title)}`)
+      navigate(`/community/post/${slugId}/${createSlug(title)}`)
     }
   }
 

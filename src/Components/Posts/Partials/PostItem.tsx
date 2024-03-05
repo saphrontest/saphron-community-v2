@@ -160,7 +160,7 @@ const PostItem: FC<PostItemContentProps> = ({
       cursor={"pointer"}
       _hover={{ borderColor: "gray.500" }}
       mb={1}
-      onClick={() => navigate(`/community/post/${post.slug}`)}
+      onClick={() => navigate(`/community/post/${post.slugId}/${post.slug}`)}
     >
       <VoteComponent
       userVote={userVote}

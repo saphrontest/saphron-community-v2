@@ -56,15 +56,6 @@ export const getCommunities = async () => {
   return communities;
 };
 
-export const getPosts = async () => {
-  const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
-  const postDocs = await getDocs(q);
-  const posts = postDocs.docs.map((doc) => {
-    return { id: doc.id, ...doc.data() } as IPost;
-  });
-  store.dispatch(setPosts(posts))
-};
-
 export const getPostsByCommunities = async (id: string) => {
   const posts: IPost[] = [];
   const postsDoc = await fetch.getListWhere(
@@ -180,30 +171,6 @@ export const getCommentVotesByUserId = async (id: string) => {
   return [];
 };
 
-export const getUserSavedPosts = async (userId: string) => {
-  // Construct a reference to the subcollection
-  const savedUsersCollectionRef = collection(firestore, "users", userId, "savedPosts");
-
-  // Create a query to retrieve all documents in the subcollection
-  const q = query(savedUsersCollectionRef);
-
-  // Try to get the documents in the subcollection
-  getDocs(q)
-    .then((querySnapshot: any) => {
-      const savedPosts: any[] = []
-      querySnapshot.forEach((docSnapshot: any) => {
-        // Access each document's data using docSnapshot.data()
-        const data = docSnapshot.data();
-        const { createdAt: {nanoseconds, seconds}, ...postData} = data
-        savedPosts.push({ ...postData, createdAt: { nanoseconds, seconds } });
-      });
-      store.dispatch(setSavedPosts(savedPosts))
-    })
-    .catch((error) => {
-      console.error("Error getting documents:", error);
-    });
-};
-
 export const getUserCommunities = async (userId: string) => {
   const userCommunitiesCollection = collection(firestore, "users", userId, "communities");
   const q = query(userCommunitiesCollection);
@@ -249,15 +216,6 @@ export const searchPost = async (keyword: string) => {
   });
   const results = [...bodyResults, ...titleResults];
   return results
-}
-
-export const getPostsByUser = async (creatorId: string) => {
-  const posts: IPost[] = []
-  const postsDoc = await fetch.getListWhere("posts", where("creatorId", "==", creatorId))
-  postsDoc.docs.forEach((doc) => {
-    posts.push({ id: doc.id, ...doc.data() } as IPost);
-  });
-  return posts;
 }
 
 const generateUsername = (email: string) => {

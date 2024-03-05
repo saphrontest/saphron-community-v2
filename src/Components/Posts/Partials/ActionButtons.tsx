@@ -5,7 +5,6 @@ import { IoBookmarkOutline, IoBookmarkSharp } from 'react-icons/io5'
 import { IPost } from '../../../Interface'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserSavedPosts, } from '../../../Helpers/apiFunctions'
 import { setModal } from '../../../redux/slices/modalSlice'
 import { BsChat } from 'react-icons/bs'
 import { RootState } from '../../../redux/store'
@@ -18,12 +17,13 @@ interface ActionButtonsInterface {
     isDeleteLoading: boolean;
 }
 
-const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete, isDeleteLoading}) => {
+//TODO: WORK ON POST STATE && SAVED POSTS
 
+const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete, isDeleteLoading}) => {
     const toast = useToast()
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const {onSave: savePost} = usePost()
+    const {onSave: savePost, getSavedPostsByUser} = usePost()
     const user = useSelector((state: RootState) => state.user)
     const [isSaveLoading, setSaveLoading] = useState(false)
 
@@ -43,7 +43,7 @@ const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete,
         setSaveLoading(true)
         savePost(post, user.id)
             .finally(() => {
-                getUserSavedPosts(user?.id as string)
+                getSavedPostsByUser(user?.id as string)
                 setSaveLoading(false)
             })
       }

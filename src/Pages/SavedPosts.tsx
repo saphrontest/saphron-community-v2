@@ -6,15 +6,15 @@ import { Meta, NoEntry, PersonalHome, PostItem } from '../Components'
 import { IPost, Community } from '../Interface'
 import { Box, Text, useToast } from '@chakra-ui/react'
 import { setModal } from '../redux/slices/modalSlice'
-import { getUserSavedPosts } from '../Helpers/apiFunctions'
-
+import { usePost } from '../Hooks'
+//TODO: WORK ON POST STATE && SAVED POSTS
 const SavedPosts = () => {
+    const {getSavedPostsByUser} = usePost()
     const user = useSelector((state: RootState) => state.user)
     const toast = useToast()
     const dispatch = useDispatch()
     const [reloadPost, setReloadPost] = useState(false)
     const {communities} = useSelector((state: RootState) => state.community)
-    const {savedPosts} = useSelector((state: RootState) => state.post)
 
     useEffect(() => {
 
@@ -35,14 +35,15 @@ const SavedPosts = () => {
 
     useEffect(() => {
         if(reloadPost) {
-            getUserSavedPosts(user?.id as string)
+            getSavedPostsByUser(user?.id as string)
+              .then(result => console.log(result))
               .finally(() => setReloadPost(false))
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reloadPost])
     
     useEffect(() => {
-        getUserSavedPosts(user?.id as string)
+        getSavedPostsByUser(user?.id as string)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -53,7 +54,7 @@ const SavedPosts = () => {
           title={'Saphron Health | Saved Post'}
           description='Saved Post'
         />
-        {
+        {/* {
           savedPosts.length ? (
             <>
               <Box p="14px 0px" >
@@ -70,7 +71,7 @@ const SavedPosts = () => {
             </>
           )
             : <NoEntry type="saved post" />
-        }
+        } */}
       </>
       <>
         <PersonalHome />

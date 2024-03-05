@@ -1,7 +1,7 @@
 import { deleteObject, getDownloadURL, ref, uploadString } from "firebase/storage";
 import { Community, IPost, IUser } from "../Interface";
 import { firestore, storage } from "../firebaseClient";
-import { Transaction, collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, increment, runTransaction, setDoc, updateDoc, writeBatch } from "firebase/firestore";
+import { Transaction, collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, increment, orderBy, query, runTransaction, setDoc, updateDoc, where, writeBatch } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
 import { createSlug } from "../Helpers";
 import md5 from "md5";
@@ -253,12 +253,58 @@ const usePost = () => {
     batch.commit()
   }
 
+  const getPosts = async () => {
+    const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
+    const postDocs = await getDocs(q);
+    const posts = postDocs.docs.map((doc) => {
+      return { id: doc.id, ...doc.data() } as IPost;
+    });
+    return posts
+  };
+
+  const getPostsByUser = async (creatorId: string) => {
+    const posts: IPost[] = []
+    const postsDoc = await getDocs(query(collection(firestore, "posts"), where("creatorId", "==", creatorId)));
+    postsDoc.docs.forEach((doc) => {
+      posts.push({ id: doc.id, ...doc.data() } as IPost);
+    });
+    return posts;
+  }
+
+  //TODO: WORK ON POST STATE && SAVED POSTS
+  const getSavedPostsByUser = async (userId: string) => {
+    // Construct a reference to the subcollection
+    const savedUsersCollectionRef = collection(firestore, "users", userId, "savedPosts");
+  
+    // Create a query to retrieve all documents in the subcollection
+    const q = query(savedUsersCollectionRef);
+  
+    // Try to get the documents in the subcollection
+    getDocs(q)
+      .then((querySnapshot: any) => {
+        const savedPosts: any[] = []
+        querySnapshot.forEach((docSnapshot: any) => {
+          // Access each document's data using docSnapshot.data()
+          const data = docSnapshot.data();
+          const { createdAt: {nanoseconds, seconds}, ...postData} = data
+          savedPosts.push({ ...postData, createdAt: { nanoseconds, seconds } });
+        });
+        return savedPosts
+      })
+      .catch((error) => {
+        console.error("Error getting documents:", error);
+      });
+  };
+
   return {
     onSave,
     onDelete,
     onCreate,
     createComment,
-    deleteComment
+    deleteComment,
+    getPosts,
+    getPostsByUser,
+    getSavedPostsByUser
   }
 }
 

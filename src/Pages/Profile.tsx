@@ -3,15 +3,16 @@ import { PageLayout } from '../Layouts'
 import { Box, Stack, useMediaQuery } from '@chakra-ui/react'
 import { Meta, MyCommunities, Nav, NoEntry, PostItem } from '../Components'
 import { ProfileHeader } from '../Components/Profile'
-import { getPostsByUser } from '../Helpers/apiFunctions'
 import { IPost, Community } from '../Interface'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import NotFoundUserPic from '../assets/images/user.png'
+import { usePost } from '../Hooks'
 
 const Profile = () => {
 
   const [isSmallerThan485] = useMediaQuery('(max-width: 485px)')
+  const {getPostsByUser} = usePost()
 
   const user = useSelector((state: RootState) => state.user)
   const { communities } = useSelector((state: RootState) => state.community)

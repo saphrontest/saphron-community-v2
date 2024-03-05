@@ -11,7 +11,7 @@ import { Flex } from '@chakra-ui/react'
 import { setSelectedCommunity } from '../redux/slices/communitySlice'
 
 const PostDetail = () => {
-  const { slugId, slug } = useParams()
+  const { slugId } = useParams()
   const dispatch = useDispatch()
   const [post, setPost] = useState<IPost | null>(null)
   const [comments, setComments] = useState<(Comment | null)[]>()
@@ -19,8 +19,9 @@ const PostDetail = () => {
   const { communities } = useSelector((state: RootState) => state.community)
   const isPageLoading = !(!!post && !!comments)
 
-  const getPost = async (slug: string) => {
-    const postDetail = await getPostDetails(slug)
+
+  const getPost = async (slugId: string) => {
+    const postDetail = await getPostDetails(slugId)
     setPost(postDetail as IPost)
   }
 
@@ -31,13 +32,13 @@ const PostDetail = () => {
 
   const getAll = async () => {
     getComments(post?.id as string)
-    getPost(slug as string)
+    getPost(slugId as string)
   }
 
   useEffect(() => {
-    slug && getPost(slug as string)
+    slugId && getPost(slugId as string)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug])
+  }, [slugId])
 
   useEffect(() => {
     post?.id && getComments(post.id as string)

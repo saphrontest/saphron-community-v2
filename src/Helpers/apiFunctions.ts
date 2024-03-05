@@ -60,20 +60,7 @@ export const getPosts = async () => {
   const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
   const postDocs = await getDocs(q);
   const posts = postDocs.docs.map((doc) => {
-    return {
-      id: doc.id,
-      createdAt: doc.data().createdAt,
-      editedAt: doc.data().editedAt,
-      body: doc.data().body,
-      communityId: doc.data().communityId,
-      communityImageURL: doc.data().communityImageURL,
-      creatorId: doc.data().creatorId,
-      numberOfComments: doc.data().numberOfComments,
-      title: doc.data().title,
-      userDisplayText: doc.data().userDisplayText,
-      voteStatus: doc.data().voteStatus,
-      slug: doc.data().slug
-    };
+    return { id: doc.id, ...doc.data() } as IPost;
   });
   store.dispatch(setPosts(posts))
 };
@@ -90,9 +77,9 @@ export const getPostsByCommunities = async (id: string) => {
   return posts;
 };
 
-export const getPostDetails = async (slug: string) => {
+export const getPostDetails = async (slugId: string) => {
   let post = {}
-  const q = query(collection(firestore, "posts"), where("slug", "==", slug));
+  const q = query(collection(firestore, "posts"), where("slugId", "==", slugId));
   const data = await getDocs(q);
   data.forEach(doc => post = { id: doc.id, ...doc.data() } as IPost)
   return post

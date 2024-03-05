@@ -1,5 +1,3 @@
-import { Timestamp } from "firebase/firestore";
-
 export type IPost = {
   id: string;
   communityId: string;
@@ -16,8 +14,8 @@ export type IPost = {
   };
   imageURL?: string;
   postIdx?: number;
-  createdAt?: Timestamp;
-  editedAt?: Timestamp;
+  createdAt?: string;
+  editedAt?: string;
   slug?: string;
 };
 

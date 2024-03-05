@@ -4,6 +4,7 @@ import { firestore, storage } from "../firebaseClient";
 import { addDoc, collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, increment, setDoc, updateDoc, writeBatch } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
 import { createSlug } from "../Helpers";
+import moment from "moment";
 
 const usePost = () => {
   const params = useParams()
@@ -92,8 +93,8 @@ const usePost = () => {
         userDisplayText: user.username,
         numberOfComments: 0,
         voteStatus: 0,
-        createdAt: new Date().toString(),
-        editedAt: new Date().toString(),
+        createdAt: moment().toString(),
+        editedAt: moment().toString(),
         slug: createSlug(title)
       })
 

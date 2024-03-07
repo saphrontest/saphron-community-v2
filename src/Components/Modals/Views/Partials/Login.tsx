@@ -6,7 +6,7 @@ import { InputItem } from "../../../../Layouts";
 import { useDispatch } from "react-redux";
 import { setModal } from "../../../../redux/slices/modalSlice";
 import { ModalViewTypes } from "../../../../Interface";
-import { getUser } from "../../../../Helpers/apiFunctions";
+import { getUser, checkDeletedUserByEmail } from "../../../../Helpers/apiFunctions";
 
 type LoginProps = {
 };
@@ -32,12 +32,16 @@ const Login: React.FC<LoginProps> = () => {
       return setFormError("Please enter a valid email");
     }
 
-    // Valid form inputs
-    signInWithEmailAndPassword(form.email, form.password);
-    if(error){
-      setFormError("Invalid email or password!");
-    }else{
-      setLoginSuccess(true)
+    const isDeleted = await checkDeletedUserByEmail(form.email)
+
+    if(!isDeleted) {
+      // Valid form inputs
+      signInWithEmailAndPassword(form.email, form.password);
+      if(error){
+        setFormError("Invalid email or password!");
+      }else{
+        setLoginSuccess(true)
+      }
     }
   };
 

@@ -14,7 +14,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 // INTERFACES
-import { Community, JoinedCommunity, IPost, IPostVote, Comment, CommentVote } from "../Interface";
+import { Community, JoinedCommunity, IPost, IPostVote, Comment, CommentVote, IUser } from "../Interface";
 import { store } from "../redux/store";
 import { setPosts, setSavedPosts } from "../redux/slices/postSlice";
 import { User } from "firebase/auth";
@@ -190,12 +190,12 @@ export const getUserSavedPosts = async (userId: string) => {
   // Try to get the documents in the subcollection
   getDocs(q)
     .then((querySnapshot: any) => {
-      const savedPosts: any[] = []
+      const savedPosts: IPost[] = []
       querySnapshot.forEach((docSnapshot: any) => {
         // Access each document's data using docSnapshot.data()
         const data = docSnapshot.data();
-        const { createdAt: {nanoseconds, seconds}, ...postData} = data
-        savedPosts.push({ ...postData, createdAt: { nanoseconds, seconds } });
+        const { createdAt, ...postData} = data
+        savedPosts.push({ ...postData, createdAt });
       });
       store.dispatch(setSavedPosts(savedPosts))
     })
@@ -321,5 +321,21 @@ export const getUser = async (userId: string) => {
     }
   } catch (error) {
     console.error(error)
+  }
+}
+
+export const checkDeletedUserByEmail = async (email: string): Promise<boolean> => {
+  let user: IUser | undefined
+  try {
+    const usersCollectionRef = collection(firestore, 'users');
+    const q = query(usersCollectionRef, where('email', '==', email));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.docs.forEach(doc => {
+      user = { id: doc.id , ...doc.data() } as IUser
+    });
+    return  user?.isDeleted ?? false
+  } catch (error) {
+    console.error(error)
+    return false
   }
 }

@@ -1,8 +1,7 @@
-import React from 'react'
-import { PageLayout } from '../Layouts'
-import { Meta } from '../Components'
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Flex, Text } from '@chakra-ui/react'
 import { useLocation } from 'react-router-dom'
+import { PageLayout } from '../Layouts'
+import { Meta } from '../Components'
 
 const Policies = () => {
     const location = useLocation().pathname.split('/')[1]

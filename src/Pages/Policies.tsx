@@ -14,6 +14,7 @@ import { Meta } from '../Components'
 
 const Policies = () => {
     const location = useLocation().pathname.split('/')[1]
+    const contact = "app@saphronhealth.com"
     return (
         <PageLayout showWorkshops={true} showGroupChats={true} leftWidth='100%'>
             <Flex bg="white" width="100%" direction="column" textAlign="left" fontSize={"18px"} height="calc(100vh - 100px)">
@@ -94,7 +95,7 @@ const Policies = () => {
                                 7. Contact Us
                             </Text>
                             <Text>
-                                If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us at <strong>app@saphronhealth.com</strong>.
+                                If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us at <strong>{contact}</strong>.
                             </Text>
                         </AccordionPanel>
                     </AccordionItem>
@@ -162,7 +163,7 @@ const Policies = () => {
                                 7. Contact Us
                             </Text>
                             <Text>
-                                If you have any questions or concerns about these Terms, please contact us at [Your Contact Information].
+                                If you have any questions or concerns about these Terms, please contact us at <strong>{contact}</strong>.
                             </Text>
                         </AccordionPanel>
                     </AccordionItem>

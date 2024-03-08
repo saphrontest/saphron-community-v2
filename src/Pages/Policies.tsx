@@ -1,4 +1,13 @@
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Flex, Text } from '@chakra-ui/react'
+import {
+    Box,
+    Flex,
+    Text,
+    Accordion,
+    AccordionButton,
+    AccordionIcon,
+    AccordionItem,
+    AccordionPanel
+} from '@chakra-ui/react'
 import { useLocation } from 'react-router-dom'
 import { PageLayout } from '../Layouts'
 import { Meta } from '../Components'

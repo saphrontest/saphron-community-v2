@@ -13,7 +13,8 @@ import {
   MyWorkshopsPage,
   MySupportGroups,
   CommunityDetail,
-  SupportGroupDetailPage
+  SupportGroupDetailPage,
+  Policies
 } from './Pages'
 
 const base = "community"
@@ -37,6 +38,8 @@ const RoutesArray = [
   { path: "support-groups", component: SupportGroups },
   { path: "support-groups/:slug", component: SupportGroupDetailPage },
   { path: "my-support-groups", component: MySupportGroups },
+  { path: "privacy-policy", component: Policies },
+  { path: "terms-conditions", component: Policies },
 ]
 
 const Router = () => {

@@ -7,8 +7,8 @@ const SideBar = () => {
     const Links = [
       {id: 0, name: "about", link: "/about"},
       {id: 1, name: "careers", link: ""},
-      {id: 2, name: "terms", link: ""},
-      {id: 3, name: "privacy", link: ""}
+      {id: 2, name: "terms", link: "/terms-conditions"},
+      {id: 3, name: "privacy", link: "/privacy-policy"}
     ]
   
     return (

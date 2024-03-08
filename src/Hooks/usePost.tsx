@@ -1,7 +1,7 @@
 import { deleteObject, getDownloadURL, ref, uploadString } from "firebase/storage";
 import { Community, IPost, IUser } from "../Interface";
 import { firestore, storage } from "../firebaseClient";
-import { Transaction, collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, increment, runTransaction, setDoc, updateDoc, writeBatch } from "firebase/firestore";
+import { Transaction, collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, increment, orderBy, query, runTransaction, setDoc, updateDoc, writeBatch } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
 import { createSlug } from "../Helpers";
 import md5 from "md5";
@@ -253,10 +253,27 @@ const usePost = () => {
     batch.commit()
   }
 
+  /**
+   * The function `getPosts` retrieves posts from a Firestore collection ordered by creation date in
+   * ascending order.
+   * @returns The `getPosts` function is returning an array of post objects, where each post object
+   * contains an `id` property representing the document ID and all the data from the Firestore
+   * document (post data) as properties. The type of each post object is specified as `IPost`.
+   */
+  const getPosts = async () => {
+    const q = query(collection(firestore, "posts"), orderBy('createdAt', 'asc'));
+    const postDocs = await getDocs(q);
+    const posts = postDocs.docs.map((doc) => {
+      return { id: doc.id, ...doc.data() } as IPost;
+    });
+    return posts
+  };
+
   return {
     onSave,
     onDelete,
     onCreate,
+    getPosts,
     createComment,
     deleteComment
   }

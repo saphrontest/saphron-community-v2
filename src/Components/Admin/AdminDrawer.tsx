@@ -3,8 +3,7 @@ import { useRef } from "react"
 import { IoMenu } from "react-icons/io5"
 import { MdOutlineEvent, MdOutlineGroups3 } from "react-icons/md"
 import { BsPostcardHeart } from "react-icons/bs";
-import { IoMdPerson } from "react-icons/io";
-import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowForward, IoMdPerson } from "react-icons/io";
 import { Link } from "react-router-dom";
 
 

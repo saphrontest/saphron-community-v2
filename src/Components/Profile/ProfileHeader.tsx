@@ -6,7 +6,7 @@ import { setModal } from '../../redux/slices/modalSlice';
 import menthalHealth from '../../assets/images/menthal.jpg'
 import { sendEmailVerification } from 'firebase/auth';
 import { auth, firestore } from '../../firebaseClient';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { useAuthState, useDeleteUser } from 'react-firebase-hooks/auth';
 import { getUser, updateUser } from '../../Helpers/apiFunctions';
 import { VscAccount } from 'react-icons/vsc';
 import { IoSettingsSharp } from "react-icons/io5";
@@ -14,6 +14,11 @@ import { TiUserDelete } from "react-icons/ti";
 import { DeleteAlert } from '../Platform';
 import { RootState } from '../../redux/store';
 import { Transaction, doc, runTransaction } from 'firebase/firestore';
+import { logoutUser } from '../../redux/slices/userSlice';
+import { resetCommunities } from '../../redux/slices/communitySlice';
+import { resetPosts } from '../../redux/slices/postSlice';
+import { useNavigate } from 'react-router-dom';
+import { signOut } from "firebase/auth";
 
 interface ProfileHeaderProps {
     name: string;
@@ -25,9 +30,11 @@ interface ProfileHeaderProps {
 }
 
 const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profilePhoto, coverPhoto, isEmailVerified }) => {
-    const dispatch = useDispatch()
     const toast = useToast()
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const [user] = useAuthState(auth)
+    const [deleteUser] = useDeleteUser(auth)
 
     const userFromDB = useSelector((state: RootState) => state.user )
     
@@ -37,22 +44,43 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
         user && await sendEmailVerification(user)
     }
 
-    const handleDeleteUser = () => {
-        console.log(user)
-                try {
-                    runTransaction(firestore, async (transaction: Transaction) => {
-                        transaction.update(doc(firestore, `users/${userFromDB.id}`), {
-                            isDeleted: true
-                        })
-                    })
-                } catch (error) {
-                    console.error("catch: ", error)
+    const handleDeleteUser = async () => {
+        deleteUser().then(success => {
+            
+            if(!success) {
+                toast({
+                    title: "Please try again later!",
+                    status: "error",
+                    isClosable: true,
+                })
+                return;
+            }
+
+            try {
+                runTransaction(firestore, async (transaction: Transaction) => {
+                    transaction.delete(doc(firestore, `users/${userFromDB.id}`))
+                }).then(() => {
                     toast({
-                        title: "Please try again later!",
-                        status: "error",
+                        title: "User deleted successfully!",
+                        status: "success",
                         isClosable: true,
                     })
-                }
+                    signOut(auth)
+                    toggleDeleteUserAlertOpen()
+                    dispatch(logoutUser())
+                    dispatch(resetCommunities())
+                    dispatch(resetPosts())
+                    navigate("/community")
+                })
+            } catch (error) {
+                console.error("catch: ", error)
+                toast({
+                    title: "Please try again later!",
+                    status: "error",
+                    isClosable: true,
+                })
+            }
+        })
     }
 
     useEffect(() => {
@@ -118,7 +146,6 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
                                     height={"fit-content"}
                                     width="fit-content"
                                     cursor={"pointer"}
-                                    onClick={() => console.log("profile settings")}
                                     _hover={{ backgroundColor: "gray.300" }}
                                 >
                                     <IoSettingsSharp size={24} fill='#718096' />

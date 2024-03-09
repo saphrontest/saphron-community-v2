@@ -254,34 +254,35 @@ const usePost = () => {
     batch.commit()
   }
 
-  /**
-   * The function `getPosts` retrieves posts from a Firestore collection ordered by creation date in
-   * ascending order.
-   * @returns The `getPosts` function is returning an array of post objects, where each post object
-   * contains an `id` property representing the document ID and all the data from the Firestore
-   * document (post data) as properties. The type of each post object is specified as `IPost`.
-   */
+  const checkBlocked = async  (postCreatorId: string) => {
+    if(store.getState().user.id) {
+      const blocked = await getBlockedUsersByUserId(store.getState().user.id);
+      return blocked.some(blockedUser => blockedUser.userId === postCreatorId); 
+    }else{
+      return false
+    }
+  }
+  
   const getPosts = async (getAll=false) => {
     const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
-  const postDocs = await getDocs(q);
-
-  // Define a function to get blocked users and filter posts
-  const getPosts = async (doc: any) => {
-    if (!getAll) {
-      const blocked = await getBlockedUsersByUserId(store.getState().user.id);
-      const isBlocked = blocked.some(blockedUser => blockedUser.userId === doc.data().creatorId); 
-      if (isBlocked) {
-        return { id: doc.id, isBlocked: true, ...doc.data() } as IPost;
+    const postDocs = await getDocs(q);
+  
+    // Define a function to get blocked users and filter posts
+    const getPosts = async (doc: any) => {
+      if (!getAll) {
+        const isBlocked = await checkBlocked(doc.data().creatorId)
+        if (isBlocked) {
+          return { id: doc.id, isBlocked: true, ...doc.data() } as IPost | { isBlocked: boolean; };
+        }
+        return { id: doc.id, ...doc.data() } as IPost
       }
       return { id: doc.id, ...doc.data() } as IPost
-      
-    }
-  };
-
-  // Use Promise.all to await all asynchronous operations
-  const posts = await Promise.all(postDocs.docs.map(getPosts));
-
-  return posts as IPost[]
+    };
+  
+    // Use Promise.all to await all asynchronous operations
+    const posts = await Promise.all(postDocs.docs.map(getPosts));
+  
+    return posts
   };
 
   return {

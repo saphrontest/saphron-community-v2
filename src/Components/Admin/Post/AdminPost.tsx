@@ -17,8 +17,8 @@ const AdminPost = () => {
     useEffect(() => {
         const getAllPosts = true
         getPosts(getAllPosts).then(result => {
-            setPosts(result)
-            setFilteredPosts(result)
+            setPosts(result as IPost[])
+            setFilteredPosts(result as IPost[])
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -26,8 +26,8 @@ const AdminPost = () => {
     useEffect(() => {
         const getAllPosts = true
         reloadPosts && getPosts(getAllPosts).then(result => {
-            setPosts(result)
-            setFilteredPosts(result)
+            setPosts(result as IPost[])
+            setFilteredPosts(result as IPost[])
         }).finally(() => setReloadPosts(false))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reloadPosts])

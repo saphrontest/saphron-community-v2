@@ -3,9 +3,10 @@ import { Community, IPost, IUser } from "../Interface";
 import { firestore, storage } from "../firebaseClient";
 import { Transaction, collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, increment, orderBy, query, runTransaction, setDoc, updateDoc, writeBatch } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
-import { createSlug } from "../Helpers";
+import { createSlug, getBlockedUsersByUserId } from "../Helpers";
 import md5 from "md5";
 import moment from "moment";
+import { store } from "../redux/store";
 
 const usePost = () => {
   const params = useParams()
@@ -260,13 +261,27 @@ const usePost = () => {
    * contains an `id` property representing the document ID and all the data from the Firestore
    * document (post data) as properties. The type of each post object is specified as `IPost`.
    */
-  const getPosts = async () => {
-    const q = query(collection(firestore, "posts"), orderBy('createdAt', 'asc'));
-    const postDocs = await getDocs(q);
-    const posts = postDocs.docs.map((doc) => {
-      return { id: doc.id, ...doc.data() } as IPost;
-    });
-    return posts
+  const getPosts = async (getAll=false) => {
+    const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
+  const postDocs = await getDocs(q);
+
+  // Define a function to get blocked users and filter posts
+  const getPosts = async (doc: any) => {
+    if (!getAll) {
+      const blocked = await getBlockedUsersByUserId(store.getState().user.id);
+      const isBlocked = blocked.some(blockedUser => blockedUser.userId === doc.data().creatorId); 
+      if (isBlocked) {
+        return { id: doc.id, isBlocked: true, ...doc.data() } as IPost;
+      }
+      return { id: doc.id, ...doc.data() } as IPost
+      
+    }
+  };
+
+  // Use Promise.all to await all asynchronous operations
+  const posts = await Promise.all(postDocs.docs.map(getPosts));
+
+  return posts as IPost[]
   };
 
   return {

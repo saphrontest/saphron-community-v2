@@ -56,12 +56,27 @@ export const getCommunities = async () => {
   return communities;
 };
 
-export const getPosts = async () => {
+export const getPosts = async (getAll=false) => {
   const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
   const postDocs = await getDocs(q);
-  const posts = postDocs.docs.map((doc) => {
-    return { id: doc.id, ...doc.data() } as IPost;
-  });
+
+  // Define a function to get blocked users and filter posts
+  const getPosts = async (doc: any) => {
+    if (!getAll) {
+      const blocked = await getBlockedUsersByUserId(store.getState().user.id);
+      const isBlocked = blocked.some(blockedUser => blockedUser.userId === doc.data().creatorId); 
+      if (isBlocked) {
+        return { id: doc.id, isBlocked: true, ...doc.data() } as IPost | { isBlocked: boolean; };
+      }
+      return { id: doc.id, ...doc.data() } as IPost
+      
+    }
+
+  };
+
+  // Use Promise.all to await all asynchronous operations
+  const posts = await Promise.all(postDocs.docs.map(getPosts));
+
   store.dispatch(setPosts(posts))
 };
 
@@ -322,4 +337,16 @@ export const getUser = async (userId: string) => {
   } catch (error) {
     console.error(error)
   }
+}
+
+export const getBlockedUsersByUserId = async (userId: string) => {
+  type IBlocked = {date: string; userId: string}
+  const blocked: IBlocked[] = []
+  const blockedDoc = query(collection(firestore, `users/${userId}/blockedUsers`))
+  const docSnapshot = await getDocs(blockedDoc)
+  docSnapshot.docs.forEach(doc => {
+    const data = doc.data()
+    blocked.push(data as IBlocked)
+  })
+  return blocked
 }

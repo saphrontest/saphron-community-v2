@@ -18,13 +18,15 @@ export type PostItemContentProps = {
   homePage?: boolean;
   communityName: string;
   setReloadPost: ( isReload:boolean ) => void;
+  isDashboard?: boolean;
 };
 
 const PostItem: FC<PostItemContentProps> = ({
   post,
   homePage,
   communityName,
-  setReloadPost
+  setReloadPost,
+  isDashboard=false
 }) => {
   const toast = useToast()
   const navigate = useNavigate()
@@ -153,20 +155,20 @@ const PostItem: FC<PostItemContentProps> = ({
   return (
     <Flex
       border="1px solid"
-      bg="white"
+      bg={isDashboard ? "gray.50" : "white"}
       borderColor={"gray.300"}
       borderRadius={4}
       cursor={"pointer"}
       _hover={{ borderColor: "gray.500" }}
       mb={1}
-      onClick={() => navigate(`/community/post/${post.slug}`)}
+      onClick={() => navigate(`/community/post/${post.slugId}/${post.slug}`)}
     >
-      <VoteComponent
+      {!isDashboard && <VoteComponent
       userVote={userVote}
       onVote={onVote}
       post={post}
       isVoteLoading={isVoteLoading}
-      />
+      />}
       <Flex direction="column" width="100%">
         <PostContent
         post={post}
@@ -177,6 +179,7 @@ const PostItem: FC<PostItemContentProps> = ({
         isSaved={isSaved}
         handleDelete={handleDelete}
         isDeleteLoading={isDeleteLoading}
+        isDashboard={isDashboard}
         />
       </Flex>
     </Flex>

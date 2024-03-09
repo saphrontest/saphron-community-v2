@@ -14,7 +14,7 @@ const SearchResultsItem: FC<SearchResultsItemProps> = ({item}) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const onItemClick = () => {
-    navigate(`/community/post/${item.slug}`)
+    navigate(`/community/post/${item.slugId}/${item.slug}`)
     dispatch(setRecentSearches(item))
   }
   return (

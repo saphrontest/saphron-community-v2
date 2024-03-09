@@ -19,7 +19,13 @@ interface CommunityProps {
     showTitleOnMobile?: boolean;
 }
 
-const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCommunityId, showTitleOnMobile=true}) => {
+const CommunitySelect: FC<CommunityProps> = ({
+    isNav,
+    isOpen,
+    setOpen,
+    selectedCommunityId,
+    showTitleOnMobile=true
+}) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.user)
@@ -32,6 +38,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
         handler: () => isOpen && setOpen(!isOpen)
       });
 
+
     const getCommunityList = async () => {
         const res = await getCommunities()
         const communityList = [
@@ -40,7 +47,7 @@ const CommunitySelect: FC<CommunityProps> = ({isOpen, setOpen, isNav, selectedCo
                  name,
                  creatorId,
                  privacyType,
-                 createdAt: { seconds: createdAt?.seconds, nanoseconds: createdAt?.nanoseconds }
+                 createdAt
                 }))
             ]
         dispatch(setCommunities(communityList as Community[]))

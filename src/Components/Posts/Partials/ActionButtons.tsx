@@ -16,9 +16,10 @@ interface ActionButtonsInterface {
     isSaved: boolean;
     handleDelete: (post: IPost) => Promise<boolean>;
     isDeleteLoading: boolean;
+    isDashboard?: boolean;
 }
 
-const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete, isDeleteLoading}) => {
+const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete, isDeleteLoading, isDashboard = false}) => {
 
     const toast = useToast()
     const navigate = useNavigate()
@@ -46,20 +47,21 @@ const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete,
                 setSaveLoading(false)
             })
       }
+
     return (
         <Flex ml={1} mb={0.5} color="gray.500" fontWeight={600}>
-            <Flex
+            {!isDashboard && <Flex
                 align="center"
                 p="8px 10px"
                 borderRadius={4}
                 _hover={{ bg: "gray.200" }}
                 cursor="pointer"
-                onClick={() => navigate(`/community/post/${post.slug}`)}
+                onClick={() => navigate(`/community/post/${post.slugId}/${post.slug}`)}
             >
                 <Icon as={BsChat} mr={2} />
                 <Text fontSize="9pt" textAlign={"left"}>{post.numberOfComments}</Text>
-            </Flex>
-            {user.id && (
+            </Flex>}
+            {(user.id && !isDashboard) && (
                 <Flex
                 align="center"
                 p="8px 10px"
@@ -76,7 +78,7 @@ const ActionButtons :FC<ActionButtonsInterface> = ({post, isSaved, handleDelete,
                     )}
                 </Flex>
             )}
-            {user?.id === post.creatorId && <Flex
+            {(isDashboard || user?.id === post.creatorId) && <Flex
                 align="center"
                 p="8px 10px"
                 borderRadius={4}

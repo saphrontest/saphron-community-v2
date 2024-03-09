@@ -1,5 +1,3 @@
-import { Timestamp } from "firebase/firestore";
-
 export type Comment = {
     id?: string;
     creatorId: string;
@@ -9,7 +7,7 @@ export type Comment = {
     postId: string;
     postTitle: string;
     text: string;
-    createdAt?: Timestamp;
+    createdAt?: string;
     voteValue?: number;
   }
 

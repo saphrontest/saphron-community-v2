@@ -1,4 +1,4 @@
-import { Box, Flex, Icon, Image, Text } from '@chakra-ui/react'
+import { Box, Container, Flex, Icon, Image, Text } from '@chakra-ui/react'
 import { FC, useEffect } from 'react'
 import { SCEditButton } from '../SCElements';
 import { useDispatch } from 'react-redux';
@@ -42,50 +42,49 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
     }, [user?.emailVerified])
 
     return (
-        <>
+        <Flex bg="white" direction="column">
             <Box bg="white" height="228px" bgImage={!!coverPhoto ? coverPhoto : menthalHealth} bgPos="center" backgroundSize="cover"/>
-            <Flex bg={"white"}>
-                {
-                    !!profilePhoto ?
-                        <Image
-                            bg="white"
-                            src={profilePhoto}
-                            width={{ base: "90px", sm: "120px" }}
-                            height={{ base: "90px", sm: "120px" }}
-                            border={"5px solid"}
-                            borderColor="gray.50"
-                            borderRadius={"80px"}
-                            pos="relative"
-                            left="5%"
-                            top="-40px"
-                        /> :
-                        <Icon
-                            bg="white"
-                            fontSize={{ base: "90px", sm: "120px" }}
-                            mr={1}
-                            color="gray.400"
-                            as={VscAccount}
-                            border={"5px solid"}
-                            borderColor="gray.50"
-                            borderRadius={"80px"}
-                            pos="relative"
-                            left="5%"
-                            top="-40px"
-                        />
-                }
-
-                <Box p="16px" display="flex" alignItems="flex-start" flexDirection="column" transform={{sm: "translateX(20%)", md: "translateX(35%)"}}>
-                    <Text fontSize={["16px", "28px"]} fontWeight={700}>{name}</Text>
-                    <Text fontSize={["12px", "16px"]} fontWeight={500} color="gray.600">u/{username}</Text>
-                    <Text fontSize={["12px", "16px"]} fontWeight={500} fontStyle={"italic"}>{email}</Text>
-                    {!isEmailVerified && <Flex align="center" gap={2}>
-                        <Text color="red">E-mail erification is not completed!</Text>
-                        <Text fontWeight={600} textDecor="underline" cursor="pointer" onClick={verifyAccount}>Verify</Text>
-                    </Flex>}
-                </Box>
-                <SCEditButton onEdit={() => handleEdit("profile-photo")} position='absolute' right={16} transform="translateY(-16px)" />
-            </Flex>
-        </>
+            <Container maxW='container.xl'>
+                <Flex p="16px" alignItems="flex-start" justify="space-between" flexDirection="row">
+                    <Flex gap="1rem">
+                        {
+                        !!profilePhoto ?
+                            <Image
+                                bg="white"
+                                src={profilePhoto}
+                                width={{ base: "90px", sm: "120px" }}
+                                height={{ base: "90px", sm: "120px" }}
+                                border={"5px solid"}
+                                borderColor="gray.50"
+                                borderRadius={"80px"}
+                                transform="translateY(-50%)"
+                            /> :
+                            <Icon
+                                bg="white"
+                                fontSize={{ base: "90px", sm: "120px" }}
+                                mr={1}
+                                color="gray.400"
+                                as={VscAccount}
+                                border={"5px solid"}
+                                borderColor="gray.50"
+                                borderRadius={"80px"}
+                                transform="translateY(-50%)"
+                            />
+                    }
+                        <Box textAlign="left">
+                            <Text fontSize={["16px", "20px", "28px"]} fontWeight={700}>{name}</Text>
+                            <Text fontSize={["12px", "14px", "16px"]} fontWeight={500} color="gray.600">u/{username}</Text>
+                            <Text fontSize={["12px", "14px", "16px"]} fontWeight={500} fontStyle={"italic"}>{email}</Text>
+                            {!isEmailVerified && <Flex align="center" gap={2}>
+                                <Text color="red">E-mail erification is not completed!</Text>
+                                <Text fontWeight={600} textDecor="underline" cursor="pointer" onClick={verifyAccount}>Verify</Text>
+                            </Flex>}
+                        </Box>
+                    </Flex>
+                    <SCEditButton onEdit={() => handleEdit("profile-photo")} transform="translateY(-80%)"/>
+                </Flex>
+            </Container>
+        </Flex>
     )
 }
 

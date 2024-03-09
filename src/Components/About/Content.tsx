@@ -106,9 +106,7 @@ const Content: FC<IContentProps> = ({
               {community?.createdAt && (
                 <Text>
                   Created{" "}
-                  {moment(
-                    new Date(community.createdAt!.seconds * 1000)
-                  ).format("MMM DD, YYYY")}
+                  {moment(new Date(community.createdAt!)).format("MMM DD, YYYY")}
                 </Text>
               )}
             </Flex>

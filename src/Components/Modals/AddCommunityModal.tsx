@@ -4,11 +4,12 @@ import { Box, Button, Divider, Input, ModalBody, ModalCloseButton, ModalFooter, 
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
 import { firestore } from '../../firebaseClient';
-import { doc, runTransaction, serverTimestamp } from 'firebase/firestore';
+import { doc, runTransaction } from 'firebase/firestore';
 import md5 from 'md5';
 import { RootState } from '../../redux/store';
 import { getCommunities, getJoinedCommunitiesList } from '../../Helpers/apiFunctions';
 import { setCommunities, setJoinedCommunities } from '../../redux/slices/communitySlice';
+import moment from 'moment';
 
 const AddCommunityModal = () => {
 
@@ -63,7 +64,7 @@ const AddCommunityModal = () => {
                 transaction.set(communityDocRef, {
                     name: name,
                     creatorId: user?.id,
-                    createdAt: serverTimestamp(),
+                    createdAt: moment().toString(),
                     numberOfMembers: 1,
                     privacyType: "public",
                 });

@@ -109,9 +109,9 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading, getCo
                     >
                         {comment?.creatorDisplayText}
                     </Text>
-                    {comment?.createdAt?.seconds && (
+                    {comment?.createdAt && (
                         <Text color="gray.600">
-                            {moment(new Date(comment?.createdAt?.seconds * 1000)).fromNow()}
+                            {moment(new Date(comment?.createdAt)).fromNow()}
                         </Text>
                     )}
                     {isLoading && <Spinner size="sm" />}

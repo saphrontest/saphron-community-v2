@@ -34,6 +34,7 @@ const SCEditButton: FC<SCEditButtonProps> = ({ onEdit, position = "relative", le
         height={"fit-content"}
         width="fit-content"
         cursor={"pointer"}
+        _hover={{backgroundColor: "gray.300"}}
         >
             <SCIcon name='edit' size={24} fill='#718096' />
         </Box>

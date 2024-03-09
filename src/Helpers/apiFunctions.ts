@@ -14,7 +14,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 // INTERFACES
-import { Community, JoinedCommunity, IPost, IPostVote, Comment, CommentVote } from "../Interface";
+import { Community, JoinedCommunity, IPost, IPostVote, Comment, CommentVote, IUser } from "../Interface";
 import { store } from "../redux/store";
 import { setPosts, setSavedPosts } from "../redux/slices/postSlice";
 import { User } from "firebase/auth";
@@ -190,12 +190,12 @@ export const getUserSavedPosts = async (userId: string) => {
   // Try to get the documents in the subcollection
   getDocs(q)
     .then((querySnapshot: any) => {
-      const savedPosts: any[] = []
+      const savedPosts: IPost[] = []
       querySnapshot.forEach((docSnapshot: any) => {
         // Access each document's data using docSnapshot.data()
         const data = docSnapshot.data();
-        const { createdAt: {nanoseconds, seconds}, ...postData} = data
-        savedPosts.push({ ...postData, createdAt: { nanoseconds, seconds } });
+        const { createdAt, ...postData} = data
+        savedPosts.push({ ...postData, createdAt });
       });
       store.dispatch(setSavedPosts(savedPosts))
     })

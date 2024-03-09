@@ -114,7 +114,7 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
                                 <InputItem type='text' name='name' onChange={ev => setFormItems((prev) => ({ ...prev, "name": ev.target.value }))} />
                             </PlatformFormItem>
                             <PlatformFormItem label='E-mail' error={!formErrors.email.success} errorMessage={formErrors.email.message}>
-                                <InputItem type='text' name='name' onChange={ev => setFormItems((prev) => ({ ...prev, "name": ev.target.value }))} />
+                                <InputItem type='text' name='name' onChange={ev => setFormItems((prev) => ({ ...prev, "email": ev.target.value }))} />
                             </PlatformFormItem>
                             <PlatformFormItem error={!formErrors.motivation.success} errorMessage={formErrors.motivation.message} label='Could you please tell us your motivation for attending this workshop?'>
                                 <Textarea

@@ -14,7 +14,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 // INTERFACES
-import { Community, JoinedCommunity, IPost, IPostVote, Comment, CommentVote, IUser } from "../Interface";
+import { Community, JoinedCommunity, IPost, IPostVote, Comment, CommentVote, IUser, IBlockedUser } from "../Interface";
 import { store } from "../redux/store";
 import { setPosts, setSavedPosts } from "../redux/slices/postSlice";
 import { User } from "firebase/auth";
@@ -333,13 +333,16 @@ export const updateUser = async (userId: string, value: object) => {
   }
 }
 
-export const getUser = async (userId: string) => {
+export const getUser = async (userId: string, type: "" | "query" = "") => {
   try {
     const userDocRef = doc(firestore, 'users', userId);
     const docSnapshot = await getDoc(userDocRef);
     const data = docSnapshot.data();
     if(data?.isRegistered){
-      store.dispatch(setUserInfo({id: userId, ...data}));
+      if(type === 'query') {
+        return {id: userId, ...data} as IUser
+      }
+      store.dispatch(setUserInfo({id: userId, ...data} as IUser));
     }
   } catch (error) {
     console.error(error)
@@ -347,13 +350,12 @@ export const getUser = async (userId: string) => {
 }
 
 export const getBlockedUsersByUserId = async (userId: string) => {
-  type IBlocked = {date: string; userId: string}
-  const blocked: IBlocked[] = []
+  const blocked: IBlockedUser[] = []
   const blockedDoc = query(collection(firestore, `users/${userId}/blockedUsers`))
   const docSnapshot = await getDocs(blockedDoc)
   docSnapshot.docs.forEach(doc => {
     const data = doc.data()
-    blocked.push(data as IBlocked)
+    blocked.push({id: doc.id, ...data} as IBlockedUser)
   })
   return blocked
 }

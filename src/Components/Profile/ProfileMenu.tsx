@@ -2,8 +2,9 @@ import { Menu, MenuButton, Button, MenuList, MenuItem } from '@chakra-ui/react'
 import { FC } from 'react'
 import { IoSettingsSharp } from 'react-icons/io5'
 import { TiUserDelete } from 'react-icons/ti'
+import { ImUserMinus } from "react-icons/im";
 
-const ProfileMenu: FC<{toggleDeleteUserAlertOpen: () => void}> = ({toggleDeleteUserAlertOpen}) => {
+const ProfileMenu: FC<{ toggleDeleteUserAlertOpen: () => void; toggleBlockedUsersModal: () => void; }> = ({ toggleDeleteUserAlertOpen, toggleBlockedUsersModal }) => {
     return (
         <Menu>
             <MenuButton
@@ -23,8 +24,11 @@ const ProfileMenu: FC<{toggleDeleteUserAlertOpen: () => void}> = ({toggleDeleteU
             </MenuButton>
 
             <MenuList>
-                <MenuItem display="flex" gap="1rem" onClick={() => toggleDeleteUserAlertOpen()}>
-                    <TiUserDelete /> Delete User
+                <MenuItem display="flex" gap="1rem" onClick={toggleDeleteUserAlertOpen}>
+                    <TiUserDelete /> Delete Account
+                </MenuItem>
+                <MenuItem display="flex" gap="1rem" onClick={toggleBlockedUsersModal}>
+                    <ImUserMinus /> Blocked Users
                 </MenuItem>
             </MenuList>
         </Menu>

@@ -22,8 +22,9 @@ interface ActionButtonsInterface {
     handleDelete: (post: IPost) => Promise<boolean>;
     isDeleteLoading: boolean;
     isDashboard?: boolean;
+    setReloadPost: (arg: boolean) => void;
 }
-const ActionButtons: FC<ActionButtonsInterface> = ({ post, isSaved, handleDelete, isDeleteLoading, isDashboard = false }) => {
+const ActionButtons: FC<ActionButtonsInterface> = ({ post, isSaved, handleDelete, isDeleteLoading, isDashboard = false, setReloadPost }) => {
 
     const toast = useToast()
     const navigate = useNavigate()
@@ -59,6 +60,7 @@ const ActionButtons: FC<ActionButtonsInterface> = ({ post, isSaved, handleDelete
         await runTransaction(firestore, async (tx: Transaction) => {
             tx.set(userDoc, { userId, date: moment().toString() })
         })
+        setReloadPost(true)
     }
 
     return (

@@ -23,6 +23,7 @@ import { Transaction, doc, runTransaction } from 'firebase/firestore';
 import { useAuthState, useDeleteUser } from 'react-firebase-hooks/auth';
 // Assets
 import menthalHealth from '../../assets/images/menthal.jpg'
+import BlockedUsersModal from './BlockedUsersModal';
 
 interface ProfileHeaderProps {
     name: string;
@@ -43,6 +44,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
     const userFromDB = useSelector((state: RootState) => state.user )
     
     const [deleteUserAlertOpen, { toggle: toggleDeleteUserAlertOpen }] = useBoolean(false)
+    const [blockedUsersModalOpen, { toggle: toggleBlockedUsersModal }] = useBoolean(false)
     
     const verifyAccount = async () => {
         user && await sendEmailVerification(user)
@@ -138,12 +140,13 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
                         </Flex>
                         <Flex transform="translateY(-80%)" gap="1rem">
                             <SCEditButton onEdit={() => dispatch(setModal({ isOpen: true, view: "editProfile", data: { isEdit: true } }))} />
-                            <ProfileMenu toggleDeleteUserAlertOpen={toggleDeleteUserAlertOpen}/>
+                            <ProfileMenu toggleDeleteUserAlertOpen={toggleDeleteUserAlertOpen} toggleBlockedUsersModal={toggleBlockedUsersModal}/>
                         </Flex>
                     </Flex>
                 </Container>
             </Flex>
-            <DeleteAlert label={`${userFromDB?.username}`} isOpen={deleteUserAlertOpen} handleDelete={handleDeleteUser} toggleDialog={toggleDeleteUserAlertOpen}/>
+            <DeleteAlert label={`${userFromDB?.username}`} isOpen={deleteUserAlertOpen} handleDelete={handleDeleteUser} toggleDialog={toggleDeleteUserAlertOpen} />
+            <BlockedUsersModal isOpen={blockedUsersModalOpen} toggleModal={toggleBlockedUsersModal}/>
         </>
     )
 }

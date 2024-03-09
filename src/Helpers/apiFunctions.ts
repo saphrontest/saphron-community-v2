@@ -56,6 +56,11 @@ export const getCommunities = async () => {
   return communities;
 };
 
+const checkBlocked = async  (postCreatorId: string) => {
+  const blocked = await getBlockedUsersByUserId(store.getState().user.id);
+  return blocked.some(blockedUser => blockedUser.userId === postCreatorId); 
+}
+
 export const getPosts = async (getAll=false) => {
   const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
   const postDocs = await getDocs(q);
@@ -63,13 +68,11 @@ export const getPosts = async (getAll=false) => {
   // Define a function to get blocked users and filter posts
   const getPosts = async (doc: any) => {
     if (!getAll) {
-      const blocked = await getBlockedUsersByUserId(store.getState().user.id);
-      const isBlocked = blocked.some(blockedUser => blockedUser.userId === doc.data().creatorId); 
+      const isBlocked = await checkBlocked(doc.data().creatorId)
       if (isBlocked) {
         return { id: doc.id, isBlocked: true, ...doc.data() } as IPost | { isBlocked: boolean; };
       }
       return { id: doc.id, ...doc.data() } as IPost
-      
     }
 
   };

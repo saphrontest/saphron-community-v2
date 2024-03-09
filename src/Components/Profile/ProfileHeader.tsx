@@ -138,7 +138,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
                                 </Flex>}
                             </Box>
                         </Flex>
-                        <Flex transform="translateY(-80%)" gap="1rem">
+                        <Flex transform={["translateY(-65%)", "translateY(-65%)", "translateY(-80%)"]} gap="1rem" direction={["column", "column", "row"]}>
                             <SCEditButton onEdit={() => dispatch(setModal({ isOpen: true, view: "editProfile", data: { isEdit: true } }))} />
                             <ProfileMenu toggleDeleteUserAlertOpen={toggleDeleteUserAlertOpen} toggleBlockedUsersModal={toggleBlockedUsersModal}/>
                         </Flex>

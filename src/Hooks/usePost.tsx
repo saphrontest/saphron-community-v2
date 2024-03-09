@@ -263,6 +263,17 @@ const usePost = () => {
     }
   }
   
+/**
+ * The function `getPosts` retrieves posts from a Firestore collection, filters them based on blocked
+ * users if needed, and returns the posts as an array.
+ * @param [getAll=false] - The `getAll` parameter in the `getPosts` function is a boolean parameter
+ * with a default value of `false`. This parameter is used to determine whether all posts should be
+ * retrieved or only non-blocked posts should be retrieved. If `getAll` is set to `true`, all posts
+ * will be
+ * @returns The `getPosts` function is returning an array of post objects. Each post object includes
+ * the post ID, post data, and an additional property `isBlocked` if the post creator is blocked. If
+ * `getAll` is true, all posts are returned without checking for blocked users.
+ */
   const getPosts = async (getAll=false) => {
     const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
     const postDocs = await getDocs(q);

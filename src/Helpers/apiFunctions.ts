@@ -350,12 +350,11 @@ export const getUser = async (userId: string, type: "" | "query" = "") => {
 }
 
 export const getBlockedUsersByUserId = async (userId: string) => {
-  const blocked: IBlockedUser[] = []
   const blockedDoc = query(collection(firestore, `users/${userId}/blockedUsers`))
   const docSnapshot = await getDocs(blockedDoc)
-  docSnapshot.docs.forEach(doc => {
-    const data = doc.data()
-    blocked.push({id: doc.id, ...data} as IBlockedUser)
-  })
-  return blocked
+
+  return docSnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  } as IBlockedUser))
 }

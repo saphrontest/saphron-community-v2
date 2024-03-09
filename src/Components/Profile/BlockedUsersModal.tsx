@@ -1,4 +1,4 @@
-import { ModalHeader, ModalCloseButton, ModalBody, Flex, useBoolean, Text, Button, Spinner, Center } from '@chakra-ui/react'
+import { ModalHeader, ModalCloseButton, ModalBody, Flex, useBoolean, Text, Button, Spinner, Center, useToast } from '@chakra-ui/react'
 import React, { FC, useEffect, useState } from 'react'
 import { ModalLayout } from '../../Layouts'
 import { getBlockedUsersByUserId, getUser as getUserById } from '../../Helpers';
@@ -14,34 +14,26 @@ type IBlockedUserTemp = IUser & { blockedDate: string; blockedItemId: string; }
 
 const BlockedUsersModal: FC<{ isOpen: boolean; toggleModal: () => void; }> = ({ isOpen, toggleModal }) => {
 
+    const toast = useToast()
+
     const [blockedUsers, setBlockedUsers] = useState<IBlockedUserTemp[]>([])
     const [loading, { toggle: toggleLoading }] = useBoolean(false)
+    
     const user: IUser = useSelector((state: RootState) => state.user)
 
     const getBlockedUsers = async () => {
         setBlockedUsers([])
-        return getBlockedUsersByUserId(user.id)
-                .then(blockedUsersData => {
-                    blockedUsersData.forEach(async (blocked: IBlockedUser) => {
-                        const userData = await getUserById(blocked.userId, 'query')
-                        setBlockedUsers(prev => {
-                            if(!prev.find(item => item.id === userData?.id)){
-                                return [{ id: blocked.userId, blockedDate: blocked.date, blockedItemId: blocked.id, ...userData } as IBlockedUserTemp, ...prev]
-                            }
-                            return [...prev]
-                        })
-                    })
-                })
+        const userPromises = (await getBlockedUsersByUserId(user.id)).map(async (blocked: IBlockedUser) => {
+            const userData = await getUserById(blocked.userId, 'query')
+            return { id: blocked.userId, blockedDate: blocked.date, blockedItemId: blocked.id, ...userData } as IBlockedUserTemp
+          })
+          
+          const newBlockedUsers = await Promise.all(userPromises)
+          setBlockedUsers(prev => [
+            ...newBlockedUsers.filter(newUser => !prev.find(item => item.id === newUser.id)),
+            ...prev
+          ])
     }
-
-    useEffect(() => {
-        if (isOpen) {
-            toggleLoading()
-            getBlockedUsers()
-                .finally(() => toggleLoading())
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isOpen])
 
     const unblockUser = async (blockedItemId: string) => {
         try {
@@ -53,9 +45,23 @@ const BlockedUsersModal: FC<{ isOpen: boolean; toggleModal: () => void; }> = ({ 
                     .finally(() => toggleLoading())
             })
         } catch (error) {
-            
+            toast({
+                title: "Please try again later!",
+                status: "error",
+                isClosable: true
+            })
         }
     }
+
+    useEffect(() => {
+        if (isOpen) {
+            toggleLoading()
+            getBlockedUsers()
+                .finally(() => toggleLoading())
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen])
+
 
     return (
         <ModalLayout size='xl' isCentered={false} isOpen={isOpen} onClose={toggleModal}>

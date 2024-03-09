@@ -10,7 +10,10 @@ import { Transaction, doc, runTransaction } from 'firebase/firestore';
 import { firestore } from '../../firebaseClient';
 import NoEntry from '../NoEntry';
 
-type IBlockedUserTemp = IUser & { blockedDate: string; blockedItemId: string; }
+type IBlockedUserTemp = IUser & {
+    blockedDate: string;
+    blockedItemId: string;
+}
 
 const BlockedUsersModal: FC<{ isOpen: boolean; toggleModal: () => void; }> = ({ isOpen, toggleModal }) => {
 

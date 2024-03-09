@@ -4,7 +4,7 @@ import { SCEditButton } from '../SCElements';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
 import menthalHealth from '../../assets/images/menthal.jpg'
-import { sendEmailVerification } from 'firebase/auth';
+import { sendEmailVerification, signOut } from 'firebase/auth';
 import { auth, firestore } from '../../firebaseClient';
 import { useAuthState, useDeleteUser } from 'react-firebase-hooks/auth';
 import { getUser, updateUser } from '../../Helpers/apiFunctions';
@@ -18,7 +18,6 @@ import { logoutUser } from '../../redux/slices/userSlice';
 import { resetCommunities } from '../../redux/slices/communitySlice';
 import { resetPosts } from '../../redux/slices/postSlice';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from "firebase/auth";
 
 interface ProfileHeaderProps {
     name: string;

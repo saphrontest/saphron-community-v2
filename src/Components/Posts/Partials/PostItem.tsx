@@ -181,6 +181,7 @@ const PostItem: FC<PostItemContentProps> = ({
         handleDelete={handleDelete}
         isDeleteLoading={isDeleteLoading}
         isDashboard={isDashboard}
+        setReloadPost={setReloadPost}
         />
       </Flex>
     </Flex>

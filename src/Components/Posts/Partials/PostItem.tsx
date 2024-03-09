@@ -153,7 +153,7 @@ const PostItem: FC<PostItemContentProps> = ({
       return isDelete
   }
 
-  return (
+  return !post.isBlocked ? (
     <Flex
       border="1px solid"
       bg={isDashboard ? "gray.50" : "white"}
@@ -184,7 +184,7 @@ const PostItem: FC<PostItemContentProps> = ({
         />
       </Flex>
     </Flex>
-  )
+  ) : null
 }
 
 export default PostItem

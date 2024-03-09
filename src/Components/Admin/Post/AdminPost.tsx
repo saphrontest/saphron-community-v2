@@ -15,7 +15,8 @@ const AdminPost = () => {
     const { communities } = useSelector((state: RootState) => state.community)
 
     useEffect(() => {
-        getPosts().then(result => {
+        const getAllPosts = true
+        getPosts(getAllPosts).then(result => {
             setPosts(result)
             setFilteredPosts(result)
         })
@@ -23,7 +24,8 @@ const AdminPost = () => {
     }, [])
 
     useEffect(() => {
-        reloadPosts && getPosts().then(result => {
+        const getAllPosts = true
+        reloadPosts && getPosts(getAllPosts).then(result => {
             setPosts(result)
             setFilteredPosts(result)
         }).finally(() => setReloadPosts(false))

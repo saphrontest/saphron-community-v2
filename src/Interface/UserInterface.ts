@@ -11,7 +11,6 @@ export interface IUser {
     profilePhotoURL: string;
     phoneNumber: string;
     role: UserRoleTypes;
-    isDeleted?: boolean;
 }
 
 export const defaultUserState: IUser = {

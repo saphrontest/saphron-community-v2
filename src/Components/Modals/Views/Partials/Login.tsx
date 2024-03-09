@@ -1,12 +1,12 @@
+import { useAuthState, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import React, { useEffect, useState } from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
-import { useAuthState, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../../../../firebaseClient";
 import { InputItem } from "../../../../Layouts";
 import { useDispatch } from "react-redux";
 import { setModal } from "../../../../redux/slices/modalSlice";
 import { ModalViewTypes } from "../../../../Interface";
-import { getUser, checkDeletedUserByEmail } from "../../../../Helpers/apiFunctions";
+import { getUser } from "../../../../Helpers/apiFunctions";
 
 type LoginProps = {
 };
@@ -32,16 +32,11 @@ const Login: React.FC<LoginProps> = () => {
       return setFormError("Please enter a valid email");
     }
 
-    const isDeleted = await checkDeletedUserByEmail(form.email)
-
-    if(!isDeleted) {
-      // Valid form inputs
-      signInWithEmailAndPassword(form.email, form.password);
-      if(error){
-        setFormError("Invalid email or password!");
-      }else{
-        setLoginSuccess(true)
-      }
+    signInWithEmailAndPassword(form.email, form.password);
+    if(error){
+      setFormError("Invalid email or password!");
+    }else{
+      setLoginSuccess(true)
     }
   };
 
@@ -49,6 +44,7 @@ const Login: React.FC<LoginProps> = () => {
     if(isLoginSuccess && user) {
       getUser(user?.uid).then(() => dispatch(setModal({isOpen: false, view: null})))
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, isLoginSuccess])
 
   const onChange = ({

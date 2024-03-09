@@ -323,19 +323,3 @@ export const getUser = async (userId: string) => {
     console.error(error)
   }
 }
-
-export const checkDeletedUserByEmail = async (email: string): Promise<boolean> => {
-  let user: IUser | undefined
-  try {
-    const usersCollectionRef = collection(firestore, 'users');
-    const q = query(usersCollectionRef, where('email', '==', email));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.docs.forEach(doc => {
-      user = { id: doc.id , ...doc.data() } as IUser
-    });
-    return  user?.isDeleted ?? false
-  } catch (error) {
-    console.error(error)
-    return false
-  }
-}

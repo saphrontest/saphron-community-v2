@@ -1,23 +1,28 @@
-import { Box, Button, Container, Flex, Icon, Image, Menu, MenuButton, MenuItem, MenuList, Text, useBoolean, useToast } from '@chakra-ui/react'
+// ChakraUI && React
+import { Box, Container, Flex, Icon, Image, Text, useBoolean, useToast } from '@chakra-ui/react'
 import { FC, useEffect } from 'react'
+// Components
 import { SCEditButton } from '../SCElements';
+import { DeleteAlert } from '../Platform';
+import ProfileMenu from './ProfileMenu';
+import { VscAccount } from 'react-icons/vsc';
+// Redux
+import { RootState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
-import menthalHealth from '../../assets/images/menthal.jpg'
-import { sendEmailVerification, signOut } from 'firebase/auth';
-import { auth, firestore } from '../../firebaseClient';
-import { useAuthState, useDeleteUser } from 'react-firebase-hooks/auth';
-import { getUser, updateUser } from '../../Helpers/apiFunctions';
-import { VscAccount } from 'react-icons/vsc';
-import { IoSettingsSharp } from "react-icons/io5";
-import { TiUserDelete } from "react-icons/ti";
-import { DeleteAlert } from '../Platform';
-import { RootState } from '../../redux/store';
-import { Transaction, doc, runTransaction } from 'firebase/firestore';
 import { logoutUser } from '../../redux/slices/userSlice';
-import { resetCommunities } from '../../redux/slices/communitySlice';
 import { resetPosts } from '../../redux/slices/postSlice';
+import { resetCommunities } from '../../redux/slices/communitySlice';
+// Helpers
+import { getUser, updateUser } from '../../Helpers/apiFunctions';
 import { useNavigate } from 'react-router-dom';
+// Firebase
+import { auth, firestore } from '../../firebaseClient';
+import { sendEmailVerification, signOut } from 'firebase/auth';
+import { Transaction, doc, runTransaction } from 'firebase/firestore';
+import { useAuthState, useDeleteUser } from 'react-firebase-hooks/auth';
+// Assets
+import menthalHealth from '../../assets/images/menthal.jpg'
 
 interface ProfileHeaderProps {
     name: string;
@@ -133,29 +138,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
                         </Flex>
                         <Flex transform="translateY(-80%)" gap="1rem">
                             <SCEditButton onEdit={() => dispatch(setModal({ isOpen: true, view: "editProfile", data: { isEdit: true } }))} />
-                            <Menu>
-                                <MenuButton
-                                    as={Button}
-                                    gap={2}
-                                    padding={2}
-                                    bg="gray.200"
-                                    borderRadius={32}
-                                    border={"2px solid"}
-                                    borderColor={"white"}
-                                    height={"fit-content"}
-                                    width="fit-content"
-                                    cursor={"pointer"}
-                                    _hover={{ backgroundColor: "gray.300" }}
-                                >
-                                    <IoSettingsSharp size={24} fill='#718096' />
-                                </MenuButton>
-
-                                <MenuList>
-                                    <MenuItem display="flex" gap="1rem" onClick={() => toggleDeleteUserAlertOpen()}>
-                                        <TiUserDelete /> Delete User
-                                    </MenuItem>
-                                </MenuList>
-                            </Menu>
+                            <ProfileMenu toggleDeleteUserAlertOpen={toggleDeleteUserAlertOpen}/>
                         </Flex>
                     </Flex>
                 </Container>

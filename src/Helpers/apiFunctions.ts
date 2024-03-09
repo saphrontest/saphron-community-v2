@@ -57,8 +57,12 @@ export const getCommunities = async () => {
 };
 
 const checkBlocked = async  (postCreatorId: string) => {
-  const blocked = await getBlockedUsersByUserId(store.getState().user.id);
-  return blocked.some(blockedUser => blockedUser.userId === postCreatorId); 
+  if(store.getState().user.id) {
+    const blocked = await getBlockedUsersByUserId(store.getState().user.id);
+    return blocked.some(blockedUser => blockedUser.userId === postCreatorId); 
+  }else{
+    return false
+  }
 }
 
 export const getPosts = async (getAll=false) => {

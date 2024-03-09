@@ -156,7 +156,7 @@ const PostItem: FC<PostItemContentProps> = ({
   return (
     <Flex
       border="1px solid"
-      bg="white"
+      bg={isDashboard ? "gray.50" : "white"}
       borderColor={"gray.300"}
       borderRadius={4}
       cursor={"pointer"}

@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useState } from 'react'
 import AdminWorkshopItem from './AdminWorkshopItem'
 import { Workshop } from '../../../Interface'
-import { Flex, Spinner, useBoolean } from '@chakra-ui/react';
+import { Spinner, useBoolean } from '@chakra-ui/react';
 import { useStatus, useWorkshop } from '../../../Hooks';
-import SearchInput from '../SearchInput';
+import { PlatformAdminContentLayout } from '../../../Layouts';
 
 const WorkshopAdmin: FC = () => {
     const { updateStatus } = useStatus()
@@ -16,7 +16,7 @@ const WorkshopAdmin: FC = () => {
         toggleWorkshopsLoading()
         getWorkshops()
             .then((result: Workshop[]) => {
-                if(!!result.length) {
+                if (!!result.length) {
                     setWorkshops(result)
                     setFilteredWorkshops(result)
                 }
@@ -37,26 +37,25 @@ const WorkshopAdmin: FC = () => {
         setFilteredWorkshops(() => {
             return workshops.filter(workshop => {
                 return workshop.workshop_name.toLowerCase().includes(searchWord) ||
-                workshop.workshop_manager_name.toLowerCase().includes(searchWord)
+                    workshop.workshop_manager_name.toLowerCase().includes(searchWord)
             })
         })
     }
 
     return (
-        <>
-            <SearchInput onSearch={searchWorkshops}/>
+        <PlatformAdminContentLayout onSearch={searchWorkshops}>
             {
                 !workshopsLoading ? (
-                    <Flex direction="column" gap="1rem">
+                    <>
                         {filteredWorkshops?.map((workshop: Workshop, idx: number) => (
                             <React.Fragment key={workshop.id}>
                                 <AdminWorkshopItem idx={idx} workshop={workshop} onSelect={updateItemStatus} />
                             </React.Fragment>
                         ))}
-                    </Flex>
+                    </>
                 ) : <Spinner size="xl" mt="1rem" />
             }
-        </>
+        </PlatformAdminContentLayout>
     )
 }
 

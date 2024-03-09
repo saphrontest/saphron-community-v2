@@ -3,7 +3,7 @@ import { Fragment, useEffect, useState } from 'react'
 import { AdminPlatformItem, AdminStatusSelect } from '../../Platform'
 import { ISupportGroup, SelectOptions } from '../../../Interface'
 import { useChat, useStatus, useSupportGroup } from '../../../Hooks'
-import SearchInput from '../SearchInput'
+import { PlatformAdminContentLayout } from '../../../Layouts'
 
 const AdminSupportGroups = () => {
     const { updateStatus } = useStatus()
@@ -44,33 +44,28 @@ const AdminSupportGroups = () => {
     }
 
     return (
-        <>
-            <SearchInput onSearch={searchSupportGroups} />
-            
-            {!supportGroupsLoading ? (
-                <Flex direction="column" gap="1rem">
-                    {filteredSupportGroups?.map((group, idx) => (
-                        <Fragment key={group.id}>
-                            <AdminPlatformItem
-                                idx={idx}
-                                coverImg={group.cover_img}
-                                name={group.support_group_name}
-                                createdAt={group.createdAt}
-                                userAvatar={group.support_group_manager_avatar}
-                                userId={group.support_group_manager_id}
-                                userName={group.support_group_manager_name}
-                                userEmail={group.support_group_manager_mail}
-                            >
-                                <Flex align="center" gap="1rem" pl={{ base: "2em", md: 0 }}>
-                                    <Text fontWeight={700} display={{ base: "block", md: "none" }}>Status</Text>
-                                    <AdminStatusSelect item={group} onSelect={updateItemStatus} />
-                                </Flex>
-                            </AdminPlatformItem>
-                        </Fragment>
-                    ))}
-                </Flex>
-            ) : <Spinner size="xl" mt="1rem" />}
-        </>
+        <PlatformAdminContentLayout onSearch={searchSupportGroups}>
+            {supportGroupsLoading && <Spinner size="xl" mt="1rem"/>}
+            {!supportGroupsLoading && filteredSupportGroups?.map((group, idx) => (
+                <Fragment key={group.id}>
+                    <AdminPlatformItem
+                        idx={idx}
+                        coverImg={group.cover_img}
+                        name={group.support_group_name}
+                        createdAt={group.createdAt}
+                        userAvatar={group.support_group_manager_avatar}
+                        userId={group.support_group_manager_id}
+                        userName={group.support_group_manager_name}
+                        userEmail={group.support_group_manager_mail}
+                    >
+                        <Flex align="center" gap="1rem" pl={{ base: "2em", md: 0 }}>
+                            <Text fontWeight={700} display={{ base: "block", md: "none" }}>Status</Text>
+                            <AdminStatusSelect item={group} onSelect={updateItemStatus} />
+                        </Flex>
+                    </AdminPlatformItem>
+                </Fragment>
+            ))}
+        </PlatformAdminContentLayout>
     )
 }
 

@@ -9,7 +9,7 @@ import { setModal } from "../redux/slices/modalSlice";
 import { RootState } from "../redux/store";
 
 type ModalLayoutProps = {
-  size?: string;
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full" | "xs" | "4xl" | "5xl" | "6xl";
   isOpen?: boolean;
   onClose?: () => void;
   isCentered?: boolean;

@@ -18,6 +18,7 @@ export type IPost = {
   editedAt?: string;
   slug?: string;
   slugId: string;
+  isBlocked?: boolean;
 };
 
 export type IPostVote = {

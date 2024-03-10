@@ -13,10 +13,16 @@ import {
   MyWorkshopsPage,
   MySupportGroups,
   CommunityDetail,
-  SupportGroupDetailPage
+  SupportGroupDetailPage,
+  Policies,
+  AdminPostsPage,
+  AdminUsersPage,
+  AdminSupportGroupsPage,
+  AdminWorkshopsPage
 } from './Pages'
 
 const base = "community"
+const adminBase = "manager-dashboard"
 
 const RoutesArray = [
   { path: "/", component: Home },
@@ -33,10 +39,17 @@ const RoutesArray = [
   { path: "workshops", component: WorkshopsPage },
   { path: "workshops/:slug", component: WorkshopsPage },
   { path: "my-workshops", component: MyWorkshopsPage },
-  { path: "manager-dashboard", component: AdminPage },
+  { path: `${adminBase}`, component: AdminPage },
+  { path: `/${adminBase}/posts`, component: AdminPostsPage },
+  { path: `/${adminBase}/users`, component: AdminUsersPage },
+  { path: `/${adminBase}/workshops`, component: AdminWorkshopsPage },
+  { path: `/${adminBase}/support-groups`, component: AdminSupportGroupsPage },
   { path: "support-groups", component: SupportGroups },
   { path: "support-groups/:slug", component: SupportGroupDetailPage },
   { path: "my-support-groups", component: MySupportGroups },
+  { path: "privacy-policy", component: Policies },
+  { path: "terms-conditions", component: Policies },
+  { path: "terms-conditions", component: Policies },
 ]
 
 const Router = () => {

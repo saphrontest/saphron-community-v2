@@ -9,7 +9,8 @@ import {
     CreateWorkshopModal,
     EditProfileModal,
     JoinSupportGroupModal,
-    JoinWorkshopModal
+    JoinWorkshopModal,
+    PaymentModal
 } from './Modals'
 
 const Modal = () => {
@@ -46,6 +47,8 @@ const Modal = () => {
             return <CreateSupportGroupModal />
         case "joinSupportGroup": 
             return <JoinSupportGroupModal data={data}/>
+        case "paymentModal": 
+            return <PaymentModal />
         default:
             return null
     }

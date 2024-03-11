@@ -1,5 +1,5 @@
 import { writeBatch, doc, collection, increment, deleteDoc, collectionGroup, getDocs, query, where } from 'firebase/firestore';
-import { Comment, IPost, IUser } from '../Interface';
+import { IComment, IPost, IUser } from '../Interface';
 import { firestore } from '../firebaseClient';
 
 /**
@@ -8,6 +8,7 @@ import { firestore } from '../firebaseClient';
  * @returns An object is being returned from the `useComment` function. This object contains three
  * properties:
  */
+
 const useComment = () => {
 
   /**
@@ -34,7 +35,7 @@ const useComment = () => {
     batch.set(commentDocRef, {
       postId: post.id,
       creatorId: user.id,
-      creatorDisplayText: user.email!.split("@")[0],
+      creatorDisplayText: user.email.split("@")[0],
       creatorPhotoURL: user.profilePhotoURL,
       text: comment,
       postTitle: post.title,
@@ -94,10 +95,10 @@ const useComment = () => {
   const getCommentByPostId = async (postId: string) => {
     const q = query(collection(firestore, "comments"), where("postId", "==", postId));
     const commentsDocs = await getDocs(q);
-    const comments = commentsDocs.docs.map((doc) => {
-      return { id: doc.id, ...doc.data() } as Comment
-    }) as Comment[];
-    return comments as Comment[];
+    const comments: IComment[] = commentsDocs.docs.map((doc) => {
+      return { id: doc.id, ...doc.data() } as IComment
+    });
+    return comments;
   };
 
   return {

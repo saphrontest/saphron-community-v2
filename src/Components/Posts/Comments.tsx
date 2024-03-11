@@ -1,7 +1,7 @@
 import { Box, Divider, Flex, SkeletonCircle, SkeletonText, Stack, Text } from '@chakra-ui/react'
 import { FC, useState } from 'react'
 import CommentItem from './CommentItem';
-import { Comment, IPost } from '../../Interface';
+import { IComment, IPost } from '../../Interface';
 import { CommentInput } from './Partials';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
@@ -9,7 +9,7 @@ import { RootState } from '../../redux/store';
 import { useComment } from '../../Hooks';
 
 interface CommentsProps {
-    comments: Comment[];
+    comments: IComment[];
     post: IPost;
     getComments: (id: string) => void
 }
@@ -25,7 +25,7 @@ const Comments: FC<CommentsProps> = ({ comments, post, getComments }) => {
     const [deleteLoading, setDeleteLoading] = useState<string>(""); // comment id
     const [commentCreateLoading, setCommentCreateLoading] = useState<boolean>(false);
     
-    const commentArray = comments as Comment[];
+    const commentArray = comments as IComment[];
 
     const onCommentDelete = async (commentId: string, postId: string) => {
         setDeleteLoading(commentId)
@@ -90,7 +90,7 @@ const Comments: FC<CommentsProps> = ({ comments, post, getComments }) => {
                         {commentArray.length > 0 ? (
                             <>
                                 <Divider borderColor="gray.200" />
-                                {commentArray.map((item: Comment) => (
+                                {commentArray.map((item: IComment) => (
                                     <CommentItem
                                         key={item?.id}
                                         comment={item}

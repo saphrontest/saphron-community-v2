@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 // INTERFACES
-import { Community, JoinedCommunity, IPost, IPostVote, Comment, CommentVote, IUser, IBlockedUser } from "../Interface";
+import { Community, JoinedCommunity, IPost, IPostVote, ICommentVote, IUser, IBlockedUser } from "../Interface";
 import { store } from "../redux/store";
 import { User } from "firebase/auth";
 import { setUserInfo } from "../redux/slices/userSlice";
@@ -140,9 +140,9 @@ export const leaveCommunity = async (userId: string, communityId: string) => {
 export const getCommentVotesByUserId = async (id: string) => {
   const commentVotes = await fetch.getList(`users/${id}/commentVotes`);
   if (commentVotes.size) {
-    const votes: CommentVote[] = [];
+    const votes: ICommentVote[] = [];
     commentVotes.forEach((doc) => {
-      votes.push({ id: doc.id, ...doc.data() } as CommentVote);
+      votes.push({ id: doc.id, ...doc.data() } as ICommentVote);
     });
     return votes;
   }

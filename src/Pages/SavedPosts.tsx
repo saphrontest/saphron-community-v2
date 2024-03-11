@@ -3,7 +3,7 @@ import { PageLayout } from '../Layouts'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { Meta, NoEntry, PersonalHome, PostItem } from '../Components'
-import { IPost, Community } from '../Interface'
+import { IPost, Community, IUser } from '../Interface'
 import { Box, Text, useToast } from '@chakra-ui/react'
 import { setModal } from '../redux/slices/modalSlice'
 import { usePost } from '../Hooks'
@@ -14,11 +14,11 @@ const SavedPosts = () => {
   const dispatch = useDispatch()
   const { getSavedPostsByUser } = usePost()
   
-  const user = useSelector((state: RootState) => state.user)
+  const user: IUser = useSelector((state: RootState) => state.user)
   const { communities } = useSelector((state: RootState) => state.community)
 
   const [reloadPost, setReloadPost] = useState(false)
-  const [savedPosts, setSavePosts] = useState<IPost[]>([])
+  const [savedPosts, setSavedPosts] = useState<IPost[]>([])
 
   useEffect(() => {
 
@@ -38,7 +38,7 @@ const SavedPosts = () => {
   useEffect(() => {
     if (reloadPost) {
       getSavedPostsByUser(user?.id as string)
-        .then(result => setSavePosts(result))
+        .then(result => setSavedPosts(result))
         .finally(() => setReloadPost(false))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -46,7 +46,7 @@ const SavedPosts = () => {
 
   useEffect(() => {
     getSavedPostsByUser(user?.id as string)
-      .then(result => setSavePosts(result))
+      .then(result => setSavedPosts(result))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

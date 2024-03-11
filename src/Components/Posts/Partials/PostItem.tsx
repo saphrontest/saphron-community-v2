@@ -15,7 +15,6 @@ import { usePost } from '../../../Hooks';
 
 export type PostItemContentProps = {
   post: IPost;
-  homePage?: boolean;
   communityName: string;
   setReloadPost: ( isReload:boolean ) => void;
   isDashboard?: boolean;

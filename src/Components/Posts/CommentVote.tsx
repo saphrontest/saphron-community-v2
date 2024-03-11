@@ -1,9 +1,9 @@
 import { Flex, Icon, Text } from '@chakra-ui/react'
 import React, { FC } from 'react'
 import { IoArrowDownCircleOutline, IoArrowDownCircleSharp, IoArrowUpCircleOutline, IoArrowUpCircleSharp } from 'react-icons/io5'
-import { CommentVote as CommentVoteInterface } from '../../Interface';
+import { ICommentVote } from '../../Interface';
 interface CommentVoteProps {
-    userVote: CommentVoteInterface;
+    userVote: ICommentVote;
     onVote: (value: number, userId: string) => void;
     userId: string;
     voteValue: number;

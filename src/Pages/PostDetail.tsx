@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
 import { useLocation, useParams } from 'react-router-dom'
-import { IPost, Comment, Community } from '../Interface'
+import { IPost, IComment, Community } from '../Interface'
 import { About, Meta, PostItem } from '../Components'
 import { Comments } from '../Components/Posts'
 import { useDispatch, useSelector } from 'react-redux'
@@ -20,7 +20,7 @@ const PostDetail = () => {
   
   const [post, setPost] = useState<IPost>()
   const [reloadPost, setReloadPost] = useState<boolean>(false)
-  const [comments, setComments] = useState<Comment[]>([])
+  const [comments, setComments] = useState<IComment[]>([])
 
   const { communities } = useSelector((state: RootState) => state.community)
   

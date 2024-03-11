@@ -8,7 +8,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { IUser } from '../../../Interface'
 import { logoutUser } from '../../../redux/slices/userSlice'
 import { resetCommunities } from '../../../redux/slices/communitySlice'
-import { resetPosts } from '../../../redux/slices/postSlice'
 import { LoginButton, MenuButtonInner, UserMenuInner } from './Menu';
 import NavigationMenu from './Menu/NavigationMenu';
 
@@ -24,7 +23,6 @@ const UserMenu: FC<{ user: IUser }> = ({ user }) => {
         await signOut(auth);
         dispatch(logoutUser())
         dispatch(resetCommunities())
-        dispatch(resetPosts())
         navigate("/community")
     }
 

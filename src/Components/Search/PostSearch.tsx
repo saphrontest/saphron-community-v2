@@ -2,8 +2,8 @@
 import { Flex } from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react'
 import SearchResults from '../Nav/Partials/SearchResults';
-import { searchPost } from '../../Helpers/apiFunctions';
 import { SearchHeader, SearchInput } from './Partials';
+import { usePost } from '../../Hooks';
 
 interface PostSearchProps {
   searchKey?: string;
@@ -11,11 +11,11 @@ interface PostSearchProps {
 }
 
 const PostSearch: FC<PostSearchProps> = ({ searchKey, items }) => {
+  
+  const {searchPost} = usePost() 
+  
   const [searchText, setSearchText] = useState(searchKey)
   const [searchResult, setSearchResult] = useState(items)
-
-  // TODO: clear search results when the search text is empty
-  // TODO: create a no-search-result component
 
   useEffect(() => {
     if (searchText) {
@@ -25,6 +25,7 @@ const PostSearch: FC<PostSearchProps> = ({ searchKey, items }) => {
       }, 1000);
       return () => clearTimeout(timer)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText])
 
   return (

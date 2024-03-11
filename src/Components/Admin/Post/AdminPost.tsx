@@ -15,7 +15,8 @@ const AdminPost = () => {
     const { communities } = useSelector((state: RootState) => state.community)
 
     useEffect(() => {
-        getPosts().then(result => {
+        const getAllPosts = true
+        getPosts(getAllPosts).then((result: IPost[]) => {
             setPosts(result)
             setFilteredPosts(result)
         })
@@ -23,7 +24,8 @@ const AdminPost = () => {
     }, [])
 
     useEffect(() => {
-        reloadPosts && getPosts().then(result => {
+        const getAllPosts = true
+        reloadPosts && getPosts(getAllPosts).then((result: IPost[]) => {
             setPosts(result)
             setFilteredPosts(result)
         }).finally(() => setReloadPosts(false))
@@ -47,6 +49,7 @@ const AdminPost = () => {
                     <Fragment key={post.id}>
                         <PostItem
                             post={post}
+                            isSaved={false}
                             setReloadPost={setReloadPosts}
                             communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
                             isDashboard={true}

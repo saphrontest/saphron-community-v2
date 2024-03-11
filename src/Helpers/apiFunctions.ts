@@ -10,20 +10,11 @@ import {
   deleteDoc,
   writeBatch,
   increment,
-  orderBy
 } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 // INTERFACES
-import {
-  Community,
-  JoinedCommunity,
-  IPost,
-  IPostVote,
-  Comment,
-  CommentVote,
-} from "../Interface";
+import { Community, JoinedCommunity, IPost, IPostVote, ICommentVote, IUser, IBlockedUser } from "../Interface";
 import { store } from "../redux/store";
-import { setPosts, setSavedPosts } from "../redux/slices/postSlice";
 import { User } from "firebase/auth";
 import { setUserInfo } from "../redux/slices/userSlice";
 
@@ -63,15 +54,6 @@ export const getCommunities = async () => {
   return communities;
 };
 
-export const getPosts = async () => {
-  const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
-  const postDocs = await getDocs(q);
-  const posts = postDocs.docs.map((doc) => {
-    return { id: doc.id, ...doc.data() } as IPost;
-  });
-  store.dispatch(setPosts(posts));
-};
-
 export const getPostsByCommunities = async (id: string) => {
   const posts: IPost[] = [];
   const postsDoc = await fetch.getListWhere(
@@ -84,30 +66,10 @@ export const getPostsByCommunities = async (id: string) => {
   return posts;
 };
 
-export const getPostDetails = async (slugId: string) => {
-  let post = {}
-  const q = query(collection(firestore, "posts"), where("slugId", "==", slugId));
-  const data = await getDocs(q);
-  data.forEach((doc) => (post = { id: doc.id, ...doc.data() } as IPost));
-  return post;
-};
-
 export const getCommunityDetail = async (id: string) => {
   const community = await fetch.getDetail("communities", id);
   const communityObject = { id: community.id, ...community.data() };
   return communityObject as Community;
-};
-
-export const getPostComments = async (id: string) => {
-  const comments: (Comment | null)[] = [];
-  const commentsDocs = await fetch.getListWhere(
-    "comments",
-    where("postId", "==", id)
-  );
-  commentsDocs.docs.forEach((doc) => {
-    comments.push({ id: doc.id, ...doc.data() } as Comment);
-  });
-  return comments;
 };
 
 export const getUserVotes = async (id: string) => {
@@ -184,42 +146,13 @@ export const leaveCommunity = async (userId: string, communityId: string) => {
 export const getCommentVotesByUserId = async (id: string) => {
   const commentVotes = await fetch.getList(`users/${id}/commentVotes`);
   if (commentVotes.size) {
-    const votes: CommentVote[] = [];
+    const votes: ICommentVote[] = [];
     commentVotes.forEach((doc) => {
-      votes.push({ id: doc.id, ...doc.data() } as CommentVote);
+      votes.push({ id: doc.id, ...doc.data() } as ICommentVote);
     });
     return votes;
   }
   return [];
-};
-
-export const getUserSavedPosts = async (userId: string) => {
-  // Construct a reference to the subcollection
-  const savedUsersCollectionRef = collection(
-    firestore,
-    "users",
-    userId,
-    "savedPosts"
-  );
-
-  // Create a query to retrieve all documents in the subcollection
-  const q = query(savedUsersCollectionRef);
-
-  // Try to get the documents in the subcollection
-  getDocs(q)
-    .then((querySnapshot: any) => {
-      const savedPosts: any[] = [];
-      querySnapshot.forEach((docSnapshot: any) => {
-        // Access each document's data using docSnapshot.data()
-        const data = docSnapshot.data();
-        const { createdAt: {nanoseconds, seconds}, ...postData} = data
-        savedPosts.push({ ...postData, createdAt: { nanoseconds, seconds } });
-      });
-      store.dispatch(setSavedPosts(savedPosts));
-    })
-    .catch((error) => {
-      console.error("Error getting documents:", error);
-    });
 };
 
 export const getUserCommunities = async (userId: string) => {
@@ -237,51 +170,6 @@ export const getUserCommunities = async (userId: string) => {
     comm.push(data);
   });
   return comm;
-};
-
-export const searchPost = async (keyword: string) => {
-  if (!!keyword === false) return;
-
-  const bodyQuery = query(
-    collection(firestore, "posts"),
-    where("body", ">=", keyword),
-    where("body", "<=", keyword + "\uf8ff")
-  );
-
-  const titleQuery = query(
-    collection(firestore, "posts"),
-    where("title", ">=", keyword),
-    where("title", "<=", keyword + "\uf8ff")
-  );
-
-  const [bodySnap, titleSnap] = await Promise.all([
-    getDocs(bodyQuery),
-    getDocs(titleQuery),
-  ]);
-
-  const bodyResults: IPost[] = [];
-  bodySnap.forEach((doc) => {
-    bodyResults.push({ id: doc.id, ...doc.data() } as IPost);
-  });
-
-  const titleResults: IPost[] = [];
-  titleSnap.forEach((doc) => {
-    titleResults.push({ id: doc.id, ...doc.data() } as IPost);
-  });
-  const results = [...bodyResults, ...titleResults];
-  return results;
-};
-
-export const getPostsByUser = async (creatorId: string) => {
-  const posts: IPost[] = [];
-  const postsDoc = await fetch.getListWhere(
-    "posts",
-    where("creatorId", "==", creatorId)
-  );
-  postsDoc.docs.forEach((doc) => {
-    posts.push({ id: doc.id, ...doc.data() } as IPost);
-  });
-  return posts;
 };
 
 const generateUsername = (email: string) => {
@@ -335,15 +223,28 @@ export const updateUser = async (userId: string, value: object) => {
   }
 };
 
-export const getUser = async (userId: string) => {
+export const getUser = async (userId: string, type: "" | "query" = "") => {
   try {
     const userDocRef = doc(firestore, "users", userId);
     const docSnapshot = await getDoc(userDocRef);
     const data = docSnapshot.data();
-    if (data?.isRegistered) {
-      store.dispatch(setUserInfo({ id: userId, ...data }));
+    if(data?.isRegistered){
+      if(type === 'query') {
+        return {id: userId, ...data} as IUser
+      }
+      store.dispatch(setUserInfo({id: userId, ...data} as IUser));
     }
   } catch (error) {
     console.error(error);
   }
-};
+}
+
+export const getBlockedUsersByUserId = async (userId: string) => {
+  const blockedDoc = query(collection(firestore, `users/${userId}/blockedUsers`))
+  const docSnapshot = await getDocs(blockedDoc)
+
+  return docSnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  } as IBlockedUser))
+}

@@ -37,7 +37,7 @@ const Home = () => {
       .then((result: IPost[]) => setPosts(result))
     
     getSavedPostsByUser(user.id!)
-      .then((result: any) => console.log(result))
+      .then((result: any) => setSavedPosts(result))
 
   }
 
@@ -53,8 +53,9 @@ const Home = () => {
           {posts.length ? posts.map((post: IPost) => <PostItem
             key={post.id}
             post={post}
-            communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
             setReloadPost={setReloadPost}
+            isSaved={savedPosts.some((item: IPost) => item.id === post.id)}
+            communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
           />) : <NoEntry type="post"/>}
         </Stack>
       </>

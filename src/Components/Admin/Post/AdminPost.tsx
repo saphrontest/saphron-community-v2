@@ -49,6 +49,7 @@ const AdminPost = () => {
                     <Fragment key={post.id}>
                         <PostItem
                             post={post}
+                            isSaved={false}
                             setReloadPost={setReloadPosts}
                             communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
                             isDashboard={true}

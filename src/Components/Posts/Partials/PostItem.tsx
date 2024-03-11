@@ -19,14 +19,15 @@ export type PostItemContentProps = {
   communityName: string;
   setReloadPost: ( isReload:boolean ) => void;
   isDashboard?: boolean;
+  isSaved: boolean;
 };
 
 const PostItem: FC<PostItemContentProps> = ({
   post,
-  homePage,
   communityName,
   setReloadPost,
-  isDashboard=false
+  isDashboard=false,
+  isSaved
 }) => {
   const toast = useToast()
   const navigate = useNavigate()
@@ -35,27 +36,15 @@ const PostItem: FC<PostItemContentProps> = ({
 
   const user = useSelector((state: RootState) => state.user)
   const {communities} = useSelector((state:RootState) => state.community)
-  const {savedPosts} = useSelector((state:RootState) => state.post)
   
   const [userVote, setUserVote] = useState<IPostVote | null>(null)
   const [isVoteLoading, setVoteLoading] = useState<boolean>(false)
   const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false)
-  const [isSaved, setSaved] = useState(false)
 
   useEffect(() => {
     getUserVotesData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  useEffect(() => {
-    if(!!post === true && savedPosts.length){
-      savedPosts.forEach((saved: any) => {
-        if(saved.id === post.id){
-          setSaved(true)
-        }
-      })
-    }
-  }, [post, savedPosts])
 
   const getUserVotesData = async () => {
     const data = user && await getUserVotes(user.id)
@@ -162,7 +151,7 @@ const PostItem: FC<PostItemContentProps> = ({
       cursor={"pointer"}
       _hover={{ borderColor: "gray.500" }}
       mb={1}
-      onClick={() => navigate(`/community/post/${post.slugId}/${post.slug}`)}
+      onClick={() => navigate(`/community/post/${post.slugId}/${post.slug}`, { state: { isSaved } })}
     >
       {!isDashboard && <VoteComponent
       userVote={userVote}

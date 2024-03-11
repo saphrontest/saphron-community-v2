@@ -10,13 +10,11 @@ import {
   deleteDoc,
   writeBatch,
   increment,
-  orderBy
 } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 // INTERFACES
 import { Community, JoinedCommunity, IPost, IPostVote, Comment, CommentVote, IUser, IBlockedUser } from "../Interface";
 import { store } from "../redux/store";
-import { setPosts, setSavedPosts } from "../redux/slices/postSlice";
 import { User } from "firebase/auth";
 import { setUserInfo } from "../redux/slices/userSlice";
 
@@ -68,30 +66,10 @@ export const getPostsByCommunities = async (id: string) => {
   return posts;
 };
 
-export const getPostDetails = async (slugId: string) => {
-  let post = {}
-  const q = query(collection(firestore, "posts"), where("slugId", "==", slugId));
-  const data = await getDocs(q);
-  data.forEach(doc => post = { id: doc.id, ...doc.data() } as IPost)
-  return post
-};
-
 export const getCommunityDetail = async (id: string) => {
   const community = await fetch.getDetail("communities", id);
   const communityObject = { id: community.id, ...community.data() };
   return communityObject as Community;
-};
-
-export const getPostComments = async (id: string) => {
-  const comments: (Comment | null)[] = [];
-  const commentsDocs = await fetch.getListWhere(
-    "comments",
-    where("postId", "==", id)
-  );
-  commentsDocs.docs.forEach((doc) => {
-    comments.push({ id: doc.id, ...doc.data() } as Comment);
-  });
-  return comments;
 };
 
 export const getUserVotes = async (id: string) => {
@@ -182,40 +160,6 @@ export const getUserCommunities = async (userId: string) => {
   });
   return comm
   
-}
-
-export const searchPost = async (keyword: string) => {
-  
-  if(!!keyword === false) return;
-  
-  const bodyQuery = query(
-    collection(firestore, 'posts'),
-    where('body', '>=', keyword),
-    where('body', '<=', keyword + '\uf8ff')
-  );
-
-  const titleQuery = query(
-    collection(firestore, 'posts'),
-    where('title', '>=', keyword),
-    where('title', '<=', keyword + '\uf8ff')
-  );
-
-  const [bodySnap, titleSnap] = await Promise.all([
-    getDocs(bodyQuery),
-    getDocs(titleQuery)
-  ]);
-
-  const bodyResults: IPost[] = [];
-  bodySnap.forEach((doc) => {
-    bodyResults.push({ id: doc.id, ...doc.data() } as IPost);
-  });
-
-  const titleResults: IPost[] = [];
-  titleSnap.forEach((doc) => {
-    titleResults.push({ id: doc.id, ...doc.data() } as IPost);
-  });
-  const results = [...bodyResults, ...titleResults];
-  return results
 }
 
 const generateUsername = (email: string) => {

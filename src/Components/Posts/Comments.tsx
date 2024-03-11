@@ -6,7 +6,7 @@ import { CommentInput } from './Partials';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
 import { RootState } from '../../redux/store';
-import { usePost } from '../../Hooks';
+import { useComment } from '../../Hooks';
 
 interface CommentsProps {
     comments: (Comment | null)[];
@@ -17,7 +17,7 @@ interface CommentsProps {
 const Comments: FC<CommentsProps> = ({ comments, post, getComments }) => {
 
     const dispatch = useDispatch()
-    const { createComment, deleteComment } = usePost()
+    const { onCreate: createComment, onDelete: deleteComment } = useComment()
     const user = useSelector((state: RootState) => state.user)
     const [deleteLoading, setDeleteLoading] = useState("");
     const [comment, setComment] = useState<string>("");

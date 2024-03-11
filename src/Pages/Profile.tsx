@@ -12,23 +12,31 @@ import { usePost } from '../Hooks'
 const Profile = () => {
 
   const [isSmallerThan485] = useMediaQuery('(max-width: 485px)')
-  const {getPostsByUser} = usePost()
+  const {getPostsByUser, getSavedPostsByUser} = usePost()
 
   const user = useSelector((state: RootState) => state.user)
   const { communities } = useSelector((state: RootState) => state.community)
 
   const [reloadPost, setReloadPost] = useState<boolean>(false)
   const [userPosts, setUserPosts] = useState<IPost[]>()
+  const [savedPosts, setSavedPosts] = useState<IPost[]>([])
 
 
   const getPosts = async (userId: string) => {
     const posts = await getPostsByUser(userId)
     setUserPosts(posts)
   }
+  
+  const getSavedPosts = async (userId: string) => {
+    const saved = await getSavedPostsByUser(userId)
+    setSavedPosts(saved)
+  }
 
 
   useEffect(() => {
-    !!user.username && getPosts(user.id)
+    getPosts(user.id)
+    getSavedPosts(user.id)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   useEffect(() => {
@@ -65,6 +73,7 @@ const Profile = () => {
               <PostItem
                 key={post.id}
                 post={post}
+                isSaved={savedPosts.some(item => item.id === post.id)}
                 communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
                 setReloadPost={setReloadPost}
               />

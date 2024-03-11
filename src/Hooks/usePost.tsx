@@ -1,7 +1,7 @@
 import { deleteObject, getDownloadURL, ref, uploadString } from "firebase/storage";
 import { Community, IPost, IUser } from "../Interface";
 import { firestore, storage } from "../firebaseClient";
-import { Transaction, collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, increment, orderBy, query, runTransaction, setDoc, updateDoc, where, writeBatch } from "firebase/firestore";
+import { Transaction, collection, deleteDoc, doc, getDoc, getDocs, limit, orderBy, query, runTransaction, setDoc, updateDoc, where } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
 import { createSlug, getBlockedUsersByUserId } from "../Helpers";
 import md5 from "md5";
@@ -85,11 +85,11 @@ const usePost = () => {
     community: Community,
     imageFile?: string,
   ) => {
-    
+
     const newPostId = md5(`${title}.${moment().toString()}`)
-    const slugId = md5(newPostId).slice(0,4)
+    const slugId = md5(newPostId).slice(0, 4)
     const slug = createSlug(title)
-    
+
     try {
       const newPostDocRef = doc(firestore, "posts", newPostId)
       await runTransaction(firestore, async (transaction: Transaction) => {
@@ -105,7 +105,7 @@ const usePost = () => {
           createdAt: moment().toString(),
           editedAt: moment().toString(),
           slug,
-          slugId 
+          slugId
         })
       })
 
@@ -183,152 +183,184 @@ const usePost = () => {
   }
 
   /**
-   * CREATE A NEW COMMENT
-   * The function `createComment` asynchronously creates a new comment document in Firestore and
-   * updates the number of comments for a specific post.
-   * @param {IPost} post - The `post` parameter in the `createComment` function is of type `IPost`,
-   * which likely represents a post object with properties such as `id` and `title`. It is used to
-   * associate the comment with a specific post by storing the post's id and title in the comment
-   * document.
-   * @param {IUser} user - The `user` parameter in the `createComment` function represents the user who
-   * is creating the comment. It should be an object that contains information about the user, such as
-   * their `id`, `email`, and `profilePhotoURL`. The `id` is a unique identifier for the user,
-   * @param {string} comment - The `comment` parameter in the `createComment` function is a string that
-   * represents the text content of the comment that the user wants to create and associate with a
-   * specific post. This comment will be stored in a Firestore document along with other details such
-   * as the post ID, creator ID, creator display
+   * The function `getPostsByUser` retrieves posts from Firestore based on the creator's ID.
+   * @param {string} creatorId - The `creatorId` parameter in the `getPostsByUser` function is a string
+   * that represents the unique identifier of the user whose posts you want to retrieve. This function
+   * fetches posts from a Firestore collection based on the `creatorId` provided.
+   * @returns An array of posts created by the user with the specified `creatorId`. Each post object in
+   * the array includes an `id` field representing the document ID in Firestore and all the data fields
+   * stored in the document. The array is casted as an array of `IPost` objects.
    */
-  const createComment = async (post: IPost, user: IUser, comment: string) => {
-    const batch = writeBatch(firestore);
-
-    // Create comment document
-    const commentDocRef = doc(collection(firestore, "comments"));
-    batch.set(commentDocRef, {
-      postId: post.id,
-      creatorId: user.id,
-      creatorDisplayText: user.email!.split("@")[0],
-      creatorPhotoURL: user.profilePhotoURL,
-      text: comment,
-      postTitle: post.title,
-      createdAt: new Date(),
-      voteValue: 0
+  const getPostsByUser = async (creatorId: string) => {
+    const postsDoc = await getDocs(query(collection(firestore, "posts"), where("creatorId", "==", creatorId)));
+    const posts = postsDoc.docs.map((doc) => {
+      return { id: doc.id, ...doc.data() } as IPost;
     });
-
-    // Update post numberOfComments
-    batch.update(doc(firestore, "posts", post.id), {
-      numberOfComments: increment(1),
-    });
-    await batch.commit();
+    return posts as IPost[];
   }
 
   /**
-   * DELETE POST COMMENT
-   * The function `deleteComment` deletes a comment, deletes associated comment votes, and updates the
-   * number of comments for a post in a TypeScript React application.
-   * @param {string} commentId - The `commentId` parameter is the unique identifier of the comment that
-   * you want to delete. It is used to locate and delete the specific comment from the database.
-   * @param {string} postId - The `postId` parameter in the `deleteComment` function represents the
-   * unique identifier of the post to which the comment belongs. This identifier is used to locate the
-   * specific post in the database and update its `numberOfComments` field when a comment is deleted.
+   * The functions `getSavedPostsByUser` and `checkBlocked` are used to retrieve saved posts by a user
+   * and check if a post creator is blocked by the current user, respectively.
+   * @param {string} userId - The `userId` parameter in the `getSavedPostsByUser` function is used to
+   * specify the user for whom you want to retrieve saved posts. This function retrieves all the saved
+   * posts for a particular user based on their `userId`.
+   * @returns The `getSavedPostsByUser` function returns an array of saved posts by a specific user,
+   * while the `checkBlocked` function returns a boolean value indicating whether the post creator is
+   * blocked by the current user.
    */
-  const deleteComment = async (commentId: string, postId: string) => {
-    // delete the comment
-    const commentRef = doc(firestore, "comments", commentId)
-    await deleteDoc(commentRef);
-
-    // delete the comment votes for all users which is voted for the comment
-    const commentVotesRef = collectionGroup(firestore, "commentVotes")
-    const commentDocs = await getDocs(commentVotesRef)
-    commentDocs.forEach(async doc => {
-        if (doc.data().commentId === commentId) {
-            await deleteDoc(doc.ref);
-        }
-    })
-
-    // update the numberOfComments for the post
-    const batch = writeBatch(firestore)
-    const postRef = doc(firestore, "posts", postId)
-    batch.update(postRef, {
-        numberOfComments: increment(-1)
-    })
-    batch.commit()
-  }
-
-
-  const getPostsByUser = async (creatorId: string) => {
-    const posts: IPost[] = []
-    const postsDoc = await getDocs(query(collection(firestore, "posts"), where("creatorId", "==", creatorId)));
-    postsDoc.docs.forEach((doc) => {
-      posts.push({ id: doc.id, ...doc.data() } as IPost);
-    });
-    return posts;
-  }
-
-  //TODO: WORK ON POST STATE && SAVED POSTS
   const getSavedPostsByUser = async (userId: string) => {
-    // Construct a reference to the subcollection
-    const savedUsersCollectionRef = collection(firestore, "users", userId, "savedPosts");
-  
-    // Create a query to retrieve all documents in the subcollection
-    const q = query(savedUsersCollectionRef);
-  
-    // Try to get the documents in the subcollection
-    getDocs(q)
-      .then((querySnapshot: any) => {
-        const savedPosts: any[] = []
-        querySnapshot.forEach((docSnapshot: any) => {
-          // Access each document's data using docSnapshot.data()
-          const data = docSnapshot.data();
-          const { createdAt: {nanoseconds, seconds}, ...postData} = data
-          savedPosts.push({ ...postData, createdAt: { nanoseconds, seconds } });
-        });
-        return savedPosts
-      })
-      .catch((error) => {
-        console.error("Error getting documents:", error);
-      });
+    try {
+      // Construct a reference to the subcollection
+      const savedUsersCollectionRef = collection(firestore, "users", userId, "savedPosts");
+
+      // Create a query to retrieve all documents in the subcollection
+      const q = query(savedUsersCollectionRef);
+
+      // Get the documents in the subcollection using async/await
+      const querySnapshot = await getDocs(q);
+
+      // Map the documents' data to an array of saved posts
+      const savedPosts = querySnapshot.docs.map(doc => doc.data());
+
+      return savedPosts as IPost[];
+    } catch (error) {
+      console.error("Error getting documents:", error);
+      throw error; // Rethrow the error to handle it at a higher level if needed
+    }
   };
 
-  const checkBlocked = async  (postCreatorId: string) => {
-    if(store.getState().user.id) {
-      const blocked = await getBlockedUsersByUserId(store.getState().user.id);
-      return blocked.some(blockedUser => blockedUser.userId === postCreatorId); 
-    }else{
+/**
+ * The function `checkBlocked` checks if a post creator is blocked by the current user.
+ * @param {string} postCreatorId - The `postCreatorId` parameter in the `checkBlocked` function is a
+ * string representing the ID of the user who created a post. This function checks if the user who
+ * created the post is blocked by the currently logged-in user.
+ * @returns The function `checkBlocked` is returning a boolean value. It returns `false` if the current
+ * user is not logged in (`store.getState().user.id` is falsy), indicating that the post creator is not
+ * blocked. If the user is logged in, it fetches the list of blocked users for the current user and
+ * checks if the `postCreatorId` matches any of the blocked users.
+ */
+  const checkBlocked = async (postCreatorId: string) => {
+
+    if(!store.getState().user.id) {
       return false
     }
+    
+    const blocked = await getBlockedUsersByUserId(store.getState().user.id);
+    return blocked.some(blockedUser => blockedUser.userId === postCreatorId);
+
   }
-  
-/**
- * The function `getPosts` retrieves posts from a Firestore collection, filters them based on blocked
- * users if needed, and returns the posts as an array.
- * @param [getAll=false] - The `getAll` parameter in the `getPosts` function is a boolean parameter
- * with a default value of `false`. This parameter is used to determine whether all posts should be
- * retrieved or only non-blocked posts should be retrieved. If `getAll` is set to `true`, all posts
- * will be
- * @returns The `getPosts` function is returning an array of post objects. Each post object includes
- * the post ID, post data, and an additional property `isBlocked` if the post creator is blocked. If
- * `getAll` is true, all posts are returned without checking for blocked users.
- */
-  const getPosts = async (getAll=false) => {
+
+  /**
+   * The function `getPosts` retrieves posts from a Firestore collection, filters them based on blocked
+   * users if needed, and returns the posts as an array.
+   * @param [getAll=false] - The `getAll` parameter in the `getPosts` function is a boolean parameter
+   * with a default value of `false`. This parameter is used to determine whether all posts should be
+   * retrieved or only non-blocked posts should be retrieved. If `getAll` is set to `true`, all posts
+   * will be
+   * @returns The `getPosts` function is returning an array of post objects. Each post object includes
+   * the post ID, post data, and an additional property `isBlocked` if the post creator is blocked. If
+   * `getAll` is true, all posts are returned without checking for blocked users.
+   */
+  const getPosts = async (getAll = false) => {
+
     const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
     const postDocs = await getDocs(q);
-  
+
     // Define a function to get blocked users and filter posts
     const getPosts = async (doc: any) => {
       if (!getAll) {
+
         const isBlocked = await checkBlocked(doc.data().creatorId)
+
         if (isBlocked) {
           return { id: doc.id, isBlocked: true, ...doc.data() } as IPost | { isBlocked: boolean; };
         }
         return { id: doc.id, ...doc.data() } as IPost
+
       }
+
       return { id: doc.id, ...doc.data() } as IPost
+
     };
-  
+
     // Use Promise.all to await all asynchronous operations
     const posts = await Promise.all(postDocs.docs.map(getPosts));
-  
-    return posts
+
+    return posts as IPost[]
+
+  };
+
+  /**
+   * The function `searchPost` searches for posts in a Firestore collection based on a keyword in the
+   * post body or title.
+   * @param {string} keyword - The `searchPost` function you provided is an asynchronous function that
+   * searches for posts in a Firestore collection based on a keyword. It performs two separate queries,
+   * one for the 'body' field and one for the 'title' field, using the keyword for filtering.
+   * @returns The `searchPost` function returns an array of `IPost` objects that match the keyword in
+   * either the `body` or `title` fields of the posts collection in Firestore.
+   */
+  const searchPost = async (keyword: string) => {
+
+    if (!!keyword === false) return;
+
+    const bodyQuery = query(
+      collection(firestore, 'posts'),
+      where('body', '>=', keyword),
+      where('body', '<=', keyword + '\uf8ff')
+    );
+
+    const titleQuery = query(
+      collection(firestore, 'posts'),
+      where('title', '>=', keyword),
+      where('title', '<=', keyword + '\uf8ff')
+    );
+
+    const [bodySnap, titleSnap] = await Promise.all([
+      getDocs(bodyQuery),
+      getDocs(titleQuery)
+    ]);
+
+    const bodyResults: IPost[] = [];
+    bodySnap.forEach((doc) => {
+      bodyResults.push({ id: doc.id, ...doc.data() } as IPost);
+    });
+
+    const titleResults: IPost[] = [];
+    titleSnap.forEach((doc) => {
+      titleResults.push({ id: doc.id, ...doc.data() } as IPost);
+    });
+    const results = [...bodyResults, ...titleResults];
+    return results
+  }
+
+  /**
+   * The function `getPostDetail` retrieves details of a post based on a provided slugId from a
+   * Firestore collection in a TypeScript React application.
+   * @param {string} slugId - The `slugId` parameter in the `getPostDetail` function is a string that
+   * represents the unique identifier (slug) of a post. This function retrieves the details of a post
+   * from a Firestore database based on the provided `slugId`.
+   * @returns The `getPostDetail` function is returning an object that contains the `id` of the post
+   * document and all the data of the post document retrieved from Firestore. The data is being
+   * returned as an object of type `IPost`. If no matching post is found based on the `slugId`, the
+   * function returns `null`.
+   */
+  const getPostDetail = async (slugId: string) => {
+    try {
+      const q = query(collection(firestore, "posts"), where("slugId", "==", slugId), limit(1));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.size === 0) {
+        // Return null or handle the case where no matching post is found
+        return null;
+      }
+
+      const doc = querySnapshot.docs[0];
+      return { id: doc.id, ...doc.data() } as IPost;
+    } catch (error) {
+      console.error("Error getting post details:", error);
+      throw error; // Rethrow the error to handle it at a higher level if needed
+    }
   };
 
   return {
@@ -336,8 +368,8 @@ const usePost = () => {
     onDelete,
     onCreate,
     getPosts,
-    createComment,
-    deleteComment,
+    searchPost,
+    getPostDetail,
     getPostsByUser,
     getSavedPostsByUser
   }

@@ -2,8 +2,8 @@
 import { Flex } from '@chakra-ui/react';
 import { FC, useEffect, useState } from 'react'
 import SearchResults from '../Nav/Partials/SearchResults';
-import { searchPost } from '../../Helpers/apiFunctions';
 import { SearchHeader, SearchInput } from './Partials';
+import { usePost } from '../../Hooks';
 
 interface PostSearchProps {
   searchKey?: string;
@@ -11,6 +11,9 @@ interface PostSearchProps {
 }
 
 const PostSearch: FC<PostSearchProps> = ({ searchKey, items }) => {
+  
+  const {searchPost} = usePost() 
+  
   const [searchText, setSearchText] = useState(searchKey)
   const [searchResult, setSearchResult] = useState(items)
 

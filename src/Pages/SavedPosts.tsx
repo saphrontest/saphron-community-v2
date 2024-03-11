@@ -7,61 +7,65 @@ import { IPost, Community } from '../Interface'
 import { Box, Text, useToast } from '@chakra-ui/react'
 import { setModal } from '../redux/slices/modalSlice'
 import { usePost } from '../Hooks'
-//TODO: WORK ON POST STATE && SAVED POSTS
+
 const SavedPosts = () => {
-    const {getSavedPostsByUser} = usePost()
-    const user = useSelector((state: RootState) => state.user)
-    const toast = useToast()
-    const dispatch = useDispatch()
-    const [reloadPost, setReloadPost] = useState(false)
-    const {communities} = useSelector((state: RootState) => state.community)
 
-    useEffect(() => {
+  const toast = useToast()
+  const dispatch = useDispatch()
+  const { getSavedPostsByUser } = usePost()
+  
+  const user = useSelector((state: RootState) => state.user)
+  const { communities } = useSelector((state: RootState) => state.community)
 
-      if(!!user.id === false) {
-        toast({
-          title: "Please login, first!",
-          status: "error",
-          isClosable: true,
-          position: "top-right"
-        })
-        dispatch(setModal({isOpen: true, view: 'login'}))
-      }
+  const [reloadPost, setReloadPost] = useState(false)
+  const [savedPosts, setSavePosts] = useState<IPost[]>([])
+
+  useEffect(() => {
+
+    if (!!user.id === false) {
+      toast({
+        title: "Please login, first!",
+        status: "error",
+        isClosable: true,
+        position: "top-right"
+      })
+      dispatch(setModal({ isOpen: true, view: 'login' }))
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user])
+  }, [user])
 
-
-
-    useEffect(() => {
-        if(reloadPost) {
-            getSavedPostsByUser(user?.id as string)
-              .then(result => console.log(result))
-              .finally(() => setReloadPost(false))
-        }
+  useEffect(() => {
+    if (reloadPost) {
+      getSavedPostsByUser(user?.id as string)
+        .then(result => setSavePosts(result))
+        .finally(() => setReloadPost(false))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [reloadPost])
-    
-    useEffect(() => {
-        getSavedPostsByUser(user?.id as string)
+  }, [reloadPost])
+
+  useEffect(() => {
+    getSavedPostsByUser(user?.id as string)
+      .then(result => setSavePosts(result))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+  }, [])
 
   return (
     <PageLayout>
       <>
-      <Meta
+        <Meta
           title={'Saphron Health | Saved Post'}
           description='Saved Post'
         />
-        {/* {
+        {
           savedPosts.length ? (
             <>
               <Box p="14px 0px" >
-                <Text fontWeight={600} textAlign="left">Saved Posts</Text>
+                <Text fontWeight={700} fontSize="22px" textAlign="left">Saved Posts</Text>
               </Box>
               {savedPosts.map((post: IPost, index: number) => (
                 <PostItem
+                  isSaved={true}
                   key={index}
                   post={post}
                   communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
@@ -71,7 +75,7 @@ const SavedPosts = () => {
             </>
           )
             : <NoEntry type="saved post" />
-        } */}
+        }
       </>
       <>
         <PersonalHome />

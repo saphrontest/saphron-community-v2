@@ -5,7 +5,6 @@ import { IoBookmarkOutline, IoBookmarkSharp } from 'react-icons/io5'
 import { IPost } from '../../../Interface'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserSavedPosts, } from '../../../Helpers/apiFunctions'
 import { setModal } from '../../../redux/slices/modalSlice'
 import { BsChat } from 'react-icons/bs'
 import { RootState } from '../../../redux/store'
@@ -24,15 +23,17 @@ interface ActionButtonsInterface {
     isDashboard?: boolean;
     setReloadPost: (arg: boolean) => void;
 }
+
 const ActionButtons: FC<ActionButtonsInterface> = ({ post, isSaved, handleDelete, isDeleteLoading, isDashboard = false, setReloadPost }) => {
 
     const toast = useToast()
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const { onSave: savePost } = usePost()
+    const {onSave: savePost, getSavedPostsByUser} = usePost()
+
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const user = useSelector((state: RootState) => state.user)
     const [isSaveLoading, setSaveLoading] = useState(false)
+    const user = useSelector((state: RootState) => state.user)
 
     const handleSave = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation();
@@ -50,7 +51,7 @@ const ActionButtons: FC<ActionButtonsInterface> = ({ post, isSaved, handleDelete
         setSaveLoading(true)
         savePost(post, user.id)
             .finally(() => {
-                getUserSavedPosts(user?.id as string)
+                getSavedPostsByUser(user?.id as string)
                 setSaveLoading(false)
             })
     }
@@ -72,7 +73,7 @@ const ActionButtons: FC<ActionButtonsInterface> = ({ post, isSaved, handleDelete
                     borderRadius={4}
                     _hover={{ bg: "gray.200" }}
                     cursor="pointer"
-                    onClick={() => navigate(`/community/post/${post.slugId}/${post.slug}`)}
+                    onClick={() => navigate(`/community/post/${post.slugId}/${post.slug}`, { state: { isSaved } })}
                 >
                     <Icon as={BsChat} mr={2} />
                     <Text fontSize="9pt" textAlign={"left"}>{post.numberOfComments}</Text>

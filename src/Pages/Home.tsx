@@ -3,15 +3,20 @@ import { PageLayout } from '../Layouts'
 import { BuyPremium, CreatePostLink, Meta, NoEntry, PersonalHome, PostItem, Recommendations } from '../Components'
 import { Stack } from '@chakra-ui/react'
 import { IPost, Community } from '../Interface'
-import { getPosts, getUserSavedPosts } from '../Helpers/apiFunctions'
+import {  } from '../Helpers/apiFunctions'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
+import { usePost } from '../Hooks'
 
 const Home = () => {
+  const {getPosts, getSavedPostsByUser} = usePost()
+  
+  const [posts, setPosts] = useState<IPost[]>([])
+  const [savedPosts, setSavedPosts] = useState<IPost[]>([])
   const [reloadPost, setReloadPost] = useState<boolean>(false)
-  const {communities} = useSelector((state: RootState) => state.community)
-  const {posts} = useSelector((state: RootState) => state.post)
+  
   const user = useSelector((state: RootState) => state.user)
+  const {communities} = useSelector((state: RootState) => state.community)
 
   useEffect(() => {
     getPostsData()
@@ -27,8 +32,13 @@ const Home = () => {
   }, [reloadPost])
 
   const getPostsData = async () => {
-    await getPosts()
-    await user?.id && getUserSavedPosts(user?.id as string)
+    
+    getPosts()
+      .then((result: IPost[]) => setPosts(result))
+    
+    getSavedPostsByUser(user.id!)
+      .then((result: any) => setSavedPosts(result))
+
   }
 
   return (
@@ -43,8 +53,9 @@ const Home = () => {
           {posts.length ? posts.map((post: IPost) => <PostItem
             key={post.id}
             post={post}
-            communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
             setReloadPost={setReloadPost}
+            isSaved={savedPosts.some((item: IPost) => item.id === post.id)}
+            communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
           />) : <NoEntry type="post"/>}
         </Stack>
       </>

@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { Comment, CommentVote as CommentVoteInterface } from '../../Interface'
+import { IComment, ICommentVote } from '../../Interface'
 import { firestore } from '../../firebaseClient';
 import { Avatar, Box, Flex, Spinner, Stack, Text } from '@chakra-ui/react';
 import moment from 'moment';
@@ -11,7 +11,7 @@ import { setModal } from '../../redux/slices/modalSlice';
 import { RootState } from '../../redux/store';
 
 interface CommentItemProps {
-    comment: Comment;
+    comment: IComment;
     onDelete: (commentId: string, postId: string) => void;
     isLoading: boolean;
     getComments: (id: string) => void
@@ -20,7 +20,7 @@ interface CommentItemProps {
 const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading, getComments }) => {
     const dispatch = useDispatch()
     const [voteLoading, setVoteLoading] = useState<boolean>(false)
-    const [userVote, setUserVote] = useState<CommentVoteInterface>()
+    const [userVote, setUserVote] = useState<ICommentVote>()
     const user = useSelector((state: RootState) => state.user)
 
     useEffect(() => {
@@ -46,7 +46,7 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading, getCo
         const createCommentVote = async (userId: string) => {
             // ADD COMMENT VOTE VALUE TO COMMENT ITEM
             const batch = writeBatch(firestore);
-            const commentVote: CommentVoteInterface = {
+            const commentVote: ICommentVote = {
                 creatorId: userId,
                 postId: comment?.postId,
                 commentId: comment?.id,

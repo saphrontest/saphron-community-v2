@@ -1,4 +1,4 @@
-export type Comment = {
+export type IComment = {
     id?: string;
     creatorId: string;
     creatorDisplayText: string;
@@ -11,7 +11,7 @@ export type Comment = {
     voteValue?: number;
   }
 
-export type CommentVote = {
+export type ICommentVote = {
     id?: string;
     creatorId: string;
     postId?: string;

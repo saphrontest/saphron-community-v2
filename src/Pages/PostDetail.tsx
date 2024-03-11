@@ -1,32 +1,39 @@
 import React, { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
-import { getPostComments, getPostDetails } from '../Helpers/apiFunctions'
-import { useParams } from 'react-router-dom'
-import { IPost, Comment, Community } from '../Interface'
+import { useLocation, useParams } from 'react-router-dom'
+import { IPost, IComment, Community } from '../Interface'
 import { About, Meta, PostItem } from '../Components'
 import { Comments } from '../Components/Posts'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { Flex } from '@chakra-ui/react'
 import { setSelectedCommunity } from '../redux/slices/communitySlice'
+import { useComment, usePost } from '../Hooks'
 
 const PostDetail = () => {
-  const { slugId } = useParams()
+  
   const dispatch = useDispatch()
-  const [post, setPost] = useState<IPost | null>(null)
-  const [comments, setComments] = useState<(Comment | null)[]>()
+  const { slugId } = useParams()
+  const { getPostDetail } = usePost()
+  const { getCommentByPostId } = useComment()
+  const { state: locationState } = useLocation()
+  
+  const [post, setPost] = useState<IPost>()
   const [reloadPost, setReloadPost] = useState<boolean>(false)
+  const [comments, setComments] = useState<IComment[]>([])
+
   const { communities } = useSelector((state: RootState) => state.community)
+  
   const isPageLoading = !(!!post && !!comments)
 
 
   const getPost = async (slugId: string) => {
-    const postDetail = await getPostDetails(slugId)
+    const postDetail = await getPostDetail(slugId)
     setPost(postDetail as IPost)
   }
 
-  const getComments = async (id: string) => {
-    const commentsData = await getPostComments(id)
+  const getComments = async (postId: string) => {
+    const commentsData = await getCommentByPostId(postId)
     setComments(commentsData)
   }
 
@@ -42,6 +49,7 @@ const PostDetail = () => {
 
   useEffect(() => {
     post?.id && getComments(post.id as string)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [post])
 
   useEffect(() => {
@@ -68,6 +76,7 @@ const PostDetail = () => {
           description={post?.body as string}
         />
         {!isPageLoading && <PostItem
+        isSaved={locationState.isSaved}
         post={post}
         setReloadPost={setReloadPost}
         communityName={communities.filter((c: Community) => post.communityId === c.id)[0]?.name}

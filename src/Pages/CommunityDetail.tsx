@@ -1,18 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Community, IPost } from '../Interface'
+import { Community, IPost, IUser } from '../Interface'
 import { PageLayout } from '../Layouts'
 import { getCommunityDetail, getPostsByCommunities } from '../Helpers/apiFunctions'
 import { About, CreatePostLink, Meta, NoEntry, PostItem } from '../Components'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
+import { usePost } from '../Hooks'
 
 const CommunityDetail = () => {
+  const {getSavedPostsByUser} = usePost()
   const location = useLocation()
   const communityId = useRef(location.pathname.split('/').at(-1)).current
+  
   const { communities } = useSelector((state: RootState) => state.community)
+  const user: IUser = useSelector((state: RootState) => state.user)
   
   const [posts, setPosts] = useState<IPost[]>([])
+  const [savedPosts, setSavedPosts] = useState<IPost[]>([])
   const [community, setCommunity] = useState<Community>()
   const [reloadPost, setReloadPost] = useState<boolean>(false)
 
@@ -26,10 +31,16 @@ const CommunityDetail = () => {
     setPosts(p)
   }
 
+  const getSavedPosts = async (userId: string) => {
+    const saved = await getSavedPostsByUser(userId)
+    setSavedPosts(saved)
+  }
+
   const getAll = async (communityId: string) => {
     try {
       await getDetail(communityId)
       await getPosts(communityId)
+      await getSavedPosts(user.id)
     } catch (error) {
       console.error(error)
     }
@@ -58,6 +69,7 @@ const CommunityDetail = () => {
         />
         <CreatePostLink communityId={communityId} />
         {posts.length ? posts.map(post => <PostItem
+          isSaved={savedPosts.some(item => item.id === post.id)}
           key={post?.id}
           post={post}
           communityName={communities?.filter((c: Community) => post?.communityId === c.id)[0]?.name}

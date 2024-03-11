@@ -114,8 +114,6 @@ const useWorkshop = () => {
         })
     }
 
-    // TODO: onCreate && onEdit && onDelete && onJoin
-
     return {
         onDelete,
         getWorkshops,

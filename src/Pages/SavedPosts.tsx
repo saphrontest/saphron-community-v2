@@ -37,7 +37,7 @@ const SavedPosts = () => {
 
   useEffect(() => {
     if (reloadPost) {
-      getSavedPostsByUser(user?.id as string)
+      getSavedPostsByUser(user.id)
         .then(result => setSavedPosts(result))
         .finally(() => setReloadPost(false))
     }
@@ -45,7 +45,7 @@ const SavedPosts = () => {
   }, [reloadPost])
 
   useEffect(() => {
-    getSavedPostsByUser(user?.id as string)
+    getSavedPostsByUser(user.id)
       .then(result => setSavedPosts(result))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

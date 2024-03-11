@@ -3,9 +3,10 @@ import { Community, IPost, IUser } from "../Interface";
 import { firestore, storage } from "../firebaseClient";
 import { Transaction, collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, increment, orderBy, query, runTransaction, setDoc, updateDoc, where, writeBatch } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
-import { createSlug } from "../Helpers";
+import { createSlug, getBlockedUsersByUserId } from "../Helpers";
 import md5 from "md5";
 import moment from "moment";
+import { store } from "../redux/store";
 
 const usePost = () => {
   const params = useParams()
@@ -253,14 +254,6 @@ const usePost = () => {
     batch.commit()
   }
 
-  const getPosts = async () => {
-    const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
-    const postDocs = await getDocs(q);
-    const posts = postDocs.docs.map((doc) => {
-      return { id: doc.id, ...doc.data() } as IPost;
-    });
-    return posts
-  };
 
   const getPostsByUser = async (creatorId: string) => {
     const posts: IPost[] = []
@@ -296,13 +289,55 @@ const usePost = () => {
       });
   };
 
+  const checkBlocked = async  (postCreatorId: string) => {
+    if(store.getState().user.id) {
+      const blocked = await getBlockedUsersByUserId(store.getState().user.id);
+      return blocked.some(blockedUser => blockedUser.userId === postCreatorId); 
+    }else{
+      return false
+    }
+  }
+  
+/**
+ * The function `getPosts` retrieves posts from a Firestore collection, filters them based on blocked
+ * users if needed, and returns the posts as an array.
+ * @param [getAll=false] - The `getAll` parameter in the `getPosts` function is a boolean parameter
+ * with a default value of `false`. This parameter is used to determine whether all posts should be
+ * retrieved or only non-blocked posts should be retrieved. If `getAll` is set to `true`, all posts
+ * will be
+ * @returns The `getPosts` function is returning an array of post objects. Each post object includes
+ * the post ID, post data, and an additional property `isBlocked` if the post creator is blocked. If
+ * `getAll` is true, all posts are returned without checking for blocked users.
+ */
+  const getPosts = async (getAll=false) => {
+    const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
+    const postDocs = await getDocs(q);
+  
+    // Define a function to get blocked users and filter posts
+    const getPosts = async (doc: any) => {
+      if (!getAll) {
+        const isBlocked = await checkBlocked(doc.data().creatorId)
+        if (isBlocked) {
+          return { id: doc.id, isBlocked: true, ...doc.data() } as IPost | { isBlocked: boolean; };
+        }
+        return { id: doc.id, ...doc.data() } as IPost
+      }
+      return { id: doc.id, ...doc.data() } as IPost
+    };
+  
+    // Use Promise.all to await all asynchronous operations
+    const posts = await Promise.all(postDocs.docs.map(getPosts));
+  
+    return posts
+  };
+
   return {
     onSave,
     onDelete,
     onCreate,
+    getPosts,
     createComment,
     deleteComment,
-    getPosts,
     getPostsByUser,
     getSavedPostsByUser
   }

@@ -1,6 +1,6 @@
+import { useAuthState, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import React, { useEffect, useState } from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
-import { useAuthState, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../../../../firebaseClient";
 import { InputItem } from "../../../../Layouts";
 import { useDispatch } from "react-redux";
@@ -32,7 +32,6 @@ const Login: React.FC<LoginProps> = () => {
       return setFormError("Please enter a valid email");
     }
 
-    // Valid form inputs
     signInWithEmailAndPassword(form.email, form.password);
     if(error){
       setFormError("Invalid email or password!");
@@ -45,6 +44,7 @@ const Login: React.FC<LoginProps> = () => {
     if(isLoginSuccess && user) {
       getUser(user?.uid).then(() => dispatch(setModal({isOpen: false, view: null})))
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, isLoginSuccess])
 
   const onChange = ({

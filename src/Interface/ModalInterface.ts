@@ -9,6 +9,7 @@ export type ModalViewTypes =
   | "createSupportGroup"
   | "joinSupportGroup"
   | "editSupportGroup"
+  | "paymentModal"
   | null;
 
 export interface ModalInterface {

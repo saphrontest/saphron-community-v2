@@ -13,6 +13,12 @@ export interface IUser {
     role: UserRoleTypes;
 }
 
+export interface IBlockedUser {
+    id: string;
+    date: string;
+    userId: string;
+}
+
 export const defaultUserState: IUser = {
     id: "",
     displayName: "",

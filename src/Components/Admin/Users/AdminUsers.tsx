@@ -3,37 +3,58 @@ import { Fragment, useEffect, useState } from 'react'
 import { useAdmin } from '../../../Hooks'
 import { IUser } from '../../../Interface'
 import AdminUserItem from './AdminUserItem'
+import { PlatformAdminContentLayout } from '../../../Layouts'
 const AdminUsers = () => {
-  const {getUsers} = useAdmin()
+  const { getUsers } = useAdmin()
   const [users, setUsers] = useState<IUser[]>([])
-  const [usersLoading, {toggle: toggleUsersLoading}]  = useBoolean(false)
-  
+  const [filteredUsers, setFilteredUsers] = useState<IUser[]>([])
+  const [usersLoading, { toggle: toggleUsersLoading }] = useBoolean(false)
+
 
   useEffect(() => {
     getUserList()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 
   const getUserList = (isLoading: boolean = true) => {
-    isLoading && toggleUsersLoading() 
+    isLoading && toggleUsersLoading()
     getUsers()
-      .then(users => setUsers(users))
+      .then(result => {
+        setUsers(result)
+        setFilteredUsers(result)
+      })
       .finally(() => isLoading && toggleUsersLoading())
   }
 
+  const searchUsers = (searchWord: string) => {
+    setFilteredUsers(() => {
+      return users.filter(user => {
+        return user.displayName.toLowerCase().includes(searchWord) ||
+          user.username.toLowerCase().includes(searchWord) ||
+          user.email.toLowerCase().includes(searchWord)
+      })
+    })
+  }
 
-  return !usersLoading ? (
-    <Flex direction="column" gap="1rem" w="100%">
+
+  return (
+    <PlatformAdminContentLayout onSearch={searchUsers}>
       {
-        users.map((user: IUser) => (
-          <Fragment key={user.id}>
-            <AdminUserItem user={user} getUserList={getUserList}/>
-          </Fragment>
-        ))
+        !usersLoading ? (
+          <Flex direction="column" gap="1rem" w="100%">
+            {
+              filteredUsers.map((user: IUser) => (
+                <Fragment key={user.id}>
+                  <AdminUserItem user={user} getUserList={getUserList} />
+                </Fragment>
+              ))
+            }
+          </Flex>
+        ) : <Spinner size="xl" mt="1rem" />
       }
-    </Flex>
-  ) : <Spinner size="xl" mt="1rem" />
+    </PlatformAdminContentLayout>
+  )
 }
 
 export default AdminUsers

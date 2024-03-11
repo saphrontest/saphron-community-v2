@@ -39,7 +39,7 @@ const Profile = () => {
   return (
     <>
       <Meta
-        title={`Saphron Health | Profile`}
+        title="Saphron Health | Profile"
         description="Profile Page"
       />
       <Nav />

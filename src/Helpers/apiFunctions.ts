@@ -66,7 +66,7 @@ const checkBlocked = async  (postCreatorId: string) => {
 }
 
 export const getPosts = async (getAll=false) => {
-  const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
+  const q = query(collection(firestore, "posts"), orderBy('createdAt', getAll ? 'desc' :'asc'));
   const postDocs = await getDocs(q);
 
   // Define a function to get blocked users and filter posts

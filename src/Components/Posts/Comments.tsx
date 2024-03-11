@@ -9,7 +9,7 @@ import { RootState } from '../../redux/store';
 import { useComment } from '../../Hooks';
 
 interface CommentsProps {
-    comments: (Comment | null)[];
+    comments: Comment[];
     post: IPost;
     getComments: (id: string) => void
 }
@@ -18,10 +18,13 @@ const Comments: FC<CommentsProps> = ({ comments, post, getComments }) => {
 
     const dispatch = useDispatch()
     const { onCreate: createComment, onDelete: deleteComment } = useComment()
+    
     const user = useSelector((state: RootState) => state.user)
-    const [deleteLoading, setDeleteLoading] = useState("");
+    
     const [comment, setComment] = useState<string>("");
+    const [deleteLoading, setDeleteLoading] = useState<string>(""); // comment id
     const [commentCreateLoading, setCommentCreateLoading] = useState<boolean>(false);
+    
     const commentArray = comments as Comment[];
 
     const onCommentDelete = async (commentId: string, postId: string) => {

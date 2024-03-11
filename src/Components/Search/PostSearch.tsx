@@ -25,6 +25,7 @@ const PostSearch: FC<PostSearchProps> = ({ searchKey, items }) => {
       }, 1000);
       return () => clearTimeout(timer)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText])
 
   return (

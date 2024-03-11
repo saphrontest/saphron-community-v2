@@ -17,9 +17,6 @@ const PostSearch: FC<PostSearchProps> = ({ searchKey, items }) => {
   const [searchText, setSearchText] = useState(searchKey)
   const [searchResult, setSearchResult] = useState(items)
 
-  // TODO: clear search results when the search text is empty
-  // TODO: create a no-search-result component
-
   useEffect(() => {
     if (searchText) {
       const timer = setTimeout(() => {

@@ -24,16 +24,16 @@ interface ActionButtonsInterface {
     setReloadPost: (arg: boolean) => void;
 }
 
-//TODO: WORK ON POST STATE && SAVED POSTS
 const ActionButtons: FC<ActionButtonsInterface> = ({ post, isSaved, handleDelete, isDeleteLoading, isDashboard = false, setReloadPost }) => {
 
     const toast = useToast()
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const {onSave: savePost, getSavedPostsByUser} = usePost()
-    const user = useSelector((state: RootState) => state.user)
-    const [isSaveLoading, setSaveLoading] = useState(false)
+
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const [isSaveLoading, setSaveLoading] = useState(false)
+    const user = useSelector((state: RootState) => state.user)
 
     const handleSave = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation();

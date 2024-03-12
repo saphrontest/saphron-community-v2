@@ -50,30 +50,12 @@ const router = createBrowserRouter(
         </Route>
 
         <Route path='community-detail'>
-          <Route
-          path=':communityId'
-          element={<CommunityDetail />}
-          loader={async ({ params: { communityId } }) => {
-            return await getCommunityDetails(communityId as string)
-          }}
-          />
+          <Route path=':communityId' element={<CommunityDetail />} loader={async ({ params: { communityId } }) => await getCommunityDetails(communityId as string)} />
         </Route>
 
         <Route path='post'>
-          <Route
-          path=':slugId' 
-          element={<PostDetail />}
-          loader={async ({ params: { slugId } }) => {
-            return await getPostDetail(slugId as string)
-          }}
-          />
-          <Route
-          path=':slugId/:slug'
-          element={<PostDetail />}
-          loader={async ({ params: { slugId } }) => {
-            return await getPostDetail(slugId as string)
-          }}
-          />
+          <Route path=':slugId' element={<PostDetail />} loader={async ({ params: { slugId } }) => await getPostDetail(slugId as string)} />
+          <Route path=':slugId/:slug' element={<PostDetail />} loader={async ({ params: { slugId } }) => await getPostDetail(slugId as string)} />
         </Route>
       </Route>
 

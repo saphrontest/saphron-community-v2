@@ -1,5 +1,5 @@
 import { PlatformPageLayout } from '../Layouts'
-import { useBoolean, useToast } from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/react'
 import communitiesBackground from '../assets/images/communities.jpg'
 import { Meta, WorkshopDetail, WorkshopList } from '../Components'
 import { useEffect, useState } from 'react'

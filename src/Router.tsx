@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import {
   Home,
   Submit,
@@ -20,46 +20,85 @@ import {
   AdminSupportGroupsPage,
   AdminWorkshopsPage
 } from './Pages'
+import { getCommunityDetails, getPostDetail } from './Helpers'
 
-const base = "community"
-const adminBase = "manager-dashboard"
+const BASE = "community"
+const WORKSHOPS_BASE = "workshops"
+const SUPPORT_GROUPS_BASE = "workshops"
+const ADMIN_BASE = "manager-dashboard"
 
-const RoutesArray = [
-  { path: "/", component: Home },
-  { path: "community", component: Home },
-  { path: "about", component: AboutPage },
-  { path: 'submit', component: Submit },
-  { path: `${base}/submit`, component: Submit },
-  { path: `${base}/submit/:communityId`, component: Submit },
-  { path: `${base}/community-detail/:id`, component: CommunityDetail },
-  { path: `${base}/post/:slugId/:slug`, component: PostDetail },
-  { path: `${base}/saved-posts`, component: SavedPosts },
-  { path: `${base}/profile`, component: Profile },
-  { path: `${base}/search`, component: SearchPage },
-  { path: "workshops", component: WorkshopsPage },
-  { path: "workshops/:slug", component: WorkshopsPage },
-  { path: "my-workshops", component: MyWorkshopsPage },
-  { path: `${adminBase}`, component: AdminPage },
-  { path: `/${adminBase}/posts`, component: AdminPostsPage },
-  { path: `/${adminBase}/users`, component: AdminUsersPage },
-  { path: `/${adminBase}/workshops`, component: AdminWorkshopsPage },
-  { path: `/${adminBase}/support-groups`, component: AdminSupportGroupsPage },
-  { path: "support-groups", component: SupportGroups },
-  { path: "support-groups/:slug", component: SupportGroupDetailPage },
-  { path: "my-support-groups", component: MySupportGroups },
-  { path: "privacy-policy", component: Policies },
-  { path: "terms-conditions", component: Policies },
-  { path: "terms-conditions", component: Policies },
-]
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path='/'>
 
-const Router = () => {
-  return (
-    <BrowserRouter>
-      <Routes>
-        {RoutesArray.map(({ path, component }, index) => <Route path={path} Component={component} key={index} />)}
-      </Routes>
-    </BrowserRouter>
+      <Route element={<Home />} index />
+      <Route path='about' element={<AboutPage />} />
+      <Route path='my-workshops' element={<MyWorkshopsPage />} />
+      <Route path='my-support-groups' element={<MySupportGroups />} />
+      <Route path='privacy-policy' element={<Policies />} />
+      <Route path='terms-conditions' element={<Policies />} />
+
+      <Route path={BASE} element={<Home />}>
+
+        <Route path='saved-posts' element={<SavedPosts />} />
+        <Route path='profile' element={<Profile />} />
+        <Route path='search' element={<SearchPage />} />
+
+        <Route path='submit'>
+          <Route element={<Submit />} index />
+          <Route path=':communityId' element={<Submit />} />
+        </Route>
+
+        <Route path='community-detail'>
+          <Route
+          path=':communityId'
+          element={<CommunityDetail />}
+          loader={async ({ params: { communityId } }) => {
+            return await getCommunityDetails(communityId as string)
+          }}
+          />
+        </Route>
+
+        <Route path='post'>
+          <Route
+          path=':slugId' 
+          element={<PostDetail />}
+          loader={async ({ params: { slugId } }) => {
+            return await getPostDetail(slugId as string)
+          }}
+          />
+          <Route
+          path=':slugId/:slug'
+          element={<PostDetail />}
+          loader={async ({ params: { slugId } }) => {
+            return await getPostDetail(slugId as string)
+          }}
+          />
+        </Route>
+      </Route>
+
+      <Route path={WORKSHOPS_BASE} element={<WorkshopsPage />}>
+        <Route path=':slug' element={<WorkshopsPage />} />
+      </Route>
+      
+      <Route path={ADMIN_BASE} element={<AdminPage />}>
+        <Route path='posts' element={<AdminPostsPage />} />
+        <Route path='users' element={<AdminUsersPage />} />
+        <Route path='workshops' element={<AdminWorkshopsPage />} />
+        <Route path='support-groups' element={<AdminSupportGroupsPage />} />
+      </Route>
+      
+      <Route path={SUPPORT_GROUPS_BASE} element={<SupportGroups />}>
+        <Route path=':slug' element={<SupportGroupDetailPage />} />
+      </Route>
+
+
+    </Route>
   )
-}
+)
+
+const Router = () => (
+  <RouterProvider router={router} />
+)
 
 export default Router

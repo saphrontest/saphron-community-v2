@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLoaderData, useLocation } from 'react-router-dom'
 import { Community, IPost, IUser } from '../Interface'
 import { PageLayout } from '../Layouts'
 import { getCommunityDetail, getPostsByCommunities } from '../Helpers/apiFunctions'
@@ -9,8 +9,10 @@ import { RootState } from '../redux/store'
 import { usePost } from '../Hooks'
 
 const CommunityDetail = () => {
-  const {getSavedPostsByUser} = usePost()
+
+  const data = useLoaderData()
   const location = useLocation()
+  const {getSavedPostsByUser} = usePost()
   const communityId = useRef(location.pathname.split('/').at(-1)).current
   
   const { communities } = useSelector((state: RootState) => state.community)
@@ -18,7 +20,7 @@ const CommunityDetail = () => {
   
   const [posts, setPosts] = useState<IPost[]>([])
   const [savedPosts, setSavedPosts] = useState<IPost[]>([])
-  const [community, setCommunity] = useState<Community>()
+  const [community, setCommunity] = useState<Community>(data as Community)
   const [reloadPost, setReloadPost] = useState<boolean>(false)
 
   const getDetail = async (id: string) => {
@@ -47,19 +49,21 @@ const CommunityDetail = () => {
   }
 
   useEffect(() => {
-    if (communityId) {
-      getAll(communityId)
+    if(community) {
+      getPosts(community.id)
+      getSavedPosts(user.id)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [communityId])
+  }, [community])
 
   useEffect(() => {
     if (reloadPost && communityId) {
-      getAll(communityId)
-        .finally(() => setReloadPost(false))
+    getAll(communityId)
+      .finally(() => setReloadPost(false))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadPost])
+
   return (
     <PageLayout>
       <>

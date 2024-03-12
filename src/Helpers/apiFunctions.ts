@@ -67,7 +67,8 @@ export const getPostsByCommunities = async (id: string) => {
 };
 
 export const getCommunityDetail = async (id: string) => {
-  const community = await fetch.getDetail("communities", id);
+  const communityDetailRef = doc(firestore, "communities", id as string);
+  const community = await getDoc(communityDetailRef);
   const communityObject = { id: community.id, ...community.data() };
   return communityObject as Community;
 };

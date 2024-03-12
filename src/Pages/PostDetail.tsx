@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLoaderData, useLocation, useMatch, useNavigate, useParams } from 'react-router-dom'
 import { IPost, IComment, Community } from '../Interface'
 import { About, Meta, PostItem } from '../Components'
 import { Comments } from '../Components/Posts'
@@ -11,14 +11,18 @@ import { setSelectedCommunity } from '../redux/slices/communitySlice'
 import { useComment, usePost } from '../Hooks'
 
 const PostDetail = () => {
-  
+
+  const data = useLoaderData() as IPost
+  const CORRECT_PATH = `/community/post/${data.slugId}/${data.slug}`
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { slugId } = useParams()
-  const { getPostDetail } = usePost()
   const { getCommentByPostId } = useComment()
+  const { getPostDetail } = usePost()
   const { state: locationState } = useLocation()
+  const match = useMatch(CORRECT_PATH)
   
-  const [post, setPost] = useState<IPost>()
+  const [post, setPost] = useState<IPost>(data)
   const [reloadPost, setReloadPost] = useState<boolean>(false)
   const [comments, setComments] = useState<IComment[]>([])
 
@@ -26,6 +30,10 @@ const PostDetail = () => {
   
   const isPageLoading = !(!!post && !!comments)
 
+  useEffect(() => {
+    !match && navigate(CORRECT_PATH)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [match])
 
   const getPost = async (slugId: string) => {
     const postDetail = await getPostDetail(slugId)
@@ -43,18 +51,14 @@ const PostDetail = () => {
   }
 
   useEffect(() => {
-    slugId && getPost(slugId as string)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slugId])
-
-  useEffect(() => {
     post?.id && getComments(post.id as string)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [post])
 
   useEffect(() => {
     if (reloadPost) {
-      getAll().finally(() => setReloadPost(false))
+      getAll()
+        .finally(() => setReloadPost(false))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadPost])
@@ -76,7 +80,7 @@ const PostDetail = () => {
           description={post?.body as string}
         />
         {!isPageLoading && <PostItem
-        isSaved={locationState.isSaved}
+        isSaved={locationState?.isSaved ||false}
         post={post}
         setReloadPost={setReloadPost}
         communityName={communities.filter((c: Community) => post.communityId === c.id)[0]?.name}

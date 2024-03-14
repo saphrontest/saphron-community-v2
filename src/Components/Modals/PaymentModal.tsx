@@ -4,8 +4,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { setModal } from '../../redux/slices/modalSlice'
 import { ModalInterface } from '../../Interface'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { MdCheckCircle } from 'react-icons/md'
+import { usePayment } from '../../Hooks'
+import { getStripePayments, getProducts } from "@stripe/firestore-stripe-payments";
+import { getApp } from 'firebase/app'
 
 
 const MemberTypeCard: FC<{ name: string; price: number; onSelect: () => void, isActive: boolean; }> = ({
@@ -52,9 +55,33 @@ const MemberTypeCard: FC<{ name: string; price: number; onSelect: () => void, is
 }
 
 const PaymentModal = () => {
+    const {getProductList} = usePayment()
     const dispatch = useDispatch()
     const modal: ModalInterface = useSelector((state: RootState) => state.modal)
     const [choosenMembership, setChoosenMembership] = useState<{ name: string; price: number; }>({ name: 'Platinium', price: 40 })
+
+    async function fetchProducts() {
+        try {
+            const app = getApp();
+            const payments = getStripePayments(app, {
+                productsCollection: "products",
+                customersCollection: "users"
+            })
+            const products = await getProducts(payments, {
+                includePrices: true,
+                activeOnly: true,
+            });
+            console.log(products);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
+    }
+    
+    useEffect(() => {
+        if(modal.isOpen){
+            fetchProducts()
+        }
+    }, [])
 
     const options = [
         { name: 'Gold', price: 12.99 },

@@ -6,6 +6,7 @@ import { TiEdit } from "react-icons/ti";
 import { IPlatform } from "../../../Interface";
 import { InputItem } from "../../../Layouts";
 import { firestore } from "../../../firebaseClient";
+import { MdCancel } from "react-icons/md";
 
 const RewardItem: FC<{
     id: string;
@@ -45,8 +46,11 @@ const RewardItem: FC<{
                             <InputItem name='point' type="number" onChange={ev => setNewReward(ev.target.value)} />
                             <Text>p</Text>
                         </Flex>
-                        <Button p="0.4rem" onClick={() => updateReward(id, +newReward)}>
-                            <FaCheck />
+                        <Button px="0.2rem" onClick={() => updateReward(id, +newReward)}>
+                            <FaCheck size="20px" />
+                        </Button>
+                        <Button px="0.2rem" bg="red.600" onClick={toggleIsEdit}>
+                            <MdCancel size="24px" />
                         </Button>
                     </>
                 )}

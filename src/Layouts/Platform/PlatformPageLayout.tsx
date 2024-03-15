@@ -5,8 +5,8 @@ import { Button, Flex, Text } from '@chakra-ui/react'
 interface IPlatformPageLayoutProps {
   coverImg: string;
   title: string;
-  actionButtonText: string;
-  actionButtonOnClick: () => void;
+  actionButtonText?: string;
+  actionButtonOnClick?: () => void;
   children: ReactNode;
 }
 
@@ -27,13 +27,14 @@ const PlatformPageLayout:FC<IPlatformPageLayoutProps> = ({
           bg="white"
           flexDirection="column"
           display="flex"
+          borderRadius="1rem"
         >
           <Flex
             align="flex-end"
             color="white"
             bg="blue.500"
             height={["150px", "250px"]}
-            borderRadius="4px 4px 0px 0px"
+            borderRadius="1rem 1rem 0px 0px"
             fontWeight={600}
             backgroundSize="cover"
             bgPos={"center"}
@@ -51,9 +52,9 @@ const PlatformPageLayout:FC<IPlatformPageLayoutProps> = ({
                 <Text fontSize={24} fontWeight={700}>
                   {title}
                 </Text>
-                <Button onClick={actionButtonOnClick}>
+                {actionButtonText && <Button onClick={actionButtonOnClick}>
                     {actionButtonText}
-                </Button>
+                </Button>}
               </Flex>
             </Flex>
           </Flex>

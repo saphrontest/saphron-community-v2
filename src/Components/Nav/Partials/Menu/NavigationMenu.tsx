@@ -6,6 +6,7 @@ import { UserRoleTypes } from '../../../../Interface';
 import MenuItemInner from './MenuItemInner';
 import MenuItemLayout from './MenuItemLayout';
 import { GoHome } from "react-icons/go";
+import { FaStore } from "react-icons/fa";
 
 
 interface IUserMenuItem {
@@ -22,6 +23,7 @@ const NavMenuItems: IUserMenuItem[] = [
   { id: 6, route: "/about", icon: PiInfoFill, label: "About Us", role: ["user", "admin"] },
   { id: 7, route: "/support-groups", icon: MdOutlineGroups3, label: "Support Groups", role: ["user", "admin"] },
   { id: 8, route: "/workshops", icon: MdOutlineEvent, label: "Workshops", role: ["user", "admin"] },
+  { id: 9, route: "/marketplace", icon: FaStore, label: "Marketplace", role: ["user", "admin"] },
 ]
 
 const NavigationMenu: FC<{ userRole: UserRoleTypes; activePath: string; }> = ({ userRole, activePath }) => {

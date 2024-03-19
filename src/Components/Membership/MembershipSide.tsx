@@ -17,12 +17,12 @@ const MembershipSide = () => {
     const user: IUser = useSelector((state: RootState) => state.user)
 
     useEffect(() => {
-        checkUserMembership(user.id)
+        user.id && checkUserMembership(user.id)
             .then(result => result && setMembership(result))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [user])
 
-    return membership ? (
+    return membership && membership.active ? (
         <Flex
         direction="column"
         bg="white"

@@ -1,5 +1,4 @@
-import { ISubscription } from "./MembershipInterface";
-
+import { ISubscription } from "./PaymentInterface";
 
 export type UserRoleTypes =  'admin' | 'user' | ''
 export interface IUser {

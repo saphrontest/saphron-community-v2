@@ -9,7 +9,8 @@ import {
     ListItem,
     Button,
     useBoolean,
-    Spinner
+    Spinner,
+    useToast
 } from '@chakra-ui/react'
 import { ModalLayout } from '../../Layouts'
 import { useDispatch, useSelector } from 'react-redux'
@@ -19,6 +20,7 @@ import { IMembership, IUser, ModalInterface } from '../../Interface'
 import { FC, useEffect, useState } from 'react'
 import { MdCheckCircle } from 'react-icons/md'
 import { usePayment } from '../../Hooks'
+import { FirestoreError } from 'firebase/firestore'
 
 const MemberTypeCard: FC<{ name: string; price: number; onSelect: () => void, isActive: boolean; }> = ({
     name, price, onSelect, isActive
@@ -64,8 +66,10 @@ const MemberTypeCard: FC<{ name: string; price: number; onSelect: () => void, is
 }
 
 const PaymentModal = () => {
+    
+    const toast = useToast()
     const dispatch = useDispatch()
-    const { getProductList, buyMembership } = usePayment()
+    const { getProductList, createNewCheckoutSession, getCheckoutSessionByDocPath } = usePayment()
     
     const [products, setProducts] = useState<IMembership[]>([])
     const [choosenMembership, setChoosenMembership] = useState<IMembership>()
@@ -91,12 +95,61 @@ const PaymentModal = () => {
     }, [])
 
     const handlePayment = async () => {
+        if(!user.id) {
+            toast({
+                title: "Please login, first!",
+                status: "error",
+                isClosable: true,
+                position: "top-right"
+            })
+            return;
+        }
         togglePaymentLoading()
         try {
-            await buyMembership(user.id, choosenMembership as IMembership)
-        } catch (error: any) {
             
-        } finally {
+            const checkoutDoc = await createNewCheckoutSession(user.id, choosenMembership as IMembership)
+            
+            if(checkoutDoc){
+
+                const timeout = setTimeout(async () => {
+                    
+                    const latestSession = await getCheckoutSessionByDocPath(checkoutDoc.path)
+                    
+                    if(latestSession) {
+
+                        if(latestSession?.error?.message) {
+                            console.error(latestSession?.error?.message)
+                            toast({
+                                title: latestSession?.error?.message,
+                                status: "error",
+                                isClosable: true,
+                                position: "top-right"
+                            })
+                            return;
+                        }
+                        if(latestSession.url) {
+                            window.location.assign(latestSession.url);
+                        }
+
+                    }
+                    
+                }, 3000)
+
+                return () => {
+                    togglePaymentLoading()
+                    clearTimeout(timeout)
+                }
+
+            }
+
+        } catch (error: any) {
+            if(error instanceof FirestoreError) {
+                toast({
+                    title: error.message,
+                    status: "error",
+                    isClosable: true,
+                })
+            }
             togglePaymentLoading()
         }
     }

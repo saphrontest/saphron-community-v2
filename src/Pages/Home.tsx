@@ -36,7 +36,7 @@ const Home = () => {
     getPosts()
       .then((result: IPost[]) => setPosts(result))
     
-    getSavedPostsByUser(user.id!)
+      user.id && getSavedPostsByUser(user.id)
       .then((result: any) => setSavedPosts(result))
 
   }

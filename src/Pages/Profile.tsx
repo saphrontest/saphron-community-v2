@@ -50,15 +50,17 @@ const Profile = () => {
         return;
       }
 
-      checkUserMembership(user.id)
+      user.id && checkUserMembership(user.id)
         .then(result => setMembership(result))
     }
   }, [payment_status, membership_type])
 
 
   useEffect(() => {
-    getPosts(user.id)
-    getSavedPosts(user.id)
+    if(user.id) {
+      getPosts(user.id)
+      getSavedPosts(user.id)
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 

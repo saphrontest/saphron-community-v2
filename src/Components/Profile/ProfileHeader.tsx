@@ -21,10 +21,12 @@ import { IMembership } from '../../Interface';
 // Firebase
 import { auth, firestore } from '../../firebaseClient';
 import { sendEmailVerification, signOut } from 'firebase/auth';
-import { Transaction, doc, runTransaction } from 'firebase/firestore';
+import { FirestoreError, Transaction, doc, runTransaction } from 'firebase/firestore';
 import { useAuthState, useDeleteUser } from 'react-firebase-hooks/auth';
 // Assets
 import menthalHealth from '../../assets/images/menthal.jpg'
+import { usePayment } from '../../Hooks';
+import { FirebaseError } from 'firebase/app';
 
 interface ProfileHeaderProps {
     name: string;
@@ -36,7 +38,7 @@ interface ProfileHeaderProps {
     membership?: IMembership;
 }
 
-const ProfileHeader: FC<ProfileHeaderProps> = ({ 
+const ProfileHeader: FC<ProfileHeaderProps> = ({
     name,
     email,
     username,
@@ -51,20 +53,21 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
     const navigate = useNavigate()
     const [user] = useAuthState(auth)
     const [deleteUser] = useDeleteUser(auth)
+    const { createPortalLink } = usePayment()
 
-    const userFromDB = useSelector((state: RootState) => state.user )
-    
+    const userFromDB = useSelector((state: RootState) => state.user)
+
     const [deleteUserAlertOpen, { toggle: toggleDeleteUserAlertOpen }] = useBoolean(false)
     const [blockedUsersModalOpen, { toggle: toggleBlockedUsersModal }] = useBoolean(false)
-    
+
     const verifyAccount = async () => {
         user && await sendEmailVerification(user)
     }
 
     const handleDeleteUser = async () => {
         deleteUser().then(success => {
-            
-            if(!success) {
+
+            if (!success) {
                 toast({
                     title: "Please try again later!",
                     status: "error",
@@ -97,6 +100,31 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
                 })
             }
         })
+    }
+
+    const goManageSubscriptions = async () => {
+        try {
+            const portalLink = await createPortalLink()
+
+            if (!portalLink) {
+                toast({
+                    title: "Please try again later!",
+                    status: "error",
+                    isClosable: true,
+                })
+                return;
+            }
+
+            window.location.assign(portalLink);
+        } catch (error) {
+            if (error instanceof FirestoreError || error instanceof FirebaseError) {
+                toast({
+                    title: error.message,
+                    status: "error",
+                    isClosable: true,
+                })
+            }
+        }
     }
 
     useEffect(() => {
@@ -141,7 +169,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
                             <Box textAlign="left">
                                 <Flex align='center' gap="1rem">
                                     <Text fontSize={["16px", "20px", "28px"]} fontWeight={700}>{name}</Text>
-                                    <MembershipBadge membershipType={membership?.name.split(' ')[0] || ''}/>
+                                    {membership?.active && <MembershipBadge membershipType={membership?.name.split(' ')[0] || ''} />}
                                 </Flex>
                                 <Text fontSize={["12px", "14px", "16px"]} fontWeight={500} color="gray.600">u/{username}</Text>
                                 <Text fontSize={["12px", "14px", "16px"]} fontWeight={500} fontStyle={"italic"}>{email}</Text>
@@ -153,13 +181,17 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
                         </Flex>
                         <Flex transform={["translateY(-65%)", "translateY(-65%)", "translateY(-80%)"]} gap="1rem" direction={["column", "column", "row"]}>
                             <SCEditButton onEdit={() => dispatch(setModal({ isOpen: true, view: "editProfile", data: { isEdit: true } }))} />
-                            <ProfileMenu toggleDeleteUserAlertOpen={toggleDeleteUserAlertOpen} toggleBlockedUsersModal={toggleBlockedUsersModal}/>
+                            <ProfileMenu
+                                toggleDeleteUserAlertOpen={toggleDeleteUserAlertOpen}
+                                toggleBlockedUsersModal={toggleBlockedUsersModal}
+                                goManageSubscriptions={goManageSubscriptions}
+                            />
                         </Flex>
                     </Flex>
                 </Container>
             </Flex>
             <DeleteAlert label={`${userFromDB?.username}`} isOpen={deleteUserAlertOpen} handleDelete={handleDeleteUser} toggleDialog={toggleDeleteUserAlertOpen} />
-            <BlockedUsersModal isOpen={blockedUsersModalOpen} toggleModal={toggleBlockedUsersModal}/>
+            <BlockedUsersModal isOpen={blockedUsersModalOpen} toggleModal={toggleBlockedUsersModal} />
         </>
     )
 }

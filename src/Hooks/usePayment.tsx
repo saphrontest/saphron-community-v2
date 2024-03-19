@@ -1,24 +1,21 @@
-import { DocumentChange, DocumentReference, QuerySnapshot, Timestamp, Transaction, addDoc, collection, doc, getDoc, getDocs, onSnapshot, query, runTransaction, where } from "firebase/firestore";
-import { firestore } from "../firebaseClient";
-import { IMembership, IPrice, ISubscription } from "../Interface";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@chakra-ui/react";
+import {
+  DocumentReference,
+  collection,
+  getDocs,
+  getDoc,
+  addDoc,
+  query,
+  where,
+  doc,
+  FirestoreError
+} from "firebase/firestore";
+import { firestore, functions } from "../firebaseClient";
+import { ICheckoutSession, IMembership, IPrice, ISubscription } from "../Interface";
+import { httpsCallable } from "firebase/functions";
+import { FirebaseError } from "firebase/app";
 
 const usePayment = () => {
-  const navigate = useNavigate()
-  const toast = useToast()
-  interface ICheckoutSession {
-    cancel_url: string;
-    client: string;
-    created: Timestamp;
-    mode: string;
-    price: string;
-    sessionId: string;
-    success_url: string;
-    url: string;
-    error?: { message: string }
-  }
-
+  
     const getProductList = async () => {
         const productQuery = query(collection(firestore, "products"), where("active", "==", true));
         const data = await getDocs(productQuery);
@@ -30,54 +27,91 @@ const usePayment = () => {
         }));
     }
 
-    const buyMembership = async ( userId: string, membership: IMembership ) => {
-     
-      const checkoutSessionsDoc = collection(firestore, `users/${userId}/checkout_sessions`)
- 
+    const getCheckoutSessionByDocPath = async (path: string) => {
       try {
-          await addDoc(checkoutSessionsDoc, {
-            price: membership.prices[0].id,
-            success_url: `${window.location.origin}/community/profile?payment_status=success&membership_type=${membership.name.split(" ")[0].toLowerCase()}`,
-            cancel_url: `${window.location.origin}/community/profile?payment_status=cancel&membership_type=${membership.name.split(" ")[0].toLowerCase()}`,
-          })
+        const newSession = await getDoc(doc(firestore, path))
+        const newSessionData = { id: newSession.id, ...newSession.data() } as ICheckoutSession
+        return newSessionData
+      }  catch (error) {
+        if(error instanceof FirestoreError) {
+          console.error(error.message)
+          throw new Error(error.message)
+        }
+      }
+    }
 
-          onSnapshot(checkoutSessionsDoc, (snapshot: QuerySnapshot) => {
-            return snapshot.docChanges()
-            .map((change: DocumentChange) => {
-                if(change.type === "added") {
-                  const data = change.doc.data() as ICheckoutSession
-                  console.log('checkout session added: ', data)
-                  if(data?.error?.message) {
-                    console.error(data?.error?.message)
-                    toast({
-                        title: data?.error?.message,
-                        status: "error",
-                        isClosable: true,
-                        position: "top-right"
-                    })
-                  }
-
-                  if(data.url) {
-                    window.location.assign(data.url);
-                  }
-                }
-                return null
-            });
-          })
+    const createNewCheckoutSession = async ( userId: string, membership: IMembership ) => {
+      try {
+          const newSessionDoc = await addDoc(
+            collection(firestore, `users/${userId}/checkout_sessions`),
+            {
+              price: membership.prices[0].id,
+              success_url: `${window.location.origin}/community/profile?payment_status=success&membership_type=${membership.name.split(" ")[0].toLowerCase()}`,
+              cancel_url: `${window.location.origin}/community/profile?payment_status=cancel&membership_type=${membership.name.split(" ")[0].toLowerCase()}`,
+            }
+          )
+          return newSessionDoc as DocumentReference
         } catch (error) {
-          console.error(error)
+          if(error instanceof FirestoreError) {
+            console.error(error.message)
+            throw new Error(error.message)
+          }
         }
     } 
 
     const checkUserMembership = async (userId: string) => {
-      const userSubscriptionsDoc = collection(firestore, `users/${userId}/subscriptions`)
-      const userSubscriptionsData = await getDocs(userSubscriptionsDoc)
-      const userSubscription = userSubscriptionsData.docs.map(doc => ({id: doc.id,...doc.data()} as ISubscription))
-      const productDoc = await getDoc(userSubscription[0].product as unknown as DocumentReference);
-      return productDoc.data() as IMembership
+
+      try {
+
+        const userSubscriptionsData = await getDocs(collection(firestore, `users/${userId}/subscriptions`))
+        
+        const userSubscription = userSubscriptionsData.docs.map(doc => (
+          { id: doc.id, ...doc.data() } as ISubscription
+        ))
+
+        if(userSubscription && userSubscription[0]?.product) {
+          const productDoc = await getDoc(userSubscription[0].product as unknown as DocumentReference);
+          return productDoc.data() as IMembership
+        }else return undefined
+        
+      } catch (error) {
+        if(error instanceof FirestoreError) {
+          console.error(error.message)
+          throw new Error(error.message)
+        }
+      }  
     }
 
-    return { getProductList, buyMembership, checkUserMembership }
+    const createPortalLink = async () => {
+
+      try {
+
+        const functionRef = httpsCallable(functions, 'ext-firestore-stripe-payments-createPortalLink');
+
+        const result: any = await functionRef({
+          returnUrl: window.location.origin,
+          locale: "auto", // Optional, defaults to "auto"
+        });
+
+        return result.data.url as string
+        
+      } catch (error) {
+        if(error instanceof FirestoreError || error instanceof FirebaseError) {
+          console.error(error.message)
+          throw new Error(error.message)
+        }
+      }
+      
+      
+    }
+
+    return {
+      getProductList,
+      createPortalLink,
+      checkUserMembership,
+      createNewCheckoutSession,
+      getCheckoutSessionByDocPath
+    }
 }
 
 export default usePayment

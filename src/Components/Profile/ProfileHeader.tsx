@@ -6,6 +6,8 @@ import { SCEditButton } from '../SCElements';
 import { DeleteAlert } from '../Platform';
 import ProfileMenu from './ProfileMenu';
 import { VscAccount } from 'react-icons/vsc';
+import { MembershipBadge } from '../Membership';
+import BlockedUsersModal from './BlockedUsersModal';
 // Redux
 import { RootState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,6 +17,7 @@ import { resetCommunities } from '../../redux/slices/communitySlice';
 // Helpers
 import { getUser, updateUser } from '../../Helpers/apiFunctions';
 import { useNavigate } from 'react-router-dom';
+import { IMembership } from '../../Interface';
 // Firebase
 import { auth, firestore } from '../../firebaseClient';
 import { sendEmailVerification, signOut } from 'firebase/auth';
@@ -22,7 +25,6 @@ import { Transaction, doc, runTransaction } from 'firebase/firestore';
 import { useAuthState, useDeleteUser } from 'react-firebase-hooks/auth';
 // Assets
 import menthalHealth from '../../assets/images/menthal.jpg'
-import BlockedUsersModal from './BlockedUsersModal';
 
 interface ProfileHeaderProps {
     name: string;
@@ -31,9 +33,19 @@ interface ProfileHeaderProps {
     profilePhoto: string;
     coverPhoto: string;
     isEmailVerified: boolean;
+    membership?: IMembership;
 }
 
-const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profilePhoto, coverPhoto, isEmailVerified }) => {
+const ProfileHeader: FC<ProfileHeaderProps> = ({ 
+    name,
+    email,
+    username,
+    profilePhoto,
+    coverPhoto,
+    isEmailVerified,
+    membership
+}) => {
+
     const toast = useToast()
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -127,7 +139,10 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
                                     />
                             }
                             <Box textAlign="left">
-                                <Text fontSize={["16px", "20px", "28px"]} fontWeight={700}>{name}</Text>
+                                <Flex align='center' gap="1rem">
+                                    <Text fontSize={["16px", "20px", "28px"]} fontWeight={700}>{name}</Text>
+                                    <MembershipBadge membershipType={membership?.name.split(' ')[0] || ''}/>
+                                </Flex>
                                 <Text fontSize={["12px", "14px", "16px"]} fontWeight={500} color="gray.600">u/{username}</Text>
                                 <Text fontSize={["12px", "14px", "16px"]} fontWeight={500} fontStyle={"italic"}>{email}</Text>
                                 {!isEmailVerified && <Flex align="center" gap={2}>

@@ -37,6 +37,7 @@ const MembershipBadge: FC<{ membershipType: string; showName?: boolean; }> = ({
 
   const membership = useMemo(() => {
     return MEMBERSHIP_JSON[membershipType]
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [membershipType])
 
   

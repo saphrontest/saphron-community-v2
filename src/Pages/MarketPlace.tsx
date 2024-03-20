@@ -40,7 +40,9 @@ const MarketPlace = () => {
   const buyItem = async (item: IProduct) => {
     toggleSellingLoading()
     try {
-      await addDoc(collection(firestore, `users/${user.id}/rewardItems`), item)
+      // TODO: this is not working
+      const userRewardsCollectionRef = collection(firestore, `users/${user.id}/rewards/items`);
+      await addDoc(userRewardsCollectionRef, item);
       await updateUser(user.id, {
         rewardPoint: increment(-item.price)
       })

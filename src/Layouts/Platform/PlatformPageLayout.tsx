@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from 'react'
 import PageLayout from '../PageLayout'
-import { Button, Flex, Text } from '@chakra-ui/react'
+import { Button, Flex, ResponsiveValue, Text } from '@chakra-ui/react'
 
 interface IPlatformPageLayoutProps {
   coverImg: string;
@@ -8,6 +8,7 @@ interface IPlatformPageLayoutProps {
   actionButtonText?: string;
   actionButtonOnClick?: () => void;
   children: ReactNode;
+  isFlexDirectionRow?: boolean;
 }
 
 const PlatformPageLayout:FC<IPlatformPageLayoutProps> = ({
@@ -15,7 +16,8 @@ const PlatformPageLayout:FC<IPlatformPageLayoutProps> = ({
   title,
   actionButtonOnClick,
   actionButtonText,
-  children
+  children,
+  isFlexDirectionRow=true
 }) => {
   return (
     <PageLayout showSidebar={false} leftWidth="100%">
@@ -25,9 +27,9 @@ const PlatformPageLayout:FC<IPlatformPageLayoutProps> = ({
           w="100%"
           h="fit-content"
           bg="white"
-          flexDirection="column"
           display="flex"
           borderRadius="1rem"
+          flexDirection="column"
         >
           <Flex
             align="flex-end"
@@ -58,7 +60,7 @@ const PlatformPageLayout:FC<IPlatformPageLayoutProps> = ({
               </Flex>
             </Flex>
           </Flex>
-          <Flex direction="row" padding="1rem">
+          <Flex flexDirection={isFlexDirectionRow ? "row" : "column"} padding="1rem">
             {children}
           </Flex>
         </Flex>

@@ -1,9 +1,15 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { PlatformItemDetailLayout, PlatformPageLayout } from '../Layouts'
 import storeThumbnail from '../assets/images/store-thumbnail.jpg'
-import { Box, Flex, Text } from '@chakra-ui/react'
-import { Meta, ProductItem } from '../Components'
+import { Button, Flex, Spinner, Text, useBoolean } from '@chakra-ui/react'
+import { Meta, ProductItem, ProductPriceLabel } from '../Components'
 import yogaMatProduct from '../assets/images/yoga-mat.jpg'
+import { addDoc, collection, increment } from 'firebase/firestore'
+import { IUser } from '../Interface'
+import { useSelector } from 'react-redux'
+import { RootState } from '../redux/store'
+import { updateUser } from '../Helpers'
+import { firestore } from '../firebaseClient'
 
 interface IProduct {
   id: number;
@@ -15,6 +21,9 @@ interface IProduct {
 
 const MarketPlace = () => {
   const [choosenProduct, setChoosenProduct] = useState<IProduct>()
+  const [sellingLoading, {toggle: toggleSellingLoading}] = useBoolean(false)
+  const user: IUser = useSelector((state: RootState) => state.user)
+
   const PRODUCT_LIST = [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }]
 
   useEffect(() => {
@@ -25,17 +34,37 @@ const MarketPlace = () => {
       description: 'Product Description',
       img: yogaMatProduct
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [choosenProduct])
+
+  const buyItem = async (item: IProduct) => {
+    toggleSellingLoading()
+    try {
+      await addDoc(collection(firestore, `users/${user.id}/rewardItems`), item)
+      await updateUser(user.id, {
+        rewardPoint: increment(-item.price)
+      })
+    } finally {
+      toggleSellingLoading()
+    }
+  }
 
   return (
     <PlatformPageLayout
       coverImg={storeThumbnail}
       title={'Marketplace'}
+      isFlexDirectionRow={false}
     >
       <Meta
         title={'Saphron Health | Marketplace'}
         description='Marketplace'
       />
+      <Flex pb="1rem" align="center">
+        <Text>
+          Balance
+        </Text>
+        <ProductPriceLabel price={user.rewardPoint} />
+      </Flex>
       <Flex flex={1} gap="0.5rem">
         <Flex direction="row" align="flex-start" gap="1rem" w="100%" h="fit-content" flexWrap="wrap">
           {
@@ -55,11 +84,7 @@ const MarketPlace = () => {
               <Text fontSize={22} fontWeight={700} marginBottom="0.3rem" align="left">
                 {choosenProduct?.name}
               </Text>
-              <Box bg="white" w="fit-content" h="fit-content" p="0.2rem 0.6rem" borderRadius="99px">
-                <Text fontWeight="600" color="black">
-                  {choosenProduct?.price} $
-                </Text>
-              </Box>
+              <ProductPriceLabel price={choosenProduct?.price || 0}/>
             </Flex>
           </>
           <>
@@ -69,6 +94,11 @@ const MarketPlace = () => {
             <Text fontStyle="italic" align="left" mb="0.7rem">
               {choosenProduct?.description}
             </Text>
+            <Flex justify="flex-end">
+              <Button onClick={() => choosenProduct && buyItem(choosenProduct)}>
+                {sellingLoading ? <Spinner /> : "Buy"}
+              </Button>
+            </Flex>
           </>
         </PlatformItemDetailLayout>
       </Flex>

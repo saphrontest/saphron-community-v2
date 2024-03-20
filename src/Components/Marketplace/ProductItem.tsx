@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import ProductPriceLabel from './ProductPriceLabel';
 
 const ProductItem:FC<{ item: any; isActive: boolean; onClick: () => void; }> = ({ item, isActive, onClick }) => {
   return (
@@ -25,11 +26,7 @@ const ProductItem:FC<{ item: any; isActive: boolean; onClick: () => void; }> = (
             </Text>
           </Box>
           <Flex w="100%" justify="flex-end">
-            <Box bg="white" w="fit-content" h="fit-content" p="0.2rem 0.4rem" borderRadius="99px">
-              <Text fontWeight="600">
-                {item.price} $
-              </Text>
-            </Box>
+            <ProductPriceLabel price={item.price} />
           </Flex>
         </Flex>
       </Flex>

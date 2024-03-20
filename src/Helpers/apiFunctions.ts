@@ -188,6 +188,7 @@ export const saveUserToFirestore = async (provider: string | null, user: User) =
       phoneNumber: "",
       emailVerified: false,
       isRegistered: true,
+      rewardPoint: 50,
       provider
     }
 
@@ -210,6 +211,8 @@ export const updateUser = async (userId: string, value: object) => {
     await batch.commit();
   } catch (error: any) {
     throw new Error(error?.message);
+  } finally {
+    await getUser(userId)
   }
 }
 

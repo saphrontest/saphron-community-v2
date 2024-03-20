@@ -12,6 +12,7 @@ export interface IUser {
     coverPhotoURL: string;
     profilePhotoURL: string;
     phoneNumber: string;
+    rewardPoint: number;
     subscriptions?: ISubscription[]
     role: UserRoleTypes;
 }
@@ -34,4 +35,5 @@ export const defaultUserState: IUser = {
     profilePhotoURL: "",
     phoneNumber: "",
     role: "",
+    rewardPoint: 0
 }

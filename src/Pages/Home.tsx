@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
-import { CreatePostLink, MembershipSide, Meta, NoEntry, PersonalHome, PostItem, Recommendations } from '../Components'
+import { CreatePostLink, MarketplaceSide, MembershipSide, Meta, NoEntry, PersonalHome, PostItem, Recommendations } from '../Components'
 import { Stack } from '@chakra-ui/react'
 import { IPost, Community } from '../Interface'
 import {  } from '../Helpers/apiFunctions'
@@ -62,6 +62,7 @@ const Home = () => {
       <>
         <PersonalHome />
         <Recommendations />
+        <MarketplaceSide />
         <MembershipSide />
       </>
     </PageLayout>

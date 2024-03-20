@@ -2,7 +2,7 @@ import { Box, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader
 import { useRef } from "react"
 import { IoMenu } from "react-icons/io5"
 import { MdOutlineEvent, MdOutlineGroups3 } from "react-icons/md"
-import { BsPostcardHeart } from "react-icons/bs";
+import { BsPostcardHeart, BsAward } from "react-icons/bs";
 import { IoIosArrowForward, IoMdPerson } from "react-icons/io";
 import { Link } from "react-router-dom";
 
@@ -60,6 +60,15 @@ function AdminDrawer() {
                                 <Flex gap="1rem">
                                     <MdOutlineGroups3 size="32px" />
                                     <Text color="gray.700" fontSize="18px" fontWeight={600}>Support Groups</Text>
+                                </Flex>
+                                <IoIosArrowForward />
+                            </Flex>
+                        </Link>
+                        <Link to="/manager-dashboard/rewards">
+                            <Flex p="0.5rem 1rem" bg="gray.100" borderRadius="0.4em" align="center" justify="space-between" cursor="pointer" _hover={{ background: "gray.300" }} >
+                                <Flex gap="1rem">
+                                    <BsAward size="32px" />
+                                    <Text color="gray.700" fontSize="18px" fontWeight={600}>Rewards</Text>
                                 </Flex>
                                 <IoIosArrowForward />
                             </Flex>

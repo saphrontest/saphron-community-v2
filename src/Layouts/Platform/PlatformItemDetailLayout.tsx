@@ -4,15 +4,17 @@ import { FC, ReactNode } from 'react'
 interface IPlatformItemDetailLayoutProps {
     coverImg: string;
     children: ReactNode[];
+    wrapperWidth?: string;
 }
 
 const PlatformItemDetailLayout:FC<IPlatformItemDetailLayoutProps> = ({
     coverImg,
-    children
+    children,
+    wrapperWidth
 }) => {
     return (
         <Flex
-            w="50%"
+            w={wrapperWidth ? wrapperWidth : "50%"}
             h="fit-content"
             align="flex-start"
             justify="flex-start"

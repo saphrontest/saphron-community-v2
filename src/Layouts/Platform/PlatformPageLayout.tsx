@@ -1,13 +1,14 @@
 import React, { FC, ReactNode } from 'react'
 import PageLayout from '../PageLayout'
-import { Button, Flex, Text } from '@chakra-ui/react'
+import { Button, Flex, ResponsiveValue, Text } from '@chakra-ui/react'
 
 interface IPlatformPageLayoutProps {
   coverImg: string;
   title: string;
-  actionButtonText: string;
-  actionButtonOnClick: () => void;
+  actionButtonText?: string;
+  actionButtonOnClick?: () => void;
   children: ReactNode;
+  isFlexDirectionRow?: boolean;
 }
 
 const PlatformPageLayout:FC<IPlatformPageLayoutProps> = ({
@@ -15,7 +16,8 @@ const PlatformPageLayout:FC<IPlatformPageLayoutProps> = ({
   title,
   actionButtonOnClick,
   actionButtonText,
-  children
+  children,
+  isFlexDirectionRow=true
 }) => {
   return (
     <PageLayout showSidebar={false} leftWidth="100%">
@@ -25,15 +27,16 @@ const PlatformPageLayout:FC<IPlatformPageLayoutProps> = ({
           w="100%"
           h="fit-content"
           bg="white"
-          flexDirection="column"
           display="flex"
+          borderRadius="1rem"
+          flexDirection="column"
         >
           <Flex
             align="flex-end"
             color="white"
             bg="blue.500"
             height={["150px", "250px"]}
-            borderRadius="4px 4px 0px 0px"
+            borderRadius="1rem 1rem 0px 0px"
             fontWeight={600}
             backgroundSize="cover"
             bgPos={"center"}
@@ -51,13 +54,13 @@ const PlatformPageLayout:FC<IPlatformPageLayoutProps> = ({
                 <Text fontSize={24} fontWeight={700}>
                   {title}
                 </Text>
-                <Button onClick={actionButtonOnClick}>
+                {actionButtonText && <Button onClick={actionButtonOnClick}>
                     {actionButtonText}
-                </Button>
+                </Button>}
               </Flex>
             </Flex>
           </Flex>
-          <Flex direction="row" padding="1rem">
+          <Flex flexDirection={isFlexDirectionRow ? "row" : "column"} padding="1rem">
             {children}
           </Flex>
         </Flex>

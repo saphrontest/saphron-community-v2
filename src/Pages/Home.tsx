@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
-import { BuyPremium, CreatePostLink, MarketplaceSide, Meta, NoEntry, PersonalHome, PostItem, Recommendations } from '../Components'
+import { CreatePostLink, MarketplaceSide, MembershipSide, Meta, NoEntry, PersonalHome, PostItem, Recommendations } from '../Components'
 import { Stack } from '@chakra-ui/react'
 import { IPost, Community } from '../Interface'
 import {  } from '../Helpers/apiFunctions'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { usePost } from '../Hooks'
-import MarketPlace from './MarketPlace'
 
 const Home = () => {
   const {getPosts, getSavedPostsByUser} = usePost()
@@ -37,7 +36,7 @@ const Home = () => {
     getPosts()
       .then((result: IPost[]) => setPosts(result))
     
-    getSavedPostsByUser(user.id!)
+      user.id && getSavedPostsByUser(user.id)
       .then((result: any) => setSavedPosts(result))
 
   }
@@ -63,8 +62,8 @@ const Home = () => {
       <>
         <PersonalHome />
         <Recommendations />
-        <BuyPremium />
         <MarketplaceSide />
+        <MembershipSide />
       </>
     </PageLayout>
   )

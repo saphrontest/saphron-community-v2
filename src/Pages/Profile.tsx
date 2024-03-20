@@ -1,22 +1,29 @@
 import { useEffect, useState } from 'react'
 import { PageLayout } from '../Layouts'
-import { Box, Stack, useMediaQuery } from '@chakra-ui/react'
+import { Box, Stack, useMediaQuery, useToast } from '@chakra-ui/react'
 import { Meta, MyCommunities, Nav, NoEntry, PostItem } from '../Components'
 import { ProfileHeader } from '../Components/Profile'
-import { IPost, Community } from '../Interface'
+import { IPost, Community, IUser, IMembership } from '../Interface'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import NotFoundUserPic from '../assets/images/user.png'
-import { usePost } from '../Hooks'
+import { usePayment, usePost } from '../Hooks'
 
 const Profile = () => {
 
-  const [isSmallerThan485] = useMediaQuery('(max-width: 485px)')
+  const search = window.location.search;
+  const params = new URLSearchParams(search);
+  const [payment_status, membership_type] = [params.get('payment_status'), params.get('membership_type')];
+  
+  const toast = useToast()
+  const {checkUserMembership} = usePayment()
   const {getPostsByUser, getSavedPostsByUser} = usePost()
+  const [isSmallerThan485] = useMediaQuery('(max-width: 485px)')
 
-  const user = useSelector((state: RootState) => state.user)
+  const user: IUser = useSelector((state: RootState) => state.user)
   const { communities } = useSelector((state: RootState) => state.community)
 
+  const [membership, setMembership] = useState<IMembership>()
   const [reloadPost, setReloadPost] = useState<boolean>(false)
   const [userPosts, setUserPosts] = useState<IPost[]>()
   const [savedPosts, setSavedPosts] = useState<IPost[]>([])
@@ -32,10 +39,28 @@ const Profile = () => {
     setSavedPosts(saved)
   }
 
+  useEffect(() =>{
+    if(payment_status !== undefined) {
+      if(payment_status === 'cancel') {
+        toast({
+          title: 'Payment Error',
+          description: 'Your payment could not be received, please try again!',
+          status: 'error',
+        })
+        return;
+      }
+
+      user.id && checkUserMembership(user.id)
+        .then(result => setMembership(result))
+    }
+  }, [payment_status, membership_type])
+
 
   useEffect(() => {
-    getPosts(user.id)
-    getSavedPosts(user.id)
+    if(user.id) {
+      getPosts(user.id)
+      getSavedPosts(user.id)
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
@@ -56,7 +81,9 @@ const Profile = () => {
         name={user?.displayName}
         username={user.username}
         profilePhoto={user?.profilePhotoURL ?? NotFoundUserPic}
-        email={user?.email} coverPhoto={user.coverPhotoURL}
+        email={user?.email}
+        coverPhoto={user.coverPhotoURL}
+        membership={membership}
       />}
       <PageLayout isNav={false} leftWidth='100%'>
         <>

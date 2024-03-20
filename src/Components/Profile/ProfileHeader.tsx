@@ -59,6 +59,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
 
     const [deleteUserAlertOpen, { toggle: toggleDeleteUserAlertOpen }] = useBoolean(false)
     const [blockedUsersModalOpen, { toggle: toggleBlockedUsersModal }] = useBoolean(false)
+    const [manageSubscriptionLoading, { toggle: toggleManageSubscriptionLoading }] = useBoolean(false)
 
     const verifyAccount = async () => {
         user && await sendEmailVerification(user)
@@ -103,6 +104,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
     }
 
     const goManageSubscriptions = async () => {
+        toggleManageSubscriptionLoading()
         try {
             const portalLink = await createPortalLink()
 
@@ -124,6 +126,8 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
                     isClosable: true,
                 })
             }
+        } finally {
+            toggleManageSubscriptionLoading()
         }
     }
 
@@ -182,6 +186,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
                         <Flex transform={["translateY(-65%)", "translateY(-65%)", "translateY(-80%)"]} gap="1rem" direction={["column", "column", "row"]}>
                             <SCEditButton onEdit={() => dispatch(setModal({ isOpen: true, view: "editProfile", data: { isEdit: true } }))} />
                             <ProfileMenu
+                                isLoading={manageSubscriptionLoading}
                                 toggleDeleteUserAlertOpen={toggleDeleteUserAlertOpen}
                                 toggleBlockedUsersModal={toggleBlockedUsersModal}
                                 goManageSubscriptions={goManageSubscriptions}

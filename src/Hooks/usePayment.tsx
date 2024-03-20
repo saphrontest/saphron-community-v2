@@ -89,7 +89,7 @@ const usePayment = () => {
         const functionRef = httpsCallable(functions, 'ext-firestore-stripe-payments-createPortalLink');
 
         const result: any = await functionRef({
-          returnUrl: window.location.origin,
+          returnUrl: `${window.location.origin}/community/profile`,
           locale: "auto", // Optional, defaults to "auto"
         });
 

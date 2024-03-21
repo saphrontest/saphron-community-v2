@@ -55,30 +55,28 @@ const ProfilePageLayout:FC<{
         isMine={isMine}
     />}
     <PageLayout isNav={false} leftWidth='100%'>
-        <>
-            <Stack>
-                {isSmallerThan485 && <ProfileHeader
-                    isEmailVerified={user?.emailVerified}
-                    name={user?.displayName}
-                    username={user.username}
-                    profilePhoto={user?.profilePhotoURL ?? NotFoundUserPic}
-                    email={user?.email}
-                    coverPhoto={user.coverPhotoURL}
-                    isMine={isMine}
-                />}
-                <Box>
-                    {posts?.length ? posts.map((post: IPost) =>
-                        <PostItem
-                            key={post.id}
-                            post={post}
-                            isSaved={savedPosts.some(item => item.id === post.id)}
-                            communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
-                            setReloadPost={setReloadPost}
-                        />
-                    ) : <NoEntry type="post" />}
-                </Box>
-            </Stack>
-        </>
+        <Stack>
+            {isSmallerThan485 && <ProfileHeader
+                isEmailVerified={user?.emailVerified}
+                name={user?.displayName}
+                username={user.username}
+                profilePhoto={user?.profilePhotoURL ?? NotFoundUserPic}
+                email={user?.email}
+                coverPhoto={user.coverPhotoURL}
+                isMine={isMine}
+            />}
+            <Box>
+                {posts?.length ? posts.map((post: IPost) =>
+                    <PostItem
+                        key={post.id}
+                        post={post}
+                        isSaved={savedPosts.some(item => item.id === post.id)}
+                        communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
+                        setReloadPost={setReloadPost}
+                    />
+                ) : <NoEntry type="post" />}
+            </Box>
+        </Stack>
         <>
             {isMine && <MyCommunities />}
         </>

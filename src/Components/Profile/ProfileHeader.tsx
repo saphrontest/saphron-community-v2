@@ -18,15 +18,15 @@ import { resetCommunities } from '../../redux/slices/communitySlice';
 import { getUser, updateUser } from '../../Helpers/apiFunctions';
 import { useNavigate } from 'react-router-dom';
 import { IMembership } from '../../Interface';
+import { usePayment } from '../../Hooks';
 // Firebase
+import { FirebaseError } from 'firebase/app';
 import { auth, firestore } from '../../firebaseClient';
 import { sendEmailVerification, signOut } from 'firebase/auth';
 import { FirestoreError, Transaction, doc, runTransaction } from 'firebase/firestore';
 import { useAuthState, useDeleteUser } from 'react-firebase-hooks/auth';
 // Assets
 import menthalHealth from '../../assets/images/menthal.jpg'
-import { usePayment } from '../../Hooks';
-import { FirebaseError } from 'firebase/app';
 
 interface ProfileHeaderProps {
     name: string;
@@ -36,6 +36,7 @@ interface ProfileHeaderProps {
     coverPhoto: string;
     isEmailVerified: boolean;
     membership?: IMembership;
+    isMine: boolean;
 }
 
 const ProfileHeader: FC<ProfileHeaderProps> = ({
@@ -45,7 +46,8 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
     profilePhoto,
     coverPhoto,
     isEmailVerified,
-    membership
+    membership,
+    isMine
 }) => {
 
     const toast = useToast()
@@ -177,26 +179,34 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
                                 </Flex>
                                 <Text fontSize={["12px", "14px", "16px"]} fontWeight={500} color="gray.600">u/{username}</Text>
                                 <Text fontSize={["12px", "14px", "16px"]} fontWeight={500} fontStyle={"italic"}>{email}</Text>
-                                {!isEmailVerified && <Flex align="center" gap={2}>
+                                {(!isEmailVerified && isMine) && <Flex align="center" gap={2}>
                                     <Text color="red">E-mail erification is not completed!</Text>
                                     <Text fontWeight={600} textDecor="underline" cursor="pointer" onClick={verifyAccount}>Verify</Text>
                                 </Flex>}
                             </Box>
                         </Flex>
-                        <Flex transform={["translateY(-65%)", "translateY(-65%)", "translateY(-80%)"]} gap="1rem" direction={["column", "column", "row"]}>
-                            <SCEditButton onEdit={() => dispatch(setModal({ isOpen: true, view: "editProfile", data: { isEdit: true } }))} />
-                            <ProfileMenu
-                                isLoading={manageSubscriptionLoading}
-                                toggleDeleteUserAlertOpen={toggleDeleteUserAlertOpen}
-                                toggleBlockedUsersModal={toggleBlockedUsersModal}
-                                goManageSubscriptions={goManageSubscriptions}
-                            />
-                        </Flex>
+                        {
+                            isMine && (
+                                <Flex transform={["translateY(-65%)", "translateY(-65%)", "translateY(-80%)"]} gap="1rem" direction={["column", "column", "row"]}>
+                                    <SCEditButton onEdit={() => dispatch(setModal({ isOpen: true, view: "editProfile", data: { isEdit: true } }))} />
+                                    <ProfileMenu
+                                        isLoading={manageSubscriptionLoading}
+                                        toggleDeleteUserAlertOpen={toggleDeleteUserAlertOpen}
+                                        toggleBlockedUsersModal={toggleBlockedUsersModal}
+                                        goManageSubscriptions={goManageSubscriptions}
+                                    />
+                                </Flex>
+                            )
+                        }
                     </Flex>
                 </Container>
             </Flex>
-            <DeleteAlert label={`${userFromDB?.username}`} isOpen={deleteUserAlertOpen} handleDelete={handleDeleteUser} toggleDialog={toggleDeleteUserAlertOpen} />
-            <BlockedUsersModal isOpen={blockedUsersModalOpen} toggleModal={toggleBlockedUsersModal} />
+            {isMine && (
+                <>
+                    <DeleteAlert label={`${userFromDB?.username}`} isOpen={deleteUserAlertOpen} handleDelete={handleDeleteUser} toggleDialog={toggleDeleteUserAlertOpen} />
+                    <BlockedUsersModal isOpen={blockedUsersModalOpen} toggleModal={toggleBlockedUsersModal} />
+                </>
+            )}
         </>
     )
 }

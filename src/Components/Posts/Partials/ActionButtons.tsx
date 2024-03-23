@@ -113,7 +113,7 @@ const ActionButtons: FC<ActionButtonsInterface> = ({ post, isSaved, handleDelete
                         </>
                     )}
                 </Flex>}
-                {(!isDashboard && user?.id !== post.creatorId) && (
+                {(!isDashboard && user.id && user?.id !== post.creatorId) && (
                     <Flex
                         align="center"
                         p="8px 10px"

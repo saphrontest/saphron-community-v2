@@ -1,6 +1,6 @@
 // ChakraUI && React
 import { Box, Container, Flex, Icon, Image, Text, useBoolean, useToast } from '@chakra-ui/react'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 // Components
 import { SCEditButton } from '../SCElements';
 import { DeleteAlert } from '../Platform';
@@ -55,13 +55,14 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
     const navigate = useNavigate()
     const [user] = useAuthState(auth)
     const [deleteUser] = useDeleteUser(auth)
-    const { createPortalLink } = usePayment()
+    const { createPortalLink, checkUserIsStripeCustomer } = usePayment()
 
     const userFromDB = useSelector((state: RootState) => state.user)
 
     const [deleteUserAlertOpen, { toggle: toggleDeleteUserAlertOpen }] = useBoolean(false)
     const [blockedUsersModalOpen, { toggle: toggleBlockedUsersModal }] = useBoolean(false)
     const [manageSubscriptionLoading, { toggle: toggleManageSubscriptionLoading }] = useBoolean(false)
+    const [isStripeCustomer, setIsStripeCustomer] = useState<boolean>(false)
 
     const verifyAccount = async () => {
         user && await sendEmailVerification(user)
@@ -134,12 +135,22 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
     }
 
     useEffect(() => {
+        
         if (user?.emailVerified && !isEmailVerified) {
             updateUser(user.uid, { emailVerified: true })
             getUser(user.uid)
         }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?.emailVerified])
+
+    useEffect(() => {
+
+        checkUserIsStripeCustomer(userFromDB.id)
+            .then(res => setIsStripeCustomer(res !== undefined && res))
+            
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <>
@@ -194,6 +205,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
                                         toggleDeleteUserAlertOpen={toggleDeleteUserAlertOpen}
                                         toggleBlockedUsersModal={toggleBlockedUsersModal}
                                         goManageSubscriptions={goManageSubscriptions}
+                                        isStripeCustomer={isStripeCustomer}
                                     />
                                 </Flex>
                             )

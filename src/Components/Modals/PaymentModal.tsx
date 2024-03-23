@@ -69,7 +69,11 @@ const PaymentModal = () => {
     
     const toast = useToast()
     const dispatch = useDispatch()
-    const { getProductList, createNewCheckoutSession, getCheckoutSessionByDocPath } = usePayment()
+    const { 
+        getProductList,
+        createNewCheckoutSession,
+        getCheckoutSessionByDocPath
+    } = usePayment()
     
     const [products, setProducts] = useState<IMembership[]>([])
     const [choosenMembership, setChoosenMembership] = useState<IMembership>()
@@ -119,6 +123,7 @@ const PaymentModal = () => {
 
                         if(latestSession?.error?.message) {
                             console.error(latestSession?.error?.message)
+                            togglePaymentLoading()
                             toast({
                                 title: latestSession?.error?.message,
                                 status: "error",
@@ -128,15 +133,14 @@ const PaymentModal = () => {
                             return;
                         }
                         if(latestSession.url) {
+                            togglePaymentLoading()
                             window.location.assign(latestSession.url);
                         }
-
                     }
                     
-                }, 3000)
+                }, 5000)
 
                 return () => {
-                    togglePaymentLoading()
                     clearTimeout(timeout)
                 }
 

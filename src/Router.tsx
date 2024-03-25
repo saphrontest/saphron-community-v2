@@ -38,6 +38,7 @@ const RoutesArray = [
   { path: `${base}/post/:slugId/:slug`, component: PostDetail },
   { path: `${base}/saved-posts`, component: SavedPosts },
   { path: `${base}/profile`, component: Profile },
+  { path: `${base}/profile/:userId`, component: Profile },
   { path: `${base}/search`, component: SearchPage },
   { path: "workshops", component: WorkshopsPage },
   { path: "workshops/:slug", component: WorkshopsPage },

@@ -12,7 +12,6 @@ const MyProfile:FC<{savedPosts: IPost[]}> = ({savedPosts}) => {
     
     const toast = useToast()
     const { checkUserMembership } = usePayment()
-
     const search = window.location.search;
     const params = new URLSearchParams(search);
     const [payment_status, membership_type] = [params.get('payment_status'), params.get('membership_type')];
@@ -21,7 +20,7 @@ const MyProfile:FC<{savedPosts: IPost[]}> = ({savedPosts}) => {
     const { communities } = useSelector((state: RootState) => state.community)
 
     const [membership, setMembership] = useState<IMembership>()
-
+    
     useEffect(() => {
         if (payment_status !== undefined) {
             if (payment_status === 'cancel') {

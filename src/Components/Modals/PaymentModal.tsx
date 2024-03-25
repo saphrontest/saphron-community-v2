@@ -38,23 +38,23 @@ const MemberTypeCard: FC<{ name: string; price: number; onSelect: () => void, is
             flexDirection="column"
             borderColor={isActive ? "blue.500" : "transparent"}
         >
-            <Text fontSize="22px" fontWeight={700} mb={3}>
+            <Text fontSize="18px" fontWeight={700} mb={3}>
                 {name}
             </Text>
             <List spacing={2}>
-                <ListItem>
+                <ListItem fontSize="14px">
                     <ListIcon as={MdCheckCircle} color='green.500' />
                     Lorem ipsum dolor sit amet
                 </ListItem>
-                <ListItem>
+                <ListItem fontSize="14px">
                     <ListIcon as={MdCheckCircle} color='green.500' />
                     Lorem ipsum dolor sit amet
                 </ListItem>
-                <ListItem>
+                <ListItem fontSize="14px">
                     <ListIcon as={MdCheckCircle} color='green.500' />
                     Lorem ipsum dolor sit amet
                 </ListItem>
-                <ListItem>
+                <ListItem fontSize="14px">
                     <ListIcon as={MdCheckCircle} color='green.500' />
                     Lorem ipsum dolor sit amet
                 </ListItem>
@@ -69,7 +69,11 @@ const PaymentModal = () => {
     
     const toast = useToast()
     const dispatch = useDispatch()
-    const { getProductList, createNewCheckoutSession, getCheckoutSessionByDocPath } = usePayment()
+    const { 
+        getProductList,
+        createNewCheckoutSession,
+        getCheckoutSessionByDocPath
+    } = usePayment()
     
     const [products, setProducts] = useState<IMembership[]>([])
     const [choosenMembership, setChoosenMembership] = useState<IMembership>()
@@ -100,8 +104,8 @@ const PaymentModal = () => {
                 title: "Please login, first!",
                 status: "error",
                 isClosable: true,
-                position: "top-right"
             })
+            dispatch(setModal({isOpen: true, view: "login"}))
             return;
         }
         togglePaymentLoading()
@@ -119,6 +123,7 @@ const PaymentModal = () => {
 
                         if(latestSession?.error?.message) {
                             console.error(latestSession?.error?.message)
+                            togglePaymentLoading()
                             toast({
                                 title: latestSession?.error?.message,
                                 status: "error",
@@ -128,15 +133,14 @@ const PaymentModal = () => {
                             return;
                         }
                         if(latestSession.url) {
+                            togglePaymentLoading()
                             window.location.assign(latestSession.url);
                         }
-
                     }
                     
-                }, 3000)
+                }, 5000)
 
                 return () => {
-                    togglePaymentLoading()
                     clearTimeout(timeout)
                 }
 
@@ -178,8 +182,7 @@ const PaymentModal = () => {
                     direction="row"
                     alignItems="center"
                     justifyContent="space-between"
-                    width="100%"
-                    gap="1rem"
+                    gap="0.4rem"
                 >
                     {products?.map(item => {
                         return <MemberTypeCard

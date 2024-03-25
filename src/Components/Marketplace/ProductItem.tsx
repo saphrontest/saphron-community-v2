@@ -1,8 +1,21 @@
 import { FC } from 'react'
-import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Button, Divider, Flex, Image, Text, useBoolean, useMediaQuery } from '@chakra-ui/react';
 import ProductPriceLabel from './ProductPriceLabel';
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
+import moment from 'moment';
 
-const ProductItem:FC<{ item: any; isActive: boolean; onClick: () => void; }> = ({ item, isActive, onClick }) => {
+interface IProduct {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  img: string;
+}
+
+const Desktop: FC<{ item: IProduct; isActive: boolean; onClick: () => void; }> = ({
+  item, isActive, onClick
+}) => {
+
   return (
     <Flex
         w="180px"
@@ -31,6 +44,42 @@ const ProductItem:FC<{ item: any; isActive: boolean; onClick: () => void; }> = (
         </Flex>
       </Flex>
   )
+
+}
+
+const Mobile:FC<{ item: IProduct; buyItem: (item: IProduct) => Promise<void>; }> = ({ item, buyItem }) => {
+  const [isClicked, {toggle: toggleIsClicked}] = useBoolean(false)
+  return (
+    <Flex direction="column" w="100%" justify="space-between" align="flex-start" cursor="pointer" bg="gray.100" borderRadius="1rem" p="1rem" onClick={toggleIsClicked}>
+      <Flex direction="row" align="center" w="100%" justify="space-between">
+        <Flex direction="row" align="center">
+          <Image src={item.img} w="5rem" h="3rem" mr="1rem" borderRadius="0.2rem" />
+          <Box>
+            <Text textAlign="left" fontWeight="600" fontSize={["12", "18"]} noOfLines={2}>{item.name}</Text>
+          </Box>
+        </Flex>
+        {!isClicked ? <MdKeyboardArrowDown size={24} /> : <MdKeyboardArrowUp size={24} />}
+      </Flex>
+      {isClicked ? (
+        <Flex direction="column" w="100%" align="flex-start" gap="1rem" p="1rem" onClick={ev => ev.stopPropagation()}>
+          <Divider borderColor="gray" />
+          <Box>
+            <Text textAlign="left" fontStyle="italic" fontSize={["12", "16"]}>{item.description}</Text>
+          </Box>
+          <Flex width="100%" justify="flex-end">
+            <Button onClick={() => buyItem(item)}>
+              Buy
+            </Button>
+          </Flex>
+        </Flex>
+      ) : null}
+    </Flex>
+  )
+}
+
+const ProductItem:FC<{ item: IProduct; isActive: boolean; onClick: () => void; buyItem: (item: IProduct) => Promise<void>; }> = ({ item, isActive, onClick, buyItem }) => {
+  const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
+  return isSmallerThan766 ? <Mobile item={item} buyItem={buyItem}/> : <Desktop item={item} isActive={isActive} onClick={onClick}/>
 }
 
 export default ProductItem

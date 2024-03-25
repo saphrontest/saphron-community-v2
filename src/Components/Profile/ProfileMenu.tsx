@@ -10,8 +10,9 @@ const ProfileMenu: FC<{
     toggleDeleteUserAlertOpen: () => void;
     toggleBlockedUsersModal: () => void;
     goManageSubscriptions: () => void;
+    isStripeCustomer: boolean;
 }> = ({
-    isLoading, toggleDeleteUserAlertOpen, toggleBlockedUsersModal, goManageSubscriptions
+    isLoading, toggleDeleteUserAlertOpen, toggleBlockedUsersModal, goManageSubscriptions, isStripeCustomer
 }) => {
         return (
             <Menu>
@@ -38,9 +39,9 @@ const ProfileMenu: FC<{
                     <MenuItem display="flex" gap="1rem" onClick={toggleBlockedUsersModal}>
                         <ImUserMinus /> Blocked Users
                     </MenuItem>
-                    <MenuItem display="flex" gap="1rem" onClick={goManageSubscriptions}>
+                    {isStripeCustomer && <MenuItem display="flex" gap="1rem" onClick={goManageSubscriptions}>
                         <MdAccountBalanceWallet /> Manage Subscription
-                    </MenuItem>
+                    </MenuItem>}
                 </MenuList>
             </Menu>
         )

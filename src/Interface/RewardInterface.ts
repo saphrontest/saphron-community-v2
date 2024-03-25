@@ -7,21 +7,16 @@ export interface IReward {
     reward: number
 }
 
-export interface IRewardHistoryExpenseItem {
+export interface IRewardHistoryItem {
+    id: string;
     createdAt: string;
-    description: string;
-    img: string;
-    name: string;
+    description?: string;
+    img?: string;
+    name?: string;
     price: number;
-    rewardItemId: number | string;
-    type: "expense"
-}
-
-export interface IRewardHistoryIncomeItem {
-    createdAt: string;
-    platform: IPlatform;
-    price: number;
-    rewardActionId: string;
-    slug: string;
-    type: "income";
+    rewardItemId?: number | string;
+    type: "expense" | "income";
+    rewardActionId?: string;
+    platform?: IPlatform;
+    slug?: string;
 }

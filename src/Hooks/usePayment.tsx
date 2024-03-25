@@ -16,6 +16,12 @@ import { FirebaseError } from "firebase/app";
 
 const usePayment = () => {
   
+    /**
+     * The function `getProductList` retrieves active products along with their prices from Firestore
+     * using async/await syntax in TypeScript React.
+     * @returns An array of objects representing active products with their corresponding prices. Each
+     * object includes the product's ID, data, and an array of prices.
+     */
     const getProductList = async () => {
         const productQuery = query(collection(firestore, "products"), where("active", "==", true));
         const data = await getDocs(productQuery);
@@ -27,6 +33,15 @@ const usePayment = () => {
         }));
     }
 
+    /**
+     * The function `getCheckoutSessionByDocPath` retrieves a checkout session from Firestore based on
+     * a given document path.
+     * @param {string} path - The `path` parameter in the `getCheckoutSessionByDocPath` function is a
+     * string that represents the path to a document in Firestore.
+     * @returns The function `getCheckoutSessionByDocPath` returns a Promise that resolves to an object
+     * of type `ICheckoutSession` containing the id and data of the checkout session retrieved from
+     * Firestore.
+     */
     const getCheckoutSessionByDocPath = async (path: string) => {
       try {
         const newSession = await getDoc(doc(firestore, path))
@@ -40,6 +55,18 @@ const usePayment = () => {
       }
     }
 
+    /**
+     * The function `createNewCheckoutSession` creates a new checkout session for a user with a
+     * specific membership, storing it in Firestore and returning the document reference.
+     * @param {string} userId - The `userId` parameter in the `createNewCheckoutSession` function is a
+     * string that represents the unique identifier of the user for whom the checkout session is being
+     * created.
+     * @param {IMembership} membership - The `membership` parameter in the `createNewCheckoutSession`
+     * function is of type `IMembership`. It likely contains information about a user's membership,
+     * such as the membership type, prices, and other relevant details.
+     * @returns The `createNewCheckoutSession` function returns a `DocumentReference` object
+     * representing the newly created checkout session document in Firestore.
+     */
     const createNewCheckoutSession = async ( userId: string, membership: IMembership ) => {
       try {
           const newSessionDoc = await addDoc(
@@ -59,6 +86,17 @@ const usePayment = () => {
         }
     } 
 
+    /**
+     * The function `checkUserMembership` retrieves a user's subscription data from Firestore and
+     * returns the membership information if available.
+     * @param {string} userId - The `userId` parameter is a string that represents the unique
+     * identifier of a user in the system.
+     * @returns The `checkUserMembership` function is returning the membership data of a user based on
+     * their subscriptions. If the user has a subscription with a product associated with it, the
+     * function will return the data of that product as an `IMembership` object. If the user does not
+     * have a subscription or the subscription does not have a product associated with it, the function
+     * will return `undefined`.
+     */
     const checkUserMembership = async (userId: string) => {
 
       try {
@@ -72,7 +110,7 @@ const usePayment = () => {
         if(userSubscription && userSubscription[0]?.product) {
           const productDoc = await getDoc(userSubscription[0].product as unknown as DocumentReference);
           return productDoc.data() as IMembership
-        }else return undefined
+        } else return undefined
         
       } catch (error) {
         if(error instanceof FirestoreError) {
@@ -82,6 +120,13 @@ const usePayment = () => {
       }  
     }
 
+   /**
+    * The function `createPortalLink` asynchronously calls a Firebase Cloud Function to generate a
+    * portal link for Stripe payments with specified return URL and locale.
+    * @returns The `createPortalLink` function is returning a URL string that is obtained from the
+    * result of calling the `ext-firestore-stripe-payments-createPortalLink` Cloud Function with the
+    * specified parameters.
+    */
     const createPortalLink = async () => {
 
       try {
@@ -101,8 +146,7 @@ const usePayment = () => {
           throw new Error(error.message)
         }
       }
-      
-      
+
     }
 
     return {

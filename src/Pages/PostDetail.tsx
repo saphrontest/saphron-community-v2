@@ -17,7 +17,7 @@ const PostDetail = () => {
   const { getPostDetail } = usePost()
   const { getCommentByPostId } = useComment()
   const { state: locationState } = useLocation()
-  
+
   const [post, setPost] = useState<IPost>()
   const [reloadPost, setReloadPost] = useState<boolean>(false)
   const [comments, setComments] = useState<IComment[]>([])

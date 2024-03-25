@@ -10,12 +10,13 @@ import { RootState } from '../../redux/store';
 import { getCommunities, getJoinedCommunitiesList } from '../../Helpers/apiFunctions';
 import { setCommunities, setJoinedCommunities } from '../../redux/slices/communitySlice';
 import moment from 'moment';
+import { useReward } from '../../Hooks';
 
 const AddCommunityModal = () => {
 
     const dispatch = useDispatch()
     const toast = useToast()
-
+    const {winRewardBySlug} = useReward()
     const user = useSelector((state: RootState) => state.user)
     const [name, setName] = useState("");
     const [charsRemaining, setCharsRemaining] = useState(21);
@@ -77,6 +78,7 @@ const AddCommunityModal = () => {
                     }
                 );
             });
+            await winRewardBySlug("create_community", user.id)
             const joined = await getJoinedCommunitiesList(user.id)
             joined && dispatch(setJoinedCommunities(joined))
             const communities = await getCommunities()

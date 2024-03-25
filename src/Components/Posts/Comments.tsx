@@ -6,7 +6,7 @@ import { CommentInput } from './Partials';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
 import { RootState } from '../../redux/store';
-import { useComment } from '../../Hooks';
+import { useComment, useReward } from '../../Hooks';
 
 interface CommentsProps {
     comments: IComment[];
@@ -17,6 +17,7 @@ interface CommentsProps {
 const Comments: FC<CommentsProps> = ({ comments, post, getComments }) => {
 
     const dispatch = useDispatch()
+    const { winRewardBySlug } = useReward()
     const { onCreate: createComment, onDelete: deleteComment } = useComment()
     
     const user = useSelector((state: RootState) => state.user)
@@ -39,18 +40,15 @@ const Comments: FC<CommentsProps> = ({ comments, post, getComments }) => {
         }
     }
 
-    const checkUser = () => {
+    const onCreateComment = async (comment: string) => {
         if (!user) {
             dispatch(setModal({ isOpen: true, view: "login" }));
             return;
         }
-    }
-
-    const onCreateComment = async (comment: string) => {
-        checkUser()
         setCommentCreateLoading(true);
         try {
             await createComment(post, user, comment)
+            await winRewardBySlug("create_comment", user.id)
             getComments(post.id)
             setComment("")
         } catch (error: any) {

@@ -7,6 +7,7 @@ import { getCommunities, getJoinedCommunitiesList, getUserCommunities, joinCommu
 import { setCommunities, setJoinedCommunities } from '../redux/slices/communitySlice';
 import { Community, JoinedCommunity } from '../Interface';
 import communitiesBackground from '../assets/images/communities.jpg'
+import { useReward } from '../Hooks';
 
 interface RecommendationsProps {
   type?: string;
@@ -16,6 +17,7 @@ const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const toast = useToast()
+  const {winRewardBySlug} = useReward()
   const [loading, setLoading] = useState(false)
   const [viewAll, setViewAll] = useState(false)
   const [myCommmunities, setMyCommmunities] = useState<any[]>([])
@@ -77,6 +79,7 @@ const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
       return;
     }
     await joinCommunity(userId, communityId)
+    await winRewardBySlug('join_community', userId)
     await getJoinedCommunities(userId)
   }
 

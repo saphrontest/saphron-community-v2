@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import { useSupportGroup } from '../../Hooks'
+import { useReward, useSupportGroup } from '../../Hooks'
 import { ISupportGroup, IUser, ErrorInterface } from '../../Interface'
 import { Box, Button, Flex, Spinner, Text, Textarea, useBoolean, useToast } from '@chakra-ui/react'
 import { InputItem } from '../../Layouts'
@@ -10,11 +10,16 @@ import { setModal } from '../../redux/slices/modalSlice'
 import md5 from 'md5'
 
 const JoinSupportGroupForm: FC<{ supportGroup: ISupportGroup }> = ({ supportGroup }) => {
-  const { onJoin } = useSupportGroup()
+  
   const toast = useToast()
   const dispatch = useDispatch()
-  const [loading, { toggle: toggleLoading }] = useBoolean(false)
+  const { winRewardBySlug } = useReward()
+  const { onJoin } = useSupportGroup()
+  
+  
   const user: IUser = useSelector((state: RootState) => state.user)
+  const [loading, { toggle: toggleLoading }] = useBoolean(false)
+  
   const [formItems, setFormItems] = useState<{
     name: string;
     email: string;
@@ -59,7 +64,8 @@ const JoinSupportGroupForm: FC<{ supportGroup: ISupportGroup }> = ({ supportGrou
       supportGroupId: supportGroup.id,
       status: "waiting"
     })
-    .then(() => {
+    .then(async () => {
+      await winRewardBySlug("join_support_group", user.id)
       toast({
         status: "success",
         isClosable: true,

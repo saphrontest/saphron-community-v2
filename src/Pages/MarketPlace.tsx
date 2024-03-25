@@ -1,15 +1,15 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PlatformItemDetailLayout, PlatformPageLayout } from '../Layouts'
 import storeThumbnail from '../assets/images/store-thumbnail.jpg'
 import { Button, Flex, Spinner, Text, useBoolean, useMediaQuery, useToast } from '@chakra-ui/react'
 import { Meta, ProductItem, ProductPriceLabel } from '../Components'
 import yogaMatProduct from '../assets/images/yoga-mat.jpg'
-import { addDoc, collection, increment } from 'firebase/firestore'
+import { FirestoreError, increment } from 'firebase/firestore'
 import { IUser } from '../Interface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { updateUser } from '../Helpers'
-import { firestore } from '../firebaseClient'
+import { useReward } from '../Hooks'
 import { setModal } from '../redux/slices/modalSlice'
 
 interface IProduct {
@@ -21,6 +21,7 @@ interface IProduct {
 }
 
 const MarketPlace = () => {
+  const { buyRewardItem } = useReward()
   const dispatch = useDispatch()
   const toast = useToast()
   const [choosenProduct, setChoosenProduct] = useState<IProduct>()
@@ -52,14 +53,26 @@ const MarketPlace = () => {
       return;
     }
     toggleSellingLoading()
+
     try {
-      await addDoc(collection(firestore, `users/${user.id}/rewardItems`), item)
-      await updateUser(user.id, {
-        rewardPoint: increment(-item.price)
-      })
+
+      await buyRewardItem(user.id, item)
+
+      await updateUser(user.id, { rewardPoint: increment(-item.price) })
+
+    } catch (error) {
+
+      if(error instanceof FirestoreError) {
+        console.error(error.message)
+        throw new Error(error.message)
+      }
+
     } finally {
+
       toggleSellingLoading()
+      
     }
+
   }
 
   return (

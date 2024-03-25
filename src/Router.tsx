@@ -20,7 +20,8 @@ import {
   AdminSupportGroupsPage,
   AdminWorkshopsPage,
   MarketPlace,
-  AdminRewardsPage
+  AdminRewardsPage,
+  RewardsPage
 } from './Pages'
 
 const base = "community"
@@ -53,6 +54,7 @@ const RoutesArray = [
   { path: "my-support-groups", component: MySupportGroups },
   { path: "privacy-policy", component: Policies },
   { path: "terms-conditions", component: Policies },
+  { path: "rewards", component: RewardsPage },
   { path: "marketplace", component: MarketPlace },
 ]
 

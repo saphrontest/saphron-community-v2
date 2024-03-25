@@ -6,3 +6,17 @@ export interface IReward {
     slug: string;
     reward: number
 }
+
+export interface IRewardHistoryItem {
+    id: string;
+    createdAt: string;
+    description?: string;
+    img?: string;
+    name?: string;
+    price: number;
+    rewardItemId?: number | string;
+    type: "expense" | "income";
+    rewardActionId?: string;
+    platform?: IPlatform;
+    slug?: string;
+}

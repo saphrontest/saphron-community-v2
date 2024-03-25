@@ -121,7 +121,7 @@ const usePost = () => {
     } catch (error) {
       console.log("on create post", error)
     } finally {
-      navigate(`/community/post/${slugId}/${createSlug(title)}`)
+      navigate(`/community/post/${slugId}/${createSlug(title)}`, { state: { isSaved: false } })
     }
   }
 

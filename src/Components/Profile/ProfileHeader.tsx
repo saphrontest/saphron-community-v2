@@ -1,11 +1,13 @@
 // ChakraUI && React
 import { Box, Container, Flex, Icon, Image, Text, useBoolean, useToast } from '@chakra-ui/react'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 // Components
 import { SCEditButton } from '../SCElements';
 import { DeleteAlert } from '../Platform';
 import ProfileMenu from './ProfileMenu';
 import { VscAccount } from 'react-icons/vsc';
+import { MembershipBadge } from '../Membership';
+import BlockedUsersModal from './BlockedUsersModal';
 // Redux
 import { RootState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,14 +17,16 @@ import { resetCommunities } from '../../redux/slices/communitySlice';
 // Helpers
 import { getUser, updateUser } from '../../Helpers/apiFunctions';
 import { useNavigate } from 'react-router-dom';
+import { IMembership } from '../../Interface';
+import { usePayment } from '../../Hooks';
 // Firebase
+import { FirebaseError } from 'firebase/app';
 import { auth, firestore } from '../../firebaseClient';
 import { sendEmailVerification, signOut } from 'firebase/auth';
-import { Transaction, doc, runTransaction } from 'firebase/firestore';
+import { FirestoreError, Transaction, doc, runTransaction } from 'firebase/firestore';
 import { useAuthState, useDeleteUser } from 'react-firebase-hooks/auth';
 // Assets
 import menthalHealth from '../../assets/images/menthal.jpg'
-import BlockedUsersModal from './BlockedUsersModal';
 
 interface ProfileHeaderProps {
     name: string;
@@ -31,28 +35,43 @@ interface ProfileHeaderProps {
     profilePhoto: string;
     coverPhoto: string;
     isEmailVerified: boolean;
+    membership?: IMembership;
+    isMine: boolean;
 }
 
-const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profilePhoto, coverPhoto, isEmailVerified }) => {
+const ProfileHeader: FC<ProfileHeaderProps> = ({
+    name,
+    email,
+    username,
+    profilePhoto,
+    coverPhoto,
+    isEmailVerified,
+    membership,
+    isMine
+}) => {
+
     const toast = useToast()
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [user] = useAuthState(auth)
     const [deleteUser] = useDeleteUser(auth)
+    const { createPortalLink, checkUserIsStripeCustomer } = usePayment()
 
-    const userFromDB = useSelector((state: RootState) => state.user )
-    
+    const userFromDB = useSelector((state: RootState) => state.user)
+
     const [deleteUserAlertOpen, { toggle: toggleDeleteUserAlertOpen }] = useBoolean(false)
     const [blockedUsersModalOpen, { toggle: toggleBlockedUsersModal }] = useBoolean(false)
-    
+    const [manageSubscriptionLoading, { toggle: toggleManageSubscriptionLoading }] = useBoolean(false)
+    const [isStripeCustomer, setIsStripeCustomer] = useState<boolean>(false)
+
     const verifyAccount = async () => {
         user && await sendEmailVerification(user)
     }
 
     const handleDeleteUser = async () => {
         deleteUser().then(success => {
-            
-            if(!success) {
+
+            if (!success) {
                 toast({
                     title: "Please try again later!",
                     status: "error",
@@ -87,13 +106,51 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
         })
     }
 
+    const goManageSubscriptions = async () => {
+        toggleManageSubscriptionLoading()
+        try {
+            const portalLink = await createPortalLink()
+
+            if (!portalLink) {
+                toast({
+                    title: "Please try again later!",
+                    status: "error",
+                    isClosable: true,
+                })
+                return;
+            }
+
+            window.location.assign(portalLink);
+        } catch (error) {
+            if (error instanceof FirestoreError || error instanceof FirebaseError) {
+                toast({
+                    title: error.message,
+                    status: "error",
+                    isClosable: true,
+                })
+            }
+        } finally {
+            toggleManageSubscriptionLoading()
+        }
+    }
+
     useEffect(() => {
+        
         if (user?.emailVerified && !isEmailVerified) {
             updateUser(user.uid, { emailVerified: true })
             getUser(user.uid)
         }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?.emailVerified])
+
+    useEffect(() => {
+
+        checkUserIsStripeCustomer(userFromDB.id)
+            .then(res => setIsStripeCustomer(res !== undefined && res))
+            
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <>
@@ -127,24 +184,41 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({ name, email, username, profileP
                                     />
                             }
                             <Box textAlign="left">
-                                <Text fontSize={["16px", "20px", "28px"]} fontWeight={700}>{name}</Text>
+                                <Flex align='center' gap="1rem">
+                                    <Text fontSize={["16px", "20px", "28px"]} fontWeight={700}>{name}</Text>
+                                    {membership?.active && <MembershipBadge membershipType={membership?.name.split(' ')[0] || ''} />}
+                                </Flex>
                                 <Text fontSize={["12px", "14px", "16px"]} fontWeight={500} color="gray.600">u/{username}</Text>
                                 <Text fontSize={["12px", "14px", "16px"]} fontWeight={500} fontStyle={"italic"}>{email}</Text>
-                                {!isEmailVerified && <Flex align="center" gap={2}>
+                                {(!isEmailVerified && isMine) && <Flex align="center" gap={2}>
                                     <Text color="red">E-mail erification is not completed!</Text>
                                     <Text fontWeight={600} textDecor="underline" cursor="pointer" onClick={verifyAccount}>Verify</Text>
                                 </Flex>}
                             </Box>
                         </Flex>
-                        <Flex transform={["translateY(-65%)", "translateY(-65%)", "translateY(-80%)"]} gap="1rem" direction={["column", "column", "row"]}>
-                            <SCEditButton onEdit={() => dispatch(setModal({ isOpen: true, view: "editProfile", data: { isEdit: true } }))} />
-                            <ProfileMenu toggleDeleteUserAlertOpen={toggleDeleteUserAlertOpen} toggleBlockedUsersModal={toggleBlockedUsersModal}/>
-                        </Flex>
+                        {
+                            isMine && (
+                                <Flex transform={["translateY(-65%)", "translateY(-65%)", "translateY(-80%)"]} gap="1rem" direction={["column", "column", "row"]}>
+                                    <SCEditButton onEdit={() => dispatch(setModal({ isOpen: true, view: "editProfile", data: { isEdit: true } }))} />
+                                    <ProfileMenu
+                                        isLoading={manageSubscriptionLoading}
+                                        toggleDeleteUserAlertOpen={toggleDeleteUserAlertOpen}
+                                        toggleBlockedUsersModal={toggleBlockedUsersModal}
+                                        goManageSubscriptions={goManageSubscriptions}
+                                        isStripeCustomer={isStripeCustomer}
+                                    />
+                                </Flex>
+                            )
+                        }
                     </Flex>
                 </Container>
             </Flex>
-            <DeleteAlert label={`${userFromDB?.username}`} isOpen={deleteUserAlertOpen} handleDelete={handleDeleteUser} toggleDialog={toggleDeleteUserAlertOpen} />
-            <BlockedUsersModal isOpen={blockedUsersModalOpen} toggleModal={toggleBlockedUsersModal}/>
+            {isMine && (
+                <>
+                    <DeleteAlert label={`${userFromDB?.username}`} isOpen={deleteUserAlertOpen} handleDelete={handleDeleteUser} toggleDialog={toggleDeleteUserAlertOpen} />
+                    <BlockedUsersModal isOpen={blockedUsersModalOpen} toggleModal={toggleBlockedUsersModal} />
+                </>
+            )}
         </>
     )
 }

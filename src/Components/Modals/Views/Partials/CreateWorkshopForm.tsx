@@ -13,6 +13,7 @@ import { RootState } from '../../../../redux/store'
 import { IUser, Workshop} from '../../../../Interface'
 import { setModal } from '../../../../redux/slices/modalSlice'
 import { PlatformFormItem } from '../../../Platform'
+import { useReward } from '../../../../Hooks'
 
 interface IForm {
     workshop_manager_name: string;
@@ -27,6 +28,7 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
 }) => {
     const dispatch = useDispatch()
     const toast = useToast()
+    const {winRewardBySlug} = useReward()
     const user: IUser = useSelector((state: RootState) => state.user)
     const workshopPicRef = useRef<HTMLInputElement | null>(null)
     const [termsCheckbox, setTermsCheckbox] = useState<boolean>(false)
@@ -134,6 +136,7 @@ const CreateWorkshopForm: FC<{ isEdit?: boolean; workshopData?: Workshop; toggle
                         }
                     );
                 });
+                await winRewardBySlug("create_workshop", user.id)
             } catch (error) { } finally {
                 setLoading(false)
                 toast({

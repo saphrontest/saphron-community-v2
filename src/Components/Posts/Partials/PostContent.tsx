@@ -33,10 +33,14 @@ const PostContent: FC<PostContentProps> = ({ post, communityName }) => {
               </Link>
               <Icon as={BsDot} color="gray.500" fontSize={8} />
             </Flex>
-            {post.createdAt && <Text color="gray.500" textAlign={"right"}>
-              {!isSmallerThan766 && `by u/${post.userDisplayText}`}{" "}
-              {moment(new Date(post.createdAt), "DD.MM.YYYY HH:mm:ss").fromNow()}
-            </Text>}
+            {post.createdAt && (
+              <Link to={`/community/profile/${post.userId}`}>
+                <Text color="gray.500" textAlign={"right"} _hover={{ textDecoration: "underline" }} onClick={(event) => event.stopPropagation()}>
+                {!isSmallerThan766 && `by u/${post.userDisplayText}`}{" "}
+                {moment(new Date(post.createdAt), "DD.MM.YYYY HH:mm:ss").fromNow()}
+                </Text>
+              </Link>
+            )}
           </Stack>
       </Stack>
       <Text fontSize="12pt" fontWeight={600} textAlign="left">

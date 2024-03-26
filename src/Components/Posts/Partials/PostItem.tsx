@@ -11,7 +11,7 @@ import { RootState } from '../../../redux/store';
 import VoteComponent from './VoteComponent';
 import ActionButtons from './ActionButtons';
 import PostContent from './PostContent';
-import { usePost } from '../../../Hooks';
+import { usePost, useReward } from '../../../Hooks';
 
 export type PostItemContentProps = {
   post: IPost;
@@ -32,6 +32,7 @@ const PostItem: FC<PostItemContentProps> = ({
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const {onDelete: deletePost} = usePost()
+  const {winRewardBySlug} = useReward()
 
   const user = useSelector((state: RootState) => state.user)
   const {communities} = useSelector((state:RootState) => state.community)
@@ -95,10 +96,11 @@ const PostItem: FC<PostItemContentProps> = ({
         newVote.id= postVoteRef.id;
         batch.set(postVoteRef, newVote);
       }
-
+      
       const postRef = doc(firestore, "posts", post.id);
       batch.update(postRef, { voteStatus: post.voteStatus + sentVote });
       await batch.commit();
+      await winRewardBySlug("create_vote", user.id)
       setReloadPost(true)
     } catch (error) {
       console.log("onVote error", error);

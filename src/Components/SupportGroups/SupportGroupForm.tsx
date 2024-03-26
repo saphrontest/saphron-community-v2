@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
 import { ISupportGroup, IUser, ErrorInterface } from '../../Interface'
-import { useSupportGroup } from '../../Hooks'
+import { useReward, useSupportGroup } from '../../Hooks'
 import { Button, Checkbox, Flex, Spinner, Text, useBoolean, useToast } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { SCIcon } from '../SCElements'
@@ -26,6 +26,7 @@ const SupportGroupForm: FC<{
 }) => {
     const toast = useToast()
     const dispatch = useDispatch()
+    const {winRewardBySlug} = useReward()
     const { onCreate, onEdit } = useSupportGroup()
     const supportGroupPicRef = useRef<HTMLInputElement | null>(null)
 
@@ -133,7 +134,8 @@ const SupportGroupForm: FC<{
         support_group_manager_name: formItems.support_group_manager_name !== '' ? formItems.support_group_manager_name : user.username,
         status: "waiting"
       })
-      .then(() => {
+      .then(async () => {
+          await winRewardBySlug("create_support_group", user.id)
           toast({
               status: "success",
               isClosable: true,

@@ -18,7 +18,10 @@ import {
   AdminPostsPage,
   AdminUsersPage,
   AdminSupportGroupsPage,
-  AdminWorkshopsPage
+  AdminWorkshopsPage,
+  MarketPlace,
+  AdminRewardsPage,
+  RewardsPage
 } from './Pages'
 
 const base = "community"
@@ -35,6 +38,7 @@ const RoutesArray = [
   { path: `${base}/post/:slugId/:slug`, component: PostDetail },
   { path: `${base}/saved-posts`, component: SavedPosts },
   { path: `${base}/profile`, component: Profile },
+  { path: `${base}/profile/:userId`, component: Profile },
   { path: `${base}/search`, component: SearchPage },
   { path: "workshops", component: WorkshopsPage },
   { path: "workshops/:slug", component: WorkshopsPage },
@@ -44,12 +48,14 @@ const RoutesArray = [
   { path: `/${adminBase}/users`, component: AdminUsersPage },
   { path: `/${adminBase}/workshops`, component: AdminWorkshopsPage },
   { path: `/${adminBase}/support-groups`, component: AdminSupportGroupsPage },
+  { path: `/${adminBase}/rewards`, component: AdminRewardsPage },
   { path: "support-groups", component: SupportGroups },
   { path: "support-groups/:slug", component: SupportGroupDetailPage },
   { path: "my-support-groups", component: MySupportGroups },
   { path: "privacy-policy", component: Policies },
   { path: "terms-conditions", component: Policies },
-  { path: "terms-conditions", component: Policies },
+  { path: "rewards", component: RewardsPage },
+  { path: "marketplace", component: MarketPlace },
 ]
 
 const Router = () => {

@@ -5,7 +5,7 @@ import { Community, IUser } from '../../../Interface';
 import { useToast } from '@chakra-ui/react';
 import { RootState } from '../../../redux/store';
 import { useSelector } from 'react-redux';
-import { usePost } from '../../../Hooks';
+import { usePost, useReward } from '../../../Hooks';
 
 interface CreatePostFormInterface {
     selectedTab: string;
@@ -14,9 +14,11 @@ interface CreatePostFormInterface {
 }
 
 const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTab, community}) => {
-  const user: IUser = useSelector((state: RootState) => state.user)
-  const {onCreate: createPost} = usePost()
+  
   const toast = useToast()
+  const {winRewardBySlug} = useReward()
+  const {onCreate: createPost} = usePost()
+  
   const [textInputs, setTextInputs] = useState<{ title: string; body: string; }>({
     title: "",
     body: "",
@@ -24,6 +26,8 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<string>();
   const selectFileRef = useRef<HTMLInputElement>(null);
+  
+  const user: IUser = useSelector((state: RootState) => state.user)
 
   const onTextChange = (name: string, data: string) => {
     setTextInputs((prev) => ({ ...prev, [name]: data }));
@@ -54,6 +58,7 @@ const CreatePostForm: FC<CreatePostFormInterface> = ({selectedTab, setSelectedTa
 
     try {
       await createPost(user, body, title, community, selectedFile)
+      await winRewardBySlug("create_post", user.id)
     } catch (error) {
       console.error(error)
     } finally {

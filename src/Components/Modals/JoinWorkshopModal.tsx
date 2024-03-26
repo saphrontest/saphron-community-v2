@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { setModal } from '../../redux/slices/modalSlice'
 import { PlatformFormItem } from '../Platform'
+import { useReward } from '../../Hooks'
 
 
 const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
@@ -17,6 +18,8 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
     const toast = useToast()
     const dispatch = useDispatch()
     const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
+
+    const {winRewardBySlug} = useReward()
 
     const [formItems, setFormItems] = useState<FormItemInterface>({ name: "", email: "", motivation: "" })
     const [formErrors, setFormErrors] = useState<{ motivation: ErrorInterface; email: ErrorInterface; }>({ motivation: { success: true, message: "" }, email: { success: true, message: "" }  })
@@ -65,7 +68,9 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
                 doc(collection(firestore, `workshops/${workshop.id}/participants`), newWorkshopRequestId),
                 workshopRequest
             );
-        }).finally(() => {
+        })
+        .then(async () => await winRewardBySlug("join_workshop", user.id))
+        .finally(() => {
             setLoading(false)
             toast({
                 status: "success",

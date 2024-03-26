@@ -1,3 +1,5 @@
+import { ISubscription } from "./PaymentInterface";
+
 export type UserRoleTypes =  'admin' | 'user' | ''
 export interface IUser {
     id: string;
@@ -10,6 +12,8 @@ export interface IUser {
     coverPhotoURL: string;
     profilePhotoURL: string;
     phoneNumber: string;
+    rewardPoint: number;
+    subscriptions?: ISubscription[]
     role: UserRoleTypes;
 }
 
@@ -31,4 +35,5 @@ export const defaultUserState: IUser = {
     profilePhotoURL: "",
     phoneNumber: "",
     role: "",
+    rewardPoint: 0
 }

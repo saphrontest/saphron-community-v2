@@ -199,8 +199,9 @@ export const saveUserToFirestore = async (
       phoneNumber: "",
       emailVerified: false,
       isRegistered: true,
-      provider,
-    };
+      rewardPoint: 50,
+      provider
+    }
 
     // Use the batch to set the data for the new user
     batch.set(userDocRef, newUser);
@@ -220,6 +221,8 @@ export const updateUser = async (userId: string, value: object) => {
     await batch.commit();
   } catch (error: any) {
     throw new Error(error?.message);
+  } finally {
+    await getUser(userId)
   }
 };
 

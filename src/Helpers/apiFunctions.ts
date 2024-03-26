@@ -73,7 +73,7 @@ export const getCommunityDetail = async (id: string) => {
 };
 
 export const getUserVotes = async (id: string) => {
-  if(!id) return;
+  if (!id) return;
   const postVotes = await fetch.getList(`users/${id}/postVotes`);
   if (postVotes.size) {
     const votes: IPostVote[] = [];
@@ -98,44 +98,50 @@ export const getJoinedCommunitiesList = async (id: string) => {
 };
 
 export const joinCommunity = async (userId: string, communityId: string) => {
+  const joinCommunityRef = doc(
+    firestore,
+    "users",
+    userId,
+    "communities",
+    communityId
+  );
+  const communityRef = doc(firestore, "communities", communityId);
 
-  const joinCommunityRef = doc(firestore, "users", userId, "communities", communityId);
-  const communityRef = doc(firestore, "communities", communityId)
-  
   try {
-    await setDoc(joinCommunityRef, { communityId, isModerator: false })
-    const batch = writeBatch(firestore)
+    await setDoc(joinCommunityRef, { communityId, isModerator: false });
+    const batch = writeBatch(firestore);
     batch.update(communityRef, {
-      numberOfMembers: increment(+1)
-    })
-    batch.commit()
-    return true
+      numberOfMembers: increment(+1),
+    });
+    batch.commit();
+    return true;
   } catch (err) {
-    return false
+    return false;
   }
-
-
-}
+};
 
 export const leaveCommunity = async (userId: string, communityId: string) => {
+  const userCommunityRef = doc(
+    firestore,
+    "users",
+    userId,
+    "communities",
+    communityId
+  );
+  const communityRef = doc(firestore, "communities", communityId);
 
-  const userCommunityRef = doc(firestore, "users", userId, "communities", communityId);
-  const communityRef = doc(firestore, "communities", communityId)
-  
   try {
-    await deleteDoc(userCommunityRef)
-    const batch = writeBatch(firestore)
+    await deleteDoc(userCommunityRef);
+    const batch = writeBatch(firestore);
     batch.update(communityRef, {
-      numberOfMembers: increment(-1)
-    })
-    batch.commit()
-    return true
+      numberOfMembers: increment(-1),
+    });
+    batch.commit();
+    return true;
   } catch (err) {
-    return false
+    return false;
   }
-
-
-}
+};
 
 export const getCommentVotesByUserId = async (id: string) => {
   const commentVotes = await fetch.getList(`users/${id}/commentVotes`);
@@ -150,32 +156,37 @@ export const getCommentVotesByUserId = async (id: string) => {
 };
 
 export const getUserCommunities = async (userId: string) => {
-  const userCommunitiesCollection = collection(firestore, "users", userId, "communities");
+  const userCommunitiesCollection = collection(
+    firestore,
+    "users",
+    userId,
+    "communities"
+  );
   const q = query(userCommunitiesCollection);
-  const comm: any[] = []
-  const querySnapshot = await getDocs(q)
+  const comm: any[] = [];
+  const querySnapshot = await getDocs(q);
   querySnapshot.forEach((docSnapshot: any) => {
     const data = docSnapshot.data();
-    comm.push(data)
+    comm.push(data);
   });
-  return comm
-  
-}
+  return comm;
+};
 
 const generateUsername = (email: string) => {
-  return email.split("@")[0].toLowerCase() ?? ""
-}
+  return email.split("@")[0].toLowerCase() ?? "";
+};
 
-export const saveUserToFirestore = async (provider: string | null, user: User) => {
-  
+export const saveUserToFirestore = async (
+  provider: string | null,
+  user: User
+) => {
   try {
-
     const batch = writeBatch(firestore);
-    const userDocRef = doc(firestore, 'users', user.uid);
+    const userDocRef = doc(firestore, "users", user.uid);
 
     const docSnapshot = await getDoc(userDocRef);
 
-    if(docSnapshot.data()?.isRegistered){
+    if (docSnapshot.data()?.isRegistered) {
       return;
     }
 
@@ -197,11 +208,10 @@ export const saveUserToFirestore = async (provider: string | null, user: User) =
 
     // Commit the batch to Firestore
     await batch.commit();
-    
   } catch (error: any) {
     throw new Error(error?.message);
   }
-}
+};
 
 export const updateUser = async (userId: string, value: object) => {
   try {
@@ -214,11 +224,11 @@ export const updateUser = async (userId: string, value: object) => {
   } finally {
     await getUser(userId)
   }
-}
+};
 
 export const getUser = async (userId: string, type: "" | "query" = "") => {
   try {
-    const userDocRef = doc(firestore, 'users', userId);
+    const userDocRef = doc(firestore, "users", userId);
     const docSnapshot = await getDoc(userDocRef);
     const data = docSnapshot.data();
     if(data?.isRegistered){
@@ -228,7 +238,7 @@ export const getUser = async (userId: string, type: "" | "query" = "") => {
       store.dispatch(setUserInfo({id: userId, ...data} as IUser));
     }
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 

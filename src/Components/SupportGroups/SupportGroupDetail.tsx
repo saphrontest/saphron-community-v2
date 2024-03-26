@@ -55,8 +55,7 @@ const SupportGroupDetail: FC<{ selected?: ISupportGroup }> = ({ selected }) => {
                             toast({
                                 title: "Please login, first!",
                                 status: "error",
-                                isClosable: true,
-                                position: "top-right"
+                                isClosable: true
                             })
                             return;
                         }

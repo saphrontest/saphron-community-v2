@@ -37,8 +37,7 @@ const AskAI = () => {
       toast({
         title: "Try Again later..",
         status: "error",
-        isClosable: true,
-        position: "top-right"
+        isClosable: true
       })
     } finally {
       setSendMessage(false)

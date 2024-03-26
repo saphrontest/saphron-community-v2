@@ -3618,7 +3618,7 @@
   }
 
   .collapse:not(.show) {
-    display: none;
+    display: block;
   }
 
   .collapsing {

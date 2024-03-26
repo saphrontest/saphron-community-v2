@@ -2,8 +2,11 @@ import { Link } from "react-router-dom";
 import "../Theme/AboutPageStyles.scss";
 import aboutPic from "../assets/images/about-page.png";
 import { Meta } from "../Components";
+import { Capacitor } from '@capacitor/core';
+import { useBoolean } from "@chakra-ui/react";
 
 const AboutPage = () => {
+    const [menuOpen, {toggle: toggleMenu}] = useBoolean(false)
     return (
         <>
             <Meta
@@ -11,28 +14,43 @@ const AboutPage = () => {
                 description='A self-help platform for neurodivergent adults to manage their health & wellness.'
             />
 
-            <div className=" AboutPage d-flex flex-column h-100">
+            <div className=" AboutPage d-flex flex-column h-100" style={{marginTop: Capacitor.getPlatform() === "ios" ? "50px" : "0px"}}>
                 <main className="flex-shrink-0">
                     <nav className="navbar navbar-expand-lg navbar-light bg-white py-3">
                         <div className="container px-5">
                             <Link className="navbar-brand" to="/"><span className="text-gradient d-inline">Saphron Health</span></Link>
-                            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span className="navbar-toggler-icon"></span></button>
-                            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                            <button
+                            className="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation"
+                            onClick={toggleMenu}
+                            >
+                                <span className="navbar-toggler-icon"></span>
+                            </button>
+                            {menuOpen ? <div className="collapse navbar-collapse" id="navbarSupportedContent">
                                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
                                     <li className="nav-item"><Link className="nav-link" to="/">Home</Link></li>
                                     <li className="nav-item"><Link className="nav-link" to="/community">Community</Link></li>
                                     <li className="nav-item"><Link className="nav-link" to="/workshops">Workshops</Link></li>
                                     <li className="nav-item"><Link className="nav-link" to="/about">About</Link></li>
                                 </ul>
-                            </div>
+                            </div> : null}
                         </div>
                     </nav>
                     <header className="py-5">
-                        <div className="container px-5 pb-5">
+                        <div className="container pb-5">
                             <div className="row gx-5 align-items-center">
                                 <div className="col-xxl-5">
                                     <div className="text-center text-xxl-start">
-                                        <div className="badge bg-gradient-primary-to-secondary mb-4"><div className="text-uppercase" style={{ color: 'white' }}>Mental &middot; Physical  &middot; Social Health &middot; Financial Wellness</div></div>
+                                        <div className="badge bg-gradient-primary-to-secondary mb-4">
+                                            <div className="text-uppercase" style={{ color: 'white' }}>
+                                                Mental &middot; Physical  &middot; Social Health &middot; Financial Wellness
+                                            </div>
+                                        </div>
                                         <div className="fs-3 fw-light text-muted">The future of healthcare is here!</div>
                                         <h1 className="display-3 fw-bolder mb-5"><span className="text-gradient d-inline">AI driven self-help platform for neurodivergent adults</span></h1>
                                         <div className="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xxl-start mb-3">

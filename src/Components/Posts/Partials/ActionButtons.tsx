@@ -37,15 +37,14 @@ const ActionButtons: FC<ActionButtonsInterface> = ({ post, isSaved, handleDelete
 
     const handleSave = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation();
-        if (!user?.id) {
-            toast({
-                title: "Please login, first!",
-                status: "error",
-                isClosable: true,
-                position: "top-right"
-            })
-            dispatch(setModal({ isOpen: true, view: 'login' }))
-            return;
+        if(!user?.id){
+          toast({
+            title: "Please login, first!",
+            status: "error",
+            isClosable: true
+          })
+          dispatch(setModal({isOpen: true, view: 'login'}))
+          return;
         }
 
         setSaveLoading(true)

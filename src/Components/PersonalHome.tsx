@@ -17,7 +17,6 @@ const PersonalHome = () => {
                 title: "Please login, first!",
                 status: "error",
                 isClosable: true,
-                position: "top-right"
             })
             return;
         }

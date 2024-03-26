@@ -102,13 +102,11 @@ const useWorkshop = () => {
         }).then(() => toast({
             title: 'Workshop deleted!',
             status: "success",
-            isClosable: true,
-            position: "top-right"
+            isClosable: true
         })).catch(() => toast({
             title: 'Please try again later!',
             status: "error",
-            isClosable: true,
-            position: "top-right"
+            isClosable: true
         })).finally(() => {
             onEnd()
         })

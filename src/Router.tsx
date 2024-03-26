@@ -21,7 +21,8 @@ import {
   AdminWorkshopsPage,
   MarketPlace,
   AdminRewardsPage,
-  RewardsPage
+  RewardsPage,
+  TaskTrackerPage
 } from './Pages'
 
 const base = "community"
@@ -56,6 +57,7 @@ const RoutesArray = [
   { path: "terms-conditions", component: Policies },
   { path: "rewards", component: RewardsPage },
   { path: "marketplace", component: MarketPlace },
+  { path: "task-tracker", component: TaskTrackerPage },
 ]
 
 const Router = () => {

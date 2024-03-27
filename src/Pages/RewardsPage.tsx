@@ -35,6 +35,7 @@ const RewardsPage = () => {
                     border={item.type === "expense" ? "1px solid" : "none"}
                     borderColor="gray.400"
                     justify="space-between"
+                    direction={["column", "row"]}
                     >
                         <Flex gap="1rem">
                             {item.img && <Image src={item.img} w="100px" h="50px" borderRadius="0.5rem"/>}
@@ -44,16 +45,21 @@ const RewardsPage = () => {
                                         {item.name}
                                     </Text>
                                 ) : (
-                                    <Text>
-                                        {item.platform}<strong>.{item.slug}</strong>
-                                    </Text>
+                                    <Flex>
+                                        <Text>
+                                            {item.platform}
+                                        </Text>
+                                        <Text fontWeight={700}>
+                                        .{item.slug}
+                                        </Text>
+                                    </Flex>
                                 )}
                                 <Text color="gray">
                                     #{item.id}
                                 </Text>
                             </Flex>
                         </Flex>
-                        <Flex  direction="column"align="flex-end">
+                        <Flex  direction="column" align={["flex-start", "flex-end"]}>
                             <Text>
                                 12.12.2024
                             </Text>

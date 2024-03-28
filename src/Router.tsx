@@ -22,7 +22,8 @@ import {
   MarketPlace,
   AdminRewardsPage,
   RewardsPage,
-  TaskTrackerPage
+  TaskTrackerPage,
+  AdminTaskPage
 } from './Pages'
 
 const base = "community"
@@ -50,6 +51,7 @@ const RoutesArray = [
   { path: `/${adminBase}/workshops`, component: AdminWorkshopsPage },
   { path: `/${adminBase}/support-groups`, component: AdminSupportGroupsPage },
   { path: `/${adminBase}/rewards`, component: AdminRewardsPage },
+  { path: `/${adminBase}/task-tracker`, component: AdminTaskPage },
   { path: "support-groups", component: SupportGroups },
   { path: "support-groups/:slug", component: SupportGroupDetailPage },
   { path: "my-support-groups", component: MySupportGroups },

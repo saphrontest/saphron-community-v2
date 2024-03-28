@@ -1,10 +1,12 @@
-import { ModalHeader, ModalCloseButton, ModalBody, Button, Flex, Checkbox } from '@chakra-ui/react'
+import { ModalHeader, ModalCloseButton, ModalBody, Button, Flex, Checkbox, Spinner } from '@chakra-ui/react'
 import { InputItem, ModalLayout } from '../../../Layouts'
 import { FC, useEffect, useState } from 'react'
 import { PlatformFormItem } from '../../Platform';
 import { ITask, ITaskControlItem } from '../../../Interface';
 import uniqid from 'uniqid'
 import { MdAdd } from 'react-icons/md';
+import { doc, runTransaction, Transaction } from 'firebase/firestore';
+import { firestore } from '../../../firebaseClient';
 
 const NewTaskModal: FC<{
     isOpen: boolean;
@@ -13,11 +15,12 @@ const NewTaskModal: FC<{
 
     const [addControlList, setAddControlList] = useState(false)
     const [task, setTask] = useState<ITask>({
-        id: '',
+        id: uniqid(),
         name: '',
         description: '',
     })
     const [controlList, setControlList] = useState<ITaskControlItem[]>([])
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
 
@@ -27,9 +30,14 @@ const NewTaskModal: FC<{
 
     }, [addControlList])
 
-    const createTask = () => {
-        console.log(task)
-        console.log(controlList)
+    const createTask = async () => {
+        setLoading(true)
+        runTransaction(firestore, async (tx: Transaction) => {
+            tx.set(doc(firestore, `tasks/${task.id}`), task)
+            controlList.length && controlList.forEach(item => {
+                tx.set(doc(firestore, `tasks/${task.id}/controlList/${item.id}`), item)
+            })
+        }).finally(() => setLoading(false))
     }
 
     return (
@@ -105,7 +113,7 @@ const NewTaskModal: FC<{
                     )}
                 </Flex>
                 <Button w={"100%"} my="1rem" onClick={createTask}>
-                    Create New Task
+                    {loading ? <Spinner /> : "Create New Task"}
                 </Button>
             </ModalBody>
         </ModalLayout>

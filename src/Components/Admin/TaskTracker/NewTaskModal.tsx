@@ -13,7 +13,7 @@ const NewTaskModal: FC<{
     reloadState: () => void;
 }> = ({ isOpen, onClose, reloadState }) => {
 
-    const {createTask} = useTask()
+    const { createTask } = useTask()
     const [addControlList, setAddControlList] = useState(false)
     const [task, setTask] = useState<ITask>({
         id: uniqid(),

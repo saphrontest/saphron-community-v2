@@ -7,7 +7,7 @@ import { useTask } from '../../Hooks'
 
 const AdminTaskPage = () => {
   
-  const {getTasks} = useTask()
+  const { getTasks } = useTask()
   const [tasks, setTasks] = useState<ITask[]>([])
   const [isNewTaskModalOpen, {toggle: toggleNewTaskModal}] = useBoolean(false)
 

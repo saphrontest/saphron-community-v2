@@ -11,6 +11,7 @@ const TaskItem: FC<{ item: ITask; }> = ({ item }) => {
     
     const toast = useToast()
     const { joinTask } = useTask()
+    
     const [clicked, { toggle: toggleClick }] = useBoolean(false)
     const [loading, { toggle: toggleLoading }] = useBoolean(false)
 

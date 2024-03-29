@@ -58,6 +58,10 @@ const NewTaskModal: FC<{
         })
     }
 
+    const removeControl = (item: ITaskControlItem) => {
+        setControlList(prev => prev.filter(i => i.id !== item.id))
+    }
+
     return (
         <ModalLayout isOpen={isOpen} onClose={onClose}>
             <ModalHeader textAlign="left" fontSize="16px">
@@ -90,9 +94,7 @@ const NewTaskModal: FC<{
                                             <InputItem type='text' name='control_item_description' onChange={ev => handleControlChange(ev, item, "description")}/>
                                         </PlatformFormItem>
                                         {idx !== 0 && <Flex w="100%" justify="flex-end">
-                                            <Button p="0rem" variant="ghost" onClick={() => {
-                                                setControlList(prev => prev.filter(i => i.id !== item.id))
-                                            }}>
+                                            <Button p="0rem" variant="ghost" onClick={() => removeControl(item)}>
                                                 Remove
                                             </Button>
                                         </Flex>}

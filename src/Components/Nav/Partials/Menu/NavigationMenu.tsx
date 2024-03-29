@@ -5,9 +5,8 @@ import { PiInfoFill } from 'react-icons/pi';
 import { UserRoleTypes } from '../../../../Interface';
 import MenuItemInner from './MenuItemInner';
 import MenuItemLayout from './MenuItemLayout';
-import { GoHome } from "react-icons/go";
+import { GoHome, GoTasklist } from "react-icons/go";
 import { FaStore } from "react-icons/fa";
-import { GoTasklist } from "react-icons/go";
 
 interface IUserMenuItem {
   id: number;

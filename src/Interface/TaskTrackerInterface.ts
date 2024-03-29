@@ -11,6 +11,11 @@ export interface ITaskControlItem {
     description: string;
 }
 
-export type IUserTask = ITask | {
+export type IUserTask = {
+    id: string;
+    name: string;
+    description: string;
+    controlList?: ITaskControlItem[]
     progress: number;
+    joinedAt: string;
 }

@@ -1,5 +1,5 @@
 import { CheckIcon } from "@chakra-ui/icons";
-import { useBoolean, Flex, Button, List, ListItem, Text, useToast, Spinner } from "@chakra-ui/react";
+import { useBoolean, Flex, Button, List, ListItem, Text, useToast, Spinner, Box } from "@chakra-ui/react";
 import { FC } from "react";
 import { MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
 import { ITask, IUser } from "../../Interface";
@@ -7,11 +7,19 @@ import { useTask } from "../../Hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
-const TaskItem: FC<{ item: ITask; }> = ({ item }) => {
-    
+interface ITaskItemProps {
+    item: ITask;
+    isJoined: boolean;
+    reloadMyTasks: () => void;
+}
+
+const TaskItem: FC<ITaskItemProps> = ({
+    item, isJoined, reloadMyTasks
+}) => {
+
     const toast = useToast()
     const { joinTask } = useTask()
-    
+
     const [clicked, { toggle: toggleClick }] = useBoolean(false)
     const [loading, { toggle: toggleLoading }] = useBoolean(false)
 
@@ -21,6 +29,7 @@ const TaskItem: FC<{ item: ITask; }> = ({ item }) => {
         toggleLoading()
         try {
             const success = await joinTask(user.id, item)
+            success && reloadMyTasks()
             !success && toast({
                 title: "Please try again later!",
                 status: "error",
@@ -42,10 +51,19 @@ const TaskItem: FC<{ item: ITask; }> = ({ item }) => {
             <Flex w="100%" justify="space-between" onClick={toggleClick} cursor="pointer">
                 <Text fontWeight={600} fontSize="18px">{item.name}</Text>
                 <Flex align="center" gap="1rem">
-                    <Button h="30px" onClick={(ev) => {
-                        ev.stopPropagation()
-                        handleClick()
-                    }}>{loading ? <Spinner /> : "Start"}</Button>
+                    {isJoined ? (
+                        <Box>Joined</Box>
+                    ) : (
+                        <Button
+                        h="30px"
+                        onClick={(ev) => {
+                            ev.stopPropagation()
+                            handleClick()
+                        }}
+                        >
+                            {loading ? <Spinner /> : "Start"}
+                        </Button>
+                    )}
                     {clicked ? <MdKeyboardArrowUp size="32px" /> : <MdKeyboardArrowDown size="32px" />}
                 </Flex>
             </Flex>

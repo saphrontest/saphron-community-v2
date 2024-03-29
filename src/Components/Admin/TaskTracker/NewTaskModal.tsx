@@ -9,7 +9,7 @@ import { useTask } from '../../../Hooks';
 
 const NewTaskModal: FC<{
     isOpen: boolean;
-    onClose?: () => void;
+    onClose: () => void;
     reloadState: () => void;
 }> = ({ isOpen, onClose, reloadState }) => {
 
@@ -39,6 +39,7 @@ const NewTaskModal: FC<{
         } catch (error) {
             
         } finally {
+            onClose()
             setLoading(false)
         }
     }

@@ -1,6 +1,6 @@
-import { getDocs, collection, doc, runTransaction, Transaction, FirestoreError } from "firebase/firestore"
+import { getDocs, collection, doc, runTransaction, Transaction, FirestoreError, getDoc } from "firebase/firestore"
 import { firestore } from "../firebaseClient"
-import { ITask, ITaskControlItem } from "../Interface"
+import { ITask, ITaskControlItem, IUserTask } from "../Interface"
 
 const useTask = () => {
 
@@ -33,8 +33,10 @@ const useTask = () => {
     const createTask = async (task: ITask, controlList: ITaskControlItem[]) => {
         const updatedTask = controlList.length ? {...task, controlList} : task
         return runTransaction(firestore, async (tx: Transaction) => {
-            tx.set(doc(firestore, `tasks/${task.id}`), updatedTask)
-            
+            tx.set(doc(firestore, `tasks/${task.id}`), {
+                createdAt: new Date().toString(),
+                ...updatedTask
+            })
         })
         .then(() => true)
         .catch((error) => {
@@ -57,7 +59,11 @@ const useTask = () => {
      */
     const joinTask = async (userId: string, task: ITask) => {
         return runTransaction(firestore, async (tx: Transaction) => {
-            tx.set(doc(firestore, `users/${userId}/tasks/${task.id}`), task)
+            tx.set(doc(firestore, `users/${userId}/tasks/${task.id}`), {
+                ...task,
+                progress: 0,
+                joinedAt: new Date().toString()
+            })
         })
         .then(() => true)
         .catch((error) => {
@@ -68,8 +74,27 @@ const useTask = () => {
         })
     }
 
+    /**
+     * The function `getTasksByUserId` retrieves tasks associated with a specific user ID from
+     * Firestore.
+     * @param {string} userId - The `userId` parameter is a string that represents the unique
+     * identifier of a user. This identifier is used to retrieve tasks associated with that specific
+     * user from the Firestore database.
+     * @returns An array of tasks associated with the specified `userId` is being returned.
+     */
+    const getTasksByUserId = async (userId: string) => {
+        const userTasksDoc = await getDocs(collection(firestore, `users/${userId}/tasks`))
+        const userTasks = userTasksDoc.docs.map(task => task.data())
+        return userTasks as IUserTask[]
+    }
 
-    return { getTasks, createTask, joinTask }
+
+    return {
+        getTasks,
+        createTask,
+        joinTask,
+        getTasksByUserId 
+    }
 }
 
 export default useTask

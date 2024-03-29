@@ -1,4 +1,4 @@
-import { MenuDivider, MenuItem, Flex, Icon, useMediaQuery } from "@chakra-ui/react";
+import { MenuDivider, MenuItem, Flex, Icon } from "@chakra-ui/react";
 import { FC } from "react";
 import { UserRoleTypes } from "../../../../Interface";
 import MenuItemInner from "./MenuItemInner";
@@ -38,7 +38,6 @@ interface IUserMenuInnerProps {
 }
 
 const UserMenuInner: FC<IUserMenuInnerProps> = ({ logout, userRole, activePath }) => {
-    const [isSmallerThan770] = useMediaQuery('(max-width: 770px)')
     return (
         <>
             {
@@ -48,8 +47,8 @@ const UserMenuInner: FC<IUserMenuInnerProps> = ({ logout, userRole, activePath }
                     </MenuItemLayout>
                 ))
             }
-            { isSmallerThan770 && <MenuDivider /> }
-            { isSmallerThan770 && <NavigationMenu userRole={userRole} activePath={activePath}/> }
+            <MenuDivider />
+            <NavigationMenu userRole={userRole} activePath={activePath}/> 
             <MenuDivider />
             <MenuItem
                 fontSize="10pt"

@@ -11,7 +11,8 @@ import { firestore } from '../../../firebaseClient';
 const NewTaskModal: FC<{
     isOpen: boolean;
     onClose?: () => void;
-}> = ({ isOpen, onClose }) => {
+    reloadState: () => void;
+}> = ({ isOpen, onClose, reloadState }) => {
 
     const [addControlList, setAddControlList] = useState(false)
     const [task, setTask] = useState<ITask>({
@@ -37,7 +38,9 @@ const NewTaskModal: FC<{
             controlList.length && controlList.forEach(item => {
                 tx.set(doc(firestore, `tasks/${task.id}/controlList/${item.id}`), item)
             })
-        }).finally(() => setLoading(false))
+        })
+        .then(() => reloadState())
+        .finally(() => setLoading(false))
     }
 
     return (

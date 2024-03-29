@@ -17,9 +17,12 @@ const AdminTaskPage = () => {
     return tasks as ITask[]
   }
 
+  const reloadState = () => {
+    getTasks().then(result => setTasks(result))
+  }
+
   useEffect(() => {
-    getTasks()
-      .then(result => setTasks(result))
+    reloadState()
   }, [])
   
   return (
@@ -38,7 +41,11 @@ const AdminTaskPage = () => {
           ))}
         </Flex>
       </PlatformAdminPageLayout>
-      <NewTaskModal isOpen={isNewTaskModalOpen} onClose={toggleNewTaskModal}/>
+      <NewTaskModal
+      isOpen={isNewTaskModalOpen}
+      onClose={toggleNewTaskModal}
+      reloadState={reloadState}
+      />
     </>
   )
 }

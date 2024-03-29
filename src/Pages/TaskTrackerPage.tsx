@@ -1,4 +1,4 @@
-import { 
+import {
     Text,
     Flex,
     List,
@@ -14,11 +14,14 @@ import {
 
 import { PageLayout } from '../Layouts'
 import { CheckIcon } from '@chakra-ui/icons';
-import { FC } from 'react';
+import { FC, Fragment, useEffect, useState } from 'react';
+import { getDocs, collection } from 'firebase/firestore';
+import { firestore } from '../firebaseClient';
+import { ITask, ITaskControlItem } from '../Interface';
 
-const TaskItem:FC<{ name: string; }> = ({ name }) => {
+const TaskItem: FC<{ item: ITask; }> = ({ item }) => {
 
-    const [clicked, {toggle: toggleClick}] = useBoolean(false)
+    const [clicked, { toggle: toggleClick }] = useBoolean(false)
 
     const handleClick = () => {
         console.log('object')
@@ -27,29 +30,26 @@ const TaskItem:FC<{ name: string; }> = ({ name }) => {
     return (
         <Flex bg="gray.100" p="1rem" w="100%" borderRadius="0.5rem" align="flex-start" justify="space-between" direction="column">
             <Flex w="100%" justify="space-between" onClick={toggleClick} cursor="pointer">
-                <Text fontWeight={600} fontSize="18px">Task - {name}</Text>
-                {clicked ? <MdKeyboardArrowUp size="32px" /> : <MdKeyboardArrowDown size="32px" />}
+                <Text fontWeight={600} fontSize="18px">{item.name}</Text>
+                <Flex align="center" gap="1rem">
+                    <Button h="30px" onClick={handleClick}>Start</Button>
+                    {clicked ? <MdKeyboardArrowUp size="32px" /> : <MdKeyboardArrowDown size="32px" />}
+                </Flex>
             </Flex>
             {clicked && (
-                <Flex direction="column" gap="1rem">
-                    <Text>
-                        Description
+                <Flex direction="column" gap="1rem" w="100%">
+                    <Text textAlign="left">
+                        {item.description}
                     </Text>
-                    <List>
-                        <ListItem display="flex" gap="0.3rem" alignItems="center">
-                            <CheckIcon />
-                            Check 1
-                        </ListItem>
-                        <ListItem display="flex" gap="0.3rem" alignItems="center">
-                            <CheckIcon />
-                            Check 2
-                        </ListItem>
-                        <ListItem display="flex" gap="0.3rem" alignItems="center">
-                            <CheckIcon />
-                            Check 3
-                        </ListItem>
+                    {item.controlList?.length && <List>
+                        {item.controlList.map(item => (
+                            <ListItem key={item.id} display="flex" gap="0.3rem" alignItems="center">
+                                <CheckIcon />
+                                {item.name}
+                            </ListItem>
+                        ))}
                     </List>
-                    <Button h="30px" onClick={handleClick}>Start</Button>
+                    }
                 </Flex>
             )}
         </Flex>
@@ -57,6 +57,33 @@ const TaskItem:FC<{ name: string; }> = ({ name }) => {
 }
 
 const TaskTrackerPage = () => {
+
+    const [tasks, setTasks] = useState<ITask[]>([])
+
+    const getTasks = async () => {
+        const tasksDoc = await getDocs(collection(firestore, `tasks`))
+        const tasks = tasksDoc.docs.map(doc => doc.data())
+        return tasks as ITask[]
+    }
+
+    const getControlListByTaskId = async (taskId: string) => {
+        const controlListDoc = await getDocs(collection(firestore, `tasks/${taskId}/controlList`))
+        const controlList = controlListDoc.docs.map(doc => doc.data())
+        return controlList as ITaskControlItem[]
+    }
+
+    useEffect(() => {
+        getTasks().then(items => {
+            items.forEach(taskItem => {
+                getControlListByTaskId(taskItem.id).then(result => {
+
+                })
+            })
+            setTasks(items)
+
+        })
+    }, [])
+
     return (
         <PageLayout leftWidth='100%'>
             <Flex bg="white" p="1rem" gap="1rem" direction="column" align="flex-start">
@@ -64,10 +91,11 @@ const TaskTrackerPage = () => {
                     Task List
                 </Text>
                 <Flex direction="column" w="100%" gap="1rem">
-                    <TaskItem name={"1"}/>
-                    <TaskItem name={"2"}/>
-                    <TaskItem name={"3"}/>
-                    <TaskItem name={"4"}/>
+                    {tasks.map(taskItem => (
+                        <Fragment key={taskItem.id}>
+                            <TaskItem item={taskItem} />
+                        </Fragment>
+                    ))}
                 </Flex>
             </Flex>
             <></>

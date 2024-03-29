@@ -3,26 +3,22 @@ import { AdminTaskItem, NewTaskModal } from '../../Components'
 import { PlatformAdminPageLayout } from '../../Layouts'
 import { Button, Flex, useBoolean } from '@chakra-ui/react'
 import { ITask } from '../../Interface'
-import { collection, getDocs } from 'firebase/firestore'
-import { firestore } from '../../firebaseClient'
+import { useTask } from '../../Hooks'
 
 const AdminTaskPage = () => {
   
+  const {getTasks} = useTask()
   const [tasks, setTasks] = useState<ITask[]>([])
   const [isNewTaskModalOpen, {toggle: toggleNewTaskModal}] = useBoolean(false)
-  
-  const getTasks = async () => {
-    const tasksDoc = await getDocs(collection(firestore, `tasks`))
-    const tasks = tasksDoc.docs.map(doc => doc.data())
-    return tasks as ITask[]
-  }
 
   const reloadState = () => {
-    getTasks().then(result => setTasks(result))
+    getTasks()
+      .then(result => setTasks(result))
   }
 
   useEffect(() => {
     reloadState()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   
   return (

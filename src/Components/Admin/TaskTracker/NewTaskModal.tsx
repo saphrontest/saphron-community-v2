@@ -5,8 +5,7 @@ import { PlatformFormItem } from '../../Platform';
 import { ITask, ITaskControlItem } from '../../../Interface';
 import uniqid from 'uniqid'
 import { MdAdd } from 'react-icons/md';
-import { doc, runTransaction, Transaction } from 'firebase/firestore';
-import { firestore } from '../../../firebaseClient';
+import { useTask } from '../../../Hooks';
 
 const NewTaskModal: FC<{
     isOpen: boolean;
@@ -14,6 +13,7 @@ const NewTaskModal: FC<{
     reloadState: () => void;
 }> = ({ isOpen, onClose, reloadState }) => {
 
+    const {createTask} = useTask()
     const [addControlList, setAddControlList] = useState(false)
     const [task, setTask] = useState<ITask>({
         id: uniqid(),
@@ -31,16 +31,30 @@ const NewTaskModal: FC<{
 
     }, [addControlList])
 
-    const createTask = async () => {
+    const handleCreateTask = async () => {
         setLoading(true)
-        runTransaction(firestore, async (tx: Transaction) => {
-            tx.set(doc(firestore, `tasks/${task.id}`), task)
-            controlList.length && controlList.forEach(item => {
-                tx.set(doc(firestore, `tasks/${task.id}/controlList/${item.id}`), item)
-            })
+        try {
+            const success = await createTask(task, controlList)
+            success && reloadState()
+        } catch (error) {
+            
+        } finally {
+            setLoading(false)
+        }
+    }
+    
+    
+    const handleControlChange = (ev: React.ChangeEvent<HTMLInputElement>, item: ITaskControlItem, type: "name" | "description") => {
+        setControlList(prev => {
+            // Find the item in the array
+            const updatedList = prev.map(control => {
+                if (control.id === item.id) {
+                    return { ...control, [type]: ev.target.value };
+                }
+                return control;
+            });
+            return updatedList; // Return the updated array
         })
-        .then(() => reloadState())
-        .finally(() => setLoading(false))
     }
 
     return (
@@ -69,32 +83,10 @@ const NewTaskModal: FC<{
                                 controlList.map((item, idx) => (
                                     <Flex key={item.id} direction="column" mb="1rem" border="1px solid" borderColor="gray.300" borderRadius="1rem" p="1rem">
                                         <PlatformFormItem label='Name'>
-                                            <InputItem type='text' name='control_item_name' onChange={ev => {
-                                                setControlList(prev => {
-                                                    // Find the item in the array
-                                                    const updatedList = prev.map(control => {
-                                                        if (control.id === item.id) {
-                                                            return { ...control, name: ev.target.value };
-                                                        }
-                                                        return control;
-                                                    });
-                                                    return updatedList; // Return the updated array
-                                                })
-                                            }}/>
+                                            <InputItem type='text' name='control_item_name' onChange={ev => handleControlChange(ev, item, "name")}/>
                                         </PlatformFormItem>
                                         <PlatformFormItem label='Description'>
-                                            <InputItem type='text' name='control_item_description' onChange={ev => {
-                                                setControlList(prev => {
-                                                    // Find the item in the array
-                                                    const updatedList = prev.map(control => {
-                                                        if (control.id === item.id) {
-                                                            return { ...control, description: ev.target.value };
-                                                        }
-                                                        return control;
-                                                    });
-                                                    return updatedList; // Return the updated array
-                                                })
-                                            }}/>
+                                            <InputItem type='text' name='control_item_description' onChange={ev => handleControlChange(ev, item, "description")}/>
                                         </PlatformFormItem>
                                         {idx !== 0 && <Flex w="100%" justify="flex-end">
                                             <Button p="0rem" variant="ghost" onClick={() => {
@@ -115,7 +107,7 @@ const NewTaskModal: FC<{
                         </Flex>
                     )}
                 </Flex>
-                <Button w={"100%"} my="1rem" onClick={createTask}>
+                <Button w={"100%"} my="1rem" onClick={handleCreateTask}>
                     {loading ? <Spinner /> : "Create New Task"}
                 </Button>
             </ModalBody>

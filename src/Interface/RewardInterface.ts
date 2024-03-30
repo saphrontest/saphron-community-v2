@@ -20,3 +20,13 @@ export interface IRewardHistoryItem {
     platform?: IPlatform;
     slug?: string;
 }
+
+export interface IUserRewardItem {
+    id: string;
+    createdAt: string;
+    description?: string;
+    img: string;
+    name: string;
+    price: number;
+    rewardItemId: number | string;
+}

@@ -1,75 +1,63 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { PageLayout } from '../Layouts'
-import { Flex, Image, Text } from '@chakra-ui/react'
-import { useReward } from '../Hooks'
-import { IRewardHistoryItem, IUser } from '../Interface'
-import { useSelector } from 'react-redux'
-import { RootState } from '../redux/store'
-import { ProductPriceLabel } from '../Components'
-
+import { Flex, Text } from '@chakra-ui/react'
+import { Account, Products } from '../Components'
 const RewardsPage = () => {
-    const {getRewardHistory} = useReward()
-    const user: IUser = useSelector((state: RootState) => state.user)
-    const [historyItems, setHistoryItems] = useState<IRewardHistoryItem[]>([])
-
-    useEffect(() => {
-        getRewardHistory(user.id)
-            .then(result => result && setHistoryItems(result))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    const [view, setView] = useState<"products" | "account">("products")
 
   return (
-    <PageLayout leftWidth='100%'>
-        <Flex bg="white" p="1rem" direction="column" align="flex-start" gap="1rem">
-            <Text fontSize="22px" fontWeight={700}>
-                Reward History
-            </Text>
-            <Flex direction="column" w="100%" gap="1rem">
-                {historyItems.map(item => (
-                    <Flex
-                    key={item.id}
-                    padding="1rem"
-                    borderRadius="1rem"
-                    gap="1rem"
-                    bg={item.type === "income" ? "gray.100" : "white"}
-                    border={item.type === "expense" ? "1px solid" : "none"}
-                    borderColor="gray.400"
-                    justify="space-between"
-                    direction={["column", "row"]}
+    <PageLayout leftWidth='100%' showSidebar={false}>
+        <Flex gap="1rem" direction={["column", "column", "row"]}>
+            <Flex
+            p="1rem"
+            bg="white"
+            gap="0.5rem"
+            h="fit-content"
+            borderRadius="0.4rem"
+            direction={["row", "row", "column"]}
+            >
+                <Flex
+                flex={1}
+                p="0.4rem"
+                align="center"
+                justify="center"
+                cursor="pointer"
+                borderRadius="5px" 
+                _hover={{bg: "gray.200"}}
+                onClick={() => setView("products")}
+                bg={view === "products" ? "gray.300" : "gray.100"}
+                >
+                    <Text
+                    w="100%"
+                    textAlign={["center", "center", "left"]}
+                    fontWeight="600"
+                    mr={{ md: "2rem" }}
                     >
-                        <Flex gap="1rem">
-                            {item.img && <Image src={item.img} w="100px" h="50px" borderRadius="0.5rem"/>}
-                            <Flex direction="column" align="flex-start">
-                                {item.name ? (
-                                    <Text fontWeight="700">
-                                        {item.name}
-                                    </Text>
-                                ) : (
-                                    <Flex>
-                                        <Text>
-                                            {item.platform}
-                                        </Text>
-                                        <Text fontWeight={700}>
-                                        .{item.slug}
-                                        </Text>
-                                    </Flex>
-                                )}
-                                <Text color="gray">
-                                    #{item.id}
-                                </Text>
-                            </Flex>
-                        </Flex>
-                        <Flex  direction="column" align={["flex-start", "flex-end"]}>
-                            <Text>
-                                12.12.2024
-                            </Text>
-                            <ProductPriceLabel
-                                price={item.type === "income" ? item.price : -item.price}
-                            />
-                        </Flex>
-                    </Flex>
-                ))}
+                        Products
+                    </Text>
+                </Flex>
+                <Flex
+                flex={1}
+                p="0.4rem"
+                align="center"
+                justify="center"
+                cursor="pointer"
+                borderRadius="5px" 
+                _hover={{bg: "gray.200"}}
+                onClick={() => setView("account")}
+                bg={view === "account" ? "gray.300" : "gray.100"}
+                >
+                    <Text
+                    w="100%"
+                    textAlign={["center", "center", "left"]}
+                    fontWeight="600"
+                    mr={{ md: "2rem" }}
+                    >
+                        Account History
+                    </Text>
+                </Flex>
             </Flex>
+            {view === "account" ? <Account /> : <Products />}
         </Flex>
         <></>
     </PageLayout>

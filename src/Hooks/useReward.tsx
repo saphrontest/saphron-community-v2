@@ -1,6 +1,6 @@
 import { collection, doc, FirestoreError, getDocs, increment, query, runTransaction, Transaction, where } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
-import { IReward, IRewardHistoryItem } from "../Interface";
+import { IReward, IRewardHistoryItem, IUserRewardItem } from "../Interface";
 
 
 interface IProduct {
@@ -13,6 +13,13 @@ interface IProduct {
 
 
 const useReward = () => {
+
+    const handleFirebaseError = (error: unknown) => {
+        if(error instanceof FirestoreError) {
+            console.error(error.message)
+            throw new Error(error.message)
+          }
+    }
 
     /**
      * The function `getRewards` retrieves reward data from a Firestore collection and returns it as an
@@ -76,10 +83,7 @@ const useReward = () => {
 
             })
         } catch (error) {
-            if(error instanceof FirestoreError) {
-                console.error(error.message)
-                throw new Error(error.message)
-              }
+            return handleFirebaseError(error)
         }
     }
 
@@ -124,10 +128,7 @@ const useReward = () => {
             })
 
         } catch (error) {
-            if(error instanceof FirestoreError) {
-                console.error(error.message)
-                throw new Error(error.message)
-              }
+            return handleFirebaseError(error)
         }
 
     }
@@ -148,10 +149,28 @@ const useReward = () => {
             const rewardHistory = rewardHistoryDoc.docs.map(doc => ({id: doc.id, ...doc.data()}))
             return rewardHistory as IRewardHistoryItem[]
         } catch (error) {
-            if(error instanceof FirestoreError) {
-                console.error(error.message)
-                throw new Error(error.message)
-              }
+            return handleFirebaseError(error)
+        }
+    }
+
+    /**
+     * The function `getUserRewardItems` retrieves a user's reward items from Firestore using the
+     * user's ID.
+     * @param {string} userId - The `userId` parameter is a string that represents the unique
+     * identifier of a user for whom we want to retrieve reward items.
+     * @returns The `getUserRewardItems` function returns an array of reward items belonging to a
+     * specific user, with each item containing an `id` field and additional data specific to the
+     * reward item. If there is an error during the process, the function will return the result of the
+     * `handleFirebaseError` function.
+     */
+    const getUserRewardItems = async (userId: string) => {
+        try {
+            const rewardItemsDocRef = collection(firestore, `users/${userId}/rewardItems`)
+            const rewardItemsDoc = await getDocs(rewardItemsDocRef)
+            const rewardItems = rewardItemsDoc.docs.map(doc => ({id: doc.id, ...doc.data()} as IUserRewardItem))
+            return rewardItems
+        } catch (error) {
+            return handleFirebaseError(error)
         }
     }
 
@@ -160,7 +179,8 @@ const useReward = () => {
         getRewards,
         getRewardBySlug,
         winRewardBySlug,
-        getRewardHistory
+        getRewardHistory,
+        getUserRewardItems
     }
 }
 

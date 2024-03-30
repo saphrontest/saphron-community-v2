@@ -1,4 +1,4 @@
-import { MenuDivider, MenuItem, Flex, Icon, useMediaQuery } from "@chakra-ui/react";
+import { MenuDivider, MenuItem, Flex, Icon } from "@chakra-ui/react";
 import { FC } from "react";
 import { UserRoleTypes } from "../../../../Interface";
 import MenuItemInner from "./MenuItemInner";
@@ -11,6 +11,7 @@ import { RiAdminLine } from "react-icons/ri";
 import { MdOutlineLogin } from "react-icons/md";
 import NavigationMenu from "./NavigationMenu";
 import { BsAward } from "react-icons/bs";
+import { GoTasklist } from "react-icons/go";
 
 interface IUserMenuItem {
     id: number;
@@ -25,8 +26,9 @@ const UserMenuItems: IUserMenuItem[] = [
     { id: 1, route: "/community/saved-posts", icon: FaRegBookmark, label: "Saved Posts", role: ["user", "admin"] },
     { id: 2, route: "/my-workshops", icon: GrWorkshop, label: "My Workshops", role: ["user", "admin"] },
     { id: 3, route: "/my-support-groups", icon: GrGroup, label: "My Support Groups", role: ["user", "admin"] },
-    { id: 4, route: "/rewards", icon: BsAward, label: "Rewards", role: ["user", "admin"] },
-    { id: 5, route: "/manager-dashboard", icon: RiAdminLine, label: "Dashboard", role: ["admin"] }
+    { id: 4, route: "/my-tasks", icon: GoTasklist, label: "My Tasks", role: ["user", "admin"] },
+    { id: 5, route: "/rewards", icon: BsAward, label: "Rewards", role: ["user", "admin"] },
+    { id: 6, route: "/manager-dashboard", icon: RiAdminLine, label: "Dashboard", role: ["admin"] }
 ]
 
 interface IUserMenuInnerProps {
@@ -36,7 +38,6 @@ interface IUserMenuInnerProps {
 }
 
 const UserMenuInner: FC<IUserMenuInnerProps> = ({ logout, userRole, activePath }) => {
-    const [isSmallerThan770] = useMediaQuery('(max-width: 770px)')
     return (
         <>
             {
@@ -46,8 +47,8 @@ const UserMenuInner: FC<IUserMenuInnerProps> = ({ logout, userRole, activePath }
                     </MenuItemLayout>
                 ))
             }
-            { isSmallerThan770 && <MenuDivider /> }
-            { isSmallerThan770 && <NavigationMenu userRole={userRole} activePath={activePath}/> }
+            <MenuDivider />
+            <NavigationMenu userRole={userRole} activePath={activePath}/> 
             <MenuDivider />
             <MenuItem
                 fontSize="10pt"

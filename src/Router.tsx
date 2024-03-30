@@ -21,7 +21,10 @@ import {
   AdminWorkshopsPage,
   MarketPlace,
   AdminRewardsPage,
-  RewardsPage
+  RewardsPage,
+  TaskTrackerPage,
+  AdminTaskPage,
+  MyTasks
 } from './Pages'
 
 const base = "community"
@@ -49,6 +52,7 @@ const RoutesArray = [
   { path: `/${adminBase}/workshops`, component: AdminWorkshopsPage },
   { path: `/${adminBase}/support-groups`, component: AdminSupportGroupsPage },
   { path: `/${adminBase}/rewards`, component: AdminRewardsPage },
+  { path: `/${adminBase}/task-tracker`, component: AdminTaskPage },
   { path: "support-groups", component: SupportGroups },
   { path: "support-groups/:slug", component: SupportGroupDetailPage },
   { path: "my-support-groups", component: MySupportGroups },
@@ -56,6 +60,8 @@ const RoutesArray = [
   { path: "terms-conditions", component: Policies },
   { path: "rewards", component: RewardsPage },
   { path: "marketplace", component: MarketPlace },
+  { path: "task-tracker", component: TaskTrackerPage },
+  { path: "my-tasks", component: MyTasks },
 ]
 
 const Router = () => {

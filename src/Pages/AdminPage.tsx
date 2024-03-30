@@ -4,7 +4,27 @@ import { RootState } from '../redux/store'
 import { Box, Flex, Stat, StatLabel, StatNumber, Text } from '@chakra-ui/react'
 import { PlatformAdminPageLayout } from '../Layouts'
 import { useAdmin, usePost, useSupportGroup, useTask, useWorkshop } from '../Hooks'
-import { useEffect, useState } from 'react'
+import { FC, Fragment, useEffect, useState } from 'react'
+import uniqid from 'uniqid'
+
+interface IStatItem {
+    id: string;
+    name: string;
+    count: number;
+}
+
+const StatItem: FC<{
+    item: IStatItem
+}> = ({
+    item
+}) => (
+    <Box w="fit-content" bg="gray.100" p="1rem" borderRadius="1rem">
+        <Stat>
+            <StatLabel textTransform="capitalize">Number of {item.name}</StatLabel>
+            <StatNumber>{item.count}</StatNumber>
+        </Stat>
+    </Box>
+)
 
 const AdminPage = () => {
 
@@ -46,39 +66,22 @@ const AdminPage = () => {
         return <Text>You are not allowed to see here</Text>
     }
 
+    const STATS: IStatItem[] = [
+        {id: uniqid(), name: "workshops", count: workshopCount as number},
+        {id: uniqid(), name: "users", count: userCount as number},
+        {id: uniqid(), name: "support groups", count: supportGroupCount as number},
+        {id: uniqid(), name: "posts", count: postsCount as number},
+        {id: uniqid(), name: "tasks", count: taskCount as number}
+    ]
+
     return (
         <PlatformAdminPageLayout title='Dashboard'>
             <Flex mt="1rem" gap="1rem" flexWrap="wrap">
-                <Box w="fit-content" bg="gray.100" p="1rem" borderRadius="1rem">
-                    <Stat>
-                        <StatLabel>Number of Users</StatLabel>
-                        <StatNumber>{userCount}</StatNumber>
-                    </Stat>
-                </Box>
-                <Box w="fit-content" bg="gray.100" p="1rem" borderRadius="1rem">
-                    <Stat>
-                        <StatLabel>Number of Workshops</StatLabel>
-                        <StatNumber>{workshopCount}</StatNumber>
-                    </Stat>
-                </Box>
-                <Box w="fit-content" bg="gray.100" p="1rem" borderRadius="1rem">
-                    <Stat>
-                        <StatLabel>Number of Support Groups</StatLabel>
-                        <StatNumber>{supportGroupCount}</StatNumber>
-                    </Stat>
-                </Box>
-                <Box w="fit-content" bg="gray.100" p="1rem" borderRadius="1rem">
-                    <Stat>
-                        <StatLabel>Number of Posts</StatLabel>
-                        <StatNumber>{postsCount}</StatNumber>
-                    </Stat>
-                </Box>
-                <Box w="fit-content" bg="gray.100" p="1rem" borderRadius="1rem">
-                    <Stat>
-                        <StatLabel>Number of Tasks</StatLabel>
-                        <StatNumber>{taskCount}</StatNumber>
-                    </Stat>
-                </Box>
+                {STATS.map(item => (
+                    <Fragment key={item.id}>
+                        <StatItem item={item}/>
+                    </Fragment>
+                ))}
             </Flex>
         </PlatformAdminPageLayout>
     )

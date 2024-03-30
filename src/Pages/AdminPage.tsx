@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
 import { Box, Flex, Stat, StatLabel, StatNumber, Text } from '@chakra-ui/react'
 import { PlatformAdminPageLayout } from '../Layouts'
-import { useAdmin, usePost, useSupportGroup, useWorkshop } from '../Hooks'
+import { useAdmin, usePost, useSupportGroup, useTask, useWorkshop } from '../Hooks'
 import { useEffect, useState } from 'react'
 
 const AdminPage = () => {
@@ -12,7 +12,9 @@ const AdminPage = () => {
     const { getPosts } = usePost()
     const { getWorkshops } = useWorkshop()
     const { getSupportGroups } = useSupportGroup()
+    const { getTasks } = useTask()
 
+    const [taskCount, setTaskCount] = useState<number>()
     const [userCount, setUserCount] = useState<number>()
     const [postsCount, setPostsCount] = useState<number>()
     const [workshopCount, setWorkshopCount] = useState<number>()
@@ -21,11 +23,23 @@ const AdminPage = () => {
     const user: IUser = useSelector((state: RootState) => state.user)
 
     useEffect(() => {
-        getUsers().then(result => setUserCount(result.length))
-        getPosts().then(result => setPostsCount(result.length))
-        getWorkshops().then(result => setWorkshopCount(result.length))
-        getSupportGroups().then(result => setSupportGroupCount(result.length))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+        getUsers()
+            .then(result => setUserCount(result.length))
+
+        getPosts()
+            .then(result => setPostsCount(result.length))
+
+        getWorkshops()
+            .then(result => setWorkshopCount(result.length))
+
+        getSupportGroups()
+            .then(result => setSupportGroupCount(result.length))
+
+        getTasks()
+            .then(result => setTaskCount(result.length))
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     if (user.role !== 'admin') {
@@ -57,6 +71,12 @@ const AdminPage = () => {
                     <Stat>
                         <StatLabel>Number of Posts</StatLabel>
                         <StatNumber>{postsCount}</StatNumber>
+                    </Stat>
+                </Box>
+                <Box w="fit-content" bg="gray.100" p="1rem" borderRadius="1rem">
+                    <Stat>
+                        <StatLabel>Number of Tasks</StatLabel>
+                        <StatNumber>{taskCount}</StatNumber>
                     </Stat>
                 </Box>
             </Flex>

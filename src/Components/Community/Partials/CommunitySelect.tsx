@@ -10,10 +10,9 @@ import { setCommunities, setJoinedCommunities, setSelectedCommunity } from '../.
 import { RootState } from '../../../redux/store';
 import { Community, JoinedCommunity } from '../../../Interface';
 import NoEntry from '../../NoEntry';
+import { setCommunitySelectOpen } from '../../../redux/slices/globalSlice';
 
 interface CommunityProps {
-    isOpen: boolean;
-    setOpen: (value: boolean) => void;
     isNav?: boolean;
     selectedCommunityId?: string;
     showTitleOnMobile?: boolean;
@@ -21,8 +20,6 @@ interface CommunityProps {
 
 const CommunitySelect: FC<CommunityProps> = ({
     isNav,
-    isOpen,
-    setOpen,
     selectedCommunityId,
     showTitleOnMobile=true
 }) => {
@@ -32,10 +29,11 @@ const CommunitySelect: FC<CommunityProps> = ({
     const communityMenuRef = useRef(null)
     const [formattedCommunities, setFormattedCommunities] = useState<any[]>([])
     const {communities, selectedCommunity, joinedCommunities} = useSelector((state: RootState) => state.community)
-    
+    const {communitySelectOpen} = useSelector((state: RootState) => state.global)
+
     useOutsideClick({
         ref: communityMenuRef,
-        handler: () => isOpen && setOpen(!isOpen)
+        handler: () => communitySelectOpen && dispatch(setCommunitySelectOpen(false))
       });
 
 
@@ -92,7 +90,7 @@ const CommunitySelect: FC<CommunityProps> = ({
 
 
     return (
-        <Menu isOpen={isOpen}>
+        <Menu isOpen={communitySelectOpen}>
             <MenuButton
                 width={"fit-content"}
                 minH="34px"
@@ -104,7 +102,7 @@ const CommunitySelect: FC<CommunityProps> = ({
                 borderColor="gray.100"
                 borderRadius="4px"
                 _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
-                onClick={() => setOpen(!isOpen)}
+                onClick={() => dispatch(setCommunitySelectOpen(!communitySelectOpen))}
                 mr={2}
             >
                 <Flex
@@ -147,7 +145,7 @@ const CommunitySelect: FC<CommunityProps> = ({
                                 onClick={() => {
                                     dispatch(setSelectedCommunity(comm))
                                     !!isNav && navigate(`/community/community-detail/${comm.id}`)
-                                    setOpen(false)
+                                    dispatch(setCommunitySelectOpen(false))
                                 }}
                             >
                                 <Flex alignItems="center">{comm.name}</Flex>
@@ -171,7 +169,7 @@ const CommunitySelect: FC<CommunityProps> = ({
                             onClick={() => {
                                 dispatch(setSelectedCommunity(comm))
                                 !!isNav && navigate(`/community/community-detail/${comm.id}`)
-                                setOpen(false)
+                                dispatch(setCommunitySelectOpen(false))
                             }}
                         >
                             <Flex alignItems="center">{comm.name}</Flex>

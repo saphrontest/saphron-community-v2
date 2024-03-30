@@ -1,8 +1,8 @@
 import { Menu, MenuButton, MenuDivider, MenuList, useConst } from '@chakra-ui/react'
 import { setModal } from '../../../redux/slices/modalSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { signOut } from "firebase/auth";
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { auth } from '../../../firebaseClient'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { IUser } from '../../../Interface'
@@ -10,6 +10,8 @@ import { logoutUser } from '../../../redux/slices/userSlice'
 import { resetCommunities } from '../../../redux/slices/communitySlice'
 import { LoginButton, MenuButtonInner, UserMenuInner } from './Menu';
 import NavigationMenu from './Menu/NavigationMenu';
+import { RootState } from '../../../redux/store';
+import { setUserMenuOpen } from '../../../redux/slices/globalSlice';
 
 
 const UserMenu: FC<{ user: IUser }> = ({ user }) => {
@@ -18,6 +20,12 @@ const UserMenu: FC<{ user: IUser }> = ({ user }) => {
     const location = useLocation()
     const userRole = useConst(() => user.role ? user.role : "user")
 
+    const {userMenuOpen} = useSelector((state: RootState) => state.global)
+
+    useEffect(() => {
+        console.log(userMenuOpen)
+    }, [userMenuOpen])
+
     const logout = async () => {
         await signOut(auth);
         dispatch(logoutUser())
@@ -25,8 +33,9 @@ const UserMenu: FC<{ user: IUser }> = ({ user }) => {
         navigate("/community")
     }
 
+
     return (
-        <Menu>
+        <Menu isOpen={userMenuOpen} onClose={() => dispatch(setUserMenuOpen(false))}>
             <MenuButton
                 minH="34px"
                 cursor="pointer"
@@ -35,6 +44,7 @@ const UserMenu: FC<{ user: IUser }> = ({ user }) => {
                 outline={"1px solid"}
                 outlineColor={"gray.100"}
                 _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
+                onClick={() => dispatch(setUserMenuOpen(!userMenuOpen))}
             >
                 <MenuButtonInner user={user}/>
             </MenuButton>

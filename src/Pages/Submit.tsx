@@ -16,7 +16,6 @@ const Submit = () => {
   const params = useParams()
   const location = useLocation()
   const user = useSelector((state: RootState) => state.user)
-  const [communitySelectOpen, setCommunitySelectOpen] = useState(false)
   const [view, setView] = useState<'New Post' | 'AI Search'>("New Post")
   const { joinedCommunities } = useSelector((state: RootState) => state.community)
 
@@ -45,7 +44,7 @@ const Submit = () => {
           view === "New Post" ? (
             <Box bg="gray.50" p="1rem">
               <Box w="100%" textAlign="left">
-                {!!user && <CommunitySelect isOpen={communitySelectOpen} setOpen={setCommunitySelectOpen} selectedCommunityId={params.communityId ?? joinedCommunities[0]?.communityId} />}
+                {!!user && <CommunitySelect selectedCommunityId={params.communityId ?? joinedCommunities[0]?.communityId} />}
               </Box>
               <NewPostForm selectedCommunityId={params.communityId ?? joinedCommunities[0]?.communityId} />
             </Box>

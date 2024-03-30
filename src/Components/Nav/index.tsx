@@ -1,5 +1,4 @@
 //Chakra & React
-import { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import { SearchInput, AskButton, AuthButtons, NavLogo, UserMenu } from "./Partials";
 import { CommunitySelect } from "../Community";
@@ -7,8 +6,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
 const Nav = () => {
-  const [dropdown, toggleDropdown] = useState(false)
+
   const user = useSelector((state: RootState) => state.user)
+
   return (
     <>
       <header>
@@ -20,7 +20,7 @@ const Nav = () => {
         >
           <Flex gap={{base: "0.5rem", sm: "2rem"}}>
             <NavLogo />
-            {user.id && <CommunitySelect isOpen={dropdown} setOpen={toggleDropdown} isNav showTitleOnMobile={false}/>}
+            {user.id && <CommunitySelect isNav showTitleOnMobile={false}/>}
           </Flex>
           <SearchInput />
           <Flex justifyContent="space-between" alignItems="center">

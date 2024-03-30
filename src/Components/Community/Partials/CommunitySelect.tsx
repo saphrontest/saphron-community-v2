@@ -90,7 +90,7 @@ const CommunitySelect: FC<CommunityProps> = ({
 
 
     return (
-        <Menu isOpen={communitySelectOpen}>
+        <Menu isOpen={communitySelectOpen} onClose={() => dispatch(setCommunitySelectOpen(false))}>
             <MenuButton
                 width={"fit-content"}
                 minH="34px"

@@ -62,16 +62,16 @@ const Desktop: FC<ISupportGroupItem> = ({ onClick, item, selected }) => {
         <Flex
             w="180px"
             minH="150px"
-            h="fit-content"
+            h="240px"
             bg="gray.100"
             cursor="pointer"
             onClick={onClick}
             direction="column"
             borderRadius="12px"
             outline={item === selected ? "2.5px solid" : "none"}
-            outlineColor="blue.500"
+            outlineColor={item === selected ? "blue.500" : "transparent"}
         >
-            <Image src={item.cover_img} borderTopLeftRadius="12px" borderTopRightRadius="12px" />
+            <Image src={item.cover_img} borderTopLeftRadius="12px" borderTopRightRadius="12px" h="150px" />
             <Flex flex="1" p="0.5rem" direction="column" justify="space-between">
                 <Box>
                     <Text align="left" noOfLines={2} fontWeight="600" textTransform="capitalize">

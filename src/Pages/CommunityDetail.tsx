@@ -33,21 +33,15 @@ const CommunityDetail = () => {
   }, [reloadPost])
   
   const getAll = async (communityId: string) => {
+
+    getCommunityDetailById(communityId)
+      .then(res => setCommunity(res))
     
-    try {
+    getPostsByCommunityId(communityId)
+      .then(p => p && setPosts(p))
 
-      getCommunityDetailById(communityId)
-        .then(res => setCommunity(res))
-      
-      getPostsByCommunityId(communityId)
-        .then(p => p && setPosts(p))
-
-      getSavedPostsByUser(user.id)
-        .then(saved => setSavedPosts(saved))
-
-    } catch (error) {
-      console.error(error)
-    }
+    getSavedPostsByUser(user.id)
+      .then(saved => setSavedPosts(saved))
 
   }
 

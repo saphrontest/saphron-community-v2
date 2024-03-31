@@ -10,8 +10,8 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
 import { Community } from "../Interface";
 import { firestore, storage } from "../firebaseClient";
-import { getCommunityDetail } from "../Helpers/apiFunctions";
 import Content from "./About/Content";
+import { useCommunity } from "../Hooks";
 
 type AboutProps = {
   community?: Community
@@ -29,6 +29,7 @@ const About: React.FC<AboutProps> = ({
   community: propCommunity
 }) => {
   const toast = useToast()
+  const {getCommunityDetailById} = useCommunity()
   const selectFileRef = useRef<HTMLInputElement>(null);
 
   const [selectedFile, setSelectedFile] = useState<string>();
@@ -44,7 +45,7 @@ const About: React.FC<AboutProps> = ({
       return;
     }
 
-    getCommunityDetail(communityId).then((result) => {
+    getCommunityDetailById(communityId).then((result) => {
       setCommunity(result)
     }).catch((err) => {
       console.error("GET COMMUNITY DETAIL ERROR: ", err)
@@ -81,7 +82,7 @@ const About: React.FC<AboutProps> = ({
     }
     // April 24 - removed reload
     // window.location.reload();
-    getCommunityDetail(communityId).then((result) => {
+    getCommunityDetailById(communityId).then((result) => {
       setCommunity(result)
     }).catch((err) => {
       console.error("GET COMMUNITY DETAIL ERROR: ", err)

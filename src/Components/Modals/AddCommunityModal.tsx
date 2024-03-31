@@ -7,12 +7,13 @@ import { firestore } from '../../firebaseClient';
 import { doc, runTransaction } from 'firebase/firestore';
 import md5 from 'md5';
 import { RootState } from '../../redux/store';
-import { getCommunities, getJoinedCommunitiesList } from '../../Helpers/apiFunctions';
 import { setCommunities, setJoinedCommunities } from '../../redux/slices/communitySlice';
 import moment from 'moment';
-import { useReward } from '../../Hooks';
+import { useCommunity, useReward } from '../../Hooks';
 
 const AddCommunityModal = () => {
+
+    const {getCommunities, getJoinedCommunities} = useCommunity()
 
     const dispatch = useDispatch()
     const toast = useToast()
@@ -79,10 +80,10 @@ const AddCommunityModal = () => {
                 );
             });
             await winRewardBySlug("create_community", user.id)
-            const joined = await getJoinedCommunitiesList(user.id)
+            const joined = await getJoinedCommunities(user.id)
             joined && dispatch(setJoinedCommunities(joined))
             const communities = await getCommunities()
-            dispatch(setCommunities(communities))
+            communities && dispatch(setCommunities(communities))
             handleClose();
 
         } catch (error: any) {

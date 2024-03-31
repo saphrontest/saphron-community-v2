@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Community, IPost, IUser } from '../Interface'
 import { PageLayout } from '../Layouts'
-import { getCommunityDetail, getPostsByCommunities } from '../Helpers/apiFunctions'
 import { About, CreatePostLink, Meta, NoEntry, PostItem } from '../Components'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import { usePost } from '../Hooks'
+import { usePost, useCommunity } from '../Hooks'
 
 const CommunityDetail = () => {
+  const {getPostsByCommunityId, getCommunityDetailById} = useCommunity()
   const {getSavedPostsByUser} = usePost()
   const location = useLocation()
   const communityId = useRef(location.pathname.split('/').at(-1)).current
@@ -22,13 +22,13 @@ const CommunityDetail = () => {
   const [reloadPost, setReloadPost] = useState<boolean>(false)
 
   const getDetail = async (id: string) => {
-    const com = await getCommunityDetail(id)
+    const com = await getCommunityDetailById(id)
     setCommunity(com)
   }
 
   const getPosts = async (id: string) => {
-    const p = await getPostsByCommunities(id)
-    setPosts(p)
+    const p = await getPostsByCommunityId(id)
+    p && setPosts(p)
   }
 
   const getSavedPosts = async (userId: string) => {

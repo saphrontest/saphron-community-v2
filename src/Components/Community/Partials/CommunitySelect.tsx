@@ -4,12 +4,12 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { GrAdd } from 'react-icons/gr';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../../redux/slices/modalSlice';
-import { getCommunities, getJoinedCommunitiesList } from '../../../Helpers/apiFunctions';
 import { useNavigate } from 'react-router-dom';
 import { setCommunities, setJoinedCommunities, setSelectedCommunity } from '../../../redux/slices/communitySlice';
 import { RootState } from '../../../redux/store';
 import { Community, JoinedCommunity } from '../../../Interface';
 import NoEntry from '../../NoEntry';
+import { useCommunity } from '../../../Hooks';
 
 interface CommunityProps {
     isOpen: boolean;
@@ -26,6 +26,7 @@ const CommunitySelect: FC<CommunityProps> = ({
     selectedCommunityId,
     showTitleOnMobile=true
 }) => {
+    const {getCommunities, getJoinedCommunities} = useCommunity()
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const user = useSelector((state: RootState) => state.user)
@@ -41,24 +42,16 @@ const CommunitySelect: FC<CommunityProps> = ({
 
     const getCommunityList = async () => {
         const res = await getCommunities()
-        const communityList = [
-            ...res.map(({ id, name, creatorId, privacyType, createdAt }) => ({
-                 id,
-                 name,
-                 creatorId,
-                 privacyType,
-                 createdAt
-                }))
-            ]
-        dispatch(setCommunities(communityList as Community[]))
+        dispatch(setCommunities(res as Community[]))
     }
-    const getJoinedCommunities = async (userId: string) => {
-        const joined = await getJoinedCommunitiesList(userId)
+    
+    const getJoinedCommunitiesList = async (userId: string) => {
+        const joined = await getJoinedCommunities(userId)
         joined && dispatch(setJoinedCommunities(joined))
     }
 
     useEffect(() => {
-        user?.id && getJoinedCommunities(user?.id)
+        user?.id && getJoinedCommunitiesList(user?.id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user])
 

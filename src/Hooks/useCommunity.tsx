@@ -1,8 +1,13 @@
-import { collection, deleteDoc, doc, FirestoreError, getDoc, getDocs, increment, query, setDoc, where, writeBatch } from "firebase/firestore";
+import { collection, deleteDoc, doc, FirestoreError, getDoc, getDocs, increment, query, runTransaction, setDoc, where, writeBatch } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 import { Community, IPost, JoinedCommunity } from "../Interface";
+import md5 from "md5";
+import { useToast } from "@chakra-ui/react";
+import moment from "moment";
 
 const useCommunity = () => {
+
+    const toast = useToast()
 
     /**
      * The function `getCommunities` retrieves a list of communities from a Firestore database in a
@@ -164,10 +169,65 @@ const useCommunity = () => {
      * represented as an object with its data properties.
      */
     const getCommunitiesByUserId = async (userId: string) => {
-        const q = query(collection(firestore, "users", userId, "communities"));
-        const querySnapshot = await getDocs(q)
-        const communities = querySnapshot.docs.map((docSnapshot: any) => ({...docSnapshot.data()}));
-        return communities
+
+        try {
+            
+            const q = query(collection(firestore, "users", userId, "communities"));
+            const querySnapshot = await getDocs(q)
+            const communities = querySnapshot.docs.map((docSnapshot: any) => ({...docSnapshot.data()}));
+            return communities
+
+        } catch (error) {
+            if (error instanceof FirestoreError) {
+                console.error(error.message)
+                throw new Error(error.message)
+            }
+        }
+
+        
+    }
+
+    const onCreate = async (name: string, userId: string) => {
+
+        try {
+            const newCommunityId = md5(`${name}.${new Date().getTime().toString()}`)
+            // Create community document and community as a subcollection document on user
+            const communityDocRef = doc(firestore, "communities", newCommunityId);
+
+            await runTransaction(firestore, async (transaction) => {
+                const communityDoc = await transaction.get(communityDocRef);
+                if (communityDoc.exists()) {
+                    toast({
+                        title: `Sorry, comm/${name} is taken. Try another.`,
+                        status: "error",
+                        isClosable: true,
+                        position: "top-right"
+                    })
+                    throw new Error(`Sorry, comm/${name} is taken. Try another.`);
+                }
+                
+                transaction.set(communityDocRef, {
+                    name: name,
+                    creatorId: userId,
+                    createdAt: moment().toString(),
+                    numberOfMembers: 1,
+                    privacyType: "public",
+                });
+
+                transaction.set(
+                    doc(firestore, `users/${userId}/communities`, newCommunityId), {
+                        communityId: newCommunityId,
+                        isModerator: true,
+                    }
+                );
+            });
+        } catch (error) {
+            if (error instanceof FirestoreError) {
+                console.error(error.message)
+                throw new Error(error.message)
+            }
+        }
+
     }
 
     return {
@@ -177,7 +237,8 @@ const useCommunity = () => {
         getCommunitiesByUserId,
         getCommunities,
         joinCommunity,
-        leaveCommunity
+        leaveCommunity,
+        onCreate
     }
 }
 

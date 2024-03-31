@@ -21,45 +21,38 @@ const CommunityDetail = () => {
   const [community, setCommunity] = useState<Community>()
   const [reloadPost, setReloadPost] = useState<boolean>(false)
 
-  const getDetail = async (id: string) => {
-    const com = await getCommunityDetailById(id)
-    setCommunity(com)
-  }
-
-  const getPosts = async (id: string) => {
-    const p = await getPostsByCommunityId(id)
-    p && setPosts(p)
-  }
-
-  const getSavedPosts = async (userId: string) => {
-    const saved = await getSavedPostsByUser(userId)
-    setSavedPosts(saved)
-  }
-
-  const getAll = async (communityId: string) => {
-    try {
-      await getDetail(communityId)
-      await getPosts(communityId)
-      await getSavedPosts(user.id)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   useEffect(() => {
-    if (communityId) {
-      getAll(communityId)
-    }
+    communityId && getAll(communityId)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [communityId])
 
   useEffect(() => {
-    if (reloadPost && communityId) {
-      getAll(communityId)
+    (reloadPost && communityId) && getAll(communityId)
         .finally(() => setReloadPost(false))
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadPost])
+  
+  const getAll = async (communityId: string) => {
+    
+    try {
+
+      getCommunityDetailById(communityId)
+        .then(res => setCommunity(res))
+      
+      getPostsByCommunityId(communityId)
+        .then(p => p && setPosts(p))
+
+      getSavedPostsByUser(user.id)
+        .then(saved => setSavedPosts(saved))
+
+    } catch (error) {
+      console.error(error)
+    }
+
+  }
+
+
+
   return (
     <PageLayout>
       <>
@@ -76,9 +69,7 @@ const CommunityDetail = () => {
           setReloadPost={setReloadPost}
         />) : <NoEntry type="community post" />}
       </>
-      <>
-        {community && <About communityId={community.id} community={community} />}
-      </>
+      {community ? <About communityId={community.id} community={community} /> : <></>}
     </PageLayout>
   )
 }

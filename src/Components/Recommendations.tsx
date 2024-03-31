@@ -58,7 +58,7 @@ const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
 
   const getUserCommunity = async (userId: string) => {
       const comms = await getCommunitiesByUserId(userId)
-      setMyCommmunities(comms)
+      comms && setMyCommmunities(comms)
   }
   
   const onJoin = async (userId: string, communityId: string) => {

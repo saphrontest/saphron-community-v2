@@ -3,26 +3,29 @@ import { FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
-import { getCommunities, getJoinedCommunitiesList, getUserCommunities, joinCommunity, leaveCommunity } from '../Helpers/apiFunctions';
 import { setCommunities, setJoinedCommunities } from '../redux/slices/communitySlice';
-import { Community, JoinedCommunity } from '../Interface';
+import { Community, IUser, JoinedCommunity } from '../Interface';
 import communitiesBackground from '../assets/images/communities.jpg'
-import { useReward } from '../Hooks';
+import { useCommunity, useReward } from '../Hooks';
 
 interface RecommendationsProps {
   type?: string;
 }
 
 const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
+  
+  const toast = useToast()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const toast = useToast()
   const {winRewardBySlug} = useReward()
+  const {getCommunities, getJoinedCommunities, joinCommunity, leaveCommunity, getCommunitiesByUserId} = useCommunity()
+  
   const [loading, setLoading] = useState(false)
   const [viewAll, setViewAll] = useState(false)
   const [myCommmunities, setMyCommmunities] = useState<any[]>([])
+  
+  const user: IUser = useSelector((state: RootState) => state.user)
   const {communities, joinedCommunities} = useSelector((state: RootState) => state.community)
-  const user = useSelector((state: RootState) => state.user)
   
   useEffect(() => {
     !!user.id && get(user.id)
@@ -31,7 +34,7 @@ const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
 
   const get = async (userId: string) => {
     await getUserCommunity(userId)
-    await getJoinedCommunities(userId)
+    await getJoinedCommunitiesList(userId)
   }
   
   useEffect(() => {
@@ -44,27 +47,17 @@ const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
   }, [])
 
   const getAllCommunities = async () => {
-    getCommunities().then(communitiesData => {
-      const communityList = [
-        ...communitiesData.map(({ id, name, creatorId, privacyType, createdAt }) => ({
-          id,
-          name,
-          creatorId,
-          privacyType,
-          createdAt 
-        }))
-      ]
-      dispatch(setCommunities(communityList as Community[]))
-    })
+    getCommunities()
+    .then(communitiesData => communitiesData && dispatch(setCommunities(communitiesData)))
   }
 
-  const getJoinedCommunities = async (userId: string) => {
-    const joined : JoinedCommunity[] | false = await getJoinedCommunitiesList(userId)
+  const getJoinedCommunitiesList = async (userId: string) => {
+    const joined = await getJoinedCommunities(userId)
     !!joined && dispatch(setJoinedCommunities(joined))
   }
 
   const getUserCommunity = async (userId: string) => {
-      const comms = await getUserCommunities(userId)
+      const comms = await getCommunitiesByUserId(userId)
       setMyCommmunities(comms)
   }
   
@@ -75,12 +68,12 @@ const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
         return
       }
       await leaveCommunity(userId, communityId)
-      await getJoinedCommunities(userId)
+      await getJoinedCommunitiesList(userId)
       return;
     }
     await joinCommunity(userId, communityId)
     await winRewardBySlug('join_community', userId)
-    await getJoinedCommunities(userId)
+    await getJoinedCommunitiesList(userId)
   }
 
 
@@ -190,9 +183,9 @@ const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
                             return;
                           }
                           onJoin(user?.id, item.id)
-                            .finally(async () => {
+                            .then(async () => {
                               await getUserCommunity(user.id)
-                              await getJoinedCommunities(user.id)
+                              await getJoinedCommunitiesList(user.id)
                             })
                         }}
                         variant={!!joinedCommunities.find((joined: JoinedCommunity) => joined.communityId === item.id) ? "outline" : "solid"}

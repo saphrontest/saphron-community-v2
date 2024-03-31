@@ -3,24 +3,25 @@ import { Community, JoinedCommunity } from '../Interface';
 import communitiesBackground from '../assets/images/communities.jpg'
 import { RootState } from '../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { getJoinedCommunitiesList, leaveCommunity } from '../Helpers/apiFunctions';
 import { setJoinedCommunities } from '../redux/slices/communitySlice';
 import { useNavigate } from 'react-router-dom';
+import { useCommunity } from '../Hooks';
 
 const MyCommunities = () => {
     const toast = useToast()
+    const {getJoinedCommunities, leaveCommunity} = useCommunity()
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const user = useSelector((state: RootState) => state.user)
     const {communities, joinedCommunities} = useSelector((state: RootState) => state.community)
 
-    const onJoin = async (userId: string, communityId: string) => {
+    const onLeave = async (userId: string, communityId: string) => {
         await leaveCommunity(userId, communityId)
-        await getJoinedCommunities(userId)
+        await getJoinedCommunitiesList(userId)
     }
 
-    const getJoinedCommunities = async (userId: string) => {
-        const joined : JoinedCommunity[] | false = await getJoinedCommunitiesList(userId)
+    const getJoinedCommunitiesList = async (userId: string) => {
+        const joined = await getJoinedCommunities(userId)
         !!joined && dispatch(setJoinedCommunities(joined))
     }
 
@@ -91,9 +92,9 @@ const MyCommunities = () => {
                             })
                             return;
                           }
-                          onJoin(user?.id, item.id)
-                            .finally(async () => {
-                              await getJoinedCommunities(user.id)
+                          onLeave(user?.id, item.id)
+                            .then(async () => {
+                              await getJoinedCommunitiesList(user.id)
                             })
                         }}
                         variant="outline"

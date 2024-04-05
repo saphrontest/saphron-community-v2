@@ -20,11 +20,11 @@ import {
   AdminSupportGroupsPage,
   AdminWorkshopsPage,
   MarketPlace,
-  AdminRewardsPage,
   RewardsPage,
   TaskTrackerPage,
   AdminTaskPage,
-  MyTasks
+  MyTasks,
+  AdminRewardsPage
 } from './Pages'
 
 const base = "community"

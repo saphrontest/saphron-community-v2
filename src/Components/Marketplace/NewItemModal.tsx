@@ -1,19 +1,20 @@
 import React, { ChangeEvent, FC, useRef, useState } from 'react'
 import { InputItem, ModalLayout } from '../../Layouts'
-import { ModalHeader, ModalCloseButton, ModalBody, Text, Flex, Button, useToast } from '@chakra-ui/react'
+import { ModalHeader, ModalCloseButton, ModalBody, Text, Flex, Button, useToast, useBoolean, Spinner } from '@chakra-ui/react'
 import { PlatformFormItem } from '../Platform';
 import { SCIcon } from '../SCElements';
-import { collection, doc, FirestoreError, runTransaction, Transaction } from 'firebase/firestore';
+import { doc, FirestoreError, runTransaction, Transaction } from 'firebase/firestore';
 import { firestore, storage } from '../../firebaseClient';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import md5 from 'md5';
 
-const NewItemModal: FC<{ isOpen: boolean; setOpen: () => void; }> = ({
-    isOpen, setOpen
+const NewItemModal: FC<{ isOpen: boolean; setOpen: () => void; reloadItems: () => void; }> = ({
+    isOpen, setOpen, reloadItems
 }) => {
 
     const toast = useToast()
     const itemPicRef = useRef<HTMLInputElement | null>(null)
+    const [loading, {toggle: toggleLoading}] = useBoolean(false)
     const [itemImg, setItemImg] = useState<string>('')
     const [form, setForm] = useState<{
         name: string;
@@ -35,13 +36,14 @@ const NewItemModal: FC<{ isOpen: boolean; setOpen: () => void; }> = ({
         };
     }
 
-    const updateImage = async (img: string, rewardItemId: string) => {
+    const uploadImage = async (img: string, rewardItemId: string) => {
         try {
-            const imageRef = ref(storage, `rewards/${rewardItemId}`);
+            const imageRef = ref(storage, `rewardItems/${rewardItemId}`);
             await uploadString(imageRef, img, "data_url");
             const photoURL = await getDownloadURL(imageRef);
             return photoURL
         } catch (error: any) {
+            console.log(error)
             if(error instanceof FirestoreError) {
                 console.error(error.message)
                 throw new Error(error.message)
@@ -50,19 +52,25 @@ const NewItemModal: FC<{ isOpen: boolean; setOpen: () => void; }> = ({
     };
 
     const handleSubmit = async () => {
+        toggleLoading();
         try {
             const newId = md5(`${new Date().toString()}.${form.name}`);
-            const rewardItemDocRef = doc(collection(firestore, `rewardItems/${newId}`));
-            const imgUrl = await updateImage(itemImg, newId)
-            return runTransaction(firestore, async (tx: Transaction) => {
-                tx.set(rewardItemDocRef, { ...form, img: imgUrl, createdAt: new Date().toString() })
-            })
+            const rewardItemDocRef = doc(firestore, `rewardItems/${newId}`);
+            const imgUrl = await uploadImage(itemImg, newId);
+            await runTransaction(firestore, async (tx: Transaction) => {
+                await tx.set(rewardItemDocRef, { ...form, img: imgUrl, createdAt: new Date().toString() });
+            });
+            await reloadItems()
+            setOpen()
         } catch (error) {
-            if(error instanceof FirestoreError) {
-                toast({ title: error.message, status: "error", isClosable: true, })
-              }
+            console.error(error); // Log the error for debugging
+            if (error instanceof FirestoreError) {
+                toast({ title: error.message, status: "error", isClosable: true });
+            }
+        } finally {
+            toggleLoading();
         }
-    }
+    };
 
     return (
         <ModalLayout isOpen={isOpen} onClose={setOpen}>
@@ -99,7 +107,7 @@ const NewItemModal: FC<{ isOpen: boolean; setOpen: () => void; }> = ({
                 </PlatformFormItem>
                 <Flex justify="flex-end" gap="1rem">
                     <Button onClick={setOpen} variant="outline">Cancel</Button>
-                    <Button onClick={handleSubmit}>Submit</Button>
+                    <Button onClick={handleSubmit}>{loading ? <Spinner /> : "Submit"}</Button>
                 </Flex>
             </ModalBody>
         </ModalLayout>

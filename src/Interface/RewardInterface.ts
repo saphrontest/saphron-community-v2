@@ -30,3 +30,12 @@ export interface IUserRewardItem {
     price: number;
     rewardItemId: number | string;
 }
+
+export interface IRewardItem {
+    id: string;
+    createdAt: string;
+    description?: string;
+    img: string;
+    name: string;
+    price: number;
+}

@@ -20,12 +20,12 @@ import {
   AdminSupportGroupsPage,
   AdminWorkshopsPage,
   MarketPlace,
-  AdminRewardsPage,
   RewardsPage,
   TaskTrackerPage,
   AdminTaskPage,
   MyTasks
 } from './Pages'
+import AdminRewardsPage from './Pages/Admin/Rewards'
 
 const base = "community"
 const adminBase = "manager-dashboard"

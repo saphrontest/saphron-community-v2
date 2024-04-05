@@ -1,6 +1,6 @@
 import { collection, doc, FirestoreError, getDocs, increment, orderBy, query, runTransaction, Transaction, where } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
-import { IReward, IRewardHistoryItem, IUserRewardItem } from "../Interface";
+import { IReward, IRewardHistoryItem, IRewardItem, IUserRewardItem } from "../Interface";
 
 
 interface IProduct {
@@ -173,6 +173,17 @@ const useReward = () => {
             return handleFirebaseError(error)
         }
     }
+    
+    const getRewardItems = async () => {
+        try {
+            const rewardItemsDocRef = query(collection(firestore, `rewardItems`))
+            const rewardItemsDoc = await getDocs(rewardItemsDocRef)
+            const rewardItems = rewardItemsDoc.docs.map(doc => ({id: doc.id, ...doc.data()}))
+            return rewardItems as IRewardItem[];
+        } catch (error) {
+            return handleFirebaseError(error)
+        }
+    }
 
     return {
         buyRewardItem,
@@ -180,7 +191,8 @@ const useReward = () => {
         getRewardBySlug,
         winRewardBySlug,
         getRewardHistory,
-        getUserRewardItems
+        getUserRewardItems,
+        getRewardItems
     }
 }
 

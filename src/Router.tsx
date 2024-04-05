@@ -23,9 +23,9 @@ import {
   RewardsPage,
   TaskTrackerPage,
   AdminTaskPage,
-  MyTasks
+  MyTasks,
+  AdminRewardsPage
 } from './Pages'
-import AdminRewardsPage from './Pages/Admin/Rewards'
 
 const base = "community"
 const adminBase = "manager-dashboard"

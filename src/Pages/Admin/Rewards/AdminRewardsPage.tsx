@@ -7,7 +7,7 @@ import RewardItems from './RewardItems';
 
 const AdminRewardsPage = () => {
 
-    const [newItemModal, { toggle: toggleNewItemModal }] = useBoolean(false)
+    const [newItemModal, {toggle: toggleNewItemModal}] = useBoolean(false)
     const [reloadItems, {toggle: toggleReload}] = useBoolean(false)
     
     return (

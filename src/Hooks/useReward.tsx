@@ -1,4 +1,4 @@
-import { collection, doc, FirestoreError, getDocs, increment, query, runTransaction, Transaction, where } from "firebase/firestore";
+import { collection, doc, FirestoreError, getDocs, increment, orderBy, query, runTransaction, Transaction, where } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 import { IReward, IRewardHistoryItem, IUserRewardItem } from "../Interface";
 
@@ -144,7 +144,7 @@ const useReward = () => {
      */
     const getRewardHistory = async (userId: string) => {
         try {
-            const rewardHistoryDocRef = collection(firestore, `users/${userId}/rewardHistory`)
+            const rewardHistoryDocRef = query(collection(firestore, `users/${userId}/rewardHistory`), orderBy('createdAt', 'desc'))
             const rewardHistoryDoc = await getDocs(rewardHistoryDocRef)
             const rewardHistory = rewardHistoryDoc.docs.map(doc => ({id: doc.id, ...doc.data()}))
             return rewardHistory as IRewardHistoryItem[]
@@ -165,7 +165,7 @@ const useReward = () => {
      */
     const getUserRewardItems = async (userId: string) => {
         try {
-            const rewardItemsDocRef = collection(firestore, `users/${userId}/rewardItems`)
+            const rewardItemsDocRef = query(collection(firestore, `users/${userId}/rewardItems`), orderBy('createdAt', 'desc'));
             const rewardItemsDoc = await getDocs(rewardItemsDocRef)
             const rewardItems = rewardItemsDoc.docs.map(doc => ({id: doc.id, ...doc.data()} as IUserRewardItem))
             return rewardItems

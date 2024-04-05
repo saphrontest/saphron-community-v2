@@ -9,7 +9,6 @@ const BuyPremium = () => {
             direction="column"
             bg="white"
             borderRadius={4}
-            cursor="pointer"
             border="1px solid"
             borderColor="gray.300"
             mt={3}

@@ -5,6 +5,7 @@ import { IRewardHistoryItem, IUser } from '../../Interface'
 import { useSelector } from 'react-redux'
 import { useReward } from '../../Hooks'
 import { RootState } from '../../redux/store'
+import moment from 'moment'
 
 const Account = () => {
   const {getRewardHistory} = useReward()
@@ -62,7 +63,7 @@ const Account = () => {
                             </Flex>
                             <Flex  direction="column" align={["flex-start", "flex-end"]}>
                                 <Text>
-                                    12.12.2024
+                                    {moment(item.createdAt).format('DD.MM.YYYY HH:mm')}
                                 </Text>
                                 <ProductPriceLabel
                                     price={item.type === "income" ? item.price : -item.price}

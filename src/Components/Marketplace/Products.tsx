@@ -59,7 +59,7 @@ const Products = () => {
           </Flex>
           <Flex direction="column" align={["flex-start", "flex-end"]}>
             <Text>
-              {moment(item.createdAt).format("DD.MM.YYYY")}
+            {moment(item.createdAt).format('DD.MM.YYYY HH:mm')}
             </Text>
             <ProductPriceLabel
               price={item.price}

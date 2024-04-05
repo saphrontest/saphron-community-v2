@@ -8,7 +8,7 @@ import { FirestoreError, increment } from 'firebase/firestore'
 import { IUser } from '../Interface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import { updateUser } from '../Helpers'
+import { getUser, updateUser } from '../Helpers'
 import { useReward } from '../Hooks'
 import { setModal } from '../redux/slices/modalSlice'
 
@@ -26,10 +26,17 @@ const MarketPlace = () => {
   const toast = useToast()
   const [choosenProduct, setChoosenProduct] = useState<IProduct>()
   const [sellingLoading, { toggle: toggleSellingLoading }] = useBoolean(false)
+  const [balanceLoading, { toggle: toggleBalanceLoading }] = useBoolean(false)
   const user: IUser = useSelector((state: RootState) => state.user)
   const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
 
   const PRODUCT_LIST = [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }]
+
+  useEffect(() => {
+    toggleBalanceLoading()
+    getUser(user.id)
+      .finally(() => toggleBalanceLoading())
+  }, [])
 
   useEffect(() => {
     !choosenProduct && setChoosenProduct({
@@ -91,7 +98,7 @@ const MarketPlace = () => {
             <Text>
               Balance
             </Text>
-            <ProductPriceLabel price={user.rewardPoint} />
+            {balanceLoading ? <Spinner ml="1rem"/> : <ProductPriceLabel price={user.rewardPoint} />}
           </>
         ) : null}
       </Flex>

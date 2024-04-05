@@ -123,22 +123,20 @@ const RewardItems: FC<{ reloadItems: boolean; toggleReload: () => void; }> = ({ 
     }, [reloadItems])
 
     return (
-        <>
-            <Flex mt="1rem" direction="column" gap="1rem">
-                {rewardItems.map(rewardItem => (
-                    <Fragment key={rewardItem.id}>
-                        <RewardItem handleDelete={handleDelete} rewardItem={rewardItem} toggleEditOpen={toggleEdit}/>
-                        {isEditOpen && <EditItemModal
-                        isOpen={isEditOpen}
-                        setOpen={toggleEdit}
-                        reloadItems={toggleReload}
-                        item={rewardItem}
-                        handleEdit={handleEdit}
-                        />}
-                    </Fragment>
-                ))}
-            </Flex>
-        </>
+        <Flex mt="1rem" direction="column" gap="1rem">
+            {rewardItems.map(rewardItem => (
+                <Fragment key={rewardItem.id}>
+                    <RewardItem handleDelete={handleDelete} rewardItem={rewardItem} toggleEditOpen={toggleEdit}/>
+                    {isEditOpen && <EditItemModal
+                    isOpen={isEditOpen}
+                    setOpen={toggleEdit}
+                    reloadItems={toggleReload}
+                    item={rewardItem}
+                    handleEdit={handleEdit}
+                    />}
+                </Fragment>
+            ))}
+        </Flex>
     )
 }
 

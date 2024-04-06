@@ -1,5 +1,6 @@
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { storage } from "./firebaseClient";
+import { FirestoreError } from "firebase/firestore";
 
 class FirebaseUploadAdapter {
     loader: any;
@@ -9,22 +10,34 @@ class FirebaseUploadAdapter {
     }
 
     upload() {
-        return this.loader.file.then((file: any) => new Promise(async (resolve, reject) => {
-            try {
-                const imageRef = ref(storage, `post/uploads/${file.name}`);
-                const base64 = await fileToBase64(file)
-                await uploadString(imageRef, base64 as string, "data_url");
-                const downloadURL = await getDownloadURL(imageRef);
-                resolve({ default: downloadURL });
-            } catch (error) {
-                console.error('Upload failed:', error);
-                reject(error);
-            }
+        return this.loader.file.then((file: any) => new Promise((resolve, reject) => {
+                uploadToFirestore(file).then(downloadURL => {
+                    resolve({
+                        default: downloadURL
+                    });
+                }).catch(err => {
+                    reject(err);
+                })
         }));
     }
 
     abort() {
         // Not implemented for Firebase Storage uploads
+    }
+}
+
+async function uploadToFirestore(file: File) {
+    try {
+        const imageRef = ref(storage, `post/uploads/${file.name}`);
+        const base64 = await fileToBase64(file)
+        await uploadString(imageRef, base64 as string, "data_url");
+        const downloadURL = await getDownloadURL(imageRef);
+        return downloadURL
+    } catch (error) {
+        if(error instanceof FirestoreError) {
+            console.error(error.message)
+            throw new Error(error.message)
+          }
     }
 }
 

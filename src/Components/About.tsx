@@ -51,6 +51,7 @@ const About: React.FC<AboutProps> = ({
       console.error("GET COMMUNITY DETAIL ERROR: ", err)
     });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [communityId, propCommunity])
 
 

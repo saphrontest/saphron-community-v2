@@ -14,6 +14,13 @@ interface IProduct {
 
 const useReward = () => {
 
+    /**
+     * The function `handleFirebaseError` checks if the error is an instance of `FirestoreError`, logs
+     * the error message to the console, and throws a new error with the same message.
+     * @param {unknown} error - The `error` parameter is of type `unknown`, which means it can be any
+     * type of value. In this specific function, it is checking if the `error` is an instance of
+     * `FirestoreError` and then logging and throwing an error with the error message if it is.
+     */
     const handleFirebaseError = (error: unknown) => {
         if(error instanceof FirestoreError) {
             console.error(error.message)

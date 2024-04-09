@@ -9,7 +9,7 @@ const AuthInputs = () => {
     return (
         <Flex direction="column" alignItems="center" width="100%" mt={4}>
             {modal.view === "login" ? (
-                <Login />
+                <Login data={modal.data}/>
             ) : (
                 <SignUp />
             )}

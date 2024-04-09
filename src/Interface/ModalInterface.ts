@@ -10,6 +10,7 @@ export type ModalViewTypes =
   | "joinSupportGroup"
   | "editSupportGroup"
   | "paymentModal"
+  | "resetPassword"
   | null;
 
 export interface ModalInterface {

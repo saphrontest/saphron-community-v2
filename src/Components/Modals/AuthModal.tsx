@@ -2,7 +2,7 @@ import { ModalLayout } from '../../Layouts'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { Flex, ModalBody, ModalCloseButton, ModalHeader } from '@chakra-ui/react'
-import { AuthView } from './Views'
+import { AuthView, ResetPassword } from './Views'
 
 const AuthModal = () => {
     const modal = useSelector((state: RootState) => state.modal)
@@ -31,8 +31,7 @@ const AuthModal = () => {
                     {modal.view === "login" || modal.view === "signup" ? (
                         <AuthView />
                     ) : (
-                        // <ResetPassword toggleView={toggleView} />
-                        null
+                        <ResetPassword />
                     )}
                 </Flex>
             </ModalBody>

@@ -36,6 +36,7 @@ const Modal = () => {
             return <AddCommunityModal />    
         case "login":
         case "signup":
+        case "resetPassword":
             return <AuthModal />    
         case "editProfile":
             return <EditProfileModal data={data}/>

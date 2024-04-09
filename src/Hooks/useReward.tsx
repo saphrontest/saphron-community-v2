@@ -3,14 +3,6 @@ import { firestore } from "../firebaseClient";
 import { IReward, IRewardHistoryItem, IRewardItem, IUserRewardItem } from "../Interface";
 
 
-interface IProduct {
-    id: number;
-    name: string;
-    price: number;
-    description: string;
-    img: string;
-}
-
 
 const useReward = () => {
 
@@ -104,7 +96,7 @@ const useReward = () => {
      * `name`, and `price`, which are used to create entries in the user's reward items and reward
      * history documents
      */
-    const buyRewardItem = async (userId: string, item: IProduct) => {
+    const buyRewardItem = async (userId: string, item: IRewardItem) => {
 
         try {
 
@@ -181,9 +173,14 @@ const useReward = () => {
         }
     }
     
+    /**
+     * The function `getRewardItems` retrieves reward items data from Firestore and returns it as an
+     * array of objects.
+     * @returns The `getRewardItems` function is returning an array of reward items as `IRewardItem[]`.
+     */
     const getRewardItems = async () => {
         try {
-            const rewardItemsDocRef = query(collection(firestore, `rewardItems`))
+            const rewardItemsDocRef = collection(firestore, `rewardItems`)
             const rewardItemsDoc = await getDocs(rewardItemsDocRef)
             const rewardItems = rewardItemsDoc.docs.map(doc => ({id: doc.id, ...doc.data()}))
             return rewardItems as IRewardItem[];

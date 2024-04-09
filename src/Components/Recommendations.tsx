@@ -168,7 +168,7 @@ const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
                       </Flex>
                     </Flex>
                     <Box position="absolute" right="10px">
-                      <Button
+                      {user.id && <Button
                         height="22px"
                         fontSize="8pt"
                         onClick={(event) => {
@@ -191,7 +191,7 @@ const Recommendations: FC<RecommendationsProps> = ({type = 'home'}) => {
                         variant={!!joinedCommunities.find((joined: JoinedCommunity) => joined.communityId === item.id) ? "outline" : "solid"}
                       >
                         {joinedCommunities.find((joined: JoinedCommunity) => joined.communityId === item.id) ? "Joined" : "Join"}
-                      </Button>
+                      </Button>}
                     </Box>
                   </Flex>
                 </Box>

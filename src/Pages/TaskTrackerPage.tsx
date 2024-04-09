@@ -21,7 +21,7 @@ const TaskTrackerPage = () => {
         getTasks()
             .then(items => setTasks(items))
 
-        getTasksByUserId(user.id)
+        user.id && getTasksByUserId(user.id)
             .then(items => setMyTasks(items))
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -33,10 +33,7 @@ const AdminRewardsPage = () => {
                                             </Text>
                                         </Button>
                                     </Flex>
-                                    <RewardItems
-                                    reloadItems={reloadItems}
-                                    toggleReload={toggleReload}
-                                    />
+                                    <RewardItems reloadItems={reloadItems} toggleReload={toggleReload} />
                                 </Flex>
                             </TabPanel>
                         </TabPanels>

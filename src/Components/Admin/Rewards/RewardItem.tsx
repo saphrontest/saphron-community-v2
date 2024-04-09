@@ -1,4 +1,4 @@
-import { useBoolean, Flex, Button, Text, Box } from "@chakra-ui/react";
+import { useBoolean, Flex, Button, Text, Box, useMediaQuery } from "@chakra-ui/react";
 import { runTransaction, Transaction, doc } from "firebase/firestore";
 import { FC, useState } from "react";
 import { FaCheck } from "react-icons/fa";
@@ -18,6 +18,7 @@ const RewardItem: FC<{
     id, platform, slug, reward, toggleReloadRewards
 }) => {
 
+    const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
     const [newReward, setNewReward] = useState("")
     const [isEdit, { toggle: toggleIsEdit }] = useBoolean(false)
 
@@ -29,6 +30,54 @@ const RewardItem: FC<{
             toggleIsEdit()
         })
     }
+
+    const Mobile = () => {
+        return (
+            <Flex bg="gray.100" p="1rem" borderRadius="1rem" justify="space-between">
+                
+                        <Flex direction="column" align="flex-start">
+                            <Text align="left">{platform}.<strong>{slug}</strong></Text>
+                {isEdit ? (
+                    <Flex gap="1rem">
+                        <Flex align="center"> 
+                            <InputItem name='point' value={newReward} type="number" onChange={ev => setNewReward(ev.target.value)} />
+                            <Text>p</Text>
+                        </Flex>
+                        <Flex gap="0.5rem">
+                            <Button w="16px" padding="0.1rem" minH="16px" onClick={() => updateReward(id, +newReward)}>
+                                <FaCheck />
+                            </Button>
+                            <Button w="16px" padding="0.1rem" minH="16px" bg="red.600" onClick={toggleIsEdit}>
+                                <MdCancel />
+                            </Button>
+                        </Flex>
+                    </Flex>
+                    ) : (
+                            <Text fontWeight={800}>{reward}p</Text>
+                        )}
+                        </Flex>
+                {!isEdit && (<Flex
+                w="40px"
+                h="40px"
+                p="0.4rem"
+                bg="blue.500"
+                align="center"
+                justify="center"
+                cursor="pointer"
+                borderRadius="50%"
+                onClick={toggleIsEdit}
+                >
+                    <TiEdit fill='white' size="24px"/>
+                </Flex>)}
+            </Flex>
+        )
+    }
+
+
+    if(isSmallerThan766) {
+        return <Mobile />
+    }
+
     return (
         <Flex bg="gray.100" p="1rem" borderRadius="1rem" justify="space-between">
             <Text align="left">{platform}.<strong>{slug}</strong></Text>

@@ -5,15 +5,11 @@ import {
   getDocs,
   doc,
   getDoc,
-  where,
-  setDoc,
-  deleteDoc,
   writeBatch,
-  increment,
 } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 // INTERFACES
-import { Community, JoinedCommunity, IPost, IPostVote, ICommentVote, IUser, IBlockedUser } from "../Interface";
+import { IPostVote, ICommentVote, IUser, IBlockedUser } from "../Interface";
 import { store } from "../redux/store";
 import { User } from "firebase/auth";
 import { setUserInfo } from "../redux/slices/userSlice";
@@ -36,42 +32,6 @@ const fetch = {
   },
 };
 
-export const getCommunities = async () => {
-  const communities: Community[] = [];
-  const communitiesData = await fetch.getList("communities");
-  communitiesData.forEach((doc) => {
-    const { creatorId, createdAt, numberOfMembers, privacyType, name } =
-      doc.data();
-    communities.push({
-      id: doc.id,
-      creatorId,
-      createdAt,
-      numberOfMembers,
-      privacyType,
-      name,
-    });
-  });
-  return communities;
-};
-
-export const getPostsByCommunities = async (id: string) => {
-  const posts: IPost[] = [];
-  const postsDoc = await fetch.getListWhere(
-    "posts",
-    where("communityId", "==", id)
-  );
-  postsDoc.docs.forEach((doc) => {
-    posts.push({ id: doc.id, ...doc.data() } as IPost);
-  });
-  return posts;
-};
-
-export const getCommunityDetail = async (id: string) => {
-  const community = await fetch.getDetail("communities", id);
-  const communityObject = { id: community.id, ...community.data() };
-  return communityObject as Community;
-};
-
 export const getUserVotes = async (id: string) => {
   if (!id) return;
   const postVotes = await fetch.getList(`users/${id}/postVotes`);
@@ -85,64 +45,6 @@ export const getUserVotes = async (id: string) => {
   return false;
 };
 
-export const getJoinedCommunitiesList = async (id: string) => {
-  const joinedCommunitiesDocs = await fetch.getList(`users/${id}/communities`);
-  if (joinedCommunitiesDocs.size) {
-    const joinedCommunities: JoinedCommunity[] = [];
-    joinedCommunitiesDocs.forEach((doc) => {
-      joinedCommunities.push(doc.data() as JoinedCommunity);
-    });
-    return joinedCommunities;
-  }
-  return false;
-};
-
-export const joinCommunity = async (userId: string, communityId: string) => {
-  const joinCommunityRef = doc(
-    firestore,
-    "users",
-    userId,
-    "communities",
-    communityId
-  );
-  const communityRef = doc(firestore, "communities", communityId);
-
-  try {
-    await setDoc(joinCommunityRef, { communityId, isModerator: false });
-    const batch = writeBatch(firestore);
-    batch.update(communityRef, {
-      numberOfMembers: increment(+1),
-    });
-    batch.commit();
-    return true;
-  } catch (err) {
-    return false;
-  }
-};
-
-export const leaveCommunity = async (userId: string, communityId: string) => {
-  const userCommunityRef = doc(
-    firestore,
-    "users",
-    userId,
-    "communities",
-    communityId
-  );
-  const communityRef = doc(firestore, "communities", communityId);
-
-  try {
-    await deleteDoc(userCommunityRef);
-    const batch = writeBatch(firestore);
-    batch.update(communityRef, {
-      numberOfMembers: increment(-1),
-    });
-    batch.commit();
-    return true;
-  } catch (err) {
-    return false;
-  }
-};
-
 export const getCommentVotesByUserId = async (id: string) => {
   const commentVotes = await fetch.getList(`users/${id}/commentVotes`);
   if (commentVotes.size) {
@@ -153,23 +55,6 @@ export const getCommentVotesByUserId = async (id: string) => {
     return votes;
   }
   return [];
-};
-
-export const getUserCommunities = async (userId: string) => {
-  const userCommunitiesCollection = collection(
-    firestore,
-    "users",
-    userId,
-    "communities"
-  );
-  const q = query(userCommunitiesCollection);
-  const comm: any[] = [];
-  const querySnapshot = await getDocs(q);
-  querySnapshot.forEach((docSnapshot: any) => {
-    const data = docSnapshot.data();
-    comm.push(data);
-  });
-  return comm;
 };
 
 const generateUsername = (email: string) => {

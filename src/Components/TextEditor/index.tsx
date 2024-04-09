@@ -2,6 +2,7 @@
 import { FC } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { FirebaseUploadAdapterPlugin } from '../../FirebaseUploadAdaptor';
 
 interface TextEditorProps {
   onChange: ( name: string, data: string ) => void;
@@ -21,10 +22,12 @@ const TextEditor: FC<TextEditorProps> = ({onChange, value}) => {
             '|', 'heading',
             '|', 'bold', 'italic',
             '|', 'link', 'blockQuote',
-            '|', 'bulletedList', 'numberedList'
+            '|', 'bulletedList', 'numberedList',
+            '|', 'imageUpload'
           ]
         },
-        link: { addTargetToExternalLinks: true }
+        link: { addTargetToExternalLinks: true },
+        extraPlugins: [FirebaseUploadAdapterPlugin],
       }}
       onChange={ ( _event, editor ) => {
           const data = editor.getData();

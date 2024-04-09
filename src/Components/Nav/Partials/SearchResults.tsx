@@ -21,7 +21,7 @@ const SearchResults: FC<SearchResultsProps> = ({searchResults, showMoreButton, s
           Show More...
         </Text>}
     </Flex>
-  ) : <Box zIndex={9999} w="200px"><NoEntry type="result" iconSize={100}/></Box>
+  ) : <Box zIndex={9999} w="100%"><NoEntry type="result" iconSize={100}/></Box>
 }
 
 export default SearchResults

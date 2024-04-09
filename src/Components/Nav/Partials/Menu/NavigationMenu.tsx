@@ -5,9 +5,8 @@ import { PiInfoFill } from 'react-icons/pi';
 import { UserRoleTypes } from '../../../../Interface';
 import MenuItemInner from './MenuItemInner';
 import MenuItemLayout from './MenuItemLayout';
-import { GoHome } from "react-icons/go";
+import { GoHome, GoTasklist } from "react-icons/go";
 import { FaStore } from "react-icons/fa";
-
 
 interface IUserMenuItem {
   id: number;
@@ -24,6 +23,7 @@ const NavMenuItems: IUserMenuItem[] = [
   { id: 7, route: "/support-groups", icon: MdOutlineGroups3, label: "Support Groups", role: ["user", "admin"] },
   { id: 8, route: "/workshops", icon: MdOutlineEvent, label: "Workshops", role: ["user", "admin"] },
   { id: 9, route: "/marketplace", icon: FaStore, label: "Marketplace", role: ["user", "admin"] },
+  { id: 10, route: "/task-tracker", icon: GoTasklist, label: "Task Tracker", role: ["user", "admin"] },
 ]
 
 const NavigationMenu: FC<{ userRole: UserRoleTypes; activePath: string; }> = ({ userRole, activePath }) => {

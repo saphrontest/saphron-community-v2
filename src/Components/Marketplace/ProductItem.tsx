@@ -3,16 +3,10 @@ import { Box, Button, Divider, Flex, Image, Text, useBoolean, useMediaQuery } fr
 import ProductPriceLabel from './ProductPriceLabel';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
 import moment from 'moment';
+import { IRewardItem } from '../../Interface';
 
-interface IProduct {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  img: string;
-}
 
-const Desktop: FC<{ item: IProduct; isActive: boolean; onClick: () => void; }> = ({
+const Desktop: FC<{ item: IRewardItem; isActive: boolean; onClick: () => void; }> = ({
   item, isActive, onClick
 }) => {
 
@@ -47,7 +41,7 @@ const Desktop: FC<{ item: IProduct; isActive: boolean; onClick: () => void; }> =
 
 }
 
-const Mobile:FC<{ item: IProduct; buyItem: (item: IProduct) => Promise<void>; }> = ({ item, buyItem }) => {
+const Mobile:FC<{ item: IRewardItem; buyItem: (item: IRewardItem) => Promise<void>; }> = ({ item, buyItem }) => {
   const [isClicked, {toggle: toggleIsClicked}] = useBoolean(false)
   return (
     <Flex direction="column" w="100%" justify="space-between" align="flex-start" cursor="pointer" bg="gray.100" borderRadius="1rem" p="1rem" onClick={toggleIsClicked}>
@@ -77,7 +71,7 @@ const Mobile:FC<{ item: IProduct; buyItem: (item: IProduct) => Promise<void>; }>
   )
 }
 
-const ProductItem:FC<{ item: IProduct; isActive: boolean; onClick: () => void; buyItem: (item: IProduct) => Promise<void>; }> = ({ item, isActive, onClick, buyItem }) => {
+const ProductItem:FC<{ item: IRewardItem; isActive: boolean; onClick: () => void; buyItem: (item: IRewardItem) => Promise<void>; }> = ({ item, isActive, onClick, buyItem }) => {
   const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
   return isSmallerThan766 ? <Mobile item={item} buyItem={buyItem}/> : <Desktop item={item} isActive={isActive} onClick={onClick}/>
 }

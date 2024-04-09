@@ -321,15 +321,10 @@ const usePost = () => {
       getDocs(titleQuery)
     ]);
 
-    const bodyResults: IPost[] = [];
-    bodySnap.forEach((doc) => {
-      bodyResults.push({ id: doc.id, ...doc.data() } as IPost);
-    });
+    const bodyResults = bodySnap.docs.map(doc => ({ id: doc.id, ...doc.data() }) as IPost);
 
-    const titleResults: IPost[] = [];
-    titleSnap.forEach((doc) => {
-      titleResults.push({ id: doc.id, ...doc.data() } as IPost);
-    });
+    const titleResults = titleSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }) as IPost);
+
     const results = [...bodyResults, ...titleResults];
     return results
   }

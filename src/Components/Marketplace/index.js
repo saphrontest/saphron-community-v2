@@ -1,3 +1,6 @@
 export {default as MarketplaceSide} from './MarketplaceSide'
 export {default as ProductItem} from './ProductItem'
 export {default as ProductPriceLabel} from './ProductPriceLabel'
+export {default as Products} from './Products'
+export {default as Account} from './Account'
+export {default as NewItemModal} from './NewItemModal'

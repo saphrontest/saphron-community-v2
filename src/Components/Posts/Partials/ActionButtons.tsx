@@ -49,6 +49,7 @@ const ActionButtons: FC<ActionButtonsInterface> = ({ post, isSaved, handleDelete
 
         setSaveLoading(true)
         savePost(post, user.id)
+            .then(() => setReloadPost(true))
             .finally(() => {
                 getSavedPostsByUser(user?.id as string)
                 setSaveLoading(false)

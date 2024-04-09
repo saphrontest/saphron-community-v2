@@ -9,9 +9,10 @@ import { ModalViewTypes } from "../../../../Interface";
 import { getUser } from "../../../../Helpers/apiFunctions";
 
 type LoginProps = {
+  data: any;
 };
 
-const Login: React.FC<LoginProps> = () => {
+const Login: React.FC<LoginProps> = ({ data }) => {
   const dispatch = useDispatch()
   const [isLoginSuccess, setLoginSuccess] = useState(false)
   const [form, setForm] = useState({
@@ -39,14 +40,7 @@ const Login: React.FC<LoginProps> = () => {
       setLoginSuccess(true)
     }
   };
-
-  useEffect(() => {
-    if(isLoginSuccess && user) {
-      getUser(user?.uid).then(() => dispatch(setModal({isOpen: false, view: null})))
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, isLoginSuccess])
-
+  
   const onChange = ({
     target: { name, value },
   }: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +49,19 @@ const Login: React.FC<LoginProps> = () => {
       [name]: value,
     }));
   };
+  
+  useEffect(() => {
+    if(isLoginSuccess && user) {
+      getUser(user?.uid).then(() => dispatch(setModal({isOpen: false, view: null})))
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, isLoginSuccess])
+
+  useEffect(() => {
+    if(data) {
+      setForm(prev => ({...prev, email: data.email}))
+    }
+  }, [data])
 
   return (
     <>
@@ -70,7 +77,8 @@ const Login: React.FC<LoginProps> = () => {
     <form onSubmit={onSubmit}>
       <InputItem
         name="email"
-        placeholder="email"
+        placeholder={"email"}
+        value={form.email || ''}
         type="text"
         mb={2}
         onChange={onChange}

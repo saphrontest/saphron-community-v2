@@ -116,7 +116,6 @@ const BlockedUsersModal: FC<{ isOpen: boolean; toggleModal: () => void; }> = ({ 
                                         </Flex>
                                     </Flex>
                                     <Flex direction="column" align="flex-end">
-                                        <Text fontWeight={700}>Blocking Date</Text>
                                         <Text>{moment(user.blockedDate).fromNow()}</Text>
                                     </Flex>
                                 </Flex>

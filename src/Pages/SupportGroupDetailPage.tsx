@@ -6,7 +6,7 @@ import { useChat, useSupportGroup } from '../Hooks'
 import { IMessage, ISupportGroup, IUser } from '../Interface'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import { ChatActionButtons, ChatSupportGroupDetail, ChatMessages, Meta } from '../Components'
+import { ChatActionButtons, ChatSupportGroupDetail, ChatMessages, Meta, NoEntry } from '../Components'
 import { DocumentChange, QuerySnapshot, collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { firestore } from '../firebaseClient'
 
@@ -24,7 +24,9 @@ const SupportGroupDetailPage = () => {
   useEffect(() => {
     if (params.slug) {
       getSupportGroupBySlug(params.slug)
-        .then(group => !!group && setSupportGroup(group))
+        .then(group => {
+          !!group && setSupportGroup(group)
+        })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params])
@@ -72,17 +74,23 @@ const SupportGroupDetailPage = () => {
           direction="column"
           justify="space-between"
         >
-          <ChatMessages
-          messages={messages}
-          adminId={supportGroup.support_group_manager_id}
-          />
-          {chatId && <ChatActionButtons
-            chatId={chatId}
-            supportGroupId={supportGroup.id!}
-            user={user}
-            isAdmin={supportGroup.support_group_manager_id === user.id}
-            isConfirmedParticipant={!!supportGroup?.participants?.find(participant => participant.userId === user.id && participant.status === "confirmed")}
-          />}
+          {
+            chatId ? (
+              <>
+                <ChatMessages
+                messages={messages}
+                adminId={supportGroup.support_group_manager_id}
+                />
+                <ChatActionButtons
+                chatId={chatId}
+                supportGroupId={supportGroup.id!}
+                user={user}
+                isAdmin={supportGroup.support_group_manager_id === user.id}
+                isConfirmedParticipant={!!supportGroup?.participants?.find(participant => participant.userId === user.id && participant.status === "confirmed")}
+                />
+            </>
+            ) : <NoEntry type='chat'/>
+          }
         </Flex>
       </Flex>
       <></>

@@ -5,44 +5,50 @@ import { Button, Flex, Spinner, Text, useBoolean, useMediaQuery, useToast } from
 import { Meta, ProductItem, ProductPriceLabel } from '../Components'
 import yogaMatProduct from '../assets/images/yoga-mat.jpg'
 import { FirestoreError, increment } from 'firebase/firestore'
-import { IUser } from '../Interface'
+import { IRewardItem, IUser } from '../Interface'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import { updateUser } from '../Helpers'
+import { getUser, updateUser } from '../Helpers'
 import { useReward } from '../Hooks'
 import { setModal } from '../redux/slices/modalSlice'
+import moment from 'moment'
 
-interface IProduct {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  img: string;
-}
 
 const MarketPlace = () => {
-  const { buyRewardItem } = useReward()
-  const dispatch = useDispatch()
+  
   const toast = useToast()
-  const [choosenProduct, setChoosenProduct] = useState<IProduct>()
-  const [sellingLoading, { toggle: toggleSellingLoading }] = useBoolean(false)
-  const user: IUser = useSelector((state: RootState) => state.user)
-  const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
+  const dispatch = useDispatch()
+  const { buyRewardItem, getRewardItems } = useReward()
+  
+  const [choosenProduct, setChoosenProduct] = useState<IRewardItem>()
+  const [items, setItems] = useState<IRewardItem[]>([])
 
-  const PRODUCT_LIST = [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }]
+  const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
+  const [sellingLoading, { toggle: toggleSellingLoading }] = useBoolean(false)
+  const [balanceLoading, { toggle: toggleBalanceLoading }] = useBoolean(false)
+  
+  const user: IUser = useSelector((state: RootState) => state.user)
 
   useEffect(() => {
-    !choosenProduct && setChoosenProduct({
-      price: 10,
-      id: PRODUCT_LIST[0].id,
-      name: `Product - ${PRODUCT_LIST[0].id}`,
-      description: 'Product Description',
-      img: yogaMatProduct
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [choosenProduct])
+    toggleBalanceLoading()
 
-  const buyItem = async (item: IProduct) => {
+    getUser(user.id)
+      .finally(() => toggleBalanceLoading())
+
+    getRewardItems()
+      .then(res => res && setItems(res))
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if(!choosenProduct && items.length) {
+      setChoosenProduct(items[0])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [choosenProduct, items])
+
+  const buyItem = async (item: IRewardItem) => {
     if (!user.id) {
       toast({
         title: "Please login, first!",
@@ -91,26 +97,26 @@ const MarketPlace = () => {
             <Text>
               Balance
             </Text>
-            <ProductPriceLabel price={user.rewardPoint} />
+            {balanceLoading ? <Spinner ml="1rem"/> : <ProductPriceLabel price={user.rewardPoint} />}
           </>
         ) : null}
       </Flex>
       <Flex flex={1} gap="0.5rem" direction={["column", "column", "row"]}>
         <Flex direction="row" align="flex-start" gap="1rem" w="100%" h="fit-content" flexWrap="wrap">
           {
-            PRODUCT_LIST.map((product, idx) => (
+            items.map((product, idx) => (
               <ProductItem
-                key={`Product_${idx}`}
-                onClick={() => setChoosenProduct({ id: product.id, name: `Product - ${idx}`, price: 10, description: 'Product Description', img: yogaMatProduct })}
+                key={product.id}
+                onClick={() => setChoosenProduct(product)}
                 isActive={choosenProduct?.id === product.id}
-                item={{ name: `Product - ${idx}`, price: 10, description: 'Product Description', img: yogaMatProduct } as IProduct}
+                item={product}
                 buyItem={buyItem}
               />
             ))
           }
         </Flex>
-        {!isSmallerThan766 && (
-          <PlatformItemDetailLayout coverImg={yogaMatProduct} wrapperWidth="100%">
+        {(!isSmallerThan766 && choosenProduct) && (
+          <PlatformItemDetailLayout coverImg={choosenProduct?.img} wrapperWidth="100%">
             <>
               <Flex w="100%" justify="space-between" align="center">
                 <Text fontSize={22} fontWeight={700} marginBottom="0.3rem" align="left">
@@ -121,7 +127,7 @@ const MarketPlace = () => {
             </>
             <>
               <Text fontWeight={700} align="left" mb="0.7rem">
-                12.12.2023
+                {moment(choosenProduct?.createdAt).format("DD.MM.YYYY")}
               </Text>
               <Text fontStyle="italic" align="left" mb="0.7rem">
                 {choosenProduct?.description}

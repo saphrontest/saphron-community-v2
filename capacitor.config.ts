@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Saphron Mobile',
   webDir: 'build',
   server: {
-    url: 'https://saphronhealth.com'
+    url: 'http://localhost:3000'
   },
   plugins: {
     Keyboard: {

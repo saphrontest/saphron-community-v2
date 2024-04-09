@@ -117,31 +117,35 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading, getCo
                     {isLoading && <Spinner size="sm" />}
                 </Stack>
                 {comment?.text && <Text className='CommentText' fontSize="10pt" textAlign={"left"} dangerouslySetInnerHTML={{ __html: comment.text }} />}
-                <Stack
-                    direction="row"
-                    align="center"
-                    cursor="pointer"
-                    fontWeight={600}
-                    color="gray.500"
-                >
-                    {
-                        voteLoading ? <Spinner size="sm" /> : 
-                            <CommentVote
-                            userId={user?.id as string}
-                            userVote={userVote!}
-                            onVote={onVote}
-                            voteValue={comment?.voteValue as number} />
-                    }
-                    {user?.id === comment?.creatorId && (
-                        <Text
-                            fontSize="9pt"
-                            _hover={{ color: "blue.500" }}
-                            onClick={() => onDelete(comment?.id as string, comment?.postId as string)}
+                {
+                    user.id ? (
+                        <Stack
+                            direction="row"
+                            align="center"
+                            cursor="pointer"
+                            fontWeight={600}
+                            color="gray.500"
                         >
-                            Delete
-                        </Text>
-                    )}
-                </Stack>
+                            {
+                                voteLoading ? <Spinner size="sm" /> : 
+                                    <CommentVote
+                                    userId={user?.id as string}
+                                    userVote={userVote!}
+                                    onVote={onVote}
+                                    voteValue={comment?.voteValue as number} />
+                            }
+                            {user?.id === comment?.creatorId && (
+                                <Text
+                                    fontSize="9pt"
+                                    _hover={{ color: "blue.500" }}
+                                    onClick={() => onDelete(comment?.id as string, comment?.postId as string)}
+                                >
+                                    Delete
+                                </Text>
+                            )}
+                        </Stack>
+                    ) : null
+                }
             </Stack>
         </Flex>
     );

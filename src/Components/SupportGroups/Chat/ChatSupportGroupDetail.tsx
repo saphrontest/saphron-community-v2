@@ -11,6 +11,7 @@ import { RootState } from '../../../redux/store'
 import ChatJoinButton from './ChatJoinButton'
 import ChatMenu from './ChatMenu'
 import SupportGroupsParticipantModal from '../SupportGroupsParticipantModal'
+import moment from 'moment'
 
 
 
@@ -100,7 +101,7 @@ const ChatSupportGroupDetail: React.FC<{ supportGroup: ISupportGroup; }> = ({ su
                             </Flex>
                         </Flex>
                         <Text align="left" mb="0.7rem" fontWeight={600}>
-                            {supportGroup.createdAt}
+                            {moment(supportGroup.createdAt).format("DD.MM.YYYY")}
                         </Text>
                     </Flex>
                 </Stack>

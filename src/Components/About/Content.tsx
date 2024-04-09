@@ -70,7 +70,7 @@ const Content: FC<IContentProps> = ({
             </>
           )}
           {
-            user.id === community?.creatorId &&
+            (user.id === community?.creatorId && !community?.description) &&
             <AddDescription
               addDescriptionView={addDescriptionView}
               addDescription={addDescription}
@@ -121,7 +121,6 @@ const Content: FC<IContentProps> = ({
                 </Button>
               </Link>
             )}
-            {/* !!!ADDED AT THE VERY END!!! INITIALLY DOES NOT EXIST */}
             {user.id === community?.creatorId && (
               <>
                 <Divider />

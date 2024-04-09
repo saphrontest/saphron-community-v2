@@ -26,6 +26,14 @@ const TaskItem: FC<ITaskItemProps> = ({
     const user: IUser = useSelector((state: RootState) => state.user)
 
     const handleClick = async () => {
+        if(!user.id) {
+            toast({
+                title: "Please login first!",
+                status: "error",
+                isClosable: true,
+            })
+            return
+        }
         toggleLoading()
         try {
             const success = await joinTask(user.id, item)

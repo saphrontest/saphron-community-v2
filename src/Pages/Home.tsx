@@ -36,8 +36,10 @@ const Home = () => {
     getPosts()
       .then((result: IPost[]) => setPosts(result))
     
-      user.id && getSavedPostsByUser(user.id)
-      .then((result: any) => setSavedPosts(result))
+    if(user.id) {
+      getSavedPostsByUser(user.id)
+        .then((result: any) => setSavedPosts(result))
+    }
 
   }
 
@@ -50,13 +52,15 @@ const Home = () => {
         />
         <CreatePostLink />
         <Stack>
-          {posts.length ? posts.map((post: IPost) => <PostItem
+          {posts.length ? posts.map((post: IPost) => (
+            <PostItem
             key={post.id}
             post={post}
             setReloadPost={setReloadPost}
             isSaved={savedPosts.some((item: IPost) => item.id === post.id)}
             communityName={communities?.filter((c: Community) => post.communityId === c.id)[0]?.name}
-          />) : <NoEntry type="post"/>}
+            />
+          )) : <NoEntry type="post"/>}
         </Stack>
       </>
       <>

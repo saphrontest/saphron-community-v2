@@ -1,4 +1,4 @@
-import { Transaction, collection, doc, getDocs, query, runTransaction } from 'firebase/firestore'
+import { FirestoreError, Transaction, collection, doc, getDocs, query, runTransaction } from 'firebase/firestore'
 import { IMessage } from '../Interface'
 import { firestore } from '../firebaseClient'
 import md5 from 'md5'
@@ -39,9 +39,16 @@ const useChat = () => {
      * associated with the given `supportGroupId`.
      */
     const getChatRoomIdBySupportGroupId = async (supportGroupId: string) => {
-        const supportGroupRef = query(collection(firestore, `supportGroups/${supportGroupId}/chatRoom`))
-        const detail = await getDocs(supportGroupRef);
-        return detail.docs[0].id
+        try {
+            const supportGroupRef = query(collection(firestore, `supportGroups/${supportGroupId}/chatRoom`))
+            const detail = await getDocs(supportGroupRef);
+            return detail.docs[0].id
+        } catch (error) {
+            if(error instanceof FirestoreError) {
+                console.error(error.message)
+                throw new Error(error.message)
+              }
+        }
     }
     
     /**

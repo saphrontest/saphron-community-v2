@@ -13,7 +13,7 @@ import { RootState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
 import { logoutUser } from '../../redux/slices/userSlice';
-import { resetCommunities } from '../../redux/slices/communitySlice';
+import { resetMyCommunities } from '../../redux/slices/communitySlice';
 // Helpers
 import { getUser, updateUser } from '../../Helpers/apiFunctions';
 import { useNavigate } from 'react-router-dom';
@@ -37,6 +37,7 @@ interface ProfileHeaderProps {
     isEmailVerified: boolean;
     membership?: IMembership;
     isMine: boolean;
+    userId?: string;
 }
 
 const ProfileHeader: FC<ProfileHeaderProps> = ({
@@ -47,7 +48,8 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
     coverPhoto,
     isEmailVerified,
     membership,
-    isMine
+    isMine,
+    userId
 }) => {
 
     const toast = useToast()
@@ -92,7 +94,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
                     signOut(auth)
                     toggleDeleteUserAlertOpen()
                     dispatch(logoutUser())
-                    dispatch(resetCommunities())
+                    dispatch(resetMyCommunities())
                     navigate("/community")
                 })
             } catch (error) {
@@ -146,8 +148,11 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
 
     useEffect(() => {
 
-        checkUserIsStripeCustomer(userFromDB.id)
-            .then(res => setIsStripeCustomer(res !== undefined && res))
+        checkUserIsStripeCustomer(
+            isMine ? userFromDB.id : userId
+        ).then(res => {
+            setIsStripeCustomer(res !== undefined && res)
+        })
             
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

@@ -39,7 +39,7 @@ const useComment = () => {
       creatorPhotoURL: user.profilePhotoURL,
       text: comment,
       postTitle: post.title,
-      createdAt: new Date(),
+      createdAt: new Date().toString(),
       voteValue: 0
     });
 

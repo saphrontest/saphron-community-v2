@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Community, IPost, IUser } from '../Interface'
 import { PageLayout } from '../Layouts'
@@ -8,14 +8,14 @@ import { RootState } from '../redux/store'
 import { usePost, useCommunity } from '../Hooks'
 
 const CommunityDetail = () => {
-  const {getPostsByCommunityId, getCommunityDetailById} = useCommunity()
-  const {getSavedPostsByUser} = usePost()
   const location = useLocation()
+  const {getSavedPostsByUser} = usePost()
+  const {getPostsByCommunityId, getCommunityDetailById} = useCommunity()
+
   const communityId = useRef(location.pathname.split('/').at(-1)).current
-  
-  const { communities } = useSelector((state: RootState) => state.community)
+
   const user: IUser = useSelector((state: RootState) => state.user)
-  
+
   const [posts, setPosts] = useState<IPost[]>([])
   const [savedPosts, setSavedPosts] = useState<IPost[]>([])
   const [community, setCommunity] = useState<Community>()
@@ -31,7 +31,7 @@ const CommunityDetail = () => {
         .finally(() => setReloadPost(false))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadPost])
-  
+
   const getAll = async (communityId: string) => {
 
     getCommunityDetailById(communityId)
@@ -40,12 +40,12 @@ const CommunityDetail = () => {
     getPostsByCommunityId(communityId)
       .then(p => p && setPosts(p))
 
-    getSavedPostsByUser(user.id)
-      .then(saved => setSavedPosts(saved))
+    if(user.id) {
+      getSavedPostsByUser(user.id)
+        .then(saved => setSavedPosts(saved))
+    }
 
   }
-
-
 
   return (
     <PageLayout>
@@ -55,13 +55,18 @@ const CommunityDetail = () => {
           description={community?.description as string}
         />
         <CreatePostLink communityId={communityId} />
-        {posts.length ? posts.map(post => <PostItem
-          isSaved={savedPosts.some(item => item.id === post.id)}
-          key={post?.id}
-          post={post}
-          communityName={communities?.filter((c: Community) => post?.communityId === c.id)[0]?.name}
-          setReloadPost={setReloadPost}
-        />) : <NoEntry type="community post" />}
+        {posts.length ? posts.map(post => (
+          <Fragment key={post?.id}>
+            <PostItem
+              post={post}
+              isSaved={savedPosts.some(item => item.id === post.id)}
+              communityName={community?.name!}
+              setReloadPost={setReloadPost}
+            />
+          </Fragment>
+        )) : (
+          <NoEntry type="community post" />
+        )}
       </>
       {community ? <About communityId={community.id} community={community} /> : <></>}
     </PageLayout>

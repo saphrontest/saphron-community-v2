@@ -1,10 +1,11 @@
 import { Flex, useToast } from '@chakra-ui/react'
 import { CreatePostForm, Tabs } from './Partials'
 import { IoDocumentText, IoImageOutline } from "react-icons/io5";
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { Community } from '../../Interface';
+import { useLocation } from 'react-router-dom';
 
 const formTabs = [
   {
@@ -22,11 +23,20 @@ interface NewPostFormPropsInterface {
 }
 
 const NewPostForm: FC<NewPostFormPropsInterface> = ({selectedCommunityId}) => {
+  
   const toast = useToast()
+  const {state} = useLocation()
+  
   const user = useSelector((state: RootState) => state.user)
-  const [selectedTab, setSelectedTab] = useState<string>(formTabs[0].title);
+  
+  const [selectedTab, setSelectedTab] = useState<string>(state?.type || formTabs[0].title);
+  
   const {communities} = useSelector((state: RootState) => state.community)
-  const selectedCommunity = communities.find((community:Community) => community.id === selectedCommunityId)
+
+  const selectedCommunity = useMemo(() => {
+    return communities.find((community:Community) => community.id === selectedCommunityId)
+  }, [communities, selectedCommunityId])
+
   useEffect(() => {
     if(!!user.id === false) {
       toast({

@@ -7,7 +7,7 @@ import { auth } from '../../../firebaseClient'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { IUser } from '../../../Interface'
 import { logoutUser } from '../../../redux/slices/userSlice'
-import { resetCommunities } from '../../../redux/slices/communitySlice'
+import { resetMyCommunities } from '../../../redux/slices/communitySlice'
 import { LoginButton, MenuButtonInner, UserMenuInner } from './Menu';
 import NavigationMenu from './Menu/NavigationMenu';
 
@@ -21,7 +21,7 @@ const UserMenu: FC<{ user: IUser }> = ({ user }) => {
     const logout = async () => {
         await signOut(auth);
         dispatch(logoutUser())
-        dispatch(resetCommunities())
+        dispatch(resetMyCommunities())
         navigate("/community")
     }
 

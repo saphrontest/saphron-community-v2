@@ -56,7 +56,8 @@ const ProfilePageLayout:FC<{
     />}
     <PageLayout isNav={false} leftWidth='100%'>
         <Stack>
-            {isSmallerThan485 && <ProfileHeader
+            {isSmallerThan485 && (
+                <ProfileHeader
                 isEmailVerified={user?.emailVerified}
                 name={user?.displayName}
                 username={user.username}
@@ -64,7 +65,9 @@ const ProfilePageLayout:FC<{
                 email={user?.email}
                 coverPhoto={user.coverPhotoURL}
                 isMine={isMine}
-            />}
+                userId={user.id}
+                />
+            )}
             <Box>
                 {posts?.length ? posts.map((post: IPost) =>
                     <PostItem

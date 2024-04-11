@@ -14,8 +14,10 @@ const Profile = () => {
   const [savedPosts, setSavedPosts] = useState<IPost[]>([])
 
   useEffect(() => {
-    getSavedPostsByUser(user.id)
-        .then(result => setSavedPosts(result))
+    if(user.id) {
+      getSavedPostsByUser(user.id)
+          .then(result => setSavedPosts(result))
+    }
 // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [])
 
@@ -23,9 +25,9 @@ const Profile = () => {
     <>
       <Nav />
         {
-          !params.userId ?
-            <MyProfile savedPosts={savedPosts} /> :
-            <UserProfile userId={params.userId} savedPosts={savedPosts} />
+          params.userId ?
+            <UserProfile userId={params.userId} savedPosts={savedPosts} /> :
+            <MyProfile savedPosts={savedPosts} /> 
         }
     </>
   )

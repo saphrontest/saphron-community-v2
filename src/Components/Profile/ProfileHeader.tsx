@@ -37,6 +37,7 @@ interface ProfileHeaderProps {
     isEmailVerified: boolean;
     membership?: IMembership;
     isMine: boolean;
+    userId?: string;
 }
 
 const ProfileHeader: FC<ProfileHeaderProps> = ({
@@ -47,7 +48,8 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
     coverPhoto,
     isEmailVerified,
     membership,
-    isMine
+    isMine,
+    userId
 }) => {
 
     const toast = useToast()
@@ -146,8 +148,11 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
 
     useEffect(() => {
 
-        checkUserIsStripeCustomer(userFromDB.id)
-            .then(res => setIsStripeCustomer(res !== undefined && res))
+        checkUserIsStripeCustomer(
+            isMine ? userFromDB.id : userId
+        ).then(res => {
+            setIsStripeCustomer(res !== undefined && res)
+        })
             
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

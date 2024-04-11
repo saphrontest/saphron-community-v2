@@ -13,7 +13,7 @@ import { RootState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
 import { logoutUser } from '../../redux/slices/userSlice';
-import { resetCommunities } from '../../redux/slices/communitySlice';
+import { resetMyCommunities } from '../../redux/slices/communitySlice';
 // Helpers
 import { getUser, updateUser } from '../../Helpers/apiFunctions';
 import { useNavigate } from 'react-router-dom';
@@ -94,7 +94,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
                     signOut(auth)
                     toggleDeleteUserAlertOpen()
                     dispatch(logoutUser())
-                    dispatch(resetCommunities())
+                    dispatch(resetMyCommunities())
                     navigate("/community")
                 })
             } catch (error) {

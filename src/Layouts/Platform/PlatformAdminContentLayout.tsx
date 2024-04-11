@@ -16,7 +16,7 @@ const PlatformAdminContentLayout: FC<{ children: ReactNode; onSearch?: (searchWo
             gap="1rem"
             direction="column"
             overflowY="scroll"
-            height="calc(100vh - 250px)"
+            height={["calc(100vh - 320px)", "calc(100vh - 250px)"]}
             >
                 {children}
             </Flex>

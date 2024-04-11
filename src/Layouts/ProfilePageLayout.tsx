@@ -53,6 +53,7 @@ const ProfilePageLayout:FC<{
         coverPhoto={user.coverPhotoURL}
         membership={membership}
         isMine={isMine}
+        userId={user.id}
     />}
     <PageLayout isNav={false} leftWidth='100%'>
         <Stack>

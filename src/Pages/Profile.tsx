@@ -9,6 +9,7 @@ import { RootState } from "../redux/store"
 const Profile = () => {
   const params = useParams()
   const {getSavedPostsByUser} = usePost()
+  
   const user: IUser = useSelector((state: RootState) => state.user)
 
   const [savedPosts, setSavedPosts] = useState<IPost[]>([])

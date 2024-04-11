@@ -212,13 +212,10 @@ const usePost = () => {
   const getSavedPostsByUser = async (userId: string) => {
     try {
       // Construct a reference to the subcollection
-      const savedUsersCollectionRef = collection(firestore, "users", userId, "savedPosts");
-
-      // Create a query to retrieve all documents in the subcollection
-      const q = query(savedUsersCollectionRef);
+      const savedUsersCollectionRef = collection(firestore, `users/${userId}/savedPosts`);
 
       // Get the documents in the subcollection using async/await
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(savedUsersCollectionRef);
 
       // Map the documents' data to an array of saved posts
       const savedPosts = querySnapshot.docs.map(doc => doc.data());

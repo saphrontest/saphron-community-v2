@@ -36,8 +36,9 @@ const AdminPost = () => {
     const searchPosts = (searchWord: string) => {
         setFilteredPosts(() => {
             return posts.filter(post => {
-                return post.title.toLowerCase().includes(searchWord) ||
-                    post.userDisplayText.toLowerCase().includes(searchWord)
+                const {title, userDisplayText} = post
+                const searchField = title || title.toLowerCase() || userDisplayText || userDisplayText.toLowerCase()
+                return searchField.includes(searchWord)
             })
         })
     }

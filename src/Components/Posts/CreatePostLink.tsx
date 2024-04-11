@@ -69,7 +69,19 @@ const CreatePostLink : FC <CreatePostLinkProps> = ({communityId}) => {
           color="gray.400"
           cursor="pointer"
           onClick={(e) => {
+
             e.stopPropagation();
+
+            if(!user.id){
+              toast({
+                title: "Please login, first!",
+                status: "error",
+                isClosable: true,
+                position: "top-right"
+              })
+              return;
+            }
+
             navigate(
               `/community/submit${communityId ? `/${communityId}` : ''}`, {
                 state: {
@@ -77,6 +89,7 @@ const CreatePostLink : FC <CreatePostLinkProps> = ({communityId}) => {
                 }
               }
             )
+
           }}
         />
         <Icon as={BsLink45Deg} fontSize={24} color="gray.400" cursor="pointer" />

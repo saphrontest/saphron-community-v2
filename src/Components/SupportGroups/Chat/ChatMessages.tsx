@@ -26,7 +26,7 @@ const ChatMessages: FC<{
             overflowY="auto"
             direction="column"
             ref={messagesWrapperRef}
-            height={{base: "calc(100vh - 300px)", sm: "calc(100vh - 330px)", md: "calc(100vh - 400px)"}}
+            height={{base: "calc(100vh - 380px)", sm: "calc(100vh - 330px)", md: "calc(100vh - 400px)"}}
         >
             {
                 messages.map((message: IMessage) => (

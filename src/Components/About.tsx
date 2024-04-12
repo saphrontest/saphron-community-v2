@@ -109,6 +109,17 @@ const About: React.FC<AboutProps> = ({
     }
   }
 
+  const addDescriptionHandler = () => {
+    addDescription()
+    .then(() => {
+      getCommunityDetailById(communityId).then((result) => {
+        setCommunity(result)
+      }).catch((err) => {
+        console.error("GET COMMUNITY DETAIL ERROR: ", err)
+      });
+    })
+  }
+
   return (
     <Box pt={pt} position="sticky" top="14px">
       <Flex
@@ -135,16 +146,7 @@ const About: React.FC<AboutProps> = ({
           updateImage={updateImage}
           onSelectImage={onSelectImage}
           addDescriptionView={addDescriptionView}
-          addDescription={() => {
-            addDescription()
-              .then(() => {
-                getCommunityDetailById(communityId).then((result) => {
-                  setCommunity(result)
-                }).catch((err) => {
-                  console.error("GET COMMUNITY DETAIL ERROR: ", err)
-                });
-              })
-          }}
+          addDescription={addDescriptionHandler}
           setAddDescriptionView={setAddDescriptionView}
           setDescriptionText={setDescriptionText}
         />

@@ -33,7 +33,7 @@ const PostContent: FC<PostContentProps> = ({ post, communityName }) => {
               <Icon as={BsDot} color="gray.500" fontSize={8} />
             </Flex>
             {post.createdAt && (
-              <Link to={`/community/profile/${post.userId}`}>
+              <Link to={`/community/profile/${post.creatorId}`}>
                 <Text color="gray.500" textAlign={"right"} _hover={{ textDecoration: "underline" }} onClick={(event) => event.stopPropagation()}>
                 {!isSmallerThan766 && `by u/${post.userDisplayText}`}{" "}
                 {moment(new Date(post.createdAt), "DD.MM.YYYY HH:mm:ss").fromNow()}
@@ -45,7 +45,12 @@ const PostContent: FC<PostContentProps> = ({ post, communityName }) => {
       <Text fontSize="12pt" fontWeight={600} textAlign="left">
         {post.title}
       </Text>
-      <Text fontSize="10pt" noOfLines={10} textAlign={"left"} className='PostBody' dangerouslySetInnerHTML={{ __html: post.body }}></Text>
+      <Text
+      fontSize="10pt"
+      noOfLines={10}
+      textAlign="left"
+      className='PostBody'
+      dangerouslySetInnerHTML={{ __html: post.body }} /> 
       {post.imageURL && (
         <Flex justify="center" align="center" p={2}>
           {loadingImage && (

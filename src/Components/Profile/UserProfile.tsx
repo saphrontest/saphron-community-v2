@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import Meta from '../Meta';
 import { usePayment } from '../../Hooks';
-import { Spinner } from '@chakra-ui/react';
+import { Spinner, Text, useBoolean } from '@chakra-ui/react';
 
 const UserProfile: FC<{
   userId: string;
@@ -17,39 +17,65 @@ const UserProfile: FC<{
   
   const [user, setUser] = useState<IUser>()
   const [membership, setMembership] = useState<IMembership>()
+  const [userLoading, {toggle: toggleUserLoading}] = useBoolean(false)
   
   const { communities } = useSelector((state: RootState) => state.community)
 
-  useEffect(() => {
+  const initFunctions = async () => {
 
-    if (userId) {
-      
-      getUser(userId, 'query')
+    getUser(userId, 'query')
         .then(result => setUser(result))
       
-      checkUserMembership(userId)
-        .then(result => setMembership(result))
-      
+    checkUserMembership(userId)
+      .then(result => setMembership(result))
+
+  }
+
+  useEffect(() => {
+    if (userId) {
+
+      toggleUserLoading()
+
+      initFunctions()
+        .finally(() => toggleUserLoading()) 
+
     }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId])
 
-  return user ? (
-    <>
-      <Meta
-        title={`Saphron Health | ${user.displayName}`}
-        description="Profile Page"
-      />
-      <ProfilePageLayout
-        user={user}
-        communities={communities}
-        isMine={false}
-        savedPosts={savedPosts}
-        membership={membership}
-      />
-    </>
-  ) : <Spinner size="xl" />
+  if(userLoading) {
+    return <Spinner size='lg' />
+  }
+
+  if( !userLoading && !user ) {
+    return (
+      <Text>
+        User could not be found!
+      </Text>
+    )
+  }
+
+  if( !userLoading && user ) {
+    return (
+      <>
+        <Meta
+          title={`Saphron Health | ${user.displayName}`}
+          description="Profile Page"
+        />
+        <ProfilePageLayout
+          user={user}
+          communities={communities}
+          isMine={false}
+          savedPosts={savedPosts}
+          membership={membership}
+        />
+      </>
+    )
+  }
+
+  return <></>
+
 }
 
 export default UserProfile

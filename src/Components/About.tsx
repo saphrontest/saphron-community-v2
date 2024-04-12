@@ -135,7 +135,16 @@ const About: React.FC<AboutProps> = ({
           updateImage={updateImage}
           onSelectImage={onSelectImage}
           addDescriptionView={addDescriptionView}
-          addDescription={addDescription}
+          addDescription={() => {
+            addDescription()
+              .then(() => {
+                getCommunityDetailById(communityId).then((result) => {
+                  setCommunity(result)
+                }).catch((err) => {
+                  console.error("GET COMMUNITY DETAIL ERROR: ", err)
+                });
+              })
+          }}
           setAddDescriptionView={setAddDescriptionView}
           setDescriptionText={setDescriptionText}
         />

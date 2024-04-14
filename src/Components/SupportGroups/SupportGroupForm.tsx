@@ -98,7 +98,6 @@ const SupportGroupForm: FC<{
           toast({
             status: "success",
             isClosable: true,
-            position: "top-right",
             title: "Edit Support Group success."
           })
           reloadSupportGroups && reloadSupportGroups()
@@ -140,7 +139,6 @@ const SupportGroupForm: FC<{
           toast({
               status: "success",
               isClosable: true,
-              position: "top-right",
               title: "Create Support Group request submitted. Currently under review. You will be notified of the outcome shortly."
           })
           dispatch(setModal({isOpen: false, view: "createSupportGroup", data: null}))

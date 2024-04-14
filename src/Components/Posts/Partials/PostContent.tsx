@@ -1,7 +1,7 @@
 import { Avatar, Flex, Icon, Image, Skeleton, Stack, Text, useMediaQuery } from '@chakra-ui/react'
 import moment from 'moment'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { FC } from 'react'
 import { IPost } from '../../../Interface'
 import { BsDot } from 'react-icons/bs'
@@ -13,6 +13,7 @@ interface PostContentProps {
 
 const PostContent: FC<PostContentProps> = ({ post, communityName }) => {
   
+  const location = useLocation()
   const [loadingImage, setLoadingImage] = useState(true);
   const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
 
@@ -50,7 +51,8 @@ const PostContent: FC<PostContentProps> = ({ post, communityName }) => {
       noOfLines={10}
       textAlign="left"
       className='PostBody'
-      dangerouslySetInnerHTML={{ __html: post.body }} /> 
+      dangerouslySetInnerHTML={{ __html: post.body }}
+      />
       {post.imageURL && (
         <Flex justify="center" align="center" p={2}>
           {loadingImage && (

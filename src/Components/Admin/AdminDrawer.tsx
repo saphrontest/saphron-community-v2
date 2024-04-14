@@ -7,6 +7,7 @@ import { IoIosArrowForward, IoMdPerson } from "react-icons/io";
 import { FaTasks } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import uniqid from 'uniqid'
+import { Capacitor } from "@capacitor/core";
 
 interface ILinkItem {
     id: string;
@@ -42,7 +43,7 @@ function AdminDrawer() {
                 finalFocusRef={btnRef}
             >
                 <DrawerOverlay />
-                <DrawerContent>
+                <DrawerContent className={Capacitor.getPlatform() === 'ios' ? 'padding-ios' : ''}>
                     <DrawerCloseButton />
                     <DrawerHeader>Manage Dashboard</DrawerHeader>
 

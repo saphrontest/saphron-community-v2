@@ -4,6 +4,12 @@
   "private": true,
   "homepage": "https://saphronhealth.com",
   "dependencies": {
+    "@capacitor/android": "^5.7.0",
+    "@capacitor/core": "^5.7.0",
+    "@capacitor/ios": "^5.7.0",
+    "@capacitor/keyboard": "^5.0.8",
+    "@capacitor/splash-screen": "^5.0.7",
+    "@capacitor/status-bar": "^5.0.7",
     "@chakra-ui/icons": "^2.1.0",
     "@chakra-ui/react": "^2.8.0",
     "@ckeditor/ckeditor5-build-classic": "^40.0.0",
@@ -41,7 +47,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generate-resource": "npx @capacitor/assets generate --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff'"
   },
   "eslintConfig": {
     "extends": [
@@ -62,6 +69,8 @@
     ]
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.4",
+    "@capacitor/cli": "^5.7.0",
     "@types/md5": "^2.3.2",
     "@types/react-helmet": "^6.1.11",
     "@types/uniqid": "^5.3.4",

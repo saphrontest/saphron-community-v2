@@ -60,8 +60,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 !!user.id ? selectFileRef.current?.click() : toast({
                 title: "Please login, first!",
                 status: "error",
-                isClosable: true,
-                position: "top-right"
+                isClosable: true
               })}
             }
           >

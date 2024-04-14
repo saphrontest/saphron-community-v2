@@ -42,8 +42,7 @@ const NewPostForm: FC<NewPostFormPropsInterface> = ({selectedCommunityId}) => {
       toast({
         title: "Please login, first!",
         status: "error",
-        isClosable: true,
-        position: "top-right"
+        isClosable: true
       })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,8 +53,7 @@ const NewPostForm: FC<NewPostFormPropsInterface> = ({selectedCommunityId}) => {
       toast({
         title: "Please select a community, first!",
         status: "error",
-        isClosable: true,
-        position: "top-right"
+        isClosable: true
       })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

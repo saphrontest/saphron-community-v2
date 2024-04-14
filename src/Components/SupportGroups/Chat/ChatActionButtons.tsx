@@ -28,8 +28,7 @@ const ChatActionButtons: FC<{
             toast({
                 title: "Please login, first!",
                 status: "error",
-                isClosable: true,
-                position: "top-right"
+                isClosable: true
             })
             return;
         }
@@ -37,8 +36,7 @@ const ChatActionButtons: FC<{
             toast({
                 title: "You should be confirmed participant to send a message!",
                 status: "error",
-                isClosable: true,
-                position: "top-right"
+                isClosable: true
             })
             return;
         }

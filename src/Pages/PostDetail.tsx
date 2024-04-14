@@ -67,7 +67,6 @@ const PostDetail = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [post])
 
-
   return (
     <PageLayout>
       <Flex direction="column" pb="1rem">

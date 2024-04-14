@@ -75,7 +75,6 @@ const JoinWorkshopModal: FC<{ data: Workshop }> = ({ data: workshop }) => {
             toast({
                 status: "success",
                 isClosable: true,
-                position: "top-right",
                 title: "Workshop request submitted. Currently under review. You will be notified of the outcome shortly."
             })
             dispatch(setModal({ isOpen: false, view: 'joinWorkshop' }))

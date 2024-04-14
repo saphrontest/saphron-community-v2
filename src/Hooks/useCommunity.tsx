@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, FirestoreError, getDoc, getDocs, increment, query, runTransaction, setDoc, where, writeBatch } from "firebase/firestore";
+import { collection, deleteDoc, doc, FirestoreError, getDoc, getDocs, increment, query, runTransaction, setDoc, Transaction, where, writeBatch } from "firebase/firestore";
 import { firestore } from "../firebaseClient";
 import { Community, IPost, JoinedCommunity } from "../Interface";
 import md5 from "md5";
@@ -171,41 +171,79 @@ const useCommunity = () => {
     const getCommunitiesByUserId = async (userId: string) => {
 
         try {
-            
             const q = query(collection(firestore, "users", userId, "communities"));
             const querySnapshot = await getDocs(q)
             const communities = querySnapshot.docs.map((docSnapshot: any) => ({...docSnapshot.data()}));
             return communities
-
         } catch (error) {
             if (error instanceof FirestoreError) {
                 console.error(error.message)
                 throw new Error(error.message)
             }
         }
-
+        
         
     }
 
-    const onCreate = async (name: string, userId: string) => {
+    /**
+     * The function `checkCommunityName` checks if a community name already exists in a Firestore
+     * collection.
+     * @param {string} name - The `name` parameter in the `checkCommunityName` function is a string
+     * representing the name of a community that you want to check for existence in a Firestore
+     * collection.
+     * @returns The `checkCommunityName` function is returning a boolean value. It returns `true` if
+     * there is a community document with the specified name in the Firestore collection, and `false`
+     * if there is no such document.
+     */
+    const isCommunityNameExist = async ( name: string ) => {
+        try {
+            const communityDocRef = query(
+                collection(firestore, `communities`),
+                where("name", "==", name)
+            )
+            const communityDoc = await getDocs(communityDocRef)
+            return !communityDoc.empty
+        } catch (error) {
+            if (error instanceof FirestoreError) {
+                console.error(error.message)
+                throw new Error(error.message)
+            }
+        }
+    }
+
+    /**
+     * The `onCreate` function creates a new community in Firestore if the community name is not
+     * already taken.
+     * @param {string} name - The `name` parameter in the `onCreate` function represents the name of
+     * the community that is being created. It is a string value that will be used to identify the
+     * community.
+     * @param {string} userId - The `userId` parameter in the `onCreate` function represents the unique
+     * identifier of the user who is creating a new community. This identifier is typically used to
+     * associate the community with the user who created it and to perform actions specific to that
+     * user, such as adding them as a moderator of the community
+     */
+    const onCreate = async ( name: string, userId: string ) => {
 
         try {
+
+            const isCommunityExist = await isCommunityNameExist(name)
+            
+            if(isCommunityExist) {
+                toast({
+                    title: `Sorry, comm/${name} is taken. Try another.`,
+                    status: "error",
+                    isClosable: true,
+                })
+                throw new Error(`Sorry, comm/${name} is taken. Try another.`);
+            }
+
             const newCommunityId = md5(`${name}.${new Date().getTime().toString()}`)
+
             // Create community document and community as a subcollection document on user
             const communityDocRef = doc(firestore, "communities", newCommunityId);
 
-            await runTransaction(firestore, async (transaction) => {
-                const communityDoc = await transaction.get(communityDocRef);
-                if (communityDoc.exists()) {
-                    toast({
-                        title: `Sorry, comm/${name} is taken. Try another.`,
-                        status: "error",
-                        isClosable: true,
-                        position: "top-right"
-                    })
-                    throw new Error(`Sorry, comm/${name} is taken. Try another.`);
-                }
-                
+            await runTransaction(firestore, async (transaction: Transaction) => {
+
                 transaction.set(communityDocRef, {
                     name: name,
                     creatorId: userId,
@@ -220,6 +258,7 @@ const useCommunity = () => {
                         isModerator: true,
                     }
                 );
+
             });
         } catch (error) {
             if (error instanceof FirestoreError) {

@@ -3,17 +3,19 @@ import { Button, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useBoolean
 import { AddIcon } from '@chakra-ui/icons';
 import { NewItemModal } from '../../../Components';
 import RewardActionItems from './RewardActionItems';
+import { useState } from 'react';
 import RewardItems from './RewardItems';
 
 const AdminRewardsPage = () => {
 
     const [newItemModal, {toggle: toggleNewItemModal}] = useBoolean(false)
     const [reloadItems, {toggle: toggleReload}] = useBoolean(false)
-    
+    const [searchWord, setSearchWord] = useState<string>('')
+
     return (
         <>
             <PlatformAdminPageLayout title='Rewards'>
-                <PlatformAdminContentLayout>
+                <PlatformAdminContentLayout onSearch={(word: string) => setSearchWord(word)}>
                     <Tabs>
                         <TabList>
                             <Tab>Actions</Tab>
@@ -21,7 +23,7 @@ const AdminRewardsPage = () => {
                         </TabList>
                         <TabPanels>
                             <TabPanel>
-                                <RewardActionItems />
+                                <RewardActionItems searchWord={searchWord}/>
                             </TabPanel>
                             <TabPanel>
                                 <Flex direction="column">
@@ -33,7 +35,7 @@ const AdminRewardsPage = () => {
                                             </Text>
                                         </Button>
                                     </Flex>
-                                    <RewardItems reloadItems={reloadItems} toggleReload={toggleReload} />
+                                    <RewardItems searchWord={searchWord} reloadItems={reloadItems} toggleReload={toggleReload} />
                                 </Flex>
                             </TabPanel>
                         </TabPanels>
@@ -41,9 +43,9 @@ const AdminRewardsPage = () => {
                 </PlatformAdminContentLayout>
             </PlatformAdminPageLayout>
             <NewItemModal
-                isOpen={newItemModal}
-                setOpen={toggleNewItemModal}
-                reloadItems={toggleReload}
+            isOpen={newItemModal}
+            setOpen={toggleNewItemModal}
+            reloadItems={toggleReload}
             />
         </>
     )

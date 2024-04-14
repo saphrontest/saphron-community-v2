@@ -261,18 +261,32 @@ const usePost = () => {
    */
   const getPosts = async (getAll = false) => {
 
-    const q = query(collection(firestore, "posts"), orderBy('createdAt', 'desc'));
-    const postDocs = await getDocs(q);
+    type IPostBlock = IPost | { isBlocked: boolean; }
+
+    const postsDocRef = query(
+      collection(firestore, "posts"),
+      orderBy('createdAt', 'asc')
+    );
+
+    const postDocs = await getDocs(postsDocRef);
 
     // Define a function to get blocked users and filter posts
     const getPosts = async (doc: any) => {
+      
       if (!getAll) {
 
         const isBlocked = await checkBlocked(doc.data().creatorId)
 
         if (isBlocked) {
-          return { id: doc.id, isBlocked: true, ...doc.data() } as IPost | { isBlocked: boolean; };
+          
+          return {
+            id: doc.id,
+            isBlocked: true,
+            ...doc.data()
+          } as IPostBlock;
+        
         }
+        
         return { id: doc.id, ...doc.data() } as IPost
 
       }

@@ -1,12 +1,11 @@
-import { ChevronDownIcon } from '@chakra-ui/icons'
-import { Flex, Menu, MenuButton, Button, MenuList, MenuItem, Image, Text, useBoolean } from '@chakra-ui/react'
-import React, { FC, Fragment, useEffect, useState } from 'react'
-import { DeleteAlert, NewItemModal, ProductPriceLabel } from '../../../Components'
+import { Flex, useBoolean } from '@chakra-ui/react'
+import { FC, Fragment, useEffect, useState } from 'react'
+import { NewItemModal} from '../../../Components'
 import { IRewardItem } from '../../../Interface'
 import { useReward } from '../../../Hooks'
 import { doc, runTransaction, Transaction } from 'firebase/firestore'
 import { firestore } from '../../../firebaseClient'
-import RewardItem from './RewardItem'
+import AdminRewardItem from './AdminRewardItem'
 
 const EditItemModal: FC<{
     isOpen: boolean;
@@ -30,7 +29,11 @@ const EditItemModal: FC<{
     />
 )
 
-const RewardItems: FC<{ reloadItems: boolean; toggleReload: () => void; }> = ({ reloadItems, toggleReload }) => {
+const RewardItems: FC<{
+    reloadItems: boolean;
+    toggleReload: () => void;
+    searchWord: string;
+}> = ({ reloadItems, toggleReload, searchWord }) => {
 
     const { getRewardItems } = useReward()
     const [isEditOpen, {toggle: toggleEdit}] = useBoolean(false)
@@ -65,13 +68,26 @@ const RewardItems: FC<{ reloadItems: boolean; toggleReload: () => void; }> = ({ 
                 .then(res => res && setRewardItems(res))
                 .finally(() => toggleReload())
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reloadItems])
 
     return (
         <Flex mt="1rem" direction="column" gap="1rem">
-            {rewardItems.map((rewardItem: IRewardItem, idx: number) => (
+            {(
+                rewardItems.filter(item => {
+                    return (
+                        item.name || item.name.toLowerCase()
+                    ).includes(
+                        searchWord.toLowerCase() || searchWord
+                    )
+                })
+            ).map(( rewardItem: IRewardItem ) => (
                 <Fragment key={rewardItem.id}>
-                    <RewardItem index={idx} handleDelete={handleDelete} rewardItem={rewardItem} toggleEditOpen={toggleEdit}/>
+                    <AdminRewardItem
+                    handleDelete={handleDelete}
+                    rewardItem={rewardItem}
+                    toggleEditOpen={toggleEdit}
+                    />
                     {isEditOpen && <EditItemModal
                     isOpen={isEditOpen}
                     setOpen={toggleEdit}

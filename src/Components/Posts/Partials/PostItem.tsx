@@ -154,12 +154,14 @@ const PostItem: FC<PostItemContentProps> = ({
       mb={1}
       onClick={() => navigate(`/community/post/${post.slugId}/${post.slug}`, { state: { isSaved } })}
     >
-      {!isDashboard && <VoteComponent
-      userVote={userVote}
-      onVote={onVote}
-      post={post}
-      isVoteLoading={isVoteLoading}
-      />}
+      {!isDashboard && (
+        <VoteComponent
+        userVote={userVote}
+        onVote={onVote}
+        post={post}
+        isVoteLoading={isVoteLoading}
+        />
+      )}
       <Flex direction="column" width="100%">
         <PostContent
         post={post}

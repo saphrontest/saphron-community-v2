@@ -9,6 +9,7 @@ import CommentVote from './CommentVote';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../../redux/slices/modalSlice';
 import { RootState } from '../../redux/store';
+import { Link } from 'react-router-dom';
 
 interface CommentItemProps {
     comment: IComment;
@@ -96,6 +97,7 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading, getCo
 
     }
 
+
     return (
         <Flex>
             <Box mr={2}>
@@ -103,12 +105,14 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDelete, isLoading, getCo
             </Box>
             <Stack spacing={1}>
                 <Stack direction="row" align="center" spacing={2} fontSize="8pt">
-                    <Text
-                        fontWeight={700}
-                        _hover={{ textDecoration: "underline", cursor: "pointer" }}
-                    >
-                        {comment?.creatorDisplayText}
-                    </Text>
+                    <Link to={`/community/profile/${comment.creatorId}`} >
+                        <Text
+                            fontWeight={700}
+                            _hover={{ textDecoration: "underline", cursor: "pointer" }}
+                        >
+                            {comment?.creatorDisplayText}
+                        </Text>
+                    </Link>
                     {comment?.createdAt && (
                         <Text color="gray.600">
                             {moment(new Date(comment?.createdAt)).fromNow()}

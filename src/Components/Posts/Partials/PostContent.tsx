@@ -42,6 +42,19 @@ const PostContent: FC<PostContentProps> = ({ post, communityName }) => {
             )}
           </Stack>
       </Stack>
+      {isSmallerThan766 &&(
+        <Link to={`/community/profile/${post.creatorId}`}>
+          <Text
+          color="gray.500"
+          textAlign="left"
+          fontSize="12px"
+          _hover={{ textDecoration: "underline" }}
+          onClick={(event) => event.stopPropagation()}
+          >
+          by u/{post.userDisplayText}
+          </Text>
+        </Link>
+      )}
       <Text fontSize="12pt" fontWeight={600} textAlign="left">
         {post.title}
       </Text>

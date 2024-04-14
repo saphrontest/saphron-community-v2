@@ -15,11 +15,30 @@ interface SearchResultsProps {
 const SearchResults: FC<SearchResultsProps> = ({searchResults, showMoreButton, searchKey}) => {
   const navigate = useNavigate()
   return !!searchResults.length ? (
-    <Flex bg={"white"} p={2} zIndex={1} border="1px solid" borderColor={"gray.50"} flexDirection={"column"} gap={2}>
+    <Flex
+    p={2}
+    gap={2}
+    w="100%"
+    bg="white"
+    zIndex={1}
+    border="1px solid"
+    borderColor="gray.50"
+    flexDirection="column"
+    >
         {searchResults.map((res, idx) => <SearchResultsItem key={idx} item={res}/>)}
-        {showMoreButton && <Text fontWeight={600} textAlign={"right"} cursor="pointer" onClick={() => navigate("/community/search", {state: {searchKey, searchResults}})}>
-          Show More...
-        </Text>}
+        {showMoreButton && (
+          <Text
+          fontWeight={600}
+          textAlign="right"
+          cursor="pointer"
+          onClick={() => navigate("/community/search", {state: {
+            searchKey,
+            searchResults
+          }})}
+          >
+            Show More...
+          </Text>
+        )}
     </Flex>
   ) : <Box zIndex={9999} w="100%"><NoEntry type="result" iconSize={100}/></Box>
 }

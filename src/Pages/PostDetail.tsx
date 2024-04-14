@@ -76,7 +76,7 @@ const PostDetail = () => {
           description={post?.body as string}
         />
         {!isPageLoading && <PostItem
-        isSaved={locationState.isSaved}
+        isSaved={locationState?.isSaved || false}
         post={post}
         setReloadPost={setReloadPost}
         communityName={communities.filter((c: Community) => post.communityId === c.id)[0]?.name}

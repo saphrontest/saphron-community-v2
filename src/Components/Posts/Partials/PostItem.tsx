@@ -13,7 +13,7 @@ import ActionButtons from './ActionButtons';
 import PostContent from './PostContent';
 import { usePost, useReward } from '../../../Hooks';
 
-export type PostItemContentProps = {
+export interface PostItemContentProps {
   post: IPost;
   communityName: string;
   setReloadPost: ( isReload:boolean ) => void;

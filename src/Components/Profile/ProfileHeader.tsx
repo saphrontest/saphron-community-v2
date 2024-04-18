@@ -196,7 +196,7 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
                                 <Text fontSize={["12px", "14px", "16px"]} fontWeight={500} color="gray.600">u/{username}</Text>
                                 <Text fontSize={["12px", "14px", "16px"]} fontWeight={500} fontStyle={"italic"}>{email}</Text>
                                 {(!isEmailVerified && isMine) && <Flex align="center" gap={2}>
-                                    <Text color="red">E-mail erification is not completed!</Text>
+                                    <Text color="red">E-mail verification is not completed!</Text>
                                     <Text fontWeight={600} textDecor="underline" cursor="pointer" onClick={verifyAccount}>Verify</Text>
                                 </Flex>}
                             </Box>

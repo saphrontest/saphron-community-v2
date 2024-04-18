@@ -9,9 +9,10 @@ import { BsDot } from 'react-icons/bs'
 interface PostContentProps {
   post: IPost;
   communityName: string;
+  isDetail?: boolean;
 }
 
-const PostContent: FC<PostContentProps> = ({ post, communityName }) => {
+const PostContent: FC<PostContentProps> = ({ post, communityName, isDetail }) => {
   
   const [loadingImage, setLoadingImage] = useState(true);
   const [isSmallerThan766] = useMediaQuery('(max-width: 766px)')
@@ -60,7 +61,7 @@ const PostContent: FC<PostContentProps> = ({ post, communityName }) => {
       </Text>
       <Text
       fontSize="10pt"
-      noOfLines={10}
+      noOfLines={!isDetail ? 10 : undefined}
       textAlign="left"
       className='PostBody'
       dangerouslySetInnerHTML={{ __html: post.body }} /> 

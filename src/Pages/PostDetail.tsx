@@ -80,6 +80,7 @@ const PostDetail = () => {
         post={post}
         setReloadPost={setReloadPost}
         communityName={communities.filter((c: Community) => post.communityId === c.id)[0]?.name}
+        isDetail={true}
         />}
         {!isPageLoading && <Comments comments={comments} post={post} getComments={getComments} />}
       </Flex>

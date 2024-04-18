@@ -19,6 +19,7 @@ export type PostItemContentProps = {
   setReloadPost: ( isReload:boolean ) => void;
   isDashboard?: boolean;
   isSaved: boolean;
+  isDetail?: boolean;
 };
 
 const PostItem: FC<PostItemContentProps> = ({
@@ -26,7 +27,8 @@ const PostItem: FC<PostItemContentProps> = ({
   communityName,
   setReloadPost,
   isDashboard=false,
-  isSaved
+  isSaved,
+  isDetail=false
 }) => {
   const toast = useToast()
   const navigate = useNavigate()
@@ -166,6 +168,7 @@ const PostItem: FC<PostItemContentProps> = ({
         <PostContent
         post={post}
         communityName={communityName}
+        isDetail={isDetail}
         />
         <ActionButtons
         post={post}
